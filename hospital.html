@@ -1,0 +1,2393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CarePulse Multi-Specialty Hospital | Online OPD Doctor Appointment & Live Token Booking</title>
+    <meta name="description"
+        content="CarePulse Multi-Specialty Hospital - Book doctor consultation appointments and live OPD queue tokens online. Highly qualified General Physicians, Pediatricians, Dermatologists, and Dental Surgeons in Phagwara, Punjab. Instant downloadable E-Pass tickets." />
+    <meta name="keywords"
+        content="CarePulse Hospital, book doctor appointment online, OPD token slip, Phagwara hospital, live queue tracking, download doctor ticket, pediatrician, general physician, dermatologist, emergency ambulance" />
+    <meta name="author" content="CarePulse Healthcare" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- OpenGraph & Social Meta Tags for Google & Social Sharing -->
+    <meta property="og:title" content="CarePulse Multi-Specialty Hospital - Doctor Appointments & OPD Tokens" />
+    <meta property="og:description" content="Book instant doctor consultation appointments, view live OPD queue tokens, and download verified digital appointment slips." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="CarePulse Hospital" />
+
+    <!-- Schema.org JSON-LD Structured Data for Google Search Rich Results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Hospital",
+      "name": "CarePulse Multi-Specialty Hospital",
+      "description": "Premier healthcare clinic and hospital offering online OPD token booking, live doctor queue tracking, diagnostics, and 24x7 emergency medical services.",
+      "telephone": "+91-1800-555-0199",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "GT Road, Near Sugar Mill Crossing",
+        "addressLocality": "Phagwara",
+        "addressRegion": "Punjab",
+        "postalCode": "144401",
+        "addressCountry": "IN"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          "opens": "08:00",
+          "closes": "21:00"
+        }
+      ],
+      "medicalSpecialty": [
+        "GeneralPractice",
+        "Pediatrics",
+        "Dermatology",
+        "Dentistry"
+      ]
+    }
+    </script>
+
+    <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+    <!-- ==========================================================================
+         CarePulse Mandatory Security & Authentication Gate
+         ========================================================================== -->
+    <div id="auth-gate-modal" class="auth-gate-overlay" style="display: none;" role="dialog" aria-modal="true"
+        aria-labelledby="auth-modal-title">
+        <div class="auth-gate-backdrop-blur"></div>
+        <div class="auth-card">
+
+            <!-- Auth Card Header -->
+            <div class="auth-card-header">
+                <div class="auth-logo-badge">
+                    <div class="auth-logo-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                            <path d="M12 5v14" />
+                            <path d="M5 12h14" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 id="auth-modal-title" class="auth-title">CarePulse Hospital Portal</h2>
+                        <span class="auth-subtitle">Mandatory Security Verification & Patient Sign-In</span>
+                    </div>
+                </div>
+                <div class="auth-shield-badge">
+                    <span class="shield-dot"></span> Secure SSL
+                </div>
+            </div>
+
+            <!-- Error Banner Container -->
+            <div id="auth-error-msg" class="auth-error-msg" style="display: none;"></div>
+
+            <!-- STEP 1: Method Selection & Input Panel -->
+            <div id="auth-step-input" class="auth-step-panel">
+
+                <!-- Auth Method Tabs -->
+                <div class="auth-tabs" role="tablist">
+                    <button type="button" class="auth-tab-btn active" data-method="mobile"
+                        onclick="CarePulseAuth.switchTab('mobile')">
+                        <span class="tab-icon">📱</span>
+                        <span>Mobile Number OTP</span>
+                    </button>
+                    <button type="button" class="auth-tab-btn" data-method="google"
+                        onclick="CarePulseAuth.switchTab('google')">
+                        <span class="tab-icon">🌐</span>
+                        <span>Google Sign-In</span>
+                    </button>
+                </div>
+
+                <!-- Panel A: Mobile Number -->
+                <div id="auth-panel-mobile" class="auth-tab-panel">
+                    <div class="auth-field-group">
+                        <label for="auth-mobile-name">Patient Full Name <span
+                                class="optional-tag">(Optional)</span></label>
+                        <div class="auth-input-wrapper">
+                            <span class="input-prefix-icon">👤</span>
+                            <input type="text" id="auth-mobile-name" class="auth-text-input"
+                                placeholder="e.g. Rahul Sharma" autocomplete="name" />
+                        </div>
+                    </div>
+
+                    <div class="auth-field-group">
+                        <label for="auth-mobile-input">10-Digit Mobile Number <span
+                                class="required-star">*</span></label>
+                        <div class="auth-input-wrapper">
+                            <span class="phone-country-pill">🇮🇳 +91</span>
+                            <input type="tel" id="auth-mobile-input" class="auth-text-input" placeholder="98765 43210"
+                                maxlength="10" inputmode="numeric" autocomplete="tel"
+                                onkeydown="if(event.key==='Enter') CarePulseAuth.sendOTP()" />
+                        </div>
+                        <span class="auth-help-text">A unique 6-digit one-time passcode (OTP) will be sent via SMS to
+                            this number.</span>
+                        <div class="sms-mode-pill-bar" style="margin-top: 0.45rem;">
+                            <span>📶 Gateway: <strong>Simulated SMS Preview</strong></span>
+                            <button type="button" class="btn-sms-info-trigger" onclick="openSMSGatewayInfoModal()">ℹ️
+                                SMS Gateway Info</button>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-auth-primary" onclick="CarePulseAuth.sendOTP()">
+                        <span>📲 Send SMS Verification OTP &rarr;</span>
+                    </button>
+                </div>
+
+                <!-- Panel B: Google Sign-In -->
+                <div id="auth-panel-google" class="auth-tab-panel" style="display: none;">
+                    <p class="google-prompt-text">Sign in using your Google account. A security code will be sent to
+                        your Gmail for verification:</p>
+
+                    <div class="google-preset-container">
+                        <div class="preset-label">Quick Select Sample Account:</div>
+                        <div class="google-presets-grid">
+                            <button type="button" class="google-account-pill selected"
+                                data-email="rajesh.kumar@gmail.com"
+                                onclick="CarePulseAuth.selectGoogleAccount('rajesh.kumar@gmail.com', 'Rajesh Kumar')">
+                                <div class="google-pill-avatar" style="background: #ea4335;">R</div>
+                                <div class="google-pill-info">
+                                    <span class="pill-name">Rajesh Kumar</span>
+                                    <span class="pill-email">rajesh.kumar@gmail.com</span>
+                                </div>
+                            </button>
+                            <button type="button" class="google-account-pill" data-email="priya.sharma@gmail.com"
+                                onclick="CarePulseAuth.selectGoogleAccount('priya.sharma@gmail.com', 'Priya Sharma')">
+                                <div class="google-pill-avatar" style="background: #4285f4;">P</div>
+                                <div class="google-pill-info">
+                                    <span class="pill-name">Priya Sharma</span>
+                                    <span class="pill-email">priya.sharma@gmail.com</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="auth-field-group" style="margin-top: 1rem;">
+                        <label for="auth-google-email">Or Type Your Gmail Address <span
+                                class="required-star">*</span></label>
+                        <div class="auth-input-wrapper">
+                            <span class="input-prefix-icon">📧</span>
+                            <input type="email" id="auth-google-email" class="auth-text-input"
+                                value="rajesh.kumar@gmail.com" placeholder="your.name@gmail.com"
+                                onkeydown="if(event.key==='Enter') CarePulseAuth.sendOTP()" />
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="auth-google-name" value="Rajesh Kumar" />
+
+                    <button type="button" class="btn-auth-primary btn-auth-google" onclick="CarePulseAuth.sendOTP()">
+                        <svg width="18" height="18" viewBox="0 0 24 24">
+                            <path fill="#4285F4"
+                                d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z" />
+                            <path fill="#34A853"
+                                d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24Z" />
+                            <path fill="#FBBC05"
+                                d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15Z" />
+                            <path fill="#EA4335"
+                                d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z" />
+                        </svg>
+                        <span>Send Gmail Security Code &rarr;</span>
+                    </button>
+                </div>
+
+                <!-- Trust Footer -->
+                <div class="auth-trust-footer">
+                    <div class="trust-item"><span>🔒</span> 256-Bit SSL Encrypted</div>
+                    <div class="trust-item"><span>🏥</span> NABH &amp; NABL Accredited</div>
+                    <div class="trust-item"><span>⚡</span> 24/7 Instant Token Access</div>
+                </div>
+            </div>
+
+            <!-- STEP 2: OTP Verification Screen -->
+            <div id="auth-step-otp" class="auth-step-panel" style="display: none;">
+                <div class="auth-otp-header">
+                    <button type="button" class="btn-auth-back" onclick="CarePulseAuth.backToInput()">
+                        &larr; Change Mobile / Email
+                    </button>
+                    <div class="otp-instruction-card">
+                        <div class="otp-target-icon">📬</div>
+                        <div>
+                            <div class="otp-card-title" id="auth-method-badge">SMS Verification OTP</div>
+                            <div class="otp-card-sub">
+                                Enter the 6-digit code sent to <strong id="auth-target-display">+91 98765 43210</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6 Discrete Digit Inputs -->
+                <div class="otp-digit-cluster" onpaste="CarePulseAuth.handleDigitPaste(event)">
+                    <input type="text" id="otp-digit-1" class="otp-digit-box" maxlength="1" inputmode="numeric"
+                        autocomplete="one-time-code" oninput="CarePulseAuth.handleDigitInput(this, 1, event)"
+                        onkeydown="CarePulseAuth.handleDigitKey(this, 1, event)" autofocus />
+                    <input type="text" id="otp-digit-2" class="otp-digit-box" maxlength="1" inputmode="numeric"
+                        oninput="CarePulseAuth.handleDigitInput(this, 2, event)"
+                        onkeydown="CarePulseAuth.handleDigitKey(this, 2, event)" />
+                    <input type="text" id="otp-digit-3" class="otp-digit-box" maxlength="1" inputmode="numeric"
+                        oninput="CarePulseAuth.handleDigitInput(this, 3, event)"
+                        onkeydown="CarePulseAuth.handleDigitKey(this, 3, event)" />
+                    <input type="text" id="otp-digit-4" class="otp-digit-box" maxlength="1" inputmode="numeric"
+                        oninput="CarePulseAuth.handleDigitInput(this, 4, event)"
+                        onkeydown="CarePulseAuth.handleDigitKey(this, 4, event)" />
+                    <input type="text" id="otp-digit-5" class="otp-digit-box" maxlength="1" inputmode="numeric"
+                        oninput="CarePulseAuth.handleDigitInput(this, 5, event)"
+                        onkeydown="CarePulseAuth.handleDigitKey(this, 5, event)" />
+                    <input type="text" id="otp-digit-6" class="otp-digit-box" maxlength="1" inputmode="numeric"
+                        oninput="CarePulseAuth.handleDigitInput(this, 6, event)"
+                        onkeydown="CarePulseAuth.handleDigitKey(this, 6, event)" />
+                </div>
+
+                <!-- Resend Row -->
+                <div class="otp-resend-row">
+                    <span>Didn't receive the code?</span>
+                    <button type="button" id="btn-resend-otp" class="btn-resend-text disabled" disabled
+                        onclick="CarePulseAuth.resendOTP()">
+                        Resend New OTP <span id="otp-countdown">(30s)</span>
+                    </button>
+                </div>
+
+                <button type="button" id="btn-verify-otp" class="btn-auth-primary" onclick="CarePulseAuth.verifyOTP()">
+                    <span>Verify &amp; Access Portal &rarr;</span>
+                </button>
+
+                <div class="sms-mode-pill-bar">
+                    <span>📶 Delivery Mode: <strong>Simulated On-Screen Preview</strong></span>
+                    <button type="button" class="btn-sms-info-trigger" onclick="openSMSGatewayInfoModal()">Why
+                        On-Screen?</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Floating Simulated Delivery Banner Area -->
+    <div id="simulated-notification-area" class="simulated-notification-area" aria-live="polite"></div>
+
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop" onclick="toggleLeftSidebar(true)"></div>
+
+    <!-- ==========================================================================
+         CarePulse Left Navigation Sidebar (Shifted Top Menu)
+         ========================================================================== -->
+    <aside class="carepulse-sidebar" id="carepulse-sidebar" aria-label="Main Hospital Navigation">
+
+        <!-- Sidebar Brand Header -->
+        <div class="sidebar-header">
+            <a href="#top" class="sidebar-brand-link" onclick="if(window.innerWidth < 1024) toggleLeftSidebar(true);">
+                <div class="sidebar-logo-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                        <path d="M12 5v14" />
+                        <path d="M5 12h14" />
+                    </svg>
+                </div>
+                <div class="sidebar-brand-text">
+                    <h2>CarePulse</h2>
+                    <span>Hospital &bull; Phagwara</span>
+                </div>
+            </a>
+            <button class="sidebar-close-btn" onclick="toggleLeftSidebar(true)"
+                aria-label="Close Sidebar">&times;</button>
+        </div>
+
+        <!-- Authenticated User Profile Card -->
+
+        <!-- Theme & Language Controls Cluster -->
+        <div class="top-controls-cluster">
+            <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+                <span>🌙</span> <span class="theme-label" data-i18n="theme_dark">Dark Mode</span>
+            </button>
+            <div class="palette-select-wrapper" title="Hospital Theme Color Palette">
+                <span>🎨</span>
+                <select class="palette-select" id="sidebar-palette-select" onchange="setPaletteTheme(this.value)"
+                    aria-label="Theme Palette">
+                    <option value="teal" selected>Teal Mint</option>
+                    <option value="blue">Royal Sapphire</option>
+                    <option value="purple">Lavender Care</option>
+                    <option value="amber">Warm Amber</option>
+                </select>
+            </div>
+            <div class="font-scale-group" title="Adjust Text Size for Seniors">
+                <button type="button" class="font-scale-btn" data-scale="sm" onclick="setFontScale('sm')"
+                    title="Small Text">A-</button>
+                <button type="button" class="font-scale-btn active" data-scale="md" onclick="setFontScale('md')"
+                    title="Normal Text">A</button>
+                <button type="button" class="font-scale-btn" data-scale="lg" onclick="setFontScale('lg')"
+                    title="Large Text">A+</button>
+            </div>
+            <div class="lang-switch-group" role="group" aria-label="Select Language">
+                <button type="button" class="lang-pill-btn active" data-lang="en"
+                    onclick="setLanguage('en')">EN</button>
+                <button type="button" class="lang-pill-btn" data-lang="hi" onclick="setLanguage('hi')">हिन्दी</button>
+                <button type="button" class="lang-pill-btn" data-lang="pa" onclick="setLanguage('pa')">ਪੰਜਾਬੀ</button>
+            </div>
+        </div>
+
+        <!-- Emergency SOS Button in Sidebar -->
+        <button type="button" class="btn-sidebar-sos" onclick="triggerEmergencySOS()">
+            <span style="font-size: 1.1rem;">🚨</span>
+            <span data-i18n="btn_sos">Emergency SOS 108</span>
+        </button>
+
+        <div class="sidebar-user-card" id="sidebar-user-card">
+            <div class="sidebar-user-avatar user-display-avatar">PT</div>
+            <div class="sidebar-user-details">
+                <div class="sidebar-user-name user-display-name">Patient Session</div>
+                <div class="sidebar-user-contact user-display-contact">Authorized Patient</div>
+                <div class="sidebar-user-meta">
+                    <span class="status-dot-active"></span>
+                    <span class="user-auth-badge">Verified Session</span>
+                    <span class="user-uhid-badge user-display-uhid">CP-98214</span>
+                </div>
+            </div>
+            <button class="btn-sidebar-logout" onclick="CarePulseAuth.logout()" title="Log out from CarePulse">
+                <span class="logout-icon">🚪</span>
+                <span class="logout-text">Logout</span>
+            </button>
+        </div>
+
+        <!-- Sidebar Navigation List -->
+        <nav class="sidebar-nav-container">
+            <ul class="sidebar-nav-list">
+
+                <!-- Home -->
+                <li class="sidebar-nav-item">
+                    <a href="#top" class="sidebar-nav-link active"
+                        onclick="if(window.innerWidth < 1024) toggleLeftSidebar(true);">
+                        <span class="sidebar-link-icon">🏠</span>
+                        <span class="sidebar-link-text">Home Overview</span>
+                    </a>
+                </li>
+
+                <!-- Category 1: OPD & Doctors Accordion -->
+                <li class="sidebar-nav-item sidebar-dropdown-group open">
+                    <div class="sidebar-dropdown-header" onclick="toggleSidebarDropdown(this)">
+                        <div class="dropdown-header-left">
+                            <span class="sidebar-link-icon" style="background: #e0f2fe; color: #0284c7;">🩺</span>
+                            <span class="sidebar-link-text">OPD &amp; Doctors</span>
+                        </div>
+                        <span class="sidebar-caret">▾</span>
+                    </div>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="#doctors-section" class="sidebar-sub-link"
+                                onclick="if(window.innerWidth < 1024) toggleLeftSidebar(true);">
+                                <span class="sub-icon">👨‍⚕️</span>
+                                <div class="sub-link-info">
+                                    <span class="sub-title">Meet Specialists</span>
+                                    <span class="sub-desc">10 Senior Indian Doctors</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#live-board-section" class="sidebar-sub-link"
+                                onclick="if(window.innerWidth < 1024) toggleLeftSidebar(true);">
+                                <span class="sub-icon">⏱️</span>
+                                <div class="sub-link-info">
+                                    <span class="sub-title">Live Token Queue</span>
+                                    <span class="sub-desc">Real-time OPD monitor</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#booking-section" class="sidebar-sub-link"
+                                onclick="openBookingLayer(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
+                                <span class="sub-icon">⚡</span>
+                                <div class="sub-link-info">
+                                    <span class="sub-title">Book Doctor Slot</span>
+                                    <span class="sub-desc">Fast reservation layer</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Category 2: Clinical Services Accordion -->
+                <li class="sidebar-nav-item sidebar-dropdown-group">
+                    <div class="sidebar-dropdown-header" onclick="toggleSidebarDropdown(this)">
+                        <div class="dropdown-header-left">
+                            <span class="sidebar-link-icon" style="background: #d1fae5; color: #065f46;">🧪</span>
+                            <span class="sidebar-link-text">Clinical Services</span>
+                        </div>
+                        <span class="sidebar-caret">▾</span>
+                    </div>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="#packages-section" class="sidebar-sub-link"
+                                onclick="if(window.innerWidth < 1024) toggleLeftSidebar(true);">
+                                <span class="sub-icon">🛡️</span>
+                                <div class="sub-link-info">
+                                    <span class="sub-title">Health Checkups</span>
+                                    <span class="sub-desc">Packages from ₹999</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="sidebar-sub-link"
+                                onclick="openLabReportModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
+                                <span class="sub-icon">📄</span>
+                                <div class="sub-link-info">
+                                    <span class="sub-title">Download Reports</span>
+                                    <span class="sub-desc">UHID pathology PDF</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="sidebar-sub-link"
+                                onclick="openPharmacyModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
+                                <span class="sub-icon">💊</span>
+                                <div class="sub-link-info">
+                                    <span class="sub-title">24/7 Doorstep Pharmacy</span>
+                                    <span class="sub-desc">2-Hour medicine delivery</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="sidebar-sub-link"
+                                onclick="openEmergencyModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
+                                <span class="sub-icon">🚨</span>
+                                <div class="sub-link-info">
+                                    <span class="sub-title">Trauma &amp; Ambulance</span>
+                                    <span class="sub-desc">24/7 Life support desk</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Category 3: Patient Care Accordion -->
+                <li class="sidebar-nav-item sidebar-dropdown-group">
+                    <div class="sidebar-dropdown-header" onclick="toggleSidebarDropdown(this)">
+                        <div class="dropdown-header-left">
+                            <span class="sidebar-link-icon" style="background: #fef3c7; color: #92400e;">📋</span>
+                            <span class="sidebar-link-text">Patient Care</span>
+                        </div>
+                        <span class="sidebar-caret">▾</span>
+                    </div>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="#insurance-section" class="sidebar-sub-link"
+                                onclick="if(window.innerWidth < 1024) toggleLeftSidebar(true);">
+                                <span class="sub-icon">🤝</span>
+                                <div class="sub-link-info">
+                                    <span class="sub-title">Cashless Insurance</span>
+                                    <span class="sub-desc">TPA &amp; AB-PMJAY desk</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#track-token-section" class="sidebar-sub-link"
+                                onclick="if(window.innerWidth < 1024) toggleLeftSidebar(true);">
+                                <span class="sub-icon">🧭</span>
+                                <div class="sub-link-info">
+                                    <span class="sub-title">Track Token Status</span>
+                                    <span class="sub-desc">Check live queue &amp; wait</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="sidebar-sub-link"
+                                onclick="openMyBookingsModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
+                                <span class="sub-icon">🎫</span>
+                                <div class="sub-link-info">
+                                    <span class="sub-title">My Digital Tokens</span>
+                                    <span class="sub-desc">View &amp; print passes</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </nav>
+
+        <!-- Sidebar Action Hub -->
+        <div class="sidebar-actions-cluster">
+            <button class="btn btn-primary btn-sidebar-action" onclick="openBookingLayer()">
+                <span>⚡ Book Doctor Slot</span>
+            </button>
+            <button class="btn btn-outline btn-sidebar-action" onclick="openMyBookingsModal()">
+                <span>📋 My Tokens</span>
+                <span class="badge-my-tokens" id="sidebar-tokens-count" style="display: none;">0</span>
+            </button>
+        </div>
+
+        <!-- Branch Switcher in Sidebar -->
+        <div class="sidebar-branch-box">
+            <label for="sidebar-branch-select" class="branch-label">🏥 Hospital Branch:</label>
+            <select id="sidebar-branch-select" class="sidebar-branch-select" onchange="switchBranch(this.value)"
+                aria-label="Select Hospital Branch">
+                <option value="phagwara" selected>Phagwara, Punjab (Flagship)</option>
+                <option value="ludhiana">Ludhiana, Punjab</option>
+                <option value="delhi">Delhi-NCR</option>
+                <option value="bengaluru">Bengaluru</option>
+            </select>
+        </div>
+
+        <!-- Sidebar Emergency Card Footer -->
+        <div class="sidebar-footer-emergency">
+            <div class="emergency-footer-header">
+                <span class="pulse-dot red-pulse"></span>
+                <strong>24/7 Emergency Helpline</strong>
+            </div>
+            <a href="tel:18001802026" class="emergency-footer-phone" onclick="openEmergencyModal(); return false;">
+                📞 1800-180-2026 / 108
+            </a>
+            <div class="emergency-footer-sub">Immediate Trauma &amp; Ambulance</div>
+        </div>
+
+    </aside>
+
+    <!-- ==========================================================================
+         App Main Content Wrapper
+         ========================================================================== -->
+    <div class="app-main-wrapper" id="app-main-wrapper">
+
+        <!-- Mobile Header Bar (Sticky on Screens < 1024px) -->
+        <header class="mobile-header-bar">
+            <button class="mobile-nav-toggle-btn" id="sidebar-mobile-toggle" aria-label="Toggle Navigation Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <a href="#top" class="mobile-header-brand">
+                <h2>CarePulse</h2>
+            </a>
+            <div class="mobile-header-actions">
+                <button type="button" class="btn-header-search" onclick="openSpotlightSearch()"
+                    title="Search Doctors, Services & Actions (Ctrl+K)">
+                    <span>🔍</span>
+                    <span class="spotlight-kbd-tag" style="margin-left: 2px;">Ctrl K</span>
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="openMyBookingsModal()" title="My Tokens">
+                    <span>📋</span>
+                    <span class="badge-my-tokens" style="display: none;">0</span>
+                </button>
+                <button class="btn btn-primary btn-sm" onclick="openBookingLayer()">
+                    Book Slot
+                </button>
+            </div>
+        </header>
+
+        <!-- Top Announcement & Multi-Branch Status Bar -->
+        <aside class="clinic-status-bar" aria-label="Clinic Live Status">
+            <div class="branch-selector-wrapper">
+                <span>🏥 Branch:</span>
+                <select class="branch-selector-select" onchange="switchBranch(this.value)"
+                    aria-label="Select Hospital City Branch">
+                    <option value="phagwara" selected>Phagwara, Punjab (Flagship)</option>
+                    <option value="ludhiana">Ludhiana, Punjab</option>
+                    <option value="delhi">Delhi-NCR</option>
+                    <option value="bengaluru">Bengaluru</option>
+                </select>
+            </div>
+            <div class="status-pill-live">
+                <span class="pulse-dot"></span> Emergency &amp; OPD Open (24/7)
+            </div>
+            <div class="branch-location-text">
+                <span>📍 CarePulse Multi-Specialty Hospital • Phagwara, Punjab</span>
+            </div>
+            <a href="tel:18001802026" class="clinic-emergency-contact branch-emergency-text"
+                onclick="openEmergencyModal(); return false;">
+                <span>🚨 Emergency: 1800-180-2026 / 108</span>
+            </a>
+        </aside>
+
+        <!-- Sticky Horizontal Category Chips Scroller -->
+        <nav class="category-chips-scroller" id="category-chips-scroller" aria-label="Quick Category Navigation Tabs">
+            <div class="category-chips-inner">
+                <a href="#top" class="category-chip active" data-target="top">
+                    <span>⭐</span> <span>Overview</span>
+                </a>
+                <a href="#quick-services" class="category-chip" data-target="quick-services">
+                    <span>⚡</span> <span>Quick Services</span>
+                </a>
+                <a href="#live-board-section" class="category-chip" data-target="live-board-section">
+                    <span>⏱️</span> <span>Live OPD Queue</span>
+                </a>
+                <a href="#beds-occupancy-section" class="category-chip" data-target="beds-occupancy-section">
+                    <span>🛏️</span> <span>Bed &amp; ICU Status</span>
+                </a>
+                <a href="#doctors-section" class="category-chip" data-target="doctors-section">
+                    <span>👨‍⚕️</span> <span>Specialists</span>
+                </a>
+                <a href="#packages-section" class="category-chip" data-target="packages-section">
+                    <span>📦</span> <span>Health Checkups</span>
+                </a>
+                <a href="#booking-section" class="category-chip" data-target="booking-section">
+                    <span>📅</span> <span>Book Appointment</span>
+                </a>
+                <a href="#track-token-section" class="category-chip" data-target="track-token-section">
+                    <span>🔍</span> <span>Track Token</span>
+                </a>
+                <a href="#insurance-section" class="category-chip" data-target="insurance-section">
+                    <span>🛡️</span> <span>Insurance &amp; TPA</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="top">
+
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="container">
+
+                    <!-- Trust badge with avatars -->
+                    <div class="trust-badge-pill">
+                        <div class="avatar-group">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80"
+                                alt="Patient avatar" />
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80"
+                                alt="Patient avatar" />
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80"
+                                alt="Patient avatar" />
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80"
+                                alt="Patient avatar" />
+                        </div>
+                        <div class="trust-text">
+                            <span>260k+</span> Satisfied Patients in Punjab & Across India • 4.9/5 Rating
+                        </div>
+                    </div>
+
+                    <h1 class="hero-title">
+                        Trustworthy Care for You <br /><span class="highlight">and Your Family</span>
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        Comprehensive, compassionate healthcare at our flagship medical campus on <strong>GT Road,
+                            Phagwara,
+                            Punjab</strong>. Check live Indian specialist OPD hours, reserve consultation slots in our
+                        fast
+                        layer, and skip lobby lines with live digital tokens.
+                    </p>
+
+                    <div class="hero-actions">
+                        <button class="btn btn-primary" onclick="openBookingLayer()"
+                            style="padding: 0.85rem 1.85rem; font-size: 1rem;">
+                            ✨ Book Appointment (Open Layer) ↗
+                        </button>
+                        <a href="#live-board-section" class="btn btn-outline"
+                            style="padding: 0.85rem 1.85rem; font-size: 1rem;">
+                            Explore Live Queue ↗
+                        </a>
+                        <button class="btn btn-secondary" onclick="openEmergencyModal()"
+                            style="padding: 0.85rem 1.4rem;">
+                            🚨 Emergency Desk
+                        </button>
+                    </div>
+
+                    <!-- Quick Stats Grid -->
+                    <div class="hero-stats-bar">
+                        <div class="hero-stat-item">
+                            <span class="stat-number">4</span>
+                            <span class="stat-label">Specialist Clinics</span>
+                        </div>
+                        <div class="hero-stat-item">
+                            <span class="stat-number">10+</span>
+                            <span class="stat-label">Senior Indian Doctors</span>
+                        </div>
+                        <div class="hero-stat-item">
+                            <span class="stat-number">~12 min</span>
+                            <span class="stat-label">Average Wait Time</span>
+                        </div>
+                        <div class="hero-stat-item">
+                            <span class="stat-number">99.2%</span>
+                            <span class="stat-label">On-Time Consultations</span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Accreditation Trust Bar (NABH / NABL / JCI / Ayushman Bharat) -->
+            <section class="accreditation-bar">
+                <div class="container accreditation-container">
+                    <div class="accred-item">
+                        <span class="accred-badge emerald">NABH ACCREDITED</span>
+                        <span>National Quality Healthcare Standard</span>
+                    </div>
+                    <div class="accred-item">
+                        <span class="accred-badge">NABL LABS</span>
+                        <span>ISO 15189 Certified Precision Diagnostics</span>
+                    </div>
+                    <div class="accred-item">
+                        <span class="accred-badge gold">JCI GOLD STANDARD</span>
+                        <span>International Patient Safety Protocol</span>
+                    </div>
+                    <div class="accred-item">
+                        <span class="accred-badge emerald">AB-PMJAY & CGHS</span>
+                        <span>100% Cashless Govt. Healthcare Empanelled</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Services Hub (Apollo 6-Tile Grid with Vibrant Color Themes) -->
+            <section class="quick-services-section" id="quick-services">
+                <div class="container">
+                    <div class="section-header" style="margin-bottom: 1.25rem;">
+                        <div>
+                            <div class="section-tag">24/7 Digital Healthcare Services</div>
+                            <h2 class="section-title">Quick Healthcare Access</h2>
+                            <p class="section-desc">One-stop access to doctor OPD tokens, preventive health checkups,
+                                diagnostic reports, and doorstep pharmacy in Phagwara, Punjab.</p>
+                        </div>
+                    </div>
+
+                    <div class="services-hub-grid">
+                        <!-- Tile 1: Book Doctor Appointment (Cobalt Blue Theme) -->
+                        <div class="service-hub-tile tile-blue" onclick="openBookingLayer()">
+                            <div class="service-hub-icon-wrapper" style="background: #e0f2fe; color: #0284c7;">🩺</div>
+                            <h3 class="service-hub-title">Book Doctor Slot</h3>
+                            <p class="service-hub-sub">Dedicated fast booking layer with live queue tokens</p>
+                            <span class="service-hub-tag" style="background: #e0f2fe; color: #0369a1;">Fast Layer</span>
+                        </div>
+
+                        <!-- Tile 2: Health Packages (Emerald Theme) -->
+                        <a href="#packages-section" class="service-hub-tile tile-emerald">
+                            <div class="service-hub-icon-wrapper" style="background: #d1fae5; color: #059669;">🛡️</div>
+                            <h3 class="service-hub-title">Health Checkups</h3>
+                            <p class="service-hub-sub">ProHealth packages from ₹999 with home sample pickup</p>
+                            <span class="service-hub-tag" style="background: #d1fae5; color: #065f46;">Up to 55%
+                                Off</span>
+                        </a>
+
+                        <!-- Tile 3: 24/7 Pharmacy (Purple/Indigo Theme) -->
+                        <div class="service-hub-tile tile-purple" onclick="openPharmacyModal()">
+                            <div class="service-hub-icon-wrapper" style="background: #ede9fe; color: #7c3aed;">💊</div>
+                            <h3 class="service-hub-title">Order Medicines</h3>
+                            <p class="service-hub-sub">Upload prescription for 2-hour doorstep delivery</p>
+                            <span class="service-hub-tag" style="background: #ede9fe; color: #5b21b6;">2-Hr
+                                Delivery</span>
+                        </div>
+
+                        <!-- Tile 4: Diagnostic Reports (Cyan Theme) -->
+                        <div class="service-hub-tile tile-teal" onclick="openLabReportModal('UHID-98214')">
+                            <div class="service-hub-icon-wrapper" style="background: #ccfbf1; color: #0f766e;">📄</div>
+                            <h3 class="service-hub-title">Lab Test Reports</h3>
+                            <p class="service-hub-sub">Enter UHID to view & print official NABL lab results</p>
+                            <span class="service-hub-tag" style="background: #ccfbf1; color: #115e59;">Instant
+                                PDF</span>
+                        </div>
+
+                        <!-- Tile 5: Live OPD Queue Monitor (Amber Theme) -->
+                        <a href="#live-board-section" class="service-hub-tile tile-amber">
+                            <div class="service-hub-icon-wrapper" style="background: #fef3c7; color: #d97706;">⏱️</div>
+                            <h3 class="service-hub-title">Live Queue Status</h3>
+                            <p class="service-hub-sub">Track active tokens, wait times & doctor consultation rooms</p>
+                            <span class="service-hub-tag" style="background: #fef3c7; color: #92400e;">Live Board</span>
+                        </a>
+
+                        <!-- Tile 6: Emergency & Ambulance (Crimson Rose Theme) -->
+
+                        <!-- Tile 7: Clinical Health & BMI Calculator (Indigo Teal Theme) -->
+                        <div class="service-hub-tile tile-blue" onclick="openHealthCalculator()">
+                            <div class="service-hub-icon-wrapper" style="background: #e0f2fe; color: #0369a1;">🩺</div>
+                            <h3 class="service-hub-title" data-i18n="btn_calc">Health &amp; BMI Calculator</h3>
+                            <p class="service-hub-sub">Check your BMI, blood pressure category &amp; clinical risk score
+                            </p>
+                            <span class="service-hub-tag" style="background: #e0f2fe; color: #0284c7;">Interactive
+                                Tool</span>
+                        </div>
+
+                        <!-- Tile 8: Live Bed & ICU Board Anchor (Emerald Theme) -->
+                        <a href="#beds-occupancy-section" class="service-hub-tile tile-emerald">
+                            <div class="service-hub-icon-wrapper" style="background: #d1fae5; color: #059669;">🛏️</div>
+                            <h3 class="service-hub-title" data-i18n="sec_beds">Bed &amp; ICU Status</h3>
+                            <p class="service-hub-sub">Real-time availability of triage beds, ventilators &amp; blood
+                                bank</p>
+                            <span class="service-hub-tag" style="background: #d1fae5; color: #065f46;">Live 24/7</span>
+                        </a>
+
+                        <div class="service-hub-tile tile-rose" onclick="openEmergencyModal()">
+                            <div class="service-hub-icon-wrapper" style="background: #fee2e2; color: #dc2626;">🚨</div>
+                            <h3 class="service-hub-title">Emergency 24/7</h3>
+                            <p class="service-hub-sub">Trauma triage, oxygen support & direct ambulance hotline</p>
+                            <span class="service-hub-tag" style="background: #fee2e2; color: #991b1b;">Priority</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Real-Time Digital OPD Token Board -->
+            <section class="live-opd-section" id="live-board-section">
+                <div class="container">
+                    <div class="live-board-card">
+                        <div class="live-board-header">
+                            <div class="board-title-group">
+                                <div class="live-indicator-badge">
+                                    <span class="pulse-dot"></span> Live OPD Queue Monitor
+                                </div>
+                                <h2 style="font-size: 1.4rem; color: white;">Real-Time Clinic Token Display</h2>
+                            </div>
+                            <div class="board-actions">
+                                <span style="font-size: 0.8rem; color: var(--slate-400);">Simulate Next Patient:</span>
+                                <button class="btn btn-outline btn-sm"
+                                    style="color: white; border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.08);"
+                                    onclick="playClinicChime()">
+                                    🔔 Test Clinic Chime
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Doctors Live Tokens Container -->
+                        <div class="queue-grid" id="live-queue-cards">
+                            <!-- Dynamically populated by app.js -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ==========================================================================
+                 Live Hospital Bed & ICU Capacity Board (Civic Transparency)
+                 ========================================================================== -->
+            <section class="beds-occupancy-section" id="beds-occupancy-section">
+                <div class="container">
+                    <div class="section-header text-center" style="max-width: 720px; margin: 0 auto 2rem;">
+                        <span class="section-badge-live">
+                            <span class="pulse-circle"></span>
+                            <span>Live Transparency Dashboard</span>
+                        </span>
+                        <h2 class="section-title" data-i18n="sec_beds">Live Hospital Bed &amp; ICU Capacity</h2>
+                        <p class="section-desc">
+                            Transparent real-time occupancy monitoring for Emergency Triage, Critical ICU, Ventilator
+                            units, and Blood Bank reserves across our Phagwara Campus.
+                        </p>
+                    </div>
+
+                    <!-- Dynamic Bed Cards Grid -->
+                    <div class="beds-grid" id="beds-capacity-grid">
+                        <!-- Populated dynamically by BedsCapacityEngine in app.js -->
+                    </div>
+
+                    <!-- Blood Bank Reserves Strip -->
+                    <div class="blood-bank-strip">
+                        <div class="blood-bank-title">
+                            <span style="font-size: 1.3rem;">🩸</span>
+                            <span><strong>Phagwara Campus Blood Bank Reserves:</strong></span>
+                        </div>
+                        <div class="blood-units-container" id="blood-units-container">
+                            <!-- Populated dynamically by BedsCapacityEngine in app.js -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Doctor Profile Directory & Specialty Filters -->
+            <section class="doctors-section" id="doctors-section" style="padding: 2rem 0 3.5rem;">
+                <div class="container">
+
+                    <div class="section-header">
+                        <div>
+                            <div class="section-tag">Qualified Medical Specialists</div>
+                            <h2 class="section-title">Meet Our Clinic Doctors</h2>
+                            <p class="section-desc">Consult our experienced Indian physicians, pediatricians,
+                                dermatologists, and dental surgeons. Click any doctor to open their instant booking
+                                layer.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Controls: Category Filter Buttons & Quick Search -->
+                    <div class="controls-bar">
+                        <div class="specialty-pills">
+                            <button class="specialty-btn active" data-specialty="all">
+                                🏥 All Specialists (10)
+                            </button>
+                            <button class="specialty-btn" data-specialty="general">
+                                🩺 General Physician (3)
+                            </button>
+                            <button class="specialty-btn" data-specialty="pediatrician">
+                                👶 Pediatrician (2)
+                            </button>
+                            <button class="specialty-btn" data-specialty="dermatologist">
+                                ✨ Dermatologist (2)
+                            </button>
+                            <button class="specialty-btn" data-specialty="dentist">
+                                🦷 Dentist (3)
+                            </button>
+                        </div>
+
+                        <div class="search-box-wrapper">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="doctor-search-input"
+                                placeholder="Search doctor by name (e.g. Rajesh, Priya, Suresh) or symptoms (fever, dental)..." />
+                        </div>
+                    </div>
+
+                    <!-- Doctors Profile Cards Grid -->
+                    <div class="doctors-grid" id="doctors-grid">
+                        <!-- Dynamically populated by app.js -->
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Preventive Health Checkup Packages (Apollo ProHealth Style) -->
+            <section class="health-packages-section" id="packages-section">
+                <div class="container">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-tag">Apollo ProHealth Screening</div>
+                            <h2 class="section-title">Preventive Health Checkup Packages</h2>
+                            <p class="section-desc">Early detection saves lives. Book NABL-certified full body health
+                                screens with free doorstep phlebotomy and physician analysis.</p>
+                        </div>
+                        <div>
+                            <span class="accred-badge emerald">100% NABL ACCREDITED LABS</span>
+                        </div>
+                    </div>
+
+                    <div class="packages-grid">
+                        <!-- Card 1: Basic Wellness -->
+                        <div class="package-card">
+                            <div class="package-header">
+                                <span class="package-tests-count">32 Essential Tests</span>
+                                <h3 class="package-name">Basic Vital Wellness</h3>
+                                <p class="package-desc">Routine baseline screening for working adults & young
+                                    professionals.
+                                </p>
+                            </div>
+                            <div class="package-pricing">
+                                <span class="current-price">₹999</span>
+                                <span class="old-price">₹2,200</span>
+                                <span class="discount-tag">55% OFF</span>
+                            </div>
+                            <ul class="package-features">
+                                <li><span class="icon">✓</span> Complete Hemogram (CBC - 24 params)</li>
+                                <li><span class="icon">✓</span> Fasting Blood Glucose (Diabetes)</li>
+                                <li><span class="icon">✓</span> Lipid Profile (Total Cholesterol, Triglycerides)</li>
+                                <li><span class="icon">✓</span> Urine Routine & Microscopic</li>
+                                <li><span class="icon">✓</span> Free Tele-Consultation with Physician</li>
+                            </ul>
+                            <button class="btn btn-primary" onclick="bookHealthPackage('pkg-basic')">
+                                Book Package (Free Home Sample) ↗
+                            </button>
+                        </div>
+
+                        <!-- Card 2: Executive Full Body (Popular) -->
+                        <div class="package-card popular">
+                            <span class="popular-badge">MOST POPULAR</span>
+                            <div class="package-header">
+                                <span class="package-tests-count" style="background: #ccfbf1;">64 Comprehensive
+                                    Tests</span>
+                                <h3 class="package-name">Executive Full Body Check</h3>
+                                <p class="package-desc">Complete multi-organ evaluation covering Liver, Kidney, Heart &
+                                    Thyroid.</p>
+                            </div>
+                            <div class="package-pricing">
+                                <span class="current-price">₹2,499</span>
+                                <span class="old-price">₹5,500</span>
+                                <span class="discount-tag">54% OFF</span>
+                            </div>
+                            <ul class="package-features">
+                                <li><span class="icon">✓</span> Liver Function Panel (LFT - 11 params)</li>
+                                <li><span class="icon">✓</span> Kidney Function Panel (KFT, Creatinine, Urea)</li>
+                                <li><span class="icon">✓</span> Complete Thyroid Profile (T3, T4, TSH)</li>
+                                <li><span class="icon">✓</span> Digital 12-Lead ECG & Chest Screen</li>
+                                <li><span class="icon">✓</span> Vitamin D3 & Vitamin B12 Levels</li>
+                                <li><span class="icon">✓</span> 1-on-1 Consultation with Senior Specialist</li>
+                            </ul>
+                            <button class="btn btn-primary" onclick="bookHealthPackage('pkg-exec')">
+                                Book Package (Free Home Sample) ↗
+                            </button>
+                        </div>
+
+                        <!-- Card 3: Senior Citizen -->
+                        <div class="package-card">
+                            <div class="package-header">
+                                <span class="package-tests-count">58 Specialized Tests</span>
+                                <h3 class="package-name">Senior Citizen Vital Care</h3>
+                                <p class="package-desc">Formulated for ages 55+ focusing on cardiac, joint, and glycemic
+                                    health.</p>
+                            </div>
+                            <div class="package-pricing">
+                                <span class="current-price">₹1,899</span>
+                                <span class="old-price">₹4,200</span>
+                                <span class="discount-tag">55% OFF</span>
+                            </div>
+                            <ul class="package-features">
+                                <li><span class="icon">✓</span> HbA1c (3-Month Glycated Glucose Average)</li>
+                                <li><span class="icon">✓</span> hs-CRP (High-Sensitivity Cardiac Risk)</li>
+                                <li><span class="icon">✓</span> Serum Calcium, Phosphorus & Uric Acid</li>
+                                <li><span class="icon">✓</span> Renal & Electrolyte Panel</li>
+                                <li><span class="icon">✓</span> Free Doorstep Phlebotomist & Senior Care Guide</li>
+                            </ul>
+                            <button class="btn btn-primary" onclick="bookHealthPackage('pkg-senior')">
+                                Book Package (Free Home Sample) ↗
+                            </button>
+                        </div>
+
+                        <!-- Card 4: Women's Advanced Screen -->
+                        <div class="package-card">
+                            <div class="package-header">
+                                <span class="package-tests-count">48 Specialized Tests</span>
+                                <h3 class="package-name">Women's Health & Cancer Screen</h3>
+                                <p class="package-desc">Specialized hormones, thyroid, bone density, and cancer
+                                    prevention.
+                                </p>
+                            </div>
+                            <div class="package-pricing">
+                                <span class="current-price">₹2,199</span>
+                                <span class="old-price">₹4,800</span>
+                                <span class="discount-tag">54% OFF</span>
+                            </div>
+                            <ul class="package-features">
+                                <li><span class="icon">✓</span> Thyroid & Iron Deficiency Panel (Ferritin)</li>
+                                <li><span class="icon">✓</span> Clinical Breast Examination / Mammogram voucher</li>
+                                <li><span class="icon">✓</span> Pelvic Ultrasound Screening voucher</li>
+                                <li><span class="icon">✓</span> Bone Mineral Density & Serum Calcium</li>
+                                <li><span class="icon">✓</span> Female Senior Gynecologist Consultation</li>
+                            </ul>
+                            <button class="btn btn-primary" onclick="bookHealthPackage('pkg-women')">
+                                Book Package (Free Home Sample) ↗
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interactive Date & Time-Slot Booking Section (Inline Reference) -->
+            <section class="booking-section" id="booking-section">
+                <div class="container">
+
+                    <div class="section-header">
+                        <div>
+                            <div class="section-tag">Online Appointment & Token Kiosk</div>
+                            <h2 class="section-title">Book Doctor Consultation & Token</h2>
+                            <p class="section-desc">Select your consulting doctor, pick an open date & time-slot, and
+                                provide patient details for token registration.</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary btn-sm" onclick="openBookingLayer()">
+                                ⚡ Switch to Layer View
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="booking-panel">
+
+                        <!-- Column 1: Doctor & Slot Selection Matrix -->
+                        <div class="panel-card">
+                            <h3 class="panel-heading">
+                                <span>📅</span> Step 1: Select Doctor & Preferred Time Slot
+                            </h3>
+                            <p class="panel-subtext">Click on any open slot to reserve your consultation window.</p>
+
+                            <!-- Doctor Selector -->
+                            <div class="form-group">
+                                <label class="form-label" for="doctor-select">Choose Consulting Doctor <span
+                                        class="req">*</span></label>
+                                <select class="form-control" id="doctor-select">
+                                    <!-- Dynamically populated by app.js -->
+                                </select>
+                            </div>
+
+                            <!-- Selected Doctor Summary Preview -->
+                            <div id="selected-doctor-banner"></div>
+
+                            <!-- Date Selector Ribbon -->
+                            <div class="date-selector-container">
+                                <label class="form-label">Choose Consultation Date <span class="req">*</span></label>
+                                <div class="date-ribbon" id="date-ribbon">
+                                    <!-- Dynamically populated by app.js -->
+                                </div>
+                            </div>
+
+                            <!-- Time Slots Grid -->
+                            <div>
+                                <label class="form-label">Available Consultation Slots <span
+                                        class="req">*</span></label>
+                                <div id="slots-container">
+                                    <!-- Dynamically populated by app.js -->
+                                </div>
+
+                                <!-- Visual Status Legend -->
+                                <div class="slot-legend">
+                                    <div class="legend-item">
+                                        <span class="legend-dot avail"></span>
+                                        <span>Available (Open)</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="legend-dot fast"></span>
+                                        <span>Filling Fast</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="legend-dot booked"></span>
+                                        <span>Booked / Reserved</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="legend-dot sel"></span>
+                                        <span>Your Selection</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Column 2: Patient Booking Form -->
+                        <div class="panel-card" style="background: white;">
+                            <h3 class="panel-heading">
+                                <span>📝</span> Step 2: Patient Details & Token Pass
+                            </h3>
+                            <p class="panel-subtext">Capture patient particulars for clinical records & digital token
+                                slip
+                                generation.</p>
+
+                            <form id="patient-booking-form">
+
+                                <div class="form-group">
+                                    <label class="form-label" for="patient-name">Patient Full Name <span
+                                            class="req">*</span></label>
+                                    <input type="text" id="patient-name" class="form-control"
+                                        placeholder="e.g. Ramesh Kumar" required />
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" for="patient-age">Age (Years) <span
+                                                class="req">*</span></label>
+                                        <input type="number" id="patient-age" class="form-control" placeholder="e.g. 34"
+                                            min="1" max="110" required />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" for="patient-gender">Gender <span
+                                                class="req">*</span></label>
+                                        <select id="patient-gender" class="form-control" required>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" for="patient-place">Place / Locality / City <span
+                                                class="req">*</span></label>
+                                        <input type="text" id="patient-place" class="form-control"
+                                            placeholder="e.g. Indiranagar, Bangalore" required />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" for="patient-phone">Mobile Number <span
+                                                class="req">*</span></label>
+                                        <input type="tel" id="patient-phone" class="form-control"
+                                            placeholder="e.g. +91 98765 43210" required />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" for="visit-type">Visit Type</label>
+                                        <select id="visit-type" class="form-control">
+                                            <option value="First Consultation">First Time Consultation</option>
+                                            <option value="Follow-Up Visit">Follow-Up Consultation</option>
+                                            <option value="Routine Health Checkup">Routine Health Checkup</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" for="patient-reason">Chief Symptoms / Reason</label>
+                                        <input type="text" id="patient-reason" class="form-control"
+                                            placeholder="e.g. Mild fever, persistent cough" />
+                                    </div>
+                                </div>
+
+                                <!-- Live Booking Summary Box -->
+                                <div class="booking-summary-box">
+                                    <div class="summary-line">
+                                        <span>Doctor:</span>
+                                        <strong id="summary-doc">Dr. Rajesh Sharma</strong>
+                                    </div>
+                                    <div class="summary-line">
+                                        <span>Consultation Date:</span>
+                                        <strong id="summary-date">Today</strong>
+                                    </div>
+                                    <div class="summary-line">
+                                        <span>Selected Time Slot:</span>
+                                        <strong id="summary-slot" style="color: #94a3b8;">Please select a slot
+                                            above</strong>
+                                    </div>
+                                    <div class="summary-line">
+                                        <span>Estimated Wait:</span>
+                                        <strong id="summary-wait">~12 mins</strong>
+                                    </div>
+                                    <div class="summary-line total">
+                                        <span>Consultation Fee (Pay at Clinic):</span>
+                                        <span id="summary-fee">₹500</span>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary"
+                                    style="width: 100%; padding: 0.85rem; font-size: 1rem;">
+                                    Confirm Appointment & Generate Token Pass ➔
+                                </button>
+
+                                <p
+                                    style="text-align: center; font-size: 0.75rem; color: var(--slate-600); margin-top: 0.75rem;">
+                                    🔒 No advance payment required. Pay consultation fee directly at the clinic
+                                    reception
+                                    counter.
+                                </p>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Track My Token / Live Queue Tracker Section -->
+            <section class="track-token-section" id="track-token-section">
+                <div class="container">
+
+                    <div class="tracker-card">
+                        <div class="section-tag" style="background: rgba(20, 184, 166, 0.2); color: #5eead4;">Real-Time
+                            Patient
+                            Tracker</div>
+                        <h2 style="font-size: 1.85rem; margin: 0.5rem 0 0.35rem;">Track Your OPD Queue Position</h2>
+                        <p style="color: #cbd5e1; max-width: 620px;">
+                            Already have an active booking? Enter your Token Number (e.g. <code
+                                style="color: #5eead4;">TK-101</code>)
+                            or registered phone number to view how many patients are ahead of you and your live
+                            estimated
+                            wait time.
+                        </p>
+
+                        <div class="tracker-search-bar">
+                            <input type="text" id="tracker-input" class="tracker-input"
+                                placeholder="Enter Token ID (e.g. TK-014) or Phone Number..." />
+                            <button class="btn btn-primary" id="tracker-search-btn" style="padding: 0.85rem 1.6rem;">
+                                Track Queue ➔
+                            </button>
+                        </div>
+
+                        <!-- Tracker Result Box -->
+                        <div class="tracker-result-box" id="tracker-result-box">
+                            <!-- Dynamically populated by app.js -->
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Clinic Guidelines & Emergency Section -->
+            <section class="clinic-guidelines-section" id="clinic-info-section" style="padding: 3rem 0 4rem;">
+                <div class="container">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-tag">Clinic Policy & Tips</div>
+                            <h2 class="section-title">Patient Guidelines & Walk-In Policy</h2>
+                            <p class="section-desc">Helpful tips to make your clinic visit swift, smooth, and
+                                comfortable.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                        <div
+                            style="background: white; border: 1px solid var(--slate-200); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏱️</div>
+                            <h4 style="font-size: 1.1rem; margin-bottom: 0.4rem;">Reporting Time</h4>
+                            <p style="font-size: 0.88rem; color: var(--slate-600);">Please arrive at the clinic
+                                reception 10
+                                to 15 minutes before your scheduled appointment slot to verify your digital token pass.
+                            </p>
+                        </div>
+
+                        <div
+                            style="background: white; border: 1px solid var(--slate-200); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+                            <h4 style="font-size: 1.1rem; margin-bottom: 0.4rem;">Medical Records</h4>
+                            <p style="font-size: 0.88rem; color: var(--slate-600);">Kindly bring any previous medical
+                                prescriptions, lab reports, and medication lists so your doctor can evaluate your
+                                medical
+                                history thoroughly.</p>
+                        </div>
+
+                        <div
+                            style="background: white; border: 1px solid var(--slate-200); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚨</div>
+                            <h4 style="font-size: 1.1rem; margin-bottom: 0.4rem;">Walk-In Emergencies</h4>
+                            <p style="font-size: 0.88rem; color: var(--slate-600);">Emergency cases, acute trauma, and
+                                high
+                                fevers in infants are given immediate priority over scheduled queues via our dedicated
+                                Emergency Desk.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cashless Insurance & TPA Partner Desk (Apollo / Max Standard) -->
+            <section class="insurance-section" id="insurance-section">
+                <div class="container">
+                    <div class="insurance-card">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                            <div>
+                                <div class="section-tag">Cashless Healthcare Facilities</div>
+                                <h2 style="font-size: 1.6rem; color: var(--dark); margin-top: 0.25rem;">Hassle-Free
+                                    Cashless
+                                    Insurance & TPA Desk</h2>
+                                <p
+                                    style="font-size: 0.875rem; color: var(--slate-600); max-width: 680px; margin-top: 0.35rem;">
+                                    CarePulse Clinic partners with leading private health insurance providers and
+                                    government
+                                    healthcare schemes for swift, cashless pre-authorization and hassle-free claims.
+                                </p>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <span class="accred-badge emerald">⚡ 15-MIN PRE-AUTH DESK</span>
+                            </div>
+                        </div>
+
+                        <!-- Recognized Insurers & TPAs -->
+                        <div class="insurance-partners-grid">
+                            <div class="insurance-logo-item">
+                                <span style="font-size: 1.35rem;">⭐</span>
+                                <span>Star Health</span>
+                            </div>
+                            <div class="insurance-logo-item">
+                                <span style="font-size: 1.35rem;">🏦</span>
+                                <span>HDFC ERGO</span>
+                            </div>
+                            <div class="insurance-logo-item">
+                                <span style="font-size: 1.35rem;">🛡️</span>
+                                <span>ICICI Lombard</span>
+                            </div>
+                            <div class="insurance-logo-item">
+                                <span style="font-size: 1.35rem;">❤️</span>
+                                <span>Care Health</span>
+                            </div>
+                            <div class="insurance-logo-item">
+                                <span style="font-size: 1.35rem;">🤝</span>
+                                <span>Medi Assist TPA</span>
+                            </div>
+                            <div class="insurance-logo-item">
+                                <span style="font-size: 1.35rem;">🌿</span>
+                                <span>Niva Bupa</span>
+                            </div>
+                            <div class="insurance-logo-item">
+                                <span style="font-size: 1.35rem;">🏛️</span>
+                                <span>Paramount TPA</span>
+                            </div>
+                            <div class="insurance-logo-item" style="background: #ecfdf5; border-color: #6ee7b7;">
+                                <span style="font-size: 1.35rem;">🇮🇳</span>
+                                <span style="color: #065f46;">Ayushman Bharat (PM-JAY)</span>
+                            </div>
+                        </div>
+
+                        <div
+                            style="background: var(--slate-50); border: 1px dashed var(--slate-300); border-radius: var(--radius-md); padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                            <div style="font-size: 0.85rem; color: var(--slate-600); max-width: 650px;">
+                                <strong>Need Cashless Hospitalization or OPD Reimbursement?</strong> Our on-premise
+                                insurance coordinators assist with documentation, policy verification, and query
+                                resolution.
+                            </div>
+                            <a href="tel:18005550199" class="btn btn-outline btn-sm"
+                                style="color: var(--primary-dark); font-weight: 700;">
+                                📞 Speak with TPA Desk
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ==========================================================================
+         Dedicated Booking Layer Modal (Layering Architecture)
+         ========================================================================== -->
+        <div class="booking-layer-modal" id="booking-layer-modal">
+            <div class="booking-layer-container">
+                <div class="booking-layer-header">
+                    <div>
+                        <span class="layer-badge">✨ Interactive Appointment Layer</span>
+                        <h2 style="font-size: 1.35rem; color: var(--dark); margin: 0;">Book Doctor Consultation & OPD
+                            Token
+                        </h2>
+                        <p style="font-size: 0.825rem; color: var(--slate-600); margin: 0.15rem 0 0;">Reserve an open
+                            slot
+                            with verified senior Indian specialists</p>
+                    </div>
+                    <button class="modal-close-btn" onclick="closeBookingLayer()"
+                        aria-label="Close booking layer">×</button>
+                </div>
+
+                <div class="booking-layer-body">
+                    <div class="layer-grid">
+
+                        <!-- Left: Doctor, Date & Slots Selection -->
+                        <div
+                            style="background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-lg); padding: 1.5rem;">
+
+                            <div class="form-group">
+                                <label class="form-label" for="layer-doctor-select">Select Consulting Doctor <span
+                                        class="req">*</span></label>
+                                <select class="form-control" id="layer-doctor-select">
+                                    <!-- Dynamically populated -->
+                                </select>
+                            </div>
+
+                            <!-- Dynamic Doctor Banner Preview -->
+                            <div id="layer-doctor-banner"></div>
+
+                            <!-- Date Ribbon inside Layer -->
+                            <div class="date-selector-container">
+                                <label class="form-label">Select Consultation Date <span class="req">*</span></label>
+                                <div class="date-ribbon" id="layer-date-ribbon">
+                                    <!-- Dynamically populated -->
+                                </div>
+                            </div>
+
+                            <!-- Slots Grid inside Layer -->
+                            <div>
+                                <label class="form-label">Select Available Time Slot <span class="req">*</span></label>
+                                <div id="layer-slots-container">
+                                    <!-- Dynamically populated -->
+                                </div>
+
+                                <div class="slot-legend" style="margin-top: 1rem;">
+                                    <div class="legend-item"><span
+                                            class="legend-dot avail"></span><span>Available</span>
+                                    </div>
+                                    <div class="legend-item"><span class="legend-dot fast"></span><span>Fast
+                                            Filling</span>
+                                    </div>
+                                    <div class="legend-item"><span class="legend-dot booked"></span><span>Booked</span>
+                                    </div>
+                                    <div class="legend-item"><span class="legend-dot sel"></span><span>Selected</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Right: Patient Registration Form inside Layer -->
+                        <div
+                            style="background: white; border: 1px solid var(--slate-200); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+                            <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.25rem;">Patient Details
+                            </h3>
+                            <p style="font-size: 0.8rem; color: var(--slate-600); margin-bottom: 1.25rem;">
+                                Captured for official OPD token slip generation.
+                            </p>
+
+                            <form id="layer-booking-form">
+                                <div class="form-group">
+                                    <label class="form-label" for="layer-patient-name">Patient Full Name <span
+                                            class="req">*</span></label>
+                                    <input type="text" id="layer-patient-name" class="form-control"
+                                        placeholder="e.g. Ramesh Kumar" required />
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" for="layer-patient-age">Age (Years) <span
+                                                class="req">*</span></label>
+                                        <input type="number" id="layer-patient-age" class="form-control"
+                                            placeholder="e.g. 32" min="1" max="110" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="layer-patient-gender">Gender <span
+                                                class="req">*</span></label>
+                                        <select id="layer-patient-gender" class="form-control" required>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" for="layer-patient-place">Place / Locality / City
+                                            <span class="req">*</span></label>
+                                        <input type="text" id="layer-patient-place" class="form-control"
+                                            placeholder="e.g. Indiranagar, Bangalore" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="layer-patient-phone">Mobile Number <span
+                                                class="req">*</span></label>
+                                        <input type="tel" id="layer-patient-phone" class="form-control"
+                                            placeholder="e.g. +91 98765 43210" required />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" for="layer-visit-type">Visit Type</label>
+                                        <select id="layer-visit-type" class="form-control">
+                                            <option value="First Consultation">First Time Consultation</option>
+                                            <option value="Follow-Up Visit">Follow-Up Consultation</option>
+                                            <option value="Routine Health Checkup">Routine Health Checkup</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="layer-patient-reason">Symptoms / Reason</label>
+                                        <input type="text" id="layer-patient-reason" class="form-control"
+                                            placeholder="e.g. Fever, persistent cough" />
+                                    </div>
+                                </div>
+
+                                <div class="booking-summary-box" style="margin: 1.25rem 0;">
+                                    <div class="summary-line"><span>Doctor:</span><strong id="layer-summary-doc">Dr.
+                                            Rajesh
+                                            Sharma</strong></div>
+                                    <div class="summary-line"><span>Date:</span><strong
+                                            id="layer-summary-date">Today</strong></div>
+                                    <div class="summary-line"><span>Slot:</span><strong id="layer-summary-slot"
+                                            style="color: #94a3b8;">Select a slot on left</strong></div>
+                                    <div class="summary-line"><span>Estimated Wait:</span><strong
+                                            id="layer-summary-wait">~12 mins</strong></div>
+                                    <div class="summary-line total"><span>Consultation Fee (Pay at Clinic):</span><span
+                                            id="layer-summary-fee">₹500</span></div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary"
+                                    style="width: 100%; padding: 0.85rem; font-size: 1rem;">
+                                    Confirm Appointment & Generate Token Pass ➔
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Digital Token Pass Modal (Printable & Downloadable) -->
+        <div class="modal-backdrop" id="token-modal">
+            <div class="modal-container">
+                <button class="modal-close-btn" onclick="closeTokenModal()" aria-label="Close modal">×</button>
+
+                <div class="token-slip-card" id="token-slip-card">
+                    <div class="token-slip-header">
+                        <div
+                            style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                            <span style="font-size: 1.4rem;">🏥</span>
+                            <h3>CarePulse Multi-Specialty Hospital</h3>
+                        </div>
+                        <p>Official OPD Token Slip • GT Road, Near Sugar Mill Crossing, Phagwara, Punjab - 144401</p>
+                    </div>
+
+                    <div class="token-number-hero">
+                        <div class="token-hero-label">Your Consultation Token Number</div>
+                        <div class="token-hero-id" id="slip-token-id">#TK-108</div>
+                        <div class="token-hero-time" id="slip-slot-time">Today • 10:30 AM</div>
+                    </div>
+
+                    <!-- Unique Ticket Security & Reference Ribbon -->
+                    <div class="token-meta-ribbon" id="slip-meta-ribbon">
+                        <span class="meta-item">Ref: <strong id="slip-ref-id">CP-2026-108420</strong></span>
+                        <span class="meta-separator">•</span>
+                        <span class="meta-item">Desk: <strong id="slip-desk-info">Counter 2 • Desk B</strong></span>
+                        <span class="meta-separator">•</span>
+                        <span class="meta-item">Security: <strong id="slip-sec-code">SEC-9F2A-88D1</strong></span>
+                    </div>
+
+                    <table class="token-details-table">
+                        <tbody>
+                            <tr>
+                                <td class="label">Patient Name</td>
+                                <td class="val" id="slip-patient-name">Ramesh Kumar</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Age / Gender / Place</td>
+                                <td class="val" id="slip-patient-meta">32 Yrs / Male • Indiranagar</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Contact Mobile</td>
+                                <td class="val" id="slip-patient-phone">+91 98765 43210</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Consulting Doctor</td>
+                                <td class="val" id="slip-doctor-name">Dr. Rajesh Sharma</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Specialty & Dept</td>
+                                <td class="val" id="slip-doctor-dept">General Physician (Internal Medicine)</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Clinic Chamber</td>
+                                <td class="val" id="slip-room-no">Room 101, Ground Floor</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Chief Symptoms / Reason</td>
+                                <td class="val" id="slip-reason">Fever & persistent cough</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Consultation Fee</td>
+                                <td class="val" id="slip-fee" style="color: var(--primary-dark);">₹500</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Arrival Instructions</td>
+                                <td class="val" id="slip-reporting" style="color: #b45309;">Please report 15 mins prior
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Dynamic QR Code & Fast Kiosk Check-In Note -->
+                    <div class="token-qr-section">
+                        <div class="token-qr-code" id="slip-qr-container">
+                            <!-- Dynamic QR Code rendered via JavaScript -->
+                        </div>
+                        <div class="token-qr-info">
+                            <strong style="color: var(--dark); display: block; margin-bottom: 0.15rem;">Fast Kiosk
+                                Check-In & Verification</strong>
+                            <span>Scan dynamic QR at reception or entrance kiosk. Issued: <strong
+                                    id="slip-issue-time">Just now</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Procedural Barcode Strip -->
+                    <div class="token-barcode-strip">
+                        <div class="barcode-lines-wrapper" id="slip-barcode-wrapper"></div>
+                        <div class="barcode-num" id="slip-barcode-num">CP-TK-108-9821</div>
+                    </div>
+
+                    <!-- Token Slip Actions: Prominent Download Button + PDF + WhatsApp + Track -->
+                    <div class="token-slip-actions">
+                        <button class="btn btn-download-ticket" id="btn-download-ticket"
+                            onclick="downloadCurrentTokenTicket('png')" title="Download High-Res E-Pass Image">
+                            📥 Download Ticket
+                        </button>
+                        <button class="btn btn-primary" onclick="downloadCurrentTokenTicket('pdf')"
+                            title="Download / Print PDF Receipt">
+                            📄 Download PDF
+                        </button>
+                        <button class="btn-whatsapp-share" onclick="shareTokenWhatsApp()" data-i18n="btn_share_wa">
+                            💬 WhatsApp
+                        </button>
+                        <button class="btn btn-outline" onclick="trackGeneratedTokenNow()">
+                            🧭 Track Queue
+                        </button>
+                    </div>
+
+                    <div class="token-download-subactions">
+                        <span style="color: var(--slate-500); font-size: 0.78rem;">Official Hospital E-Pass with
+                            Security Seal</span>
+                        <span>•</span>
+                        <button class="btn-sub-download" onclick="printTokenSlip()">🖨️ Direct Print</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Bookings Drawer Modal -->
+        <div class="modal-backdrop" id="my-bookings-modal">
+            <div class="modal-container" style="max-width: 520px; padding: 2rem;">
+                <button class="modal-close-btn" onclick="closeMyBookingsModal()" aria-label="Close modal">×</button>
+
+                <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.35rem;">
+                    <span style="font-size: 1.5rem;">📋</span>
+                    <h3 style="font-size: 1.35rem;">My Active Token Bookings</h3>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--slate-600); margin-bottom: 1.5rem;">
+                    Tokens booked on this device. Click on any item to view or reprint your digital token slip.
+                </p>
+
+                <div class="my-bookings-list" id="my-bookings-list-content">
+                    <!-- Dynamically populated by app.js -->
+                </div>
+
+                <div style="margin-top: 1.5rem; text-align: right;">
+                    <button class="btn btn-outline btn-sm" onclick="closeMyBookingsModal()">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Assistance Modal -->
+        <div class="modal-backdrop" id="emergency-modal">
+            <div class="modal-container" style="max-width: 480px; padding: 2rem;">
+                <button class="modal-close-btn" onclick="closeEmergencyModal()" aria-label="Close modal">×</button>
+
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <div style="font-size: 2.8rem; margin-bottom: 0.5rem;">🚨</div>
+                    <h3 style="font-size: 1.4rem; color: var(--accent-rose);">Emergency & Walk-In Desk</h3>
+                    <p style="font-size: 0.85rem; color: var(--slate-600);">Immediate assistance available 24/7 at
+                        CarePulse
+                        Clinic
+                    </p>
+                </div>
+
+                <div
+                    style="background: var(--accent-rose-light); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem;">
+                    <div style="font-size: 0.8rem; font-weight: 700; color: #991b1b; text-transform: uppercase;">Direct
+                        Ambulance
+                        Line</div>
+                    <a href="tel:18005550199"
+                        style="font-size: 1.4rem; font-weight: 800; color: #b91c1c; text-decoration: none; display: block; margin-top: 0.2rem;">
+                        📞 +1 (800) 555-0199
+                    </a>
+                </div>
+
+                <div style="font-size: 0.85rem; color: var(--slate-600); line-height: 1.6; margin-bottom: 1.5rem;">
+                    <p><strong>Emergency Room:</strong> Ground Floor, Wing A (Bay 1 & 2)</p>
+                    <p><strong>Pharmacy & First Aid:</strong> Open 24 Hours on-premise</p>
+                    <p><strong>Address:</strong> Building 12, Health Boulevard, Sector 4</p>
+                </div>
+
+                <button class="btn btn-outline" style="width: 100%;" onclick="closeEmergencyModal()">
+                    Return to Appointment Booking
+                </button>
+            </div>
+        </div>
+
+        <!-- Interactive Diagnostic Lab Reports Modal (Patient UHID Portal) -->
+        <div class="modal-backdrop" id="lab-report-modal">
+            <div class="report-modal-container">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+                    <div>
+                        <span class="accred-badge emerald" style="margin-bottom: 0.35rem; display: inline-block;">NABL
+                            ACCREDITED DIAGNOSTICS</span>
+                        <h3 style="font-size: 1.4rem; color: var(--dark); margin: 0;">Online Diagnostic Report Portal
+                        </h3>
+                        <p style="font-size: 0.85rem; color: var(--slate-600); margin-top: 0.2rem;">
+                            Instant verified pathology & biochemistry test results. Enter your Patient UHID or phone
+                            number.
+                        </p>
+                    </div>
+                    <button class="modal-close-btn" onclick="closeLabReportModal()" aria-label="Close modal"
+                        style="position: static;">×</button>
+                </div>
+
+                <!-- UHID Search Bar -->
+                <div
+                    style="display: flex; gap: 0.75rem; background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-lg); padding: 0.75rem; align-items: center; margin-bottom: 1rem;">
+                    <div style="flex: 1;">
+                        <label
+                            style="font-size: 0.75rem; font-weight: 700; color: var(--slate-600); display: block; margin-bottom: 0.2rem;">PATIENT
+                            UHID / REGISTERED MOBILE</label>
+                        <input type="text" id="report-uhid-input" class="form-control" value="UHID-98214"
+                            placeholder="e.g. UHID-98214 or UHID-44021"
+                            style="border: 1px solid var(--slate-300); font-weight: 700;" />
+                    </div>
+                    <button class="btn btn-primary" onclick="searchLabReport()"
+                        style="margin-top: 1.25rem; white-space: nowrap;">
+                        🔍 Fetch Verified Report
+                    </button>
+                </div>
+
+                <div
+                    style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; font-size: 0.75rem; color: var(--slate-600);">
+                    <span>Quick Demos:</span>
+                    <button class="btn-rx-add" onclick="openLabReportModal('UHID-98214')">UHID-98214 (Mr. Rajesh Verma -
+                        Normal CBC & Lipid)</button>
+                    <button class="btn-rx-add" onclick="openLabReportModal('UHID-44021')">UHID-44021 (Mrs. Sunita Rao -
+                        Diabetic & Vit D Screen)</button>
+                </div>
+
+                <!-- Report Sheet Render Target -->
+                <div id="lab-report-output">
+                    <!-- Dynamically populated by app.js -->
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 0.75rem;">
+                    <button class="btn btn-outline" onclick="closeLabReportModal()">Close</button>
+                    <button class="btn btn-primary" onclick="downloadLabReportPDF()">
+                        🖨️ Download / Print Official PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 24/7 Clinic Pharmacy & Prescription Upload Modal -->
+        <div class="modal-backdrop" id="pharmacy-modal">
+            <div class="pharmacy-modal-container">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                    <div>
+                        <span class="accred-badge"
+                            style="background: #0284c7; color: white; margin-bottom: 0.35rem; display: inline-block;">CAREPULSE
+                            24/7 PHARMACY</span>
+                        <h3 style="font-size: 1.4rem; color: var(--dark); margin: 0;">Doorstep Medicine Delivery</h3>
+                        <p style="font-size: 0.85rem; color: var(--slate-600); margin-top: 0.2rem;">
+                            100% Genuine Medicines • 2-Hour Express Delivery • Flat 15% Savings
+                        </p>
+                    </div>
+                    <button class="modal-close-btn" onclick="closePharmacyModal()" aria-label="Close modal"
+                        style="position: static;">×</button>
+                </div>
+
+                <!-- Prescription Upload Dropzone -->
+                <div class="prescription-dropzone" onclick="document.getElementById('rx-file-input').click()">
+                    <input type="file" id="rx-file-input" style="display: none;" accept="image/*,.pdf"
+                        onchange="handlePrescriptionUpload(event)" />
+                    <div class="rx-icon">📋</div>
+                    <strong
+                        style="display: block; color: var(--dark); font-size: 0.95rem; margin-bottom: 0.2rem;">Upload
+                        Doctor's Prescription</strong>
+                    <p style="font-size: 0.78rem; color: var(--slate-600); margin: 0;">Drag & drop image or PDF here, or
+                        click to browse files</p>
+                    <div id="rx-filename-display"
+                        style="display: none; margin-top: 0.65rem; font-size: 0.825rem; color: #065f46; background: #d1fae5; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm);">
+                    </div>
+                </div>
+
+                <!-- Common OTC Health Essentials -->
+                <div>
+                    <label
+                        style="font-size: 0.825rem; font-weight: 800; color: var(--dark); display: block; margin-bottom: 0.4rem;">
+                        Popular Healthcare Essentials (Click to Add):
+                    </label>
+                    <div class="pharmacy-popular-list">
+                        <div class="pharmacy-item-card">
+                            <div>
+                                <div class="pharmacy-item-name">Paracetamol 650mg</div>
+                                <div class="pharmacy-item-desc">15 Tablets (Fever & Pain)</div>
+                            </div>
+                            <div class="pharmacy-item-bottom">
+                                <span class="pharmacy-price">₹32</span>
+                                <button class="btn-rx-add"
+                                    onclick="toggleMedicineSelection(this, 'Paracetamol 650mg', 32)">+ Add</button>
+                            </div>
+                        </div>
+                        <div class="pharmacy-item-card">
+                            <div>
+                                <div class="pharmacy-item-name">Vitamin C + Zinc Chewable</div>
+                                <div class="pharmacy-item-desc">30 Tabs (Immunity Booster)</div>
+                            </div>
+                            <div class="pharmacy-item-bottom">
+                                <span class="pharmacy-price">₹110</span>
+                                <button class="btn-rx-add"
+                                    onclick="toggleMedicineSelection(this, 'Vitamin C + Zinc', 110)">+ Add</button>
+                            </div>
+                        </div>
+                        <div class="pharmacy-item-card">
+                            <div>
+                                <div class="pharmacy-item-name">Antacid Liquid Gel</div>
+                                <div class="pharmacy-item-desc">200ml (Acidity & Gas relief)</div>
+                            </div>
+                            <div class="pharmacy-item-bottom">
+                                <span class="pharmacy-price">₹145</span>
+                                <button class="btn-rx-add"
+                                    onclick="toggleMedicineSelection(this, 'Antacid Liquid Gel', 145)">+ Add</button>
+                            </div>
+                        </div>
+                        <div class="pharmacy-item-card">
+                            <div>
+                                <div class="pharmacy-item-name">Digital Clinical Thermometer</div>
+                                <div class="pharmacy-item-desc">Instant Read with Beep</div>
+                            </div>
+                            <div class="pharmacy-item-bottom">
+                                <span class="pharmacy-price">₹199</span>
+                                <button class="btn-rx-add"
+                                    onclick="toggleMedicineSelection(this, 'Digital Thermometer', 199)">+ Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cart Summary -->
+                <div id="pharmacy-cart-summary" style="margin-bottom: 1rem;">
+                    <span style="color: var(--slate-400); font-size: 0.8rem;">No OTC medicines selected yet (optional if
+                        uploading prescription).</span>
+                </div>
+
+                <!-- Delivery Address Form -->
+                <form id="pharmacy-order-form" onsubmit="submitPharmacyOrder(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="rx-patient-name">Recipient Name <span
+                                    class="req">*</span></label>
+                            <input type="text" id="rx-patient-name" class="form-control" placeholder="e.g. Ramesh Kumar"
+                                required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="rx-patient-phone">Mobile for SMS Updates <span
+                                    class="req">*</span></label>
+                            <input type="tel" id="rx-patient-phone" class="form-control" placeholder="e.g. 9876543210"
+                                required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="rx-delivery-address">Doorstep Delivery Address <span
+                                class="req">*</span></label>
+                        <input type="text" id="rx-delivery-address" class="form-control"
+                            placeholder="Flat No., Street, Landmark, Pin code" required />
+                    </div>
+
+                    <div style="margin-top: 1.25rem; display: flex; justify-content: flex-end; gap: 0.75rem;">
+                        <button type="button" class="btn btn-outline" onclick="closePharmacyModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            🚀 Confirm & Deliver in 120 Mins ↗
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Floating AI Symptom Assistant / Triage Chatbot ("Dr. CarePulse Bot") -->
+        <button class="chat-widget-trigger" id="chat-widget-trigger" onclick="toggleChatWidget()"
+            aria-label="Open Dr. CarePulse Medical Assistant">
+            <span class="pulse-dot"></span>
+            <span>💬 Ask Dr. CarePulse Bot</span>
+        </button>
+
+        <div class="chat-window-layer" id="chat-window-layer">
+            <div class="chat-header">
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <div
+                        style="width: 32px; height: 32px; border-radius: 50%; background: white; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800;">
+                        🤖
+                    </div>
+                    <div>
+                        <h4 style="font-size: 0.95rem; margin: 0; color: white;">Dr. CarePulse Assistant</h4>
+                        <span style="font-size: 0.7rem; color: #a7f3d0;">● Clinical Triage & Doctor
+                            Recommendation</span>
+                    </div>
+                </div>
+                <button onclick="closeChatWidget()"
+                    style="background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer;"
+                    aria-label="Close Chat">×</button>
+            </div>
+
+            <div class="chat-messages-container" id="chat-messages-container">
+                <div class="chat-msg bot">
+                    Hello! I am <strong>Dr. CarePulse Bot</strong>, your smart clinical triage assistant. Tell me what
+                    symptoms or health concerns you are experiencing today, or pick an option below:
+
+                    <div class="chat-quick-chips">
+                        <button class="chat-chip" onclick="handleChatChip('High fever and body pain')">🤒 High fever &
+                            body
+                            pain</button>
+                        <button class="chat-chip" onclick="handleChatChip('Severe toothache and swelling')">🦷 Severe
+                            toothache</button>
+                        <button class="chat-chip" onclick="handleChatChip('Skin allergy and red rash')">✨ Skin rash /
+                            itching</button>
+                        <button class="chat-chip" onclick="handleChatChip('Baby cough and vaccination')">👶 Baby
+                            vaccination</button>
+                        <button class="chat-chip" onclick="handleChatChip('Full body checkup package')">🛡️ Health
+                            packages</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-bar">
+                <input type="text" id="chat-user-input" placeholder="Type your symptoms (e.g. fever, toothache)..."
+                    autocomplete="off" />
+                <button type="button" onclick="sendChatMessage()" aria-label="Send message">Send ↗</button>
+            </div>
+        </div>
+
+
+        <!-- Floating Emergency SOS 108 Dispatch Trigger -->
+        <button class="sos-floating-trigger" onclick="triggerEmergencySOS()"
+            title="Instant Emergency Ambulance Dispatch">
+            <span style="font-size: 1.1rem;">🚨</span>
+            <span data-i18n="btn_sos">SOS 108</span>
+        </button>
+
+        <!-- Emergency SOS & Live Ambulance Dispatch Modal -->
+        <div class="modal-backdrop" id="emergency-sos-modal">
+            <div class="sos-modal-card">
+                <button class="modal-close-btn" onclick="closeEmergencySOS()" aria-label="Close modal">×</button>
+
+                <div class="sos-siren-animation">
+                    <div class="sos-siren-ring"></div>
+                    <span>🚨</span>
+                </div>
+
+                <h3 style="font-size: 1.45rem; color: #dc2626; margin: 0 0 0.35rem;" data-i18n="sos_title">Emergency
+                    Ambulance Dispatch</h3>
+                <p style="font-size: 0.85rem; color: var(--slate-600); margin-bottom: 0.75rem;"
+                    data-i18n="sos_dispatched">
+                    Advanced Life Support (ALS) Ambulance #PB-09-8821 has been activated from CarePulse Phagwara Trauma
+                    Wing.
+                </p>
+
+                <div class="sos-eta-badge" id="sos-eta-timer">6m 45s</div>
+
+                <div style="font-size: 0.8rem; color: var(--slate-600); margin-bottom: 1rem;" id="sos-location-text">
+                    📍 <strong>GPS Verified:</strong> GT Road, Near Sugar Mill Crossing, Phagwara
+                </div>
+
+                <!-- 4-Step Dispatch Stepper -->
+                <div class="dispatch-steps-tracker">
+                    <div class="dispatch-step-item active">
+                        <div class="step-indicator-circle">✓</div>
+                        <div class="step-indicator-label">Alert Received</div>
+                    </div>
+                    <div class="dispatch-step-item current">
+                        <div class="step-indicator-circle">🚑</div>
+                        <div class="step-indicator-label">En Route</div>
+                    </div>
+                    <div class="dispatch-step-item">
+                        <div class="step-indicator-circle">📍</div>
+                        <div class="step-indicator-label">On-Site</div>
+                    </div>
+                    <div class="dispatch-step-item">
+                        <div class="step-indicator-circle">🏥</div>
+                        <div class="step-indicator-label">Trauma Bay</div>
+                    </div>
+                </div>
+
+                <!-- Paramedic Contact Card -->
+                <div class="paramedic-details-card">
+                    <div>
+                        <div style="font-weight: 800; font-size: 0.9rem; color: var(--dark);">S. Harpreet Singh
+                            (Paramedic Lead)</div>
+                        <div style="font-size: 0.75rem; color: var(--slate-400);">ALS Unit PB-09-8821 • Direct Radio
+                            #98140-EMERG</div>
+                    </div>
+                    <a href="tel:18001802026" class="btn btn-primary btn-sm"
+                        style="background: #dc2626; text-decoration: none;">
+                        📞 Call Driver
+                    </a>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem;">
+                    <a href="tel:18001802026" class="btn btn-primary"
+                        style="flex: 1; background: #dc2626; text-decoration: none;">
+                        📞 Hotline: 1800-180-2026
+                    </a>
+                    <button class="btn btn-outline" onclick="closeEmergencySOS()" style="flex: 1;">
+                        Cancel Alert
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clinical Health Risk & BMI / Vitals Calculator Modal -->
+        <div class="modal-backdrop" id="health-calculator-modal">
+            <div class="health-calc-card">
+                <button class="modal-close-btn" onclick="closeHealthCalculator()" aria-label="Close modal">×</button>
+
+                <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
+                    <span style="font-size: 1.6rem;">🩺</span>
+                    <div>
+                        <h3 style="font-size: 1.35rem; margin: 0; color: var(--dark);" data-i18n="btn_calc">Health Risk
+                            &amp; BMI Calculator</h3>
+                        <span style="font-size: 0.75rem; color: var(--slate-400);">NABL Standard Anthropometric &amp;
+                            Vitals Assessment</span>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.85rem; color: var(--slate-600);">
+                    Enter your physical metrics to instantly determine your Body Mass Index (BMI), clinical risk score,
+                    and recommended specialist care.
+                </p>
+
+                <div class="calc-inputs-grid">
+                    <div>
+                        <label
+                            style="font-size: 0.8rem; font-weight: 700; color: var(--dark); display: block; margin-bottom: 0.3rem;">
+                            Height (cm) *
+                        </label>
+                        <input type="number" id="calc-height" class="form-control" placeholder="e.g. 175" value="172" />
+                    </div>
+                    <div>
+                        <label
+                            style="font-size: 0.8rem; font-weight: 700; color: var(--dark); display: block; margin-bottom: 0.3rem;">
+                            Weight (kg) *
+                        </label>
+                        <input type="number" id="calc-weight" class="form-control" placeholder="e.g. 70" value="68" />
+                    </div>
+                    <div>
+                        <label
+                            style="font-size: 0.8rem; font-weight: 700; color: var(--dark); display: block; margin-bottom: 0.3rem;">
+                            Age (years)
+                        </label>
+                        <input type="number" id="calc-age" class="form-control" placeholder="e.g. 32" value="28" />
+                    </div>
+                    <div>
+                        <label
+                            style="font-size: 0.8rem; font-weight: 700; color: var(--dark); display: block; margin-bottom: 0.3rem;">
+                            Systolic BP (mmHg)
+                        </label>
+                        <input type="number" id="calc-bp" class="form-control" placeholder="e.g. 120" value="120" />
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="calculateHealthRisk()"
+                    style="width: 100%; margin-top: 1.25rem;">
+                    ⚡ Calculate Health Score &amp; Risk
+                </button>
+
+                <!-- Dynamic Calculation Result Box -->
+                <div class="calc-gauge-result" id="calc-result-box" style="display: none;">
+                    <div class="calc-result-hero">
+                        <div>
+                            <span
+                                style="font-size: 0.75rem; color: var(--slate-400); text-transform: uppercase; font-weight: 700;">Calculated
+                                BMI</span>
+                            <div class="calc-score-number" id="calc-bmi-val">23.0</div>
+                        </div>
+                        <span class="calc-category-badge" id="calc-category-badge">Normal / Healthy</span>
+                    </div>
+
+                    <!-- Visual Spectrum Bar -->
+                    <div class="bmi-spectrum-bar">
+                        <div class="bmi-indicator-pin" id="calc-indicator-pin" style="left: 42%;"></div>
+                    </div>
+                    <div
+                        style="display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--slate-400); margin-bottom: 1rem;">
+                        <span>Underweight (&lt;18.5)</span>
+                        <span>Normal (18.5-24.9)</span>
+                        <span>Overweight (25-29.9)</span>
+                        <span>Obese (&ge;30)</span>
+                    </div>
+
+                    <div
+                        style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; text-align: center; padding-top: 0.75rem; border-top: 1px solid var(--slate-200);">
+                        <div>
+                            <div style="font-size: 0.7rem; color: var(--slate-400);">Ideal Weight</div>
+                            <strong style="font-size: 0.85rem; color: var(--dark);" id="calc-ideal-weight">55 - 74
+                                kg</strong>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.7rem; color: var(--slate-400);">Daily Hydration</div>
+                            <strong style="font-size: 0.85rem; color: var(--primary);" id="calc-water-intake">2.4 L /
+                                Day</strong>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.7rem; color: var(--slate-400);">BP Category</div>
+                            <strong style="font-size: 0.85rem; color: #059669;" id="calc-bp-status">Normal</strong>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <button class="btn btn-outline btn-sm" onclick="closeHealthCalculator(); openBookingLayer();"
+                            style="flex: 1;">
+                            🩺 Consult Physician
+                        </button>
+                        <button class="btn btn-primary btn-sm"
+                            onclick="closeHealthCalculator(); bookHealthPackage('pkg-exec');" style="flex: 1;">
+                            🛡️ Book Full Checkup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification Container -->
+        <div class="toast-container" id="toast-container"></div>
+
+        <!-- Footer -->
+        <footer class="clinic-footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <div class="logo" style="margin-bottom: 1rem;">
+                            <div class="logo-icon-wrapper" style="width: 38px; height: 38px;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                                </svg>
+                            </div>
+                            <div class="logo-text">
+                                <h2 style="color: white; font-size: 1.25rem;">CarePulse Clinic</h2>
+                                <span style="color: var(--slate-400);">Local Healthcare & OPD Hub</span>
+                            </div>
+                        </div>
+                        <p>
+                            Delivering accessible, modern healthcare to local communities. Real-time token tracking
+                            minimizes wait times
+                            and connects you seamlessly with specialist care.
+                        </p>
+                        <div style="font-size: 0.85rem; color: #5eead4;">
+                            🟢 Reception Desk: Mon – Sun, 08:30 AM to 09:00 PM
+                        </div>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>Specialties</h4>
+                        <ul class="footer-links">
+                            <li><a href="#doctors-section" onclick="openBookingLayer('doc-gp-1')">General Physicians</a>
+                            </li>
+                            <li><a href="#doctors-section" onclick="openBookingLayer('doc-ped-1')">Pediatricians</a>
+                            </li>
+                            <li><a href="#doctors-section" onclick="openBookingLayer('doc-derma-1')">Dermatology &
+                                    Skin</a>
+                            </li>
+                            <li><a href="#doctors-section" onclick="openBookingLayer('doc-dent-1')">Dental &
+                                    Orthodontics</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>Patient Services</h4>
+                        <ul class="footer-links">
+                            <li><a href="#" onclick="openBookingLayer(); return false;">Book Appointment Layer</a></li>
+                            <li><a href="#packages-section">Preventive Health Packages</a></li>
+                            <li><a href="#" onclick="openLabReportModal(); return false;">Download Lab Reports
+                                    (UHID)</a>
+                            </li>
+                            <li><a href="#" onclick="openPharmacyModal(); return false;">Order Medicines (24/7)</a></li>
+                            <li><a href="#insurance-section">Cashless Insurance Desk</a></li>
+                            <li><a href="#" onclick="openMyBookingsModal(); return false;">My Digital Token Slips</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>Main Hospital Campus & Helpline</h4>
+                        <p class="branch-location-text">📍 GT Road, Near Sugar Mill Crossing, Model Town</p>
+                        <p class="branch-address-text">Phagwara, Punjab - 144401, India</p>
+                        <p class="branch-phone-text">📞 Reception: +91 1828 223456 / +91 98765 12345</p>
+                        <p class="branch-emergency-text">🚨 Emergency 24/7: 1800-180-2026 / 108</p>
+                        <p>📧 care@carepulsephagwara.org</p>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>© 2026 CarePulse Multi-Specialty Hospital & Medical Research Institute, Phagwara, Punjab. NABH &
+                        NABL
+                        Accredited. All Rights Reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div> <!-- Close #app-main-wrapper -->
+
+    <!-- ==========================================================================
+         Floating Active Token Mini-Tracker Pill
+         ========================================================================== -->
+    <div id="floating-token-pill" class="floating-token-pill" style="display: none;" role="status" aria-live="polite">
+        <div class="floating-token-info">
+            <span class="dock-pulse-dot" style="position: static; display: inline-block;"></span>
+            <span class="floating-token-badge" id="float-token-number">Token #--</span>
+            <span id="float-token-doc" style="font-weight: 600;">Dr. Specialist</span>
+            <span id="float-token-eta" style="color: #94a3b8; font-size: 0.75rem;">(~10m wait)</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.35rem;">
+            <button type="button" class="floating-token-btn" onclick="openMyBookingsModal()">View Slip</button>
+            <button type="button" class="floating-token-close" onclick="FloatingTokenTracker.dismiss()"
+                title="Dismiss">&times;</button>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         Sticky Bottom Quick-Action Dock (Mobile & Desktop App Dock)
+         ========================================================================== -->
+    <nav class="bottom-quick-dock" id="bottom-quick-dock" aria-label="Quick App Actions">
+        <a href="#top" class="dock-item active" id="dock-item-home" onclick="setActiveDock('home')">
+            <span class="dock-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="#doctors-section" class="dock-item" id="dock-item-doctors" onclick="setActiveDock('doctors')">
+            <span class="dock-icon">👨‍⚕️</span>
+            <span>Doctors</span>
+        </a>
+        <button type="button" class="dock-item dock-fab" onclick="openBookingLayer()"
+            title="Instant Doctor Slot Booking">
+            <span class="dock-icon">⚡</span>
+            <span>Book Slot</span>
+        </button>
+        <a href="#live-board-section" class="dock-item" id="dock-item-queue" onclick="setActiveDock('queue')">
+            <span class="dock-icon">⏱️</span>
+            <span class="dock-pulse-dot"></span>
+            <span>Live Queue</span>
+        </a>
+        <button type="button" class="dock-item" onclick="openMyBookingsModal()" title="My Booked Tokens">
+            <span class="dock-icon">📋</span>
+            <span class="dock-badge badge-my-tokens" style="display: none;">0</span>
+            <span>My Tokens</span>
+        </button>
+        <button type="button" class="dock-item" onclick="openSpotlightSearch()" title="Universal Search (Ctrl+K)">
+            <span class="dock-icon">🔍</span>
+            <span>Search</span>
+        </button>
+    </nav>
+
+    <!-- ==========================================================================
+         Universal Spotlight Search Modal (Ctrl + K)
+         ========================================================================== -->
+    <div id="spotlight-search-modal" class="spotlight-backdrop" role="dialog" aria-modal="true"
+        aria-label="Global Search">
+        <div class="spotlight-dialog">
+            <div class="spotlight-search-header">
+                <span style="font-size: 1.25rem;">🔍</span>
+                <input type="text" id="spotlight-search-input" class="spotlight-search-input"
+                    placeholder="Search doctors, departments, tests, beds, or actions... (Esc to close)"
+                    autocomplete="off" />
+                <button type="button" class="btn-sidebar-logout"
+                    style="padding: 0.2rem 0.5rem; border-radius: var(--radius-sm);"
+                    onclick="closeSpotlightSearch()">✕</button>
+            </div>
+            <div class="spotlight-results" id="spotlight-results-container">
+                <!-- Populated dynamically by SpotlightSearchEngine -->
+            </div>
+            <div class="spotlight-footer">
+                <span>Navigation: <kbd class="spotlight-kbd-tag">↑</kbd> <kbd class="spotlight-kbd-tag">↓</kbd> to
+                    navigate &bull; <kbd class="spotlight-kbd-tag">Enter</kbd> to select</span>
+                <span>CarePulse Universal Search</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         SMS Gateway Transparency & Mode Info Modal
+         ========================================================================== -->
+    <div id="sms-gateway-modal" class="modal-backdrop" style="display: none;" role="dialog" aria-modal="true"
+        aria-labelledby="sms-modal-title">
+        <div class="modal-card" style="max-width: 560px;">
+            <div class="modal-header">
+                <h3 id="sms-modal-title" style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.15rem;">
+                    <span>📲</span> Mobile OTP Delivery & SMS Gateway Info
+                </h3>
+                <button class="modal-close-btn" onclick="closeSMSGatewayInfoModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="font-size: 0.88rem; line-height: 1.6; color: var(--slate-600);">
+                <p style="margin-bottom: 0.85rem;">
+                    <strong>Why do OTPs appear directly on the website?</strong><br />
+                    Browsers running on your computer or phone cannot directly talk to cellular telecom networks
+                    (Airtel, Jio, Vi, BSNL). In production, an SMS is sent by a secure backend server through an
+                    <strong>SMS Gateway API</strong>.
+                </p>
+                <div
+                    style="background: var(--slate-100); padding: 0.9rem; border-radius: var(--radius-md); margin-bottom: 0.85rem; border-left: 4px solid var(--primary);">
+                    <strong style="color: var(--dark);">How Real Cellular SMS Delivery Works:</strong>
+                    <ul style="margin: 0.5rem 0 0 1.25rem; font-size: 0.82rem; line-height: 1.6;">
+                        <li><strong>Google Firebase Phone Auth (Recommended):</strong> Free tier provides up to
+                            <em>10,000 real verification SMS/month</em> with zero initial telecom contracts.
+                        </li>
+                        <li><strong>Fast2SMS / MSG91 (India DLT):</strong> Direct Indian SMS route (~₹0.15/SMS),
+                            requires TRAI DLT Sender ID approval (e.g. <code>CRPLSE</code>).</li>
+                        <li><strong>Twilio Verify API:</strong> Global carrier standard for international patients.</li>
+                    </ul>
+                </div>
+                <p style="font-size: 0.82rem; color: var(--slate-600);">
+                    The current <strong>Simulated Notification Banner</strong> gives you an interactive, zero-cost
+                    preview with one-click <strong>Auto-Fill</strong> and <strong>Copy Code</strong> buttons so you can
+                    test all patient features instantly.
+                </p>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: flex-end;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="closeSMSGatewayInfoModal()">Got it,
+                    thanks!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JavaScript Logic -->
+    <script src="app.js"></script>
+</body>
+
+</html>
