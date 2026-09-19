@@ -745,7 +745,7 @@ function renderLiveOPDBoard() {
   if (filtered.length === 0) {
     container.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem 1rem; background: white; border-radius: var(--radius-xl); border: 1px dashed var(--slate-300);">
-        <p style="font-size: 1.15rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem;">No active consultation chambers match "${state.queueSearch}"</p>
+        <p style="font-size: 1.15rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem;">No active consultation chambers match "${escapeHtml(state.queueSearch)}"</p>
         <p style="color: var(--slate-600); margin-bottom: 1rem; font-size: 0.88rem;">Try clearing your search query or switching to All Chambers.</p>
         <button class="btn btn-outline btn-sm" onclick="filterQueueSpecialty('all'); const inp = document.getElementById('queue-search-input'); if (inp) inp.value = ''; handleQueueSearch('');">
           Reset Chamber Filters
@@ -3442,26 +3442,34 @@ window.openMyBookingsModal = function () {
     `;
   } else {
     list.innerHTML = state.userAppointments.map(app => {
+      const safeTokenId = escapeHtml(app.tokenId);
+      const safeStatus = escapeHtml(app.status || 'Active');
+      const safeDocName = escapeHtml(app.doctorName);
+      const safeDocSpec = escapeHtml(app.doctorSpecialty);
+      const safeDate = escapeHtml(app.date);
+      const safeSlot = escapeHtml(app.timeSlot);
+      const safePatientName = escapeHtml(app.patientName);
+      const safePatientPlace = escapeHtml(app.patientPlace || 'Phagwara');
       return `
         <div class="my-booking-item">
           <div>
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-              <span class="my-token-num">#${app.tokenId}</span>
-              <span class="avail-status-tag" style="font-size: 0.7rem; padding: 0.15rem 0.5rem;">${app.status}</span>
+              <span class="my-token-num">#${safeTokenId}</span>
+              <span class="avail-status-tag" style="font-size: 0.7rem; padding: 0.15rem 0.5rem;">${safeStatus}</span>
             </div>
-            <div style="font-weight: 700; font-size: 0.95rem; color: var(--dark);">${app.doctorName} (${app.doctorSpecialty})</div>
-            <div style="font-size: 0.8rem; color: var(--slate-600);">${app.date} • ${app.timeSlot} • Patient: ${app.patientName} (${app.patientPlace})</div>
+            <div style="font-weight: 700; font-size: 0.95rem; color: var(--dark);">${safeDocName} (${safeDocSpec})</div>
+            <div style="font-size: 0.8rem; color: var(--slate-600);">${safeDate} • ${safeSlot} • Patient: ${safePatientName} (${safePatientPlace})</div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-end;">
             <div style="display: flex; gap: 0.35rem; align-items: center;">
-              <button class="btn btn-outline btn-sm" onclick="reopenTokenSlip('${app.tokenId}')" title="View token slip">
+              <button class="btn btn-outline btn-sm" onclick="reopenTokenSlip('${safeTokenId}')" title="View token slip">
                 View ↗
               </button>
-              <button class="btn btn-sm btn-download-ticket" style="padding: 0.3rem 0.65rem; font-size: 0.76rem;" onclick="downloadTicketById('${app.tokenId}', 'png')" title="Download E-Pass">
+              <button class="btn btn-sm btn-download-ticket" style="padding: 0.3rem 0.65rem; font-size: 0.76rem;" onclick="downloadTicketById('${safeTokenId}', 'png')" title="Download E-Pass">
                 📥 Download
               </button>
             </div>
-            <button class="btn btn-sm" style="color: var(--accent-rose); background: transparent; border: none; font-size: 0.75rem; padding: 0.1rem 0.3rem;" onclick="cancelAppointment('${app.tokenId}')">
+            <button class="btn btn-sm" style="color: var(--accent-rose); background: transparent; border: none; font-size: 0.75rem; padding: 0.1rem 0.3rem;" onclick="cancelAppointment('${safeTokenId}')">
               Cancel
             </button>
           </div>
@@ -3488,18 +3496,7 @@ window.reopenTokenSlip = function (tokenId) {
   }
 };
 
-window.cancelAppointment = function (tokenId) {
-  if (!confirm(`Are you sure you want to cancel appointment for Token #${tokenId}?`)) return;
 
-  state.userAppointments = state.userAppointments.filter(a => a.tokenId !== tokenId);
-  try {
-    localStorage.setItem('carepulse_appointments', JSON.stringify(state.userAppointments));
-  } catch (e) { }
-
-  renderMyBookingsBadge();
-  openMyBookingsModal();
-  showToast(`Token #${tokenId} cancelled successfully.`, 'info');
-};
 
 // --- Specialty Filter Buttons Setup ---
 function setupSpecialtyFilters() {
@@ -3639,15 +3636,7 @@ function setupModalDismissals() {
 // CarePulse Enterprise Healthcare Portal Modules
 // ==========================================================================
 
-function escapeHtml(str) {
-  if (!str) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
+
 
 // 1. Multi-Branch & City Selector
 const CLINIC_BRANCHES = {
@@ -4158,12 +4147,12 @@ function renderLabReportSheet(uhid) {
       </div>
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; background: var(--slate-50); padding: 1rem; border-radius: var(--radius-md); font-size: 0.8rem; margin-bottom: 1.25rem;">
-        <div><strong>Patient Name:</strong> ${data.patientName}</div>
-        <div><strong>UHID:</strong> <span style="font-family: monospace; font-weight: 700; color: var(--primary-dark);">${data.uhid}</span></div>
-        <div><strong>Age / Gender:</strong> ${data.ageGender}</div>
-        <div><strong>Referred By:</strong> ${data.refDoctor}</div>
-        <div><strong>Sample Collected:</strong> ${data.collectionDate}</div>
-        <div><strong>Report Status:</strong> <span style="color: #059669; font-weight: 700;">${data.status}</span></div>
+        <div><strong>Patient Name:</strong> ${escapeHtml(data.patientName)}</div>
+        <div><strong>UHID:</strong> <span style="font-family: monospace; font-weight: 700; color: var(--primary-dark);">${escapeHtml(data.uhid)}</span></div>
+        <div><strong>Age / Gender:</strong> ${escapeHtml(data.ageGender)}</div>
+        <div><strong>Referred By:</strong> ${escapeHtml(data.refDoctor)}</div>
+        <div><strong>Sample Collected:</strong> ${escapeHtml(data.collectionDate)}</div>
+        <div><strong>Report Released:</strong> ${escapeHtml(data.reportDate)}</div>
       </div>
 
       <table class="lab-table">
@@ -4251,7 +4240,7 @@ window.handlePrescriptionUpload = function (event) {
   const file = event.target.files && event.target.files[0];
   const preview = document.getElementById('rx-filename-display');
   if (file && preview) {
-    preview.innerHTML = `✅ <strong>Uploaded:</strong> ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+    preview.innerHTML = `✅ <strong>Uploaded:</strong> ${escapeHtml(file.name)} (${(file.size / 1024).toFixed(1)} KB)`;
     preview.style.display = 'block';
     showToast(`Prescription '${file.name}' attached successfully!`, 'success');
   }
@@ -4946,7 +4935,7 @@ const CarePulseAuth = {
         <div class="simulated-banner-body">
           <div class="simulated-sender">CarePulse Security &bull; <span>security@carepulse.org</span></div>
           <p class="simulated-msg">
-            Google Security Code: <strong class="highlight-otp">${otp}</strong> for account <em>${target}</em> login.
+            Google Security Code: <strong class="highlight-otp">${otp}</strong> for account <em>${escapeHtml(target)}</em> login.
           </p>
         </div>
         <div class="simulated-banner-actions">
