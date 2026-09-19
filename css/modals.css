@@ -3617,99 +3617,14 @@ body.theme-dark .campus-pulse-sub {
 /* ==========================================================================
    21. Dialog Modals: Interactive Reschedule & Cancel System
    ========================================================================== */
-.dialog-modal-card {
-  background: white;
-  border-radius: var(--radius-xl);
-  padding: 1.75rem;
-  width: 100%;
-  max-width: 480px;
-  box-shadow: var(--shadow-2xl);
-  position: relative;
-  border: 1px solid var(--slate-200);
-  animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
 
-[data-theme="dark"] .dialog-modal-card {
-  background: #1e293b;
-  border-color: #334155;
-  color: #f8fafc;
-}
+[data-theme="dark"] 
 
-.dialog-modal-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.85rem;
-  border-bottom: 1px solid var(--slate-100);
-}
+[data-theme="dark"] 
 
-[data-theme="dark"] .dialog-modal-header {
-  border-color: #334155;
-}
+[data-theme="dark"] 
 
-.dialog-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.35rem;
-}
-
-.dialog-icon.reschedule {
-  background: #eff6ff;
-  color: #2563eb;
-}
-
-.dialog-icon.cancel {
-  background: #fef2f2;
-  color: #dc2626;
-}
-
-.dialog-title {
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--dark);
-  margin: 0;
-}
-
-[data-theme="dark"] .dialog-title {
-  color: white;
-}
-
-.dialog-sub {
-  font-size: 0.8rem;
-  color: var(--slate-500);
-}
-
-.dialog-token-pill {
-  background: var(--slate-50);
-  border: 1px dashed var(--slate-300);
-  border-radius: var(--radius-md);
-  padding: 0.75rem 1rem;
-  margin-bottom: 1.25rem;
-  font-size: 0.85rem;
-  color: var(--slate-700);
-}
-
-[data-theme="dark"] .dialog-token-pill {
-  background: #0f172a;
-  border-color: #334155;
-  color: #94a3b8;
-}
-
-.dialog-actions {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-}
-
-.dialog-actions .btn {
-  flex: 1;
-  justify-content: center;
-}
+[data-theme="dark"] 
 
 /* Medical Disclaimers */
 .medical-disclaimer-notice {
@@ -3733,12 +3648,6 @@ body.theme-dark .campus-pulse-sub {
 }
 
 /* Hospital Footer Alias */
-.hospital-footer {
-  background: #0f172a;
-  color: var(--slate-400);
-  padding: 4rem 0 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
 
 /* Mobile Sticky Helpline Pill Bar (Over Bottom Dock) */
 .mobile-sticky-helpline-bar {

@@ -196,23 +196,6 @@ h6 {
 }
 
 /* Navigation */
-.navbar {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-  position: sticky;
-  top: 36px;
-  z-index: 90;
-  transition: var(--transition);
-}
-
-.nav-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.9rem 1.5rem;
-}
 
 .logo {
   display: flex;
@@ -251,51 +234,6 @@ h6 {
   margin-top: -3px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 1.75rem;
-  list-style: none;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: var(--slate-600);
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: var(--transition);
-  position: relative;
-  padding: 0.35rem 0;
-}
-
-.nav-links a:hover,
-.nav-links a.active {
-  color: var(--primary);
-}
-
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--primary);
-  transition: width 0.25s ease;
-  border-radius: 2px;
-}
-
-.nav-links a:hover::after,
-.nav-links a.active::after {
-  width: 100%;
-}
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
 }
 
 .btn {
@@ -361,15 +299,6 @@ h6 {
   padding: 0.15rem 0.5rem;
   border-radius: var(--radius-full);
   margin-left: 0.3rem;
-}
-
-.mobile-menu-btn {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 1.6rem;
-  color: var(--dark);
-  cursor: pointer;
 }
 
 /* ==========================================================================
