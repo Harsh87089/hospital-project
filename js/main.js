@@ -1501,6 +1501,24 @@ document.addEventListener('click', function (e) {
   }
 });
 
+// Register PWA Service Worker
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => {
+        if (window.location.search.includes('dev=1')) {
+          console.log('[SW] ServiceWorker registered with scope:', reg.scope);
+        }
+      })
+      .catch(err => {
+        if (window.location.search.includes('dev=1')) {
+          console.log('[SW] ServiceWorker registration error:', err);
+        }
+      });
+  });
+}
+
+
 
 
 
