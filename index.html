@@ -122,6 +122,7 @@
 </head>
 
 <body>
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
 
     <!-- ==========================================================================
          CarePulse Mandatory Security & Authentication Gate
@@ -164,12 +165,12 @@
                 <div class="auth-tabs" role="tablist">
                     <button type="button" class="auth-tab-btn active" data-method="mobile"
                         data-action="auth-switch-tab" data-tab="mobile">
-                        <span class="tab-icon">📱</span>
+                        <span class="u-icon-decorative" aria-hidden="true">📱</span>
                         <span>Mobile Number OTP</span>
                     </button>
                     <button type="button" class="auth-tab-btn" data-method="google"
                         data-action="auth-switch-tab" data-tab="google">
-                        <span class="tab-icon">🌐</span>
+                        <span class="u-icon-decorative" aria-hidden="true">🌐</span>
                         <span>Google Sign-In</span>
                     </button>
                 </div>
@@ -180,7 +181,7 @@
                         <label for="auth-mobile-name">Patient Full Name <span
                                 class="optional-tag">(Optional)</span></label>
                         <div class="auth-input-wrapper">
-                            <span class="input-prefix-icon">👤</span>
+                            <span class="u-icon-decorative" aria-hidden="true">👤</span>
                             <input type="text" id="auth-mobile-name" class="auth-text-input"
                                 placeholder="e.g. Rahul Sharma" autocomplete="name" />
                         </div>
@@ -211,7 +212,7 @@
                         <label for="auth-google-email">Your Gmail Address <span
                                 class="required-star">*</span></label>
                         <div class="auth-input-wrapper">
-                            <span class="input-prefix-icon">📧</span>
+                            <span class="u-icon-decorative" aria-hidden="true">📧</span>
                             <input type="email" id="auth-google-email" class="auth-text-input"
                                 value="" placeholder="e.g. yourname@gmail.com"
                                 onkeydown="if(event.key==='Enter') CarePulseAuth.sendOTP()" />
@@ -262,22 +263,22 @@
 
                 <!-- 6 Discrete Digit Inputs -->
                 <div class="otp-digit-cluster" onpaste="CarePulseAuth.handleDigitPaste(event)">
-                    <input type="text" id="otp-digit-1" class="otp-digit-box" maxlength="1" inputmode="numeric"
+                    <input type="text" id="otp-digit-1" aria-label="OTP Digit 1" class="otp-digit-box" maxlength="1" inputmode="numeric"
                         autocomplete="one-time-code" oninput="CarePulseAuth.handleDigitInput(this, 1, event)"
                         onkeydown="CarePulseAuth.handleDigitKey(this, 1, event)" autofocus />
-                    <input type="text" id="otp-digit-2" class="otp-digit-box" maxlength="1" inputmode="numeric"
+                    <input type="text" id="otp-digit-2" aria-label="OTP Digit 2" class="otp-digit-box" maxlength="1" inputmode="numeric"
                         oninput="CarePulseAuth.handleDigitInput(this, 2, event)"
                         onkeydown="CarePulseAuth.handleDigitKey(this, 2, event)" />
-                    <input type="text" id="otp-digit-3" class="otp-digit-box" maxlength="1" inputmode="numeric"
+                    <input type="text" id="otp-digit-3" aria-label="OTP Digit 3" class="otp-digit-box" maxlength="1" inputmode="numeric"
                         oninput="CarePulseAuth.handleDigitInput(this, 3, event)"
                         onkeydown="CarePulseAuth.handleDigitKey(this, 3, event)" />
-                    <input type="text" id="otp-digit-4" class="otp-digit-box" maxlength="1" inputmode="numeric"
+                    <input type="text" id="otp-digit-4" aria-label="OTP Digit 4" class="otp-digit-box" maxlength="1" inputmode="numeric"
                         oninput="CarePulseAuth.handleDigitInput(this, 4, event)"
                         onkeydown="CarePulseAuth.handleDigitKey(this, 4, event)" />
-                    <input type="text" id="otp-digit-5" class="otp-digit-box" maxlength="1" inputmode="numeric"
+                    <input type="text" id="otp-digit-5" aria-label="OTP Digit 5" class="otp-digit-box" maxlength="1" inputmode="numeric"
                         oninput="CarePulseAuth.handleDigitInput(this, 5, event)"
                         onkeydown="CarePulseAuth.handleDigitKey(this, 5, event)" />
-                    <input type="text" id="otp-digit-6" class="otp-digit-box" maxlength="1" inputmode="numeric"
+                    <input type="text" id="otp-digit-6" aria-label="OTP Digit 6" class="otp-digit-box" maxlength="1" inputmode="numeric"
                         oninput="CarePulseAuth.handleDigitInput(this, 6, event)"
                         onkeydown="CarePulseAuth.handleDigitKey(this, 6, event)" />
                 </div>
@@ -377,7 +378,7 @@
 
         <!-- Emergency SOS Button in Sidebar -->
         <button type="button" class="btn-sidebar-sos" data-action="trigger-emergency-sos">
-            <span class="u-font-size-1-1rem">🚨</span>
+            <span class="u-icon-decorative" aria-hidden="true">🚨</span>
             <span data-i18n="btn_sos">Emergency SOS 108</span>
         </button>
 
@@ -393,7 +394,7 @@
                 </div>
             </div>
             <button class="btn-sidebar-logout" data-action="auth-logout" title="Log out from CarePulse">
-                <span class="logout-icon">🚪</span>
+                <span class="u-icon-decorative" aria-hidden="true">🚪</span>
                 <span class="logout-text">Logout</span>
             </button>
         </div>
@@ -406,7 +407,7 @@
                 <li class="sidebar-nav-item">
                     <a href="#top" class="sidebar-nav-link active"
                         data-action="close-sidebar-mobile">
-                        <span class="sidebar-link-icon">🏠</span>
+                        <span class="u-icon-decorative" aria-hidden="true">🏠</span>
                         <span class="sidebar-link-text">Home Overview</span>
                     </a>
                 </li>
@@ -415,7 +416,7 @@
                 <li class="sidebar-nav-item sidebar-dropdown-group open">
                     <div class="sidebar-dropdown-header" data-action="toggle-sidebar-dropdown">
                         <div class="dropdown-header-left">
-                            <span class="sidebar-link-icon u-badge-e0f2fe-0284c7">🩺</span>
+                            <span class="u-icon-decorative" aria-hidden="true">🩺</span>
                             <span class="sidebar-link-text">OPD &amp; Doctors</span>
                         </div>
                         <span class="sidebar-caret">▾</span>
@@ -434,7 +435,7 @@
                         <li>
                             <a href="#queue" class="sidebar-sub-link"
                                 data-action="open-live-queue-modal" data-close-sidebar="true">
-                                <span class="sub-icon">⏱️</span>
+                                <span class="u-icon-decorative" aria-hidden="true">⏱️</span>
                                 <div class="sub-link-info">
                                     <span class="sub-title">Live Token Queue</span>
                                     <span class="sub-desc">Real-time OPD monitor</span>
@@ -444,7 +445,7 @@
                         <li>
                             <a href="#booking" class="sidebar-sub-link"
                                 data-action="open-booking-layer" data-close-sidebar="true">
-                                <span class="sub-icon">⚡</span>
+                                <span class="u-icon-decorative" aria-hidden="true">⚡</span>
                                 <div class="sub-link-info">
                                     <span class="sub-title">Book Doctor Slot</span>
                                     <span class="sub-desc">Instant digital token</span>
@@ -454,7 +455,7 @@
                         <li>
                             <a href="#teleconsult" class="sidebar-sub-link"
                                 data-action="open-teleconsult-modal" data-close-sidebar="true">
-                                <span class="sub-icon">📹</span>
+                                <span class="u-icon-decorative" aria-hidden="true">📹</span>
                                 <div class="sub-link-info">
                                     <span class="sub-title">Virtual Tele-Consult</span>
                                     <span class="sub-desc">Live video &amp; digital Rx</span>
@@ -468,7 +469,7 @@
                 <li class="sidebar-nav-item sidebar-dropdown-group">
                     <div class="sidebar-dropdown-header" data-action="toggle-sidebar-dropdown">
                         <div class="dropdown-header-left">
-                            <span class="sidebar-link-icon u-badge-d1fae5-065f46">🧪</span>
+                            <span class="u-icon-decorative" aria-hidden="true">🧪</span>
                             <span class="sidebar-link-text">Clinical Services</span>
                         </div>
                         <span class="sidebar-caret">▾</span>
@@ -477,7 +478,7 @@
                         <li>
                             <a href="#packages" class="sidebar-sub-link"
                                 data-action="open-packages-modal" data-close-sidebar="true">
-                                <span class="sub-icon">🛡️</span>
+                                <span class="u-icon-decorative" aria-hidden="true">🛡️</span>
                                 <div class="sub-link-info">
                                     <span class="sub-title">Health Checkups</span>
                                     <span class="sub-desc">Packages from ₹999</span>
@@ -487,7 +488,7 @@
                         <li>
                             <a href="#beds" class="sidebar-sub-link"
                                 data-action="open-beds-modal" data-close-sidebar="true">
-                                <span class="sub-icon">🛏️</span>
+                                <span class="u-icon-decorative" aria-hidden="true">🛏️</span>
                                 <div class="sub-link-info">
                                     <span class="sub-title">Bed &amp; ICU Status</span>
                                     <span class="sub-desc">Live capacity &amp; triage</span>
@@ -497,7 +498,7 @@
                         <li>
                             <a href="#reports" class="sidebar-sub-link"
                                 data-action="open-lab-report-modal" data-close-sidebar="true">
-                                <span class="sub-icon">📄</span>
+                                <span class="u-icon-decorative" aria-hidden="true">📄</span>
                                 <div class="sub-link-info">
                                     <span class="sub-title">Download Reports</span>
                                     <span class="sub-desc">UHID pathology PDF</span>
@@ -507,7 +508,7 @@
                         <li>
                             <a href="#pharmacy" class="sidebar-sub-link"
                                 data-action="open-pharmacy-modal" data-close-sidebar="true">
-                                <span class="sub-icon">💊</span>
+                                <span class="u-icon-decorative" aria-hidden="true">💊</span>
                                 <div class="sub-link-info">
                                     <span class="sub-title">24/7 Doorstep Pharmacy</span>
                                     <span class="sub-desc">2-Hour medicine delivery</span>
@@ -517,7 +518,7 @@
                         <li>
                             <a href="#emergency" class="sidebar-sub-link"
                                 data-action="open-emergency-modal" data-close-sidebar="true">
-                                <span class="sub-icon">🚨</span>
+                                <span class="u-icon-decorative" aria-hidden="true">🚨</span>
                                 <div class="sub-link-info">
                                     <span class="sub-title">Trauma &amp; Ambulance</span>
                                     <span class="sub-desc">24/7 Life support desk</span>
@@ -527,7 +528,7 @@
                         <li>
                             <a href="#wayfinder" class="sidebar-sub-link"
                                 data-action="open-wayfinder-modal" data-close-sidebar="true">
-                                <span class="sub-icon">🗺️</span>
+                                <span class="u-icon-decorative" aria-hidden="true">🗺️</span>
                                 <div class="sub-link-info">
                                     <span class="sub-title">Indoor Campus GPS</span>
                                     <span class="sub-desc">Multi-floor navigation</span>
@@ -541,7 +542,7 @@
                 <li class="sidebar-nav-item sidebar-dropdown-group">
                     <div class="sidebar-dropdown-header" data-action="toggle-sidebar-dropdown">
                         <div class="dropdown-header-left">
-                            <span class="sidebar-link-icon u-badge-fef3c7-92400e">📋</span>
+                            <span class="u-icon-decorative" aria-hidden="true">📋</span>
                             <span class="sidebar-link-text">Patient Care</span>
                         </div>
                         <span class="sidebar-caret">▾</span>
@@ -550,7 +551,7 @@
                         <li>
                             <a href="#abha" class="sidebar-sub-link"
                                 data-action="open-health-card-modal" data-close-sidebar="true">
-                                <span class="sub-icon">🪪</span>
+                                <span class="u-icon-decorative" aria-hidden="true">🪪</span>
                                 <div class="sub-link-info">
                                     <span class="sub-title">ABHA Digital Health Pass</span>
                                     <span class="sub-desc">Emergency medical ID &amp; QR</span>
@@ -560,7 +561,7 @@
                         <li>
                             <a href="#insurance" class="sidebar-sub-link"
                                 data-action="open-insurance-modal" data-close-sidebar="true">
-                                <span class="sub-icon">🤝</span>
+                                <span class="u-icon-decorative" aria-hidden="true">🤝</span>
                                 <div class="sub-link-info">
                                     <span class="sub-title">Cashless Insurance</span>
                                     <span class="sub-desc">TPA &amp; AB-PMJAY desk</span>
@@ -570,7 +571,7 @@
                         <li>
                             <a href="#track" class="sidebar-sub-link"
                                 data-action="open-track-token-modal" data-close-sidebar="true">
-                                <span class="sub-icon">🧭</span>
+                                <span class="u-icon-decorative" aria-hidden="true">🧭</span>
                                 <div class="sub-link-info">
                                     <span class="sub-title">Track Token Status</span>
                                     <span class="sub-desc">Check live queue &amp; wait</span>
@@ -590,7 +591,7 @@
                         <li>
                             <a href="#my-bookings" class="sidebar-sub-link"
                                 data-action="open-my-bookings-modal" data-close-sidebar="true">
-                                <span class="sub-icon">🎫</span>
+                                <span class="u-icon-decorative" aria-hidden="true">🎫</span>
                                 <div class="sub-link-info">
                                     <span class="sub-title">My Digital Tokens</span>
                                     <span class="sub-desc">View &amp; print passes</span>
@@ -799,12 +800,13 @@
     <main id="top">
 
         <!-- Hero Section -->
-        <section class="hero-section">
+        <main id="main-content">
+    <section class="hero-section">
             <div class="container">
 
                 <!-- Trust badge with verified metric -->
                 <div class="trust-badge-pill">
-                    <span class="trust-pill-icon u-box-font-size-17">🛡️</span>
+                    <span class="u-icon-decorative" aria-hidden="true">🛡️</span>
                     <div class="trust-text">
                         <span>Demo Multi-Specialty Hospital Portal</span> • Prototype 24/7 Casualty &amp; Digital OPD System
                     </div>
@@ -895,7 +897,7 @@
 
                 <div class="services-hub-grid">
                     <!-- Tile 1: Book Doctor Appointment -->
-                    <div class="service-hub-tile tile-blue" data-action="open-booking-layer" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Book Doctor Appointment Slot">
+                    <button type="button" class="service-hub-tile tile-blue" data-action="open-booking-layer" aria-label="Book Doctor Appointment Slot">
                         <div class="service-hub-icon-wrapper u-badge-e0f2fe-0284c7">🩺</div>
                         <h3 class="service-hub-title">Book Doctor Slot</h3>
                         <p class="service-hub-sub">Reserve confirmed consultation slots with live OPD queue tokens</p>
@@ -904,7 +906,7 @@
                     </div>
 
                     <!-- Tile 2: Live OPD Queue Monitor -->
-                    <div class="service-hub-tile tile-amber" data-action="open-live-queue-modal" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="View Live Queue Board">
+                    <div class="service-hub-tile tile-amber" data-action="open-live-queue-modal" aria-label="View Live Queue Board">
                         <div class="service-hub-icon-wrapper u-badge-fef3c7-d97706">⏱️</div>
                         <h3 class="service-hub-title">Live Queue Status</h3>
                         <p class="service-hub-sub">Track active tokens, wait times &amp; doctor consultation rooms</p>
@@ -913,7 +915,7 @@
                     </div>
 
                     <!-- Tile 3: Meet Specialists -->
-                    <div class="service-hub-tile tile-blue" data-action="open-doctors-modal" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Meet 18 Hospital Specialists">
+                    <div class="service-hub-tile tile-blue" data-action="open-doctors-modal" aria-label="Meet 18 Hospital Specialists">
                         <div class="service-hub-icon-wrapper u-badge-e0f2fe-0369a1">👨‍⚕️</div>
                         <h3 class="service-hub-title">Meet Specialists</h3>
                         <p class="service-hub-sub">Consult 18 senior physicians, cardiologists, pediatricians &amp;
@@ -923,7 +925,7 @@
                     </div>
 
                     <!-- Tile 4: Bed & ICU Status -->
-                    <div class="service-hub-tile tile-emerald" data-action="open-beds-modal" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Check Bed and ICU Status">
+                    <div class="service-hub-tile tile-emerald" data-action="open-beds-modal" aria-label="Check Bed and ICU Status">
                         <div class="service-hub-icon-wrapper u-badge-d1fae5-059669">🛏️</div>
                         <h3 class="service-hub-title">Bed &amp; ICU Status</h3>
                         <p class="service-hub-sub">Real-time availability of triage beds, ventilators &amp; blood bank
@@ -933,7 +935,7 @@
                     </div>
 
                     <!-- Tile 5: Health Packages -->
-                    <div class="service-hub-tile tile-emerald" data-action="open-packages-modal" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="View Health Checkup Packages">
+                    <div class="service-hub-tile tile-emerald" data-action="open-packages-modal" aria-label="View Health Checkup Packages">
                         <div class="service-hub-icon-wrapper u-badge-d1fae5-059669">🛡️</div>
                         <h3 class="service-hub-title">Health Checkups</h3>
                         <p class="service-hub-sub">ProHealth packages from ₹999 with home sample pickup</p>
@@ -942,7 +944,7 @@
                     </div>
 
                     <!-- Tile 6: Track Token -->
-                    <div class="service-hub-tile tile-teal" data-action="open-track-token-modal" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Track Token Status">
+                    <div class="service-hub-tile tile-teal" data-action="open-track-token-modal" aria-label="Track Token Status">
                         <div class="service-hub-icon-wrapper u-badge-ccfbf1-0f766e">🧭</div>
                         <h3 class="service-hub-title">Track Token Status</h3>
                         <p class="service-hub-sub">Enter your token ID to check live position &amp; estimated wait time
@@ -952,7 +954,7 @@
                     </div>
 
                     <!-- Tile 7: 24/7 Pharmacy -->
-                    <div class="service-hub-tile tile-purple" data-action="open-pharmacy-modal" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Order Medicines Online">
+                    <div class="service-hub-tile tile-purple" data-action="open-pharmacy-modal" aria-label="Order Medicines Online">
                         <div class="service-hub-icon-wrapper u-badge-ede9fe-7c3aed">💊</div>
                         <h3 class="service-hub-title">Order Medicines</h3>
                         <p class="service-hub-sub">Upload prescription for 2-hour doorstep delivery</p>
@@ -961,7 +963,7 @@
                     </div>
 
                     <!-- Tile 8: Diagnostic Reports -->
-                    <div class="service-hub-tile tile-teal" data-action="open-lab-report-modal" data-uhid="UHID-98214" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Download Diagnostic Lab Reports">
+                    <div class="service-hub-tile tile-teal" data-action="open-lab-report-modal" data-uhid="UHID-98214" aria-label="Download Diagnostic Lab Reports">
                         <div class="service-hub-icon-wrapper u-badge-ccfbf1-0f766e">📄</div>
                         <h3 class="service-hub-title">Lab Test Reports</h3>
                         <p class="service-hub-sub">Enter UHID to view &amp; print certified diagnostic lab results</p>
@@ -970,7 +972,7 @@
                     </div>
 
                     <!-- Tile 9: Cashless Insurance & TPA -->
-                    <div class="service-hub-tile tile-purple" data-action="open-insurance-modal" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Cashless Insurance Desk">
+                    <div class="service-hub-tile tile-purple" data-action="open-insurance-modal" aria-label="Cashless Insurance Desk">
                         <div class="service-hub-icon-wrapper u-badge-ede9fe-7c3aed">🤝</div>
                         <h3 class="service-hub-title">Cashless Insurance</h3>
                         <p class="service-hub-sub">8+ Insurance partners, Ayushman Bharat &amp; 15-min pre-auth</p>
@@ -979,7 +981,7 @@
                     </div>
 
                     <!-- Tile 10: Clinical Health & BMI Calculator -->
-                    <div class="service-hub-tile tile-blue" data-action="open-health-calculator" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Health Risk and BMI Calculator">
+                    <div class="service-hub-tile tile-blue" data-action="open-health-calculator" aria-label="Health Risk and BMI Calculator">
                         <div class="service-hub-icon-wrapper u-badge-e0f2fe-0369a1">🩺</div>
                         <h3 class="service-hub-title">Health &amp; BMI Calculator</h3>
                         <p class="service-hub-sub">Check your BMI, blood pressure category &amp; clinical risk score</p>
@@ -989,7 +991,7 @@
                     </div>
 
                     <!-- Tile 11: Hospital Guidelines -->
-                    <div class="service-hub-tile tile-amber" data-action="open-guidelines-modal" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Hospital Guidelines and Visiting Rules">
+                    <div class="service-hub-tile tile-amber" data-action="open-guidelines-modal" aria-label="Hospital Guidelines and Visiting Rules">
                         <div class="service-hub-icon-wrapper u-badge-fef3c7-d97706">ℹ️</div>
                         <h3 class="service-hub-title">Hospital Guidelines</h3>
                         <p class="service-hub-sub">Visiting timings, reporting rules &amp; consultation instructions</p>
@@ -998,7 +1000,7 @@
                     </div>
 
                     <!-- Tile 12: Emergency & Ambulance 24/7 -->
-                    <div class="service-hub-tile tile-rose" data-action="open-emergency-modal" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Emergency 24/7 Casualty Desk">
+                    <div class="service-hub-tile tile-rose" data-action="open-emergency-modal" aria-label="Emergency 24/7 Casualty Desk">
                         <div class="service-hub-icon-wrapper u-badge-fee2e2-dc2626">🚨</div>
                         <h3 class="service-hub-title">Emergency 24/7</h3>
                         <p class="service-hub-sub">Trauma triage, oxygen support &amp; direct ambulance hotline</p>
@@ -1019,7 +1021,7 @@
                         </div>
                     </div>
                     <div class="campus-pulse-grid">
-                        <div class="campus-pulse-item" data-action="open-live-queue-modal">
+                        <button type="button" class="campus-pulse-item" data-action="open-live-queue-modal">
                             <div class="campus-pulse-item-info">
                                 <span class="campus-pulse-label">⏱️ Live OPD Queue</span>
                                 <span class="campus-pulse-value">Token #TK-108 Active</span>
@@ -1027,7 +1029,7 @@
                             </div>
                             <button class="campus-pulse-action-btn" type="button">Open Board ➔</button>
                         </div>
-                        <div class="campus-pulse-item" data-action="open-doctors-modal">
+                        <button type="button" class="campus-pulse-item" data-action="open-doctors-modal">
                             <div class="campus-pulse-item-info">
                                 <span class="campus-pulse-label">👨‍⚕️ Specialists on Duty</span>
                                 <span class="campus-pulse-value">10 Senior Doctors</span>
@@ -1035,7 +1037,7 @@
                             </div>
                             <button class="campus-pulse-action-btn" type="button">Doctors ➔</button>
                         </div>
-                        <div class="campus-pulse-item" data-action="open-beds-modal">
+                        <button type="button" class="campus-pulse-item" data-action="open-beds-modal">
                             <div class="campus-pulse-item-info">
                                 <span class="campus-pulse-label">🛏️ Hospital Beds &amp; ICU</span>
                                 <span class="campus-pulse-value">6 Triage &bull; 4 ICU Open</span>
@@ -1043,7 +1045,7 @@
                             </div>
                             <button class="campus-pulse-action-btn" type="button">Check Beds ➔</button>
                         </div>
-                        <div class="campus-pulse-item" data-action="open-booking-layer">
+                        <button type="button" class="campus-pulse-item" data-action="open-booking-layer">
                             <div class="campus-pulse-item-info">
                                 <span class="campus-pulse-label">⚡ Fast E-Pass Pass</span>
                                 <span class="campus-pulse-value">Instant Reservation</span>
@@ -1113,7 +1115,7 @@
                     <!-- Col 2: Diagnostic Imaging & Cardiology -->
                     <div class="rate-card-box u-card-box-39">
                         <div class="u-flex-box-40">
-                            <span class="u-font-size-1-6rem">🩻</span>
+                            <span class="u-icon-decorative" aria-hidden="true">🩻</span>
                             <div>
                                 <h3 class="u-box-font-size-42">Diagnostic Imaging &amp;
                                     Scans</h3>
@@ -1150,7 +1152,7 @@
                     <!-- Col 3: Clinical Pathology Tests -->
                     <div class="rate-card-box u-card-box-39">
                         <div class="u-flex-box-40">
-                            <span class="u-font-size-1-6rem">🧪</span>
+                            <span class="u-icon-decorative" aria-hidden="true">🧪</span>
                             <div>
                                 <h3 class="u-box-font-size-42">Clinical Pathology Laboratory
                                 </h3>
@@ -1326,7 +1328,7 @@
                     <details class="faq-item u-card-box-81">
                         <summary class="u-flex-box-82">
                             <span>How does the Real-Time OPD Token system minimize my clinic wait time?</span>
-                            <span class="faq-toggle-icon u-box-font-size-83">+</span>
+                            <span class="u-icon-decorative" aria-hidden="true">+</span>
                         </summary>
                         <p class="u-box-margin-top-84">
                             When you reserve a slot online or at our reception kiosk, a unique Token ID (e.g.,
@@ -1339,7 +1341,7 @@
                     <details class="faq-item u-card-box-81">
                         <summary class="u-flex-box-82">
                             <span>Do I need an advance booking, or can I walk in directly?</span>
-                            <span class="faq-toggle-icon u-box-font-size-83">+</span>
+                            <span class="u-icon-decorative" aria-hidden="true">+</span>
                         </summary>
                         <p class="u-box-margin-top-84">
                             Walk-in patients are warmly welcomed! Our Ground Floor Reception Desks (Counters 1 &amp; 2)
@@ -1351,7 +1353,7 @@
                     <details class="faq-item u-card-box-81">
                         <summary class="u-flex-box-82">
                             <span>What should I do if I am experiencing a critical emergency?</span>
-                            <span class="faq-toggle-icon u-box-font-size-83">+</span>
+                            <span class="u-icon-decorative" aria-hidden="true">+</span>
                         </summary>
                         <p class="u-box-margin-top-84">
                             <strong>Do not wait for an OPD token.</strong> Call government emergency ambulance
@@ -1362,7 +1364,7 @@
                     <details class="faq-item u-card-box-81">
                         <summary class="u-flex-box-82">
                             <span>Can I reschedule or cancel my booked appointment?</span>
-                            <span class="faq-toggle-icon u-box-font-size-83">+</span>
+                            <span class="u-icon-decorative" aria-hidden="true">+</span>
                         </summary>
                         <p class="u-box-margin-top-84">
                             Yes, completely free of charge. Open "My Tokens" from the navigation bar, view your digital
@@ -1374,7 +1376,7 @@
                     <details class="faq-item u-card-box-81">
                         <summary class="u-flex-box-82">
                             <span>Which cashless insurance policies and government cards are supported?</span>
-                            <span class="faq-toggle-icon u-box-font-size-83">+</span>
+                            <span class="u-icon-decorative" aria-hidden="true">+</span>
                         </summary>
                         <p class="u-box-margin-top-84">
                             CarePulse is empanelled with Star Health, HDFC ERGO, ICICI Lombard, Care Health, Medi
@@ -1386,7 +1388,7 @@
                     <details class="faq-item u-card-box-81">
                         <summary class="u-flex-box-82">
                             <span>How does CarePulse protect my medical data under the DPDP Act 2023?</span>
-                            <span class="faq-toggle-icon u-box-font-size-83">+</span>
+                            <span class="u-icon-decorative" aria-hidden="true">+</span>
                         </summary>
                         <p class="u-box-margin-top-84">
                             We strictly comply with India's Digital Personal Data Protection (DPDP) Act, 2023. Patient
@@ -1503,21 +1505,21 @@
                         </button>
                     </div>
                     <div class="queue-search-input-wrap">
-                        <span class="queue-search-icon">🔍</span>
-                        <input type="text" id="queue-search-input" placeholder="Search doctor or room..."
+                        <span class="u-icon-decorative" aria-hidden="true">🔍</span>
+                        <input type="text" id="queue-search-input" aria-label="Search live OPD queue by doctor name or specialty" placeholder="Search doctor or room..."
                             oninput="handleQueueSearch(this.value)" />
                     </div>
                 </div>
 
                 <!-- Dynamically Populated Queue Cards Grid -->
-                <div class="queue-grid" id="live-queue-cards">
+                <div class="queue-grid" id="live-queue-cards" aria-live="polite">
                     <!-- Populated dynamically by app.js -->
                 </div>
 
                 <!-- Fast Token Tracker Quick-Bar -->
                 <div class="u-flex-box-88">
                     <div class="u-flex-box-89">
-                        <span class="u-font-size-1-6rem">🎫</span>
+                        <span class="u-icon-decorative" aria-hidden="true">🎫</span>
                         <div>
                             <div class="u-box-font-size-90">Already holding a
                                 Digital Token Pass?</div>
@@ -1560,7 +1562,7 @@
                 </div>
                 <div class="blood-bank-strip u-margin-top-1-5rem">
                     <div class="blood-bank-title">
-                        <span class="u-font-size-1-3rem">🩸</span>
+                        <span class="u-icon-decorative" aria-hidden="true">🩸</span>
                         <span><strong>Phagwara Campus Blood Bank Reserves:</strong></span>
                     </div>
                     <div class="blood-units-container" id="blood-units-container">
@@ -1624,7 +1626,7 @@
                     <!-- Infusion & Emergency Action Row -->
                     <div class="icu-bottom-row">
                         <div class="iv-drip-monitor">
-                            <span class="u-font-size-1-1rem">💧</span>
+                            <span class="u-icon-decorative" aria-hidden="true">💧</span>
                             <div class="u-flex-1">
                                 <div class="u-flex-box-96">
                                     <span class="u-color-cbd5e1">IV Infusion: Saline 0.9% NaCl (500ml)</span>
@@ -1698,8 +1700,8 @@
                     </div>
 
                     <div class="search-box-wrapper">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="doctor-search-input"
+                        <span class="u-icon-decorative" aria-hidden="true">🔍</span>
+                        <input type="text" id="doctor-search-input" aria-label="Search doctors by name or department"
                             placeholder="Search doctor by name (e.g. Rajesh, Priya, Gurpreet, Maninderjit) or symptoms..." />
                     </div>
                 </div>
@@ -1744,11 +1746,11 @@
                             <span class="package-tag u-card-box-99">All-Inclusive • 32 Tests</span>
                         </div>
                         <ul class="package-features">
-                            <li><span class="icon">✓</span> Complete Hemogram (CBC - 24 params)</li>
-                            <li><span class="icon">✓</span> Fasting Blood Glucose (Diabetes)</li>
-                            <li><span class="icon">✓</span> Lipid Profile (Total Cholesterol, Triglycerides)</li>
-                            <li><span class="icon">✓</span> Urine Routine &amp; Microscopic</li>
-                            <li><span class="icon">✓</span> Free Tele-Consultation with Physician</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Complete Hemogram (CBC - 24 params)</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Fasting Blood Glucose (Diabetes)</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Lipid Profile (Total Cholesterol, Triglycerides)</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Urine Routine &amp; Microscopic</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Free Tele-Consultation with Physician</li>
                         </ul>
                         <button class="btn btn-primary" data-action="book-package" data-pkg="pkg-basic">
                             Book Package (Free Home Sample) ↗
@@ -1769,12 +1771,12 @@
                             <span class="package-tag u-card-box-101">All-Inclusive • 64 Tests</span>
                         </div>
                         <ul class="package-features">
-                            <li><span class="icon">✓</span> Liver Function Panel (LFT - 11 params)</li>
-                            <li><span class="icon">✓</span> Kidney Function Panel (KFT, Creatinine, Urea)</li>
-                            <li><span class="icon">✓</span> Complete Thyroid Profile (T3, T4, TSH)</li>
-                            <li><span class="icon">✓</span> Digital 12-Lead ECG &amp; Chest Screen</li>
-                            <li><span class="icon">✓</span> Vitamin D3 &amp; Vitamin B12 Levels</li>
-                            <li><span class="icon">✓</span> 1-on-1 Consultation with Senior Specialist</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Liver Function Panel (LFT - 11 params)</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Kidney Function Panel (KFT, Creatinine, Urea)</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Complete Thyroid Profile (T3, T4, TSH)</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Digital 12-Lead ECG &amp; Chest Screen</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Vitamin D3 &amp; Vitamin B12 Levels</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> 1-on-1 Consultation with Senior Specialist</li>
                         </ul>
                         <button class="btn btn-primary" data-action="book-package" data-pkg="pkg-exec">
                             Book Package (Free Home Sample) ↗
@@ -1794,11 +1796,11 @@
                             <span class="package-tag u-card-box-102">Senior Care • 58 Tests</span>
                         </div>
                         <ul class="package-features">
-                            <li><span class="icon">✓</span> HbA1c (3-Month Glycated Glucose Average)</li>
-                            <li><span class="icon">✓</span> hs-CRP (High-Sensitivity Cardiac Risk)</li>
-                            <li><span class="icon">✓</span> Serum Calcium, Phosphorus &amp; Uric Acid</li>
-                            <li><span class="icon">✓</span> Renal &amp; Electrolyte Panel</li>
-                            <li><span class="icon">✓</span> Free Doorstep Phlebotomist &amp; Senior Care Guide</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> HbA1c (3-Month Glycated Glucose Average)</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> hs-CRP (High-Sensitivity Cardiac Risk)</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Serum Calcium, Phosphorus &amp; Uric Acid</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Renal &amp; Electrolyte Panel</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Free Doorstep Phlebotomist &amp; Senior Care Guide</li>
                         </ul>
                         <button class="btn btn-primary"
                             data-action="book-package" data-pkg="pkg-senior">
@@ -1819,11 +1821,11 @@
                             <span class="package-tag u-card-box-103">Women Care • 48 Tests</span>
                         </div>
                         <ul class="package-features">
-                            <li><span class="icon">✓</span> Thyroid &amp; Iron Deficiency Panel (Ferritin)</li>
-                            <li><span class="icon">✓</span> Clinical Breast Examination / Mammogram voucher</li>
-                            <li><span class="icon">✓</span> Pelvic Ultrasound Screening voucher</li>
-                            <li><span class="icon">✓</span> Bone Mineral Density &amp; Serum Calcium</li>
-                            <li><span class="icon">✓</span> Female Senior Gynecologist Consultation</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Thyroid &amp; Iron Deficiency Panel (Ferritin)</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Clinical Breast Examination / Mammogram voucher</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Pelvic Ultrasound Screening voucher</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Bone Mineral Density &amp; Serum Calcium</li>
+                            <li><span class="u-icon-decorative" aria-hidden="true">✓</span> Female Senior Gynecologist Consultation</li>
                         </ul>
                         <button class="btn btn-primary" data-action="book-package" data-pkg="pkg-women">
                             Book Package (Free Home Sample) ↗
@@ -1853,7 +1855,7 @@
             </div>
             <div class="service-layer-body">
                 <div class="tracker-search-bar u-flex-box-106">
-                    <input type="text" id="tracker-input" class="tracker-input u-flex-1"
+                    <input type="text" id="tracker-input" aria-label="Enter token number or mobile number to track" class="tracker-input u-flex-1"
                         placeholder="Enter Token ID (e.g. TK-014) or Phone Number..." />
                     <button class="btn btn-primary u-box-padding-107" id="tracker-search-btn">
                         Track Queue ➔
@@ -1888,35 +1890,35 @@
                 <!-- Recognized Insurers & TPAs -->
                 <div class="insurance-partners-grid u-margin-bottom-1-5rem">
                     <div class="insurance-logo-item">
-                        <span class="u-font-size-1-35rem">⭐</span>
+                        <span class="u-icon-decorative" aria-hidden="true">⭐</span>
                         <span>Star Health</span>
                     </div>
                     <div class="insurance-logo-item">
-                        <span class="u-font-size-1-35rem">🏦</span>
+                        <span class="u-icon-decorative" aria-hidden="true">🏦</span>
                         <span>HDFC ERGO</span>
                     </div>
                     <div class="insurance-logo-item">
-                        <span class="u-font-size-1-35rem">🛡️</span>
+                        <span class="u-icon-decorative" aria-hidden="true">🛡️</span>
                         <span>ICICI Lombard</span>
                     </div>
                     <div class="insurance-logo-item">
-                        <span class="u-font-size-1-35rem">❤️</span>
+                        <span class="u-icon-decorative" aria-hidden="true">❤️</span>
                         <span>Care Health</span>
                     </div>
                     <div class="insurance-logo-item">
-                        <span class="u-font-size-1-35rem">🤝</span>
+                        <span class="u-icon-decorative" aria-hidden="true">🤝</span>
                         <span>Medi Assist TPA</span>
                     </div>
                     <div class="insurance-logo-item">
-                        <span class="u-font-size-1-35rem">🌿</span>
+                        <span class="u-icon-decorative" aria-hidden="true">🌿</span>
                         <span>Niva Bupa</span>
                     </div>
                     <div class="insurance-logo-item">
-                        <span class="u-font-size-1-35rem">🏛️</span>
+                        <span class="u-icon-decorative" aria-hidden="true">🏛️</span>
                         <span>Paramount TPA</span>
                     </div>
                     <div class="insurance-logo-item u-box-background-111">
-                        <span class="u-font-size-1-35rem">🇮🇳</span>
+                        <span class="u-icon-decorative" aria-hidden="true">🇮🇳</span>
                         <span class="u-color-065f46">Ayushman Bharat (PM-JAY)</span>
                     </div>
                 </div>
@@ -1982,12 +1984,12 @@
     <!-- ==========================================================================
          Dedicated Booking Layer Modal (Layering Architecture)
          ========================================================================== -->
-    <div class="booking-layer-modal" id="booking-layer-modal">
+    <div class="booking-layer-modal" id="booking-layer-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-booking-layer">
         <div class="booking-layer-container">
             <div class="booking-layer-header">
                 <div>
                     <span class="layer-badge">✨ Doctor Appointment Booking</span>
-                    <h2 class="u-box-font-size-122">Book Doctor Consultation & OPD Token
+                    <h2 id="modal-title-booking-layer" class="u-box-font-size-122">Book Doctor Consultation & OPD Token
                     </h2>
                     <p class="u-box-font-size-123">Reserve an open
                         consultation slot with verified senior specialists in Phagwara</p>
@@ -2140,7 +2142,7 @@
                             <!-- DPDP Act 2023 Consent Checkbox -->
                             <div class="u-card-box-129">
                                 <label class="u-flex-box-130">
-                                    <input type="checkbox" id="layer-dpdp-consent" required checkedclass="u-margin-top-0-2rem" />
+                                    <input type="checkbox" id="layer-dpdp-consent" required checked class="u-margin-top-0-2rem" aria-label="Consent to demo booking data storage in browser" />
                                     <span>I consent to CarePulse collecting and processing my health details for
                                         clinical OPD token generation and consultation in compliance with the
                                         <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong>. <a href="#privacy"
@@ -2161,15 +2163,15 @@
     </div>
 
     <!-- Digital Token Pass Modal (Printable & Downloadable) -->
-    <div class="modal-backdrop" id="token-modal">
+    <div class="modal-backdrop" id="token-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-token">
         <div class="modal-container">
             <button class="modal-close-btn" data-action="close-token-modal" aria-label="Close modal">×</button>
 
             <div class="token-slip-card" id="token-slip-card">
                 <div class="token-slip-header">
                     <div class="u-flex-box-134">
-                        <span class="u-font-size-1-4rem">🏥</span>
-                        <h3>CarePulse Super Speciality Hospital</h3>
+                        <span class="u-icon-decorative" aria-hidden="true">🏥</span>
+                        <h3 id="modal-title-token">CarePulse Super Speciality Hospital</h3>
                     </div>
                     <p>Official OPD Token Slip • GT Road, Near Sugar Mill Crossing, Phagwara, Punjab - 144401</p>
                 </div>
@@ -2290,13 +2292,13 @@
     </div>
 
     <!-- My Bookings Drawer Modal -->
-    <div class="modal-backdrop" id="my-bookings-modal">
+    <div class="modal-backdrop" id="my-bookings-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-my-bookings">
         <div class="modal-container u-modal-w-520px">
             <button class="modal-close-btn" data-action="close-my-bookings-modal" aria-label="Close modal">×</button>
 
             <div class="u-flex-box-141">
-                <span class="u-font-size-1-5rem">📋</span>
-                <h3 class="u-font-size-1-35rem">My Active Token Bookings</h3>
+                <span class="u-icon-decorative" aria-hidden="true">📋</span>
+                <h3 id="modal-title-my-bookings" class="u-font-size-1-35rem">My Active Token Bookings</h3>
             </div>
             <p class="u-box-font-size-143">
                 Tokens booked on this device. Click on any item to view or reprint your digital token slip.
@@ -2317,7 +2319,7 @@
         <div class="reschedule-card">
             <button class="modal-close-btn" data-action="close-reschedule-modal" aria-label="Close modal">×</button>
             <div class="u-flex-box-145">
-                <span class="u-font-size-1-5rem">📅</span>
+                <span class="u-icon-decorative" aria-hidden="true">📅</span>
                 <div>
                     <h3 id="reschedule-title"class="u-box-font-size-146">Reschedule Appointment</h3>
                     <span id="reschedule-token-badge"class="u-box-font-size-147"></span>
@@ -2354,7 +2356,7 @@
         <div class="cancel-card">
             <button class="modal-close-btn" data-action="close-cancel-modal" aria-label="Close modal">×</button>
             <div class="u-flex-box-145">
-                <span class="u-font-size-1-5rem">⚠️</span>
+                <span class="u-icon-decorative" aria-hidden="true">⚠️</span>
                 <div>
                     <h3 id="cancel-title"class="u-box-font-size-152">Cancel Appointment</h3>
                     <span id="cancel-token-badge"class="u-box-font-size-153"></span>
@@ -2375,13 +2377,13 @@
     </div>
 
     <!-- Emergency Assistance Modal -->
-    <div class="modal-backdrop" id="emergency-modal">
+    <div class="modal-backdrop" id="emergency-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-emergency">
         <div class="modal-container u-modal-w-500px">
             <button class="modal-close-btn" data-action="close-emergency-modal" aria-label="Close modal">×</button>
 
             <div class="u-box-text-align-156">
                 <div class="u-box-font-size-157">🚨</div>
-                <h3 class="u-box-font-size-158">Emergency &amp; Trauma Casualty Desk</h3>
+                <h3 id="modal-title-emergency" class="u-box-font-size-158">Emergency &amp; Trauma Casualty Desk</h3>
                 <p class="u-box-font-size-159">Simulated demo casualty center • Prototype Project</p>
             </div>
 
@@ -2433,13 +2435,13 @@
     </div>
 
     <!-- Interactive Diagnostic Lab Reports Modal (Patient UHID Portal) -->
-    <div class="modal-backdrop" id="lab-report-modal">
+    <div class="modal-backdrop" id="lab-report-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-lab-report">
         <div class="report-modal-container">
             <div class="u-flex-box-173">
                 <div>
                     <span class="accred-badge emerald u-box-margin-bottom-174">CERTIFIED
                         CLINICAL DIAGNOSTICS</span>
-                    <h3 class="u-box-font-size-175">Online Diagnostic Report Portal
+                    <h3 id="modal-title-lab-report" class="u-box-font-size-175">Online Diagnostic Report Portal
                     </h3>
                     <p class="u-box-font-size-176">
                         Instant verified pathology & biochemistry test results. Enter your Patient UHID or phone
@@ -2454,7 +2456,7 @@
                 <div class="u-flex-1">
                     <label class="u-box-font-size-179">PATIENT
                         UHID / REGISTERED MOBILE</label>
-                    <input type="text" id="report-uhid-input" class="form-control u-box-border-180" value="UHID-98214"
+                    <input type="text" id="report-uhid-input" aria-label="Enter patient UHID or mobile number for diagnostic report" class="form-control u-box-border-180" value="UHID-98214"
                         placeholder="e.g. UHID-98214 or UHID-44021" />
                 </div>
                 <button class="btn btn-primary u-box-margin-top-181" data-action="search-lab-report">
@@ -2486,13 +2488,13 @@
     </div>
 
     <!-- 24/7 Clinic Pharmacy & Prescription Upload Modal -->
-    <div class="modal-backdrop" id="pharmacy-modal">
+    <div class="modal-backdrop" id="pharmacy-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-pharmacy">
         <div class="pharmacy-modal-container">
             <div class="u-flex-box-184">
                 <div>
                     <span class="accred-badge u-box-background-185">CAREPULSE
                         24/7 PHARMACY</span>
-                    <h3 class="u-box-font-size-175">Doorstep Medicine Delivery</h3>
+                    <h3 id="modal-title-pharmacy" class="u-box-font-size-175">Doorstep Medicine Delivery</h3>
                     <p class="u-box-font-size-176">
                         100% Genuine Medicines • 2-Hour Express Delivery • Flat 15% Savings
                     </p>
@@ -2501,8 +2503,8 @@
             </div>
 
             <!-- Prescription Upload Dropzone -->
-            <div class="prescription-dropzone" data-action="trigger-rx-upload">
-                <input type="file" id="rx-file-input"class="u-display-none" accept="image/*,.pdf"
+            <button type="button" class="prescription-dropzone" data-action="trigger-rx-upload">
+                <input type="file" id="rx-file-input" aria-label="Upload prescription file (PDF, JPG, PNG)"class="u-display-none" accept="image/*,.pdf"
                     onchange="handlePrescriptionUpload(event)" />
                 <div class="rx-icon">📋</div>
                 <strong class="u-box-display-186">Upload
@@ -2655,7 +2657,7 @@
         </div>
 
         <div class="chat-input-bar">
-            <input type="text" id="chat-user-input" placeholder="Describe symptoms (e.g. fever, toothache)..."
+            <input type="text" id="chat-user-input" aria-label="Describe your symptoms to AI Health Assistant" placeholder="Describe symptoms (e.g. fever, toothache)..."
                 autocomplete="off" />
             <button type="button" data-action="send-chat-message" aria-label="Send message">Send ↗</button>
         </div>
@@ -2663,12 +2665,12 @@
 
     <!-- Floating Emergency SOS 108 Dispatch Trigger -->
     <button class="sos-floating-trigger" data-action="trigger-emergency-sos" title="Emergency Response & 108 Ambulance Hub">
-        <span class="u-font-size-1-1rem">🚨</span>
+        <span class="u-icon-decorative" aria-hidden="true">🚨</span>
         <span data-i18n="btn_sos">SOS 108</span>
     </button>
 
     <!-- Emergency SOS & Live GPS Response Hub Modal -->
-    <div class="modal-backdrop" id="emergency-sos-modal">
+    <div class="modal-backdrop" id="emergency-sos-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-emergency-sos">
         <div class="sos-modal-card u-modal-w-520px-1">
             <button class="modal-close-btn" data-action="close-emergency-sos" aria-label="Close modal">×</button>
 
@@ -2677,7 +2679,7 @@
                 <span>🚨</span>
             </div>
 
-            <h3 class="u-box-font-size-200">Emergency &amp; Ambulance Hub</h3>
+            <h3 id="modal-title-emergency-sos" class="u-box-font-size-200">Emergency &amp; Ambulance Hub</h3>
             <p class="u-box-font-size-201">
                 Simulated emergency response center • CarePulse Demonstration Project
             </p>
@@ -2773,14 +2775,14 @@
     </div>
 
     <!-- Clinical Health Risk & BMI / Vitals Calculator Modal -->
-    <div class="modal-backdrop" id="health-calculator-modal">
+    <div class="modal-backdrop" id="health-calculator-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-health-calc">
         <div class="health-calc-card">
             <button class="modal-close-btn" data-action="close-health-calculator" aria-label="Close modal">×</button>
 
             <div class="u-flex-box-221">
-                <span class="u-font-size-1-6rem">🩺</span>
+                <span class="u-icon-decorative" aria-hidden="true">🩺</span>
                 <div>
-                    <h3 class="u-box-font-size-222" data-i18n="btn_calc">Health Risk
+                    <h3 id="modal-title-health-calc" class="u-box-font-size-222" data-i18n="btn_calc">Health Risk
                         &amp; BMI Calculator</h3>
                     <span class="u-box-font-size-223">Standard Anthropometric &amp;
                         Vitals Assessment</span>
@@ -2801,25 +2803,25 @@
                     <label class="u-box-font-size-224">
                         Height (cm) *
                     </label>
-                    <input type="number" id="calc-height" class="form-control" placeholder="e.g. 175" value="172" />
+                    <input type="number" id="calc-height" aria-label="Height in centimeters" class="form-control" placeholder="e.g. 175" value="172" />
                 </div>
                 <div>
                     <label class="u-box-font-size-224">
                         Weight (kg) *
                     </label>
-                    <input type="number" id="calc-weight" class="form-control" placeholder="e.g. 70" value="68" />
+                    <input type="number" id="calc-weight" aria-label="Weight in kilograms" class="form-control" placeholder="e.g. 70" value="68" />
                 </div>
                 <div>
                     <label class="u-box-font-size-224">
                         Age (years)
                     </label>
-                    <input type="number" id="calc-age" class="form-control" placeholder="e.g. 32" value="28" />
+                    <input type="number" id="calc-age" aria-label="Patient age in years" class="form-control" placeholder="e.g. 32" value="28" />
                 </div>
                 <div>
                     <label class="u-box-font-size-224">
                         Systolic BP (mmHg)
                     </label>
-                    <input type="number" id="calc-bp" class="form-control" placeholder="e.g. 120" value="120" />
+                    <input type="number" id="calc-bp" aria-label="Systolic blood pressure in mmHg" class="form-control" placeholder="e.g. 120" value="120" />
                 </div>
             </div>
 
@@ -2882,11 +2884,11 @@
     <!-- ==========================================================================
              Package Booking Modal with Free Home Sample Collection
              ========================================================================== -->
-    <div class="modal-backdrop" id="package-booking-modal">
+    <div class="modal-backdrop" id="package-booking-modal" role="dialog" aria-modal="true" aria-labelledby="pkg-modal-title">
         <div class="modal-container u-modal-w-580px">
             <button class="modal-close-btn" data-action="close-package-booking-modal" aria-label="Close modal">×</button>
             <div class="u-flex-box-236">
-                <span class="u-font-size-1-6rem">🛡️</span>
+                <span class="u-icon-decorative" aria-hidden="true">🛡️</span>
                 <div>
                     <h3 id="pkg-modal-title"class="u-box-margin-237">CarePulse
                         ProHealth Package</h3>
@@ -3032,15 +3034,15 @@
     <!-- ==========================================================================
              DPDP Act 2023 Compliance & Patient Health Privacy Modal
              ========================================================================== -->
-    <div class="modal-backdrop" id="privacy-modal">
+    <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-privacy">
         <div class="modal-container u-modal-w-680px">
             <button class="modal-close-btn"
                 data-action="close-privacy-modal"
                 aria-label="Close modal">×</button>
             <div class="u-flex-box-221">
-                <span class="u-font-size-1-6rem">🛡️</span>
+                <span class="u-icon-decorative" aria-hidden="true">🛡️</span>
                 <div>
-                    <h3 class="u-box-font-size-222">Digital Health Data Privacy Policy
+                    <h3 id="modal-title-privacy" class="u-box-font-size-222">Digital Health Data Privacy Policy
                     </h3>
                     <span class="u-box-font-size-254">COMPLIANT WITH DIGITAL PERSONAL
                         DATA PROTECTION (DPDP) ACT, 2023 (INDIA)</span>
@@ -3085,14 +3087,14 @@
     <!-- ==========================================================================
              Patient Rights Charter & Terms Modal
              ========================================================================== -->
-    <div class="modal-backdrop" id="terms-modal">
+    <div class="modal-backdrop" id="terms-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-terms">
         <div class="modal-container u-modal-w-680px">
             <button class="modal-close-btn" data-action="close-terms-modal"
                 aria-label="Close modal">×</button>
             <div class="u-flex-box-221">
-                <span class="u-font-size-1-6rem">📜</span>
+                <span class="u-icon-decorative" aria-hidden="true">📜</span>
                 <div>
-                    <h3 class="u-box-font-size-222">Patient Rights Charter &amp; Terms
+                    <h3 id="modal-title-terms" class="u-box-font-size-222">Patient Rights Charter &amp; Terms
                     </h3>
                     <span class="u-box-font-size-43">CarePulse Super Speciality Hospital,
                         Phagwara</span>
@@ -3124,7 +3126,7 @@
     </div>
 
     <!-- Toast Notification Container -->
-    <div class="toast-container" id="toast-container"></div>
+    <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <!-- Footer -->
     <footer class="clinic-footer">
@@ -3240,7 +3242,7 @@
          ========================================================================== -->
     <nav class="bottom-quick-dock" id="bottom-quick-dock" aria-label="Quick App Actions">
         <a href="#top" class="dock-item active" id="dock-item-home" data-action="set-active-dock" data-tab="home">
-            <span class="dock-icon">🏠</span>
+            <span class="u-icon-decorative" aria-hidden="true">🏠</span>
             <span>Home</span>
         </a>
         <a href="#doctors" class="dock-item" id="dock-item-doctors" data-action="open-doctors-modal">
@@ -3249,21 +3251,21 @@
         </a>
         <button type="button" class="dock-item dock-fab" data-action="open-booking-layer"
             title="Instant Doctor Slot Booking">
-            <span class="dock-icon">⚡</span>
+            <span class="u-icon-decorative" aria-hidden="true">⚡</span>
             <span>Book Slot</span>
         </button>
         <a href="#queue" class="dock-item" id="dock-item-queue" data-action="open-live-queue-modal">
-            <span class="dock-icon">⏱️</span>
+            <span class="u-icon-decorative" aria-hidden="true">⏱️</span>
             <span class="dock-pulse-dot"></span>
             <span>Live Queue</span>
         </a>
         <button type="button" class="dock-item" data-action="open-my-bookings-modal" title="My Booked Tokens">
-            <span class="dock-icon">📋</span>
+            <span class="u-icon-decorative" aria-hidden="true">📋</span>
             <span class="dock-badge badge-my-tokens u-display-none">0</span>
             <span>My Tokens</span>
         </button>
         <button type="button" class="dock-item" data-action="open-spotlight-search" title="Universal Search (Ctrl+K)">
-            <span class="dock-icon">🔍</span>
+            <span class="u-icon-decorative" aria-hidden="true">🔍</span>
             <span>Search</span>
         </button>
     </nav>
@@ -3275,9 +3277,10 @@
         aria-label="Global Search">
         <div class="spotlight-dialog">
             <div class="spotlight-search-header">
-                <span class="u-font-size-1-25rem">🔍</span>
+                <span class="u-icon-decorative" aria-hidden="true">🔍</span>
                 <input type="text" id="spotlight-search-input" class="spotlight-search-input"
                     placeholder="Search doctors, departments, tests, beds, or actions... (Esc to close)"
+                    aria-label="Search doctors, departments, tests, beds, or actions"
                     autocomplete="off" />
                 <button type="button" class="btn-voice-ai u-box-padding-272"
                     data-action="voice-ai-open" title="Speak with Voice AI (Ctrl+M)">
@@ -3299,7 +3302,7 @@
 
     <!-- Public Address (PA) Audio Callout Broadcast Banner -->
     <div id="pa-announcement-banner" class="pa-announcement-banner" role="status" aria-live="polite">
-        <span class="pa-speaker-icon">📢</span>
+        <span class="u-icon-decorative" aria-hidden="true">📢</span>
         <div>
             <div id="pa-announcement-text" class="pa-announcement-text">Now Serving Token TK-15 &bull; Room 101</div>
             <div id="pa-announcement-sub" class="pa-announcement-sub">CarePulse Public Address &bull; Dr. Rajesh Sharma</div>
@@ -3311,7 +3314,7 @@
         <div class="voice-modal-card">
             <div class="u-flex-box-274">
                 <div class="u-flex-box-275">
-                    <span class="u-font-size-1-2rem">🎙️</span>
+                    <span class="u-icon-decorative" aria-hidden="true">🎙️</span>
                     <div>
                         <h3 id="voice-modal-title"class="u-box-font-size-277">CarePulse Voice AI</h3>
                         <span class="u-box-font-size-278">Speak in English, हिन्दी, or ਪੰਜਾਬੀ (Ctrl+M)</span>
@@ -3396,7 +3399,7 @@
                 <!-- Live Patient Telemetry HUD -->
                 <div class="tele-vitals-hud">
                     <div class="vitals-pill">
-                        <span class="heart-beat-icon">❤️</span> <span id="tele-vital-hr">74 BPM</span>
+                        <span class="u-icon-decorative" aria-hidden="true">❤️</span> <span id="tele-vital-hr">74 BPM</span>
                     </div>
                     <div class="vitals-pill">
                         <span>🫁</span> <span id="tele-vital-spo2">SpO2 98%</span>
@@ -3584,7 +3587,7 @@
                 <div class="wayfinder-route-panel">
                     <div class="route-selector-box">
                         <div class="route-input-row">
-                            <span class="route-input-icon">🟢</span>
+                            <span class="u-icon-decorative" aria-hidden="true">🟢</span>
                             <select id="wayfinder-start-select" class="route-select" onchange="CampusWayfinderEngine.onRouteSelectChange()" aria-label="Select Starting Point">
                                 <option value="main-gate" selected>Main Entrance (Gate 1 Reception)</option>
                                 <option value="casualty-ramp">Emergency Casualty Ramp</option>
@@ -3592,7 +3595,7 @@
                             </select>
                         </div>
                         <div class="route-input-row">
-                            <span class="route-input-icon">📍</span>
+                            <span class="u-icon-decorative" aria-hidden="true">📍</span>
                             <select id="wayfinder-dest-select" class="route-select" onchange="CampusWayfinderEngine.onRouteSelectChange()" aria-label="Select Destination">
                                 <optgroup label="Ground Floor">
                                     <option value="room-101" selected>Room 101 - Dr. Rajesh Sharma (Gen Med)</option>
@@ -3614,7 +3617,7 @@
                         </div>
                         <div class="route-options-row">
                             <label class="wheelchair-toggle">
-                                <input type="checkbox" id="wayfinder-wheelchair-chk" onchange="CampusWayfinderEngine.toggleWheelchair(this.checked)" />
+                                <input type="checkbox" id="wayfinder-wheelchair-chk" aria-label="Accessible wheelchair route filter" onchange="CampusWayfinderEngine.toggleWheelchair(this.checked)" />
                                 <span>♿ Wheelchair / Ramp Only</span>
                             </label>
                             <span class="u-box-color-105">Zero Stairs Mode</span>
@@ -3670,7 +3673,7 @@
             <!-- Header -->
             <div class="health-pass-header">
                 <div class="u-flex-box-89">
-                    <span class="u-font-size-1-4rem">🪪</span>
+                    <span class="u-icon-decorative" aria-hidden="true">🪪</span>
                     <div>
                         <h3 id="modal-title-health-card"class="u-box-margin-293">Digital CarePulse Health Pass</h3>
                         <p class="u-box-margin-294">ABHA &bull; Emergency Medical ID &bull; Instant Hospital Check-in</p>

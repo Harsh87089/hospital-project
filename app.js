@@ -570,6 +570,8 @@ function showToast(message, type = 'info') {
   if (!container) return;
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
+  toast.setAttribute('role', 'status');
+  toast.setAttribute('aria-live', 'polite');
 
   let icon = 'ℹ️';
   if (type === 'success') icon = '✅';
@@ -3537,13 +3539,66 @@ window.closeEmergencyModal = function () {
 };
 
 // --- Close Modals on Backdrop Click or Escape Key ---
+// --- Unified Accessible Modal Engine (WCAG 2.2 AA Focus Trap, Opener Return & Scroll Lock) ---
+let activeModalOpener = null;
+let currentActiveModal = null;
+
+window.openModal = function (modalId, triggerElement) {
+  const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
+  if (!modal) return;
+
+  activeModalOpener = triggerElement || document.activeElement;
+  currentActiveModal = modal;
+
+  modal.classList.add('active');
+  modal.classList.remove('u-display-none');
+  modal.setAttribute('aria-hidden', 'false');
+
+  document.body.classList.add('modal-open');
+  document.body.style.overflow = 'hidden';
+
+  // Focus trap initiation: focus first interactive element inside modal
+  const focusable = modal.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+  if (focusable.length > 0) {
+    focusable[0].focus();
+  } else {
+    modal.setAttribute('tabindex', '-1');
+    modal.focus();
+  }
+};
+
+window.closeModal = function (modalId) {
+  const modal = typeof modalId === 'string' ? document.getElementById(modalId) : (modalId || currentActiveModal);
+  if (!modal) return;
+
+  modal.classList.remove('active');
+  modal.setAttribute('aria-hidden', 'true');
+
+  const openModals = document.querySelectorAll('.modal-backdrop.active, .service-layer-modal.active, .booking-layer-modal.active, .spotlight-backdrop.active, .voice-modal-backdrop.active');
+  if (openModals.length === 0) {
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    currentActiveModal = null;
+  } else {
+    currentActiveModal = openModals[openModals.length - 1];
+  }
+
+  if (activeModalOpener && typeof activeModalOpener.focus === 'function') {
+    activeModalOpener.focus();
+    activeModalOpener = null;
+  }
+};
+
 function setupModalDismissals() {
   const allModalIds = [
     'booking-layer-modal', 'token-modal', 'my-bookings-modal', 'emergency-modal',
     'lab-report-modal', 'pharmacy-modal', 'health-calculator-modal',
     'live-queue-modal', 'beds-modal', 'doctors-modal', 'packages-modal',
     'track-token-modal', 'insurance-modal', 'guidelines-modal', 'tele-consult-modal',
-    'campus-wayfinder-modal', 'health-card-modal'
+    'campus-wayfinder-modal', 'health-card-modal', 'reschedule-dialog-modal',
+    'cancel-dialog-modal', 'package-booking-modal', 'privacy-modal', 'terms-modal',
+    'reception-modal', 'spotlight-search-modal', 'voice-assistant-modal',
+    'delivery-gateway-modal', 'emergency-sos-modal'
   ];
 
   allModalIds.forEach(modalId => {
@@ -3551,51 +3606,41 @@ function setupModalDismissals() {
     if (!el) return;
     el.addEventListener('click', (e) => {
       if (e.target === el) {
-        if (modalId === 'booking-layer-modal') closeBookingLayer();
-        else if (modalId === 'token-modal') closeTokenModal();
-        else if (modalId === 'my-bookings-modal') closeMyBookingsModal();
-        else if (modalId === 'emergency-modal') closeEmergencyModal();
-        else if (modalId === 'lab-report-modal') closeLabReportModal();
-        else if (modalId === 'pharmacy-modal') closePharmacyModal();
-        else if (modalId === 'health-calculator-modal' && typeof closeHealthCalculator === 'function') closeHealthCalculator();
-        else if (modalId === 'live-queue-modal') closeLiveQueueModal();
-        else if (modalId === 'beds-modal') closeBedsModal();
-        else if (modalId === 'doctors-modal') closeDoctorsModal();
-        else if (modalId === 'packages-modal') closePackagesModal();
-        else if (modalId === 'track-token-modal') closeTrackTokenModal();
-        else if (modalId === 'insurance-modal') closeInsuranceModal();
-        else if (modalId === 'guidelines-modal') closeGuidelinesModal();
-        else if (modalId === 'tele-consult-modal' && typeof closeTeleConsultModal === 'function') closeTeleConsultModal();
-        else if (modalId === 'campus-wayfinder-modal' && typeof closeWayfinderModal === 'function') closeWayfinderModal();
-        else if (modalId === 'health-card-modal' && typeof closeHealthCardModal === 'function') closeHealthCardModal();
+        window.closeModal(el);
       }
     });
   });
 
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      closeBookingLayer();
-      closeTokenModal();
-      closeMyBookingsModal();
-      closeEmergencyModal();
-      closeLabReportModal();
-      closePharmacyModal();
-      if (typeof closeHealthCalculator === 'function') closeHealthCalculator();
-      closeLiveQueueModal();
-      closeBedsModal();
-      closeDoctorsModal();
-      closePackagesModal();
-      closeTrackTokenModal();
-      closeInsuranceModal();
-      closeGuidelinesModal();
-      if (typeof closeTeleConsultModal === 'function') closeTeleConsultModal();
-      if (typeof closeWayfinderModal === 'function') closeWayfinderModal();
-      if (typeof closeHealthCardModal === 'function') closeHealthCardModal();
+      if (currentActiveModal) {
+        window.closeModal(currentActiveModal);
+      } else {
+        allModalIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el && el.classList.contains('active')) {
+            window.closeModal(el);
+          }
+        });
+      }
       if (typeof closeChatWidget === 'function') closeChatWidget();
-      if (typeof closeEmergencySOS === 'function') closeEmergencySOS();
-      if (typeof closeSpotlightSearch === 'function') closeSpotlightSearch();
+    } else if (e.key === 'Tab' && currentActiveModal) {
+      const focusable = Array.from(currentActiveModal.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')).filter(el => el.offsetParent !== null);
+      if (focusable.length === 0) return;
+
+      const firstEl = focusable[0];
+      const lastEl = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === firstEl) {
+        e.preventDefault();
+        lastEl.focus();
+      } else if (!e.shiftKey && document.activeElement === lastEl) {
+        e.preventDefault();
+        firstEl.focus();
+      }
     }
   });
+}
 
   // Deep Link & Hash Routing handler
   window.handleHashRouting = function () {
