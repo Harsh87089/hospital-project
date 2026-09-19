@@ -13,6 +13,34 @@
   }
 })();
 
+// Global HTML Sanitizer to prevent any script injection
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Indian Standard Time (Asia/Kolkata = UTC+5:30) Date Utilities
+function getISTDate(date = new Date()) {
+  const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+  return new Date(utc + (330 * 60000));
+}
+
+function getISTIsoDate(date = new Date()) {
+  const ist = getISTDate(date);
+  const y = ist.getFullYear();
+  const m = String(ist.getMonth() + 1).padStart(2, '0');
+  const d = String(ist.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+// Global reference for active tracker token
+let activeTrackerToken = null;
+
 // --- Doctors Data with Indian Names across required specialties ---
 const DOCTORS = [
   // --- General Physicians ---
@@ -21,7 +49,7 @@ const DOCTORS = [
     name: 'Dr. Rajesh Sharma',
     specialty: 'General Physician',
     specialtyKey: 'general',
-    qualifications: 'MBBS, MD (General Medicine - AIIMS New Delhi)',
+    qualifications: 'MBBS, MD (General Medicine - Premier Institute of Medical Sciences)',
     regNo: 'PMC-38214 (Punjab Medical Council)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon - Sat',
@@ -31,7 +59,7 @@ const DOCTORS = [
     hours: '09:00 AM - 01:00 PM & 05:00 PM - 08:30 PM',
     room: 'Room 101, Ground Floor (General OPD)',
     rating: 4.93,
-    reviewsCount: '1,840 verified visits',
+    reviewsCount: '1,840 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -45,7 +73,7 @@ const DOCTORS = [
     name: 'Dr. Priya Nair',
     specialty: 'General Physician',
     specialtyKey: 'general',
-    qualifications: 'MBBS, DNB (Family & Internal Medicine - CMC Vellore)',
+    qualifications: 'MBBS, DNB (Family & Internal Medicine - Apex Medical College)',
     regNo: 'PMC-41908 (Punjab Medical Council)',
     languages: 'English, Hindi, Malayalam',
     days: 'Mon - Sat',
@@ -55,7 +83,7 @@ const DOCTORS = [
     hours: '10:00 AM - 02:00 PM & 06:00 PM - 09:00 PM',
     room: 'Room 102, Ground Floor (General OPD Bay B)',
     rating: 4.90,
-    reviewsCount: '1,290 verified visits',
+    reviewsCount: '1,290 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1594824813689-ff4a20b784a0?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -69,8 +97,8 @@ const DOCTORS = [
     name: 'Dr. Amitav Banerjee',
     specialty: 'General Physician',
     specialtyKey: 'general',
-    qualifications: 'MBBS, MD (Senior Physician & Diabetologist - KGMC)',
-    regNo: 'MCI-29481 (Medical Council of India)',
+    qualifications: 'MBBS, MD (Senior Physician & Diabetologist - State Medical Academy)',
+    regNo: 'NMC-29481 (National Medical Commission)',
     languages: 'English, Hindi, Bengali',
     days: 'Mon - Fri',
     experience: '18 Years Exp',
@@ -79,7 +107,7 @@ const DOCTORS = [
     hours: '08:30 AM - 12:30 PM & 04:30 PM - 07:30 PM',
     room: 'Room 103, Ground Floor (Executive OPD)',
     rating: 4.96,
-    reviewsCount: '2,100 verified visits',
+    reviewsCount: '2,100 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -95,7 +123,7 @@ const DOCTORS = [
     name: 'Dr. Gurpreet Singh Sandhu',
     specialty: 'Cardiologist',
     specialtyKey: 'cardiology',
-    qualifications: 'MBBS, MD (Medicine), DM (Cardiology - PGIMER Chandigarh)',
+    qualifications: 'MBBS, MD (Medicine), DM (Cardiology - National Postgraduate Medical Institute)',
     regNo: 'PMC-38291 (Punjab Medical Council)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon - Sat',
@@ -105,7 +133,7 @@ const DOCTORS = [
     hours: '09:00 AM - 01:00 PM & 04:00 PM - 07:00 PM',
     room: 'Room 201, 2nd Floor (Cardiology & Echo Lab)',
     rating: 4.97,
-    reviewsCount: '2,450 verified visits',
+    reviewsCount: '2,450 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -119,7 +147,7 @@ const DOCTORS = [
     name: 'Dr. Navjot Kaur Dhillon',
     specialty: 'Cardiologist',
     specialtyKey: 'cardiology',
-    qualifications: 'MBBS, MD, DNB (Cardiology - Fortis Escorts Heart Institute)',
+    qualifications: 'MBBS, MD, DNB (Cardiology - Metro Heart & Vascular Institute)',
     regNo: 'PMC-44120 (Punjab Medical Council)',
     languages: 'English, Hindi, Punjabi',
     days: 'Tue - Sun',
@@ -129,7 +157,7 @@ const DOCTORS = [
     hours: '10:00 AM - 02:00 PM & 05:00 PM - 08:00 PM',
     room: 'Room 203, 2nd Floor (Heart Failure Clinic)',
     rating: 4.92,
-    reviewsCount: '1,380 verified visits',
+    reviewsCount: '1,380 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1594824813689-ff4a20b784a0?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -145,7 +173,7 @@ const DOCTORS = [
     name: 'Dr. Maninderjit Bawa',
     specialty: 'Orthopedic Surgeon',
     specialtyKey: 'orthopedics',
-    qualifications: 'MBBS, MS (Orthopedics - CMC Ludhiana), MCh Ortho (Dundee, UK)',
+    qualifications: 'MBBS, MS (Orthopedics - Regional Medical College), MCh Ortho (UK)',
     regNo: 'PMC-41209 (Punjab Medical Council)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon - Sat',
@@ -155,7 +183,7 @@ const DOCTORS = [
     hours: '09:30 AM - 01:30 PM & 04:30 PM - 07:30 PM',
     room: 'Room 106, Ground Floor (Joint & Spine Clinic)',
     rating: 4.95,
-    reviewsCount: '2,180 verified visits',
+    reviewsCount: '2,180 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -169,7 +197,7 @@ const DOCTORS = [
     name: 'Dr. Harmeet Ahluwalia',
     specialty: 'Orthopedic Surgeon',
     specialtyKey: 'orthopedics',
-    qualifications: 'MBBS, D.Ortho, DNB (Orthopedics - DMC Ludhiana)',
+    qualifications: 'MBBS, D.Ortho, DNB (Orthopedics - Apex Orthopedic Institute)',
     regNo: 'PMC-48190 (Punjab Medical Council)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon, Wed, Fri, Sat',
@@ -179,7 +207,7 @@ const DOCTORS = [
     hours: '11:00 AM - 03:00 PM & 05:30 PM - 08:30 PM',
     room: 'Room 107, Ground Floor (Sports Injury & Trauma Bay)',
     rating: 4.89,
-    reviewsCount: '1,120 verified visits',
+    reviewsCount: '1,120 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -195,7 +223,7 @@ const DOCTORS = [
     name: 'Dr. Simranjit Kaur Randhawa',
     specialty: 'Gynecologist & Obstetrician',
     specialtyKey: 'gynecology',
-    qualifications: 'MBBS, MS (Obstetrics & Gynaecology - GMC Amritsar), Fellowship Infertility',
+    qualifications: 'MBBS, MS (Obstetrics & Gynaecology - Government Medical College), Fellowship Infertility',
     regNo: 'PMC-45812 (Punjab Medical Council)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon - Sat',
@@ -205,7 +233,7 @@ const DOCTORS = [
     hours: '09:00 AM - 01:00 PM & 04:30 PM - 07:30 PM',
     room: 'Room 205, 2nd Floor (Women Wellness Centre)',
     rating: 4.96,
-    reviewsCount: '2,320 verified visits',
+    reviewsCount: '2,320 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -219,7 +247,7 @@ const DOCTORS = [
     name: 'Dr. Manpreet Saini',
     specialty: 'Gynecologist & Obstetrician',
     specialtyKey: 'gynecology',
-    qualifications: 'MBBS, DGO, DNB (Obstetrics & Gynecology - PGIMER)',
+    qualifications: 'MBBS, DGO, DNB (Obstetrics & Gynecology - Postgraduate Medical Institute)',
     regNo: 'PMC-52190 (Punjab Medical Council)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon - Fri',
@@ -229,7 +257,7 @@ const DOCTORS = [
     hours: '10:30 AM - 02:30 PM & 05:00 PM - 08:00 PM',
     room: 'Room 206, 2nd Floor (Antenatal Care Unit)',
     rating: 4.90,
-    reviewsCount: '1,040 verified visits',
+    reviewsCount: '1,040 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1594824813689-ff4a20b784a0?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -245,7 +273,7 @@ const DOCTORS = [
     name: 'Dr. Harvinder Singh Kohli',
     specialty: 'ENT Specialist',
     specialtyKey: 'ent',
-    qualifications: 'MBBS, MS (ENT / Otorhinolaryngology - GMC Patiala)',
+    qualifications: 'MBBS, MS (ENT / Otorhinolaryngology - State Medical College)',
     regNo: 'PMC-39145 (Punjab Medical Council)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon - Sat',
@@ -255,7 +283,7 @@ const DOCTORS = [
     hours: '09:30 AM - 01:30 PM & 05:00 PM - 08:00 PM',
     room: 'Room 208, 2nd Floor (ENT & Audiology Suite)',
     rating: 4.92,
-    reviewsCount: '1,560 verified visits',
+    reviewsCount: '1,560 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -271,7 +299,7 @@ const DOCTORS = [
     name: 'Dr. Ravneet Oberoi',
     specialty: 'Eye Specialist',
     specialtyKey: 'ophthalmology',
-    qualifications: 'MBBS, MS (Ophthalmology - Dr. RP Centre AIIMS New Delhi)',
+    qualifications: 'MBBS, MS (Ophthalmology - National Eye Centre)',
     regNo: 'PMC-54911 (Punjab Medical Council)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon - Sat',
@@ -281,7 +309,7 @@ const DOCTORS = [
     hours: '09:00 AM - 01:00 PM & 04:00 PM - 07:30 PM',
     room: 'Room 210, 2nd Floor (Precision Eye & Cataract Suite)',
     rating: 4.94,
-    reviewsCount: '1,720 verified visits',
+    reviewsCount: '1,720 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -297,7 +325,7 @@ const DOCTORS = [
     name: 'Dr. Ananya Mukherjee',
     specialty: 'Pediatrician',
     specialtyKey: 'pediatrician',
-    qualifications: 'MBBS, MD (Pediatrics & Neonatology - KEM Mumbai)',
+    qualifications: 'MBBS, MD (Pediatrics & Neonatology - Metro Institute of Child Health)',
     regNo: 'PMC-47819 (Punjab Medical Council)',
     languages: 'English, Hindi, Bengali',
     days: 'Mon - Sat',
@@ -307,7 +335,7 @@ const DOCTORS = [
     hours: '09:30 AM - 01:30 PM & 04:30 PM - 07:30 PM',
     room: 'Room 104, 1st Floor (Child Wellness Unit)',
     rating: 4.95,
-    reviewsCount: '1,480 verified visits',
+    reviewsCount: '1,480 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -321,7 +349,7 @@ const DOCTORS = [
     name: 'Dr. Vikramaditya Joshi',
     specialty: 'Pediatrician',
     specialtyKey: 'pediatrician',
-    qualifications: 'MBBS, DCH (Child Health & Immunization - PGIMER)',
+    qualifications: 'MBBS, DCH (Child Health & Immunization - National Postgraduate Institute)',
     regNo: 'PMC-50931 (Punjab Medical Council)',
     languages: 'English, Hindi, Marathi',
     days: 'Mon - Fri',
@@ -331,7 +359,7 @@ const DOCTORS = [
     hours: '10:00 AM - 02:00 PM & 05:00 PM - 08:00 PM',
     room: 'Room 105, 1st Floor (Pediatric Clinic B)',
     rating: 4.88,
-    reviewsCount: '950 verified visits',
+    reviewsCount: '950 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -347,7 +375,7 @@ const DOCTORS = [
     name: 'Dr. Meera Krishnan',
     specialty: 'Dermatologist',
     specialtyKey: 'dermatologist',
-    qualifications: 'MBBS, MD (Dermatology, Venereology & Leprosy - JIPMER)',
+    qualifications: 'MBBS, MD (Dermatology, Venereology & Leprosy - Premier Institute of Dermatology)',
     regNo: 'PMC-46201 (Punjab Medical Council)',
     languages: 'English, Hindi, Tamil',
     days: 'Mon - Sat',
@@ -357,7 +385,7 @@ const DOCTORS = [
     hours: '10:00 AM - 02:00 PM & 05:00 PM - 08:00 PM',
     room: 'Room 202, 2nd Floor (Skin & Derma Suite)',
     rating: 4.91,
-    reviewsCount: '1,340 verified visits',
+    reviewsCount: '1,340 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1594824813689-ff4a20b784a0?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -371,7 +399,7 @@ const DOCTORS = [
     name: 'Dr. Rohan Varma',
     specialty: 'Dermatologist',
     specialtyKey: 'dermatologist',
-    qualifications: 'MBBS, DDVL (Aesthetic Dermatology & Trichology - MAMC)',
+    qualifications: 'MBBS, DDVL (Aesthetic Dermatology & Trichology - State Medical College)',
     regNo: 'PMC-49112 (Punjab Medical Council)',
     languages: 'English, Hindi, Punjabi',
     days: 'Tue - Sun',
@@ -381,7 +409,7 @@ const DOCTORS = [
     hours: '11:00 AM - 03:00 PM & 06:00 PM - 08:30 PM',
     room: 'Room 204, 2nd Floor (Aesthetic & Hair Clinic)',
     rating: 4.86,
-    reviewsCount: '810 verified visits',
+    reviewsCount: '810 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -397,7 +425,7 @@ const DOCTORS = [
     name: 'Dr. Suresh Kulkarni',
     specialty: 'Dentist',
     specialtyKey: 'dentist',
-    qualifications: 'BDS, MDS (Orthodontics & Dentofacial Orthopedics - Nair Dental)',
+    qualifications: 'BDS, MDS (Orthodontics & Dentofacial Orthopedics - Government Dental College)',
     regNo: 'PDC-12490 (Punjab Dental Council)',
     languages: 'English, Hindi, Marathi',
     days: 'Mon - Sat',
@@ -407,7 +435,7 @@ const DOCTORS = [
     hours: '09:00 AM - 01:00 PM & 04:00 PM - 08:00 PM',
     room: 'Room 108, Ground Floor (Advanced Dental Suite)',
     rating: 4.94,
-    reviewsCount: '1,620 verified visits',
+    reviewsCount: '1,620 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -421,7 +449,7 @@ const DOCTORS = [
     name: 'Dr. Pooja Deshmukh',
     specialty: 'Dentist',
     specialtyKey: 'dentist',
-    qualifications: 'BDS, MDS (Conservative Dentistry & Endodontics - GDC Mumbai)',
+    qualifications: 'BDS, MDS (Conservative Dentistry & Endodontics - State Dental College)',
     regNo: 'PDC-14981 (Punjab Dental Council)',
     languages: 'English, Hindi, Marathi',
     days: 'Mon - Fri',
@@ -431,7 +459,7 @@ const DOCTORS = [
     hours: '09:30 AM - 01:30 PM & 05:00 PM - 08:30 PM',
     room: 'Room 109, Ground Floor (Dental Care Bay)',
     rating: 4.89,
-    reviewsCount: '1,050 verified visits',
+    reviewsCount: '1,050 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -445,7 +473,7 @@ const DOCTORS = [
     name: 'Dr. Arjun Singhania',
     specialty: 'Dentist',
     specialtyKey: 'dentist',
-    qualifications: 'BDS, MDS (Oral & Maxillofacial Implantology - BHU)',
+    qualifications: 'BDS, MDS (Oral & Maxillofacial Implantology - Apex Dental Institute)',
     regNo: 'PDC-11822 (Punjab Dental Council)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon, Wed, Thu, Sat',
@@ -455,7 +483,7 @@ const DOCTORS = [
     hours: '10:30 AM - 02:30 PM & 05:30 PM - 08:30 PM',
     room: 'Room 110, Ground Floor (Dental Surgery Suite)',
     rating: 4.92,
-    reviewsCount: '1,180 verified visits',
+    reviewsCount: '1,180 demo consultations',
     avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
     status: 'In OPD',
@@ -481,7 +509,13 @@ const state = {
   selectedDate: '',
   selectedSlot: '',
   selectedSlotSession: '',
-  bookedSlotsCache: {}, // key: doctorId + date -> set of booked times
+  bookedSlotsCache: (function () {
+    try {
+      return JSON.parse(localStorage.getItem('carepulse_booked_slots') || '{}');
+    } catch (e) {
+      return {};
+    }
+  })(),
   userAppointments: [],
   lastCreatedToken: null,
   queueSpecialty: 'all',
@@ -521,7 +555,7 @@ function playClinicChime() {
   }
 }
 
-// --- Toast System ---
+// --- Toast System (XSS-Safe DOM Construction) ---
 function showToast(message, type = 'info') {
   const container = document.getElementById('toast-container');
   if (!container) return;
@@ -531,8 +565,15 @@ function showToast(message, type = 'info') {
   let icon = 'ℹ️';
   if (type === 'success') icon = '✅';
   if (type === 'warning') icon = '⚠️';
+  if (type === 'error') icon = '⛔';
 
-  toast.innerHTML = `<span>${icon}</span> <div>${message}</div>`;
+  const iconSpan = document.createElement('span');
+  iconSpan.textContent = icon;
+  const msgDiv = document.createElement('div');
+  msgDiv.textContent = message; // Safe against script injection attacks
+
+  toast.appendChild(iconSpan);
+  toast.appendChild(msgDiv);
   container.appendChild(toast);
 
   setTimeout(() => {
@@ -543,20 +584,22 @@ function showToast(message, type = 'info') {
   }, 4000);
 }
 
-// --- Initialize Dates (Today + next 6 days) ---
+// --- Initialize Dates in Indian Standard Time (Today + next 6 days) ---
 function getUpcomingDays(count = 7) {
   const days = [];
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+  const istNow = getISTDate();
+
   for (let i = 0; i < count; i++) {
-    const d = new Date();
-    d.setDate(d.getDate() + i);
+    const d = new Date(istNow);
+    d.setDate(istNow.getDate() + i);
 
     const dayStr = i === 0 ? 'Today' : (i === 1 ? 'Tmrw' : dayNames[d.getDay()]);
     const dateNum = d.getDate();
     const monthStr = monthNames[d.getMonth()];
-    const isoString = d.toISOString().split('T')[0];
+    const isoString = getISTIsoDate(d);
 
     days.push({
       label: dayStr,
@@ -569,16 +612,69 @@ function getUpcomingDays(count = 7) {
   return days;
 }
 
-// --- Generate Slots with realistic availability ---
+// --- Generate Slots with realistic availability & doctor schedule enforcement ---
 function getSlotsForDoctorAndDate(doctorId, isoDate) {
-  const cacheKey = `${doctorId}_${isoDate}`;
+  const doc = DOCTORS.find(d => d.id === doctorId) || DOCTORS[0];
+  const targetDateIso = isoDate || getISTIsoDate();
+  const cacheKey = `${doctorId}_${targetDateIso}`;
+
+  // 1. Verify if doctor is working on this day of week
+  const dateObj = new Date(targetDateIso + 'T12:00:00Z');
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const dayName = dayNames[dateObj.getUTCDay()];
+
+  let isWorking = true;
+  if (doc.days) {
+    if (doc.days === 'Mon - Sat' && dayName === 'Sun') isWorking = false;
+    else if (doc.days === 'Mon - Fri' && (dayName === 'Sat' || dayName === 'Sun')) isWorking = false;
+    else if (doc.days === 'Tue - Sun' && dayName === 'Mon') isWorking = false;
+    else if (doc.days.includes(',')) {
+      const allowed = doc.days.split(',').map(s => s.trim());
+      isWorking = allowed.includes(dayName);
+    }
+  }
+
+  if (!isWorking) {
+    return {
+      offDuty: true,
+      offDutyMessage: `${doc.name} is off-duty on ${dateObj.toLocaleDateString('en-IN', { weekday: 'long' })} (Weekly OPD: ${doc.days}). Please select another date above.`,
+      morning: [],
+      afternoon: [],
+      evening: []
+    };
+  }
+
+  // 2. Check if doctor takes afternoon sessions
+  const hoursLower = (doc.hours || '').toLowerCase();
+  const hasAfternoon = hoursLower.includes('02:') || hoursLower.includes('03:') || hoursLower.includes('11:00 am - 03:00 pm') || hoursLower.includes('10:30 am - 02:30 pm');
+
+  // 3. Past slots check for today in IST
+  const todayISTIso = getISTIsoDate();
+  const isToday = (targetDateIso === todayISTIso);
+  const istNow = getISTDate();
+  const currentMinutesIST = istNow.getHours() * 60 + istNow.getMinutes();
+
+  const parseSlotMinutes = (slotStr) => {
+    const parts = slotStr.trim().split(' ');
+    const tp = (parts[0] || '09:00').split(':');
+    let h = parseInt(tp[0], 10) || 9;
+    const m = parseInt(tp[1], 10) || 0;
+    if (parts[1] === 'PM' && h < 12) h += 12;
+    if (parts[1] === 'AM' && h === 12) h = 0;
+    return h * 60 + m;
+  };
 
   // Deterministic seed for realistic slot states
-  const seed = (doctorId.charCodeAt(doctorId.length - 1) + parseInt(isoDate.replace(/-/g, '').slice(-2), 10)) % 10;
+  const seed = (doctorId.charCodeAt(doctorId.length - 1) + parseInt(targetDateIso.replace(/-/g, '').slice(-2), 10)) % 10;
 
   const processGroup = (slots, sessionName) => {
     return slots.map((time, idx) => {
-      // Check if user or demo already booked this
+      // Check if past for today in IST
+      if (isToday && parseSlotMinutes(time) <= currentMinutesIST) {
+        return { time, status: 'past', session: sessionName };
+      }
+
+      // Check if user or demo already booked this in persistent cache
       const isLocallyBooked = state.bookedSlotsCache[cacheKey] && state.bookedSlotsCache[cacheKey].includes(time);
       if (isLocallyBooked) {
         return { time, status: 'booked', session: sessionName };
@@ -596,8 +692,9 @@ function getSlotsForDoctorAndDate(doctorId, isoDate) {
   };
 
   return {
+    offDuty: false,
     morning: processGroup(SLOT_TEMPLATES.morning, 'Morning'),
-    afternoon: processGroup(SLOT_TEMPLATES.afternoon, 'Afternoon'),
+    afternoon: hasAfternoon ? processGroup(SLOT_TEMPLATES.afternoon, 'Afternoon') : [],
     evening: processGroup(SLOT_TEMPLATES.evening, 'Evening')
   };
 }
@@ -723,11 +820,8 @@ function renderLiveOPDBoard() {
 
         <!-- Action Buttons -->
         <div class="queue-card-actions">
-          <button class="btn-next-sim" onclick="simulateNextToken('${doc.id}')" title="Call next token with chime notification">
-            ⚡ Next Token
-          </button>
-          <button class="btn-book-from-queue" onclick="closeLiveQueueModal(); openBookingLayer('${doc.id}');" title="Book appointment slot with this doctor">
-            📅 Book Slot ➔
+          <button class="btn-book-from-queue" onclick="closeLiveQueueModal(); openBookingLayer('${doc.id}');" style="width: 100%; justify-content: center; font-weight: 700;" title="Book consultation appointment slot with this specialist">
+            📅 Book Consultation Slot ➔
           </button>
         </div>
       </div>
@@ -1144,10 +1238,25 @@ function renderSlots() {
 
   const slotsData = getSlotsForDoctorAndDate(state.selectedDoctorId, state.selectedDate);
 
+  if (slotsData.offDuty) {
+    const offDutyHtml = `
+      <div style="grid-column: 1 / -1; padding: 1.5rem; text-align: center; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; color: #9f1239; font-size: 0.9rem; font-weight: 600; line-height: 1.5;">
+        ⚠️ ${escapeHtml(slotsData.offDutyMessage)}
+      </div>
+    `;
+    containers.forEach(container => {
+      container.innerHTML = offDutyHtml;
+    });
+    updateSummaryBox();
+    return;
+  }
+
   let html = '';
 
   ['morning', 'afternoon', 'evening'].forEach(session => {
-    const sessionSlots = slotsData[session];
+    const sessionSlots = slotsData[session] || [];
+    if (sessionSlots.length === 0) return;
+
     const sessionLabel = session === 'morning' ? '🌅 Morning Slots' : (session === 'afternoon' ? '☀️ Afternoon Slots' : '🌙 Evening Slots');
 
     html += `
@@ -1160,16 +1269,21 @@ function renderSlots() {
       let statusTagText = 'Open';
       let statusClass = slot.status;
 
-      if (slot.status === 'booked') {
+      if (slot.status === 'past') {
+        statusTagText = 'Passed';
+        statusClass = 'booked past-slot';
+      } else if (slot.status === 'booked') {
         statusTagText = 'Booked';
       } else if (slot.status === 'fast-filling') {
         statusTagText = 'Filling Fast';
       }
 
+      const isSelectable = slot.status !== 'booked' && slot.status !== 'past';
+
       html += `
         <div class="slot-item ${statusClass} ${isSelected ? 'selected' : ''}" 
-             ${slot.status !== 'booked' ? `onclick="selectSlot('${slot.time}', '${slot.session}')"` : ''}
-             title="${slot.status === 'booked' ? 'Slot already reserved' : 'Click to select this slot'}">
+             ${isSelectable ? `onclick="selectSlot('${slot.time}', '${slot.session}')"` : 'style="opacity: 0.45; cursor: not-allowed;"'}
+             title="${slot.status === 'past' ? 'This slot time has already passed for today' : (slot.status === 'booked' ? 'Slot already reserved' : 'Click to select this slot')}">
           <span class="slot-time">${slot.time}</span>
           <span class="slot-status-tag">${isSelected ? '✓ Selected' : statusTagText}</span>
         </div>
@@ -1187,6 +1301,13 @@ function renderSlots() {
 }
 
 window.selectSlot = function (time, session) {
+  const slotsData = getSlotsForDoctorAndDate(state.selectedDoctorId, state.selectedDate);
+  const allSlots = [...(slotsData.morning || []), ...(slotsData.afternoon || []), ...(slotsData.evening || [])];
+  const target = allSlots.find(s => s.time === time);
+  if (target && (target.status === 'booked' || target.status === 'past')) {
+    showToast(target.status === 'past' ? 'This slot time has already passed for today.' : 'This slot is already reserved.', 'warning');
+    return;
+  }
   state.selectedSlot = time;
   state.selectedSlotSession = session;
   renderSlots();
@@ -1297,8 +1418,8 @@ const CarePulseQR = (function () {
 
   function QRMath() { }
   QRMath.glog = function (n) {
-    if (n < 1) throw new Error("glog(" + n + ")");
-    return QRMath.LOG_TABLE[n];
+    if (n < 1) return 0;
+    return QRMath.LOG_TABLE[n] || 0;
   };
   QRMath.gexp = function (n) {
     while (n < 0) n += 255;
@@ -1316,7 +1437,7 @@ const CarePulseQR = (function () {
     while (offset < num.length && num[offset] === 0) offset++;
     this.num = new Array(num.length - offset + shift);
     for (let i = 0; i < num.length - offset; i++) this.num[i] = num[i + offset];
-    for (let i = 0; i < num.length - offset; i++) this.num[i] = 0;
+    for (let i = num.length - offset; i < this.num.length; i++) this.num[i] = 0;
   }
   QRPolynomial.prototype = {
     get: function (index) { return this.num[index]; },
@@ -1663,7 +1784,8 @@ const CarePulseQR = (function () {
     renderToSvg(text, size = 72) {
       const qr = this.generate(text);
       if (!qr) {
-        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24"><rect width="24" height="24" fill="#f1f5f9"/></svg>`;
+        const enc = encodeURIComponent(text);
+        return `<img src="https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${enc}" width="${size}" height="${size}" alt="Token QR" style="display:block; border-radius:4px; background:#ffffff;" />`;
       }
       const count = qr.getModuleCount();
       const margin = 1;
@@ -1775,19 +1897,25 @@ const CarePulseBarcode = {
 };
 
 // --- Unique Ticket Attributes & State Generator ---
-function generateUniqueTicketDetails(doc, patientData) {
-  // 1. Persistent doctor queue counter in localStorage
+// --- Unique Ticket Attributes & State Generator ---
+function generateUniqueTicketDetails(doc, patientData, targetDateIso) {
+  const appDateIso = targetDateIso || state.selectedDate || getISTIsoDate();
+  const todayDateIso = getISTIsoDate();
+  const isToday = (appDateIso === todayDateIso);
+
+  // 1. Daily scoped doctor queue counter in localStorage
+  const counterKey = `carepulse_doc_counters_${appDateIso}`;
   let docCounters = {};
   try {
-    docCounters = JSON.parse(localStorage.getItem('carepulse_doc_counters') || '{}');
+    docCounters = JSON.parse(localStorage.getItem(counterKey) || '{}');
   } catch (e) {
     docCounters = {};
   }
-  const currentDocCount = docCounters[doc.id] || doc.totalTodayTokens || 20;
+  const currentDocCount = docCounters[doc.id] || 0;
   const tokenNumber = currentDocCount + 1;
   docCounters[doc.id] = tokenNumber;
   try {
-    localStorage.setItem('carepulse_doc_counters', JSON.stringify(docCounters));
+    localStorage.setItem(counterKey, JSON.stringify(docCounters));
   } catch (e) { }
   doc.totalTodayTokens = tokenNumber;
 
@@ -1798,7 +1926,7 @@ function generateUniqueTicketDetails(doc, patientData) {
     localStorage.setItem('carepulse_global_ticket_serial', globalSerial.toString());
   } catch (e) { }
 
-  // 3. Unique Token ID (e.g. TK-029, TK-109)
+  // 3. Unique Token ID (e.g. TK-029)
   const tokenId = `TK-${String(tokenNumber).padStart(3, '0')}`;
 
   // 4. Unique Booking Reference Number (e.g. CP-2026-849201)
@@ -1820,11 +1948,11 @@ function generateUniqueTicketDetails(doc, patientData) {
   const assignedDesk = `Counter ${counterId} • Desk ${deskLetter}`;
 
   // 8. Dynamic Queue Position & Estimated Wait
-  const queuePosition = Math.max(1, tokenNumber - doc.currentServingToken);
-  const estWaitMins = queuePosition * (doc.avgWaitPerPatient || 12);
+  const queuePosition = isToday ? Math.max(1, tokenNumber - (doc.currentServingToken || 0)) : tokenNumber;
+  const estWaitMins = isToday ? queuePosition * (doc.avgWaitPerPatient || 12) : 0;
 
   // 9. Exact Issue Timestamp
-  const now = new Date();
+  const now = getISTDate();
   const issueTimestamp = now.toLocaleDateString('en-IN', {
     day: '2-digit',
     month: 'short',
@@ -1836,8 +1964,8 @@ function generateUniqueTicketDetails(doc, patientData) {
     hour12: true
   });
 
-  // 10. Dynamic Verification URL & Payload for QR
-  const qrPayload = `https://carepulse.hospital/checkin?t=${tokenId}&ref=${ticketRef}&sec=${securityCode}&p=${encodeURIComponent(patientData.name || 'Patient')}`;
+  // 10. Dynamic Verification URL & Payload for QR (No PII in query params)
+  const qrPayload = `https://hospital-project-tawny.vercel.app/?track=${tokenId}&ref=${ticketRef}`;
 
   return {
     tokenNumber,
@@ -1855,15 +1983,30 @@ function generateUniqueTicketDetails(doc, patientData) {
 
 // --- Common Appointment Booking Processor ---
 function processBookingSubmission(patientData) {
-  if (!patientData.name || patientData.name.trim().length < 2) {
+  const name = (patientData.name || '').trim();
+  if (name.length < 2) {
     showToast('Please provide a valid patient name (minimum 2 characters).', 'warning');
     return false;
   }
-  const cleanPhone = (patientData.phone || '').replace(/[^0-9]/g, '');
-  if (cleanPhone.length < 10) {
-    showToast('Please enter a valid 10-digit mobile number for SMS/ticket delivery.', 'warning');
+
+  const age = parseInt(patientData.age, 10);
+  if (isNaN(age) || age < 1 || age > 120) {
+    showToast('Please enter a valid patient age between 1 and 120 years.', 'warning');
     return false;
   }
+
+  let cleanPhone = (patientData.phone || '').replace(/[^0-9]/g, '');
+  if (cleanPhone.startsWith('91') && cleanPhone.length === 12) {
+    cleanPhone = cleanPhone.slice(2);
+  } else if (cleanPhone.startsWith('0') && cleanPhone.length === 11) {
+    cleanPhone = cleanPhone.slice(1);
+  }
+
+  if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+    showToast('Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.', 'warning');
+    return false;
+  }
+
   if (!state.selectedSlot) {
     showToast('Please select an available consultation time-slot before booking!', 'warning');
     return false;
@@ -1872,11 +2015,12 @@ function processBookingSubmission(patientData) {
   const doc = DOCTORS.find(d => d.id === state.selectedDoctorId) || DOCTORS[0];
 
   // Generate completely distinct ticket details every time
-  const details = generateUniqueTicketDetails(doc, patientData);
+  const targetDateIso = state.selectedDate || getISTIsoDate();
+  const details = generateUniqueTicketDetails(doc, patientData, targetDateIso);
   const reportingNote = `Please report 15 mins prior (${state.selectedSlot})`;
 
   const activePill = document.querySelector('.date-card-pill.active');
-  const appointmentDateStr = activePill ? activePill.dataset.full : state.selectedDate;
+  const appointmentDateStr = activePill ? activePill.dataset.full : targetDateIso;
 
   // Create Appointment Record with all unique verification parameters
   const newAppointment = {
@@ -1894,15 +2038,15 @@ function processBookingSubmission(patientData) {
     doctorName: doc.name,
     doctorSpecialty: doc.specialty,
     room: doc.room,
-    patientName: patientData.name,
-    patientAge: patientData.age,
+    patientName: name,
+    patientAge: age,
     patientGender: patientData.gender,
-    patientPlace: patientData.place,
-    patientPhone: patientData.phone,
+    patientPlace: (patientData.place || 'Phagwara').trim(),
+    patientPhone: cleanPhone,
     visitReason: patientData.reason || 'General Consultation',
     visitType: patientData.visitType || 'First Consultation',
     date: appointmentDateStr,
-    isoDate: state.selectedDate,
+    isoDate: targetDateIso,
     timeSlot: state.selectedSlot,
     reportingNote: reportingNote,
     fee: doc.feeDisplay,
@@ -1910,12 +2054,17 @@ function processBookingSubmission(patientData) {
     status: 'Confirmed'
   };
 
-  // Mark slot as booked locally
-  const cacheKey = `${doc.id}_${state.selectedDate}`;
+  // Mark slot as booked locally and persist to localStorage
+  const cacheKey = `${doc.id}_${targetDateIso}`;
   if (!state.bookedSlotsCache[cacheKey]) {
     state.bookedSlotsCache[cacheKey] = [];
   }
-  state.bookedSlotsCache[cacheKey].push(state.selectedSlot);
+  if (!state.bookedSlotsCache[cacheKey].includes(state.selectedSlot)) {
+    state.bookedSlotsCache[cacheKey].push(state.selectedSlot);
+  }
+  try {
+    localStorage.setItem('carepulse_booked_slots', JSON.stringify(state.bookedSlotsCache));
+  } catch (e) { }
 
   // Save to State & LocalStorage
   state.userAppointments.unshift(newAppointment);
@@ -2131,19 +2280,19 @@ function downloadTicket(app, format = 'png') {
   ctx.fillText('CarePulse Multi-Specialty Hospital', 96, 56);
   ctx.font = '13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.fillStyle = '#99f6e4';
-  ctx.fillText('Govt. Regd. Healthcare Center • OPD & Clinical Diagnostic Unit', 96, 78);
+  ctx.fillText('CarePulse Hospital Clinical UX Demo • Simulated OPD E-Pass', 96, 78);
   ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.fillStyle = '#ccfbf1';
   ctx.fillText('GT Road, Near Sugar Mill Crossing, Phagwara, Punjab • 24/7 Helpline: 1800-180-2026', 96, 98);
 
-  // Verified Badge (Top Right)
-  ctx.fillStyle = '#10b981';
+  // Demo Prototype Badge (Top Right)
+  ctx.fillStyle = '#dc2626';
   roundRect(ctx, 608, 42, 160, 30, 15);
   ctx.fill();
   ctx.fillStyle = '#ffffff';
   ctx.font = 'bold 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('VERIFIED DIGITAL PASS', 688, 61);
+  ctx.fillText('DEMO PROTOTYPE', 688, 61);
   ctx.textAlign = 'left';
 
   // 3. Hero Token Number Box
@@ -2237,7 +2386,7 @@ function downloadTicket(app, format = 'png') {
   ctx.stroke();
 
   // Draw dynamic QR Code on canvas
-  const qrPayload = app.qrPayload || `https://carepulse.hospital/checkin?t=${app.tokenId}&ref=${app.ticketRef}`;
+  const qrPayload = app.qrPayload || `https://hospital-project-tawny.vercel.app/?track=${app.tokenId}&ref=${app.ticketRef}`;
   CarePulseQR.drawToCanvas(ctx, qrPayload, 56, 642, 110);
 
   ctx.fillStyle = '#0f172a';
@@ -2247,9 +2396,9 @@ function downloadTicket(app, format = 'png') {
   ctx.font = '13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.fillText('Scan this unique dynamic QR code at the reception desk scanner or check-in', 186, 694);
   ctx.fillText('kiosk to immediately confirm presence in the waiting lobby and notify doctor.', 186, 714);
-  ctx.fillStyle = '#059669';
+  ctx.fillStyle = '#b45309';
   ctx.font = 'bold 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-  ctx.fillText('✓ ENCRYPTED DIGITAL TOKEN • VALID FOR SCHEDULED DATE ONLY', 186, 744);
+  ctx.fillText('DEMO PROTOTYPE • SIMULATED DIGITAL TOKEN FOR CLINICAL UX PREVIEW', 186, 744);
 
   // 7. Dynamic Barcode Section
   ctx.fillStyle = '#ffffff';
@@ -2280,7 +2429,7 @@ function downloadTicket(app, format = 'png') {
   ctx.fillText('• Please report at reception 15 minutes prior to scheduled time for vitals check.', 54, 936);
   ctx.fillText('• Keep this digital ticket handy on your phone or in printed copy at the hospital.', 54, 958);
   ctx.fillText('• Emergency Ambulance Line: 108 / 1800-180-2026 | GT Road, Phagwara, Punjab', 54, 980);
-  ctx.fillText('• Official Portal: carepulse.hospital | Email: appointments@carepulse.hospital', 54, 1002);
+  ctx.fillText('• Demonstration Prototype – Not an active commercial clinic | Real emergencies dial 108 / 112', 54, 1002);
 
   // Official Seal Graphic (Right side)
   ctx.save();
@@ -2344,13 +2493,13 @@ function downloadTicketPDF(app) {
   }
 
   const barcodeSvg = CarePulseBarcode.renderSvg(app.barcodeNum || `CP-${app.tokenId}`);
-  const qrSvg = CarePulseQR.renderToSvg(app.qrPayload || `https://carepulse.hospital/checkin?t=${app.tokenId}`, 90);
+  const qrSvg = CarePulseQR.renderToSvg(app.qrPayload || `https://hospital-project-tawny.vercel.app/?track=${app.tokenId}&ref=${app.ticketRef || '0'}`, 90);
 
   printWindow.document.write(`
     <!DOCTYPE html>
     <html>
     <head>
-      <title>CarePulse_Ticket_${app.tokenId}_${app.patientName}</title>
+      <title>CarePulse_Ticket_${escapeHtml(app.tokenId)}_${escapeHtml(app.patientName)}</title>
       <meta charset="utf-8" />
       <style>
         @page { size: auto; margin: 15mm; }
@@ -2377,11 +2526,23 @@ function downloadTicketPDF(app) {
         }
         .header h1 { margin: 0 0 6px; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
         .header p { margin: 2px 0; font-size: 12px; color: #ccfbf1; }
+        .demo-tag-bar {
+          background: #fee2e2;
+          border: 1px solid #f87171;
+          color: #991b1b;
+          font-size: 11px;
+          font-weight: 800;
+          text-align: center;
+          padding: 6px 12px;
+          margin: 12px 24px 0;
+          border-radius: 6px;
+          letter-spacing: 0.5px;
+        }
         .token-hero {
           background: #042f2e;
           color: white;
           padding: 18px;
-          margin: 18px 24px;
+          margin: 14px 24px 18px;
           border-radius: 12px;
           text-align: center;
           border: 1px solid #14b8a6;
@@ -2446,47 +2607,50 @@ function downloadTicketPDF(app) {
       <div class="slip-print-card">
         <div class="header">
           <h1>🏥 CarePulse Multi-Specialty Hospital</h1>
-          <p>Official OPD Consultation Slip • GT Road, Phagwara, Punjab - 144401</p>
-          <p>24x7 Emergency Helpline: 1800-180-2026 / 108 | carepulse.hospital</p>
+          <p>CarePulse Clinical UX Prototype • GT Road, Phagwara, Punjab - 144401</p>
+          <p>Emergency Hotline: 108 / 112 | 24x7 Ambulance: 1800-180-2026</p>
+        </div>
+        <div class="demo-tag-bar">
+          ⚠️ DEMO PROTOTYPE &bull; NOT A VALID MEDICAL OR HOSPITAL ADMISSION PASS
         </div>
         <div class="token-hero">
           <div class="token-lbl">Official Consultation Token Number</div>
-          <div class="token-id">#${app.tokenId}</div>
-          <div class="token-time">Scheduled: ${app.date} • ${app.timeSlot}</div>
+          <div class="token-id">#${escapeHtml(app.tokenId)}</div>
+          <div class="token-time">Scheduled: ${escapeHtml(app.date)} • ${escapeHtml(app.timeSlot)}</div>
         </div>
         <div class="meta-strip">
-          <span>Ref: <strong>${app.ticketRef}</strong></span>
+          <span>Ref: <strong>${escapeHtml(app.ticketRef)}</strong></span>
           <span>•</span>
-          <span>Desk: <strong>${app.assignedDesk}</strong></span>
+          <span>Desk: <strong>${escapeHtml(app.assignedDesk)}</strong></span>
           <span>•</span>
-          <span>Security: <strong>${app.securityCode}</strong></span>
+          <span>Security: <strong>${escapeHtml(app.securityCode)}</strong></span>
         </div>
         <table>
           <tbody>
-            <tr><td class="lbl">Patient Name</td><td class="val">${app.patientName}</td></tr>
-            <tr><td class="lbl">Age / Gender / Place</td><td class="val">${app.patientAge} Yrs / ${app.patientGender} • ${app.patientPlace || 'Phagwara'}</td></tr>
-            <tr><td class="lbl">Contact Mobile</td><td class="val">${app.patientPhone}</td></tr>
-            <tr><td class="lbl">Consulting Doctor</td><td class="val">${app.doctorName}</td></tr>
-            <tr><td class="lbl">Specialty & Dept</td><td class="val">${app.doctorSpecialty}</td></tr>
-            <tr><td class="lbl">Clinic Chamber</td><td class="val">${app.room}</td></tr>
-            <tr><td class="lbl">Chief Symptoms</td><td class="val">${app.visitReason}</td></tr>
-            <tr><td class="lbl">Consultation Fee</td><td class="val" style="color: #0d9488;">${app.fee}</td></tr>
-            <tr><td class="lbl">Arrival Instructions</td><td class="val" style="color: #b45309;">${app.reportingNote || 'Please report 15 mins prior'}</td></tr>
+            <tr><td class="lbl">Patient Name</td><td class="val">${escapeHtml(app.patientName)}</td></tr>
+            <tr><td class="lbl">Age / Gender / Place</td><td class="val">${escapeHtml(app.patientAge)} Yrs / ${escapeHtml(app.patientGender)} • ${escapeHtml(app.patientPlace || 'Phagwara')}</td></tr>
+            <tr><td class="lbl">Contact Mobile</td><td class="val">${escapeHtml(app.patientPhone)}</td></tr>
+            <tr><td class="lbl">Consulting Doctor</td><td class="val">${escapeHtml(app.doctorName)}</td></tr>
+            <tr><td class="lbl">Specialty & Dept</td><td class="val">${escapeHtml(app.doctorSpecialty)}</td></tr>
+            <tr><td class="lbl">Clinic Chamber</td><td class="val">${escapeHtml((app.room || '').split(',')[0])}</td></tr>
+            <tr><td class="lbl">Chief Symptoms</td><td class="val">${escapeHtml(app.visitReason || 'General Consultation')}</td></tr>
+            <tr><td class="lbl">Consultation Fee</td><td class="val" style="color: #0d9488;">${escapeHtml(app.fee)}</td></tr>
+            <tr><td class="lbl">Arrival Instructions</td><td class="val" style="color: #b45309;">${escapeHtml(app.reportingNote || 'Please report 15 mins prior')}</td></tr>
           </tbody>
         </table>
         <div class="qr-section">
           <div class="qr-box">${qrSvg}</div>
           <div class="qr-text">
             <h4>Fast Kiosk & Lobby Check-In</h4>
-            <p>Scan this dynamic QR code at the reception kiosk to instantly verify your arrival and confirm your queue slot. Issued: ${app.issueTimestamp}</p>
+            <p>Scan this dynamic QR code at the reception kiosk to instantly verify your arrival and confirm your queue slot. Issued: ${escapeHtml(app.issueTimestamp)}</p>
           </div>
         </div>
         <div class="barcode-section">
           <div class="barcode-svg">${barcodeSvg}</div>
-          <div class="barcode-txt">${app.barcodeNum}</div>
+          <div class="barcode-txt">${escapeHtml(app.barcodeNum)}</div>
         </div>
         <div class="footer">
-          This is an official computer-generated OPD appointment slip. Valid for scheduled date and consulting physician only.
+          Demonstration Project • Not an active commercial clinic. For actual medical emergencies in India, dial 108 or 112.
         </div>
       </div>
       <script>
@@ -2526,6 +2690,23 @@ window.downloadTicketById = function (tokenId, format = 'png') {
 // TOKEN ACTIONS: RESCHEDULE, CANCEL, ADD TO CALENDAR (In-Page Modal UI)
 // ==========================================================================
 
+function populateRescheduleSlots(doctorId, isoDate) {
+  const slotEl = document.getElementById('reschedule-slot-select');
+  if (!slotEl) return;
+  const slotsData = getSlotsForDoctorAndDate(doctorId, isoDate);
+  if (slotsData.offDuty) {
+    slotEl.innerHTML = `<option value="">Doctor Off-Duty on this day</option>`;
+    return;
+  }
+  const allSlots = [...(slotsData.morning || []), ...(slotsData.afternoon || []), ...(slotsData.evening || [])];
+  const available = allSlots.filter(s => s.status !== 'booked' && s.status !== 'past');
+  if (available.length === 0) {
+    slotEl.innerHTML = `<option value="">No open consultation slots available</option>`;
+    return;
+  }
+  slotEl.innerHTML = available.map(s => `<option value="${s.time}">${s.session}: ${s.time}</option>`).join('');
+}
+
 window.openRescheduleModal = function (app) {
   state.pendingActionAppointment = app;
   const modal = document.getElementById('reschedule-dialog-modal');
@@ -2535,23 +2716,33 @@ window.openRescheduleModal = function (app) {
     const dateEl = document.getElementById('reschedule-date-input');
     if (docEl) docEl.textContent = app.doctorName;
     if (tokEl) tokEl.textContent = `#${app.tokenId}`;
+    
+    const tmrw = new Date(getISTDate().getTime() + 86400000);
+    const tmrwIso = getISTIsoDate(tmrw);
     if (dateEl) {
-      const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
-      dateEl.value = tomorrow;
-      dateEl.min = tomorrow;
+      dateEl.value = tmrwIso;
+      dateEl.min = getISTIsoDate();
+      dateEl.onchange = function () {
+        populateRescheduleSlots(app.doctorId, dateEl.value);
+      };
     }
+    populateRescheduleSlots(app.doctorId, dateEl ? dateEl.value : tmrwIso);
     modal.style.display = 'flex';
   } else {
-    // Graceful in-app confirmation
-    const newDate = 'Tomorrow';
-    const newSlot = '11:30 AM';
-    app.date = newDate;
-    app.timeSlot = newSlot;
+    // Direct in-page safe reschedule
+    const nextDay = new Date(getISTDate().getTime() + 86400000);
+    const nextIso = getISTIsoDate(nextDay);
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const formatted = `${dayNames[nextDay.getDay()]}, ${nextDay.getDate()} ${monthNames[nextDay.getMonth()]}`;
+
+    app.isoDate = nextIso;
+    app.date = formatted;
     app.status = 'Rescheduled';
     try {
       localStorage.setItem('carepulse_appointments', JSON.stringify(state.userAppointments));
     } catch (e) { }
-    showToast(`Token #${app.tokenId} rescheduled to ${newDate} (${newSlot})!`, 'success');
+    showToast(`Token #${app.tokenId} rescheduled to ${formatted} (${app.timeSlot})!`, 'success');
     openTokenSlipModal(app);
   }
 };
@@ -2566,10 +2757,38 @@ window.confirmReschedule = function () {
   if (!app) return;
   const dateInput = document.getElementById('reschedule-date-input');
   const slotInput = document.getElementById('reschedule-slot-select');
-  const newDate = (dateInput && dateInput.value) ? dateInput.value : 'Tomorrow';
-  const newSlot = (slotInput && slotInput.value) ? slotInput.value : '11:30 AM';
+  const newDateIso = (dateInput && dateInput.value) ? dateInput.value : getISTIsoDate();
+  const newSlot = (slotInput && slotInput.value) ? slotInput.value : '';
 
-  app.date = newDate;
+  if (!newSlot || newSlot.includes('Off-Duty') || newSlot.includes('No open')) {
+    showToast('Please select an available consultation slot.', 'warning');
+    return;
+  }
+
+  // 1. Free up previous slot from cache
+  const oldCacheKey = `${app.doctorId}_${app.isoDate || app.date}`;
+  if (state.bookedSlotsCache[oldCacheKey]) {
+    state.bookedSlotsCache[oldCacheKey] = state.bookedSlotsCache[oldCacheKey].filter(s => s !== app.timeSlot);
+  }
+
+  // 2. Reserve new slot in cache
+  const newCacheKey = `${app.doctorId}_${newDateIso}`;
+  if (!state.bookedSlotsCache[newCacheKey]) state.bookedSlotsCache[newCacheKey] = [];
+  if (!state.bookedSlotsCache[newCacheKey].includes(newSlot)) {
+    state.bookedSlotsCache[newCacheKey].push(newSlot);
+  }
+  try {
+    localStorage.setItem('carepulse_booked_slots', JSON.stringify(state.bookedSlotsCache));
+  } catch (e) { }
+
+  // 3. Format human date
+  const dateObj = new Date(newDateIso + 'T12:00:00Z');
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const formattedDate = `${dayNames[dateObj.getUTCDay()]}, ${dateObj.getUTCDate()} ${monthNames[dateObj.getUTCMonth()]}`;
+
+  app.isoDate = newDateIso;
+  app.date = formattedDate;
   app.timeSlot = newSlot;
   app.reportingNote = `Rescheduled: Please report 15 mins prior (${newSlot})`;
   app.status = 'Rescheduled';
@@ -2578,8 +2797,8 @@ window.confirmReschedule = function () {
     localStorage.setItem('carepulse_appointments', JSON.stringify(state.userAppointments));
   } catch (e) { }
 
-  broadcastQueueUpdate('RESCHEDULE', { tokenId: app.tokenId, newDate, newSlot });
-  showToast(`Token #${app.tokenId} rescheduled to ${newDate} at ${newSlot}!`, 'success');
+  broadcastQueueUpdate('RESCHEDULE', { tokenId: app.tokenId, newDate: formattedDate, newSlot });
+  showToast(`Token #${app.tokenId} rescheduled to ${formattedDate} at ${newSlot}!`, 'success');
   closeRescheduleModal();
   openTokenSlipModal(app);
 };
@@ -2604,6 +2823,13 @@ window.openCancelModal = function (app) {
     modal.style.display = 'flex';
   } else {
     app.status = 'Cancelled';
+    const cacheKey = `${app.doctorId}_${app.isoDate || app.date}`;
+    if (state.bookedSlotsCache[cacheKey]) {
+      state.bookedSlotsCache[cacheKey] = state.bookedSlotsCache[cacheKey].filter(s => s !== app.timeSlot);
+      try {
+        localStorage.setItem('carepulse_booked_slots', JSON.stringify(state.bookedSlotsCache));
+      } catch (e) { }
+    }
     try {
       localStorage.setItem('carepulse_appointments', JSON.stringify(state.userAppointments));
     } catch (e) { }
@@ -2626,10 +2852,13 @@ window.confirmCancellation = function () {
   app.status = 'Cancelled';
   app.cancelReason = reason;
 
-  // Free up slot cache
-  const cacheKey = `${app.doctorId}_${app.isoDate}`;
+  // Free up slot cache and persist
+  const cacheKey = `${app.doctorId}_${app.isoDate || app.date}`;
   if (state.bookedSlotsCache[cacheKey]) {
     state.bookedSlotsCache[cacheKey] = state.bookedSlotsCache[cacheKey].filter(s => s !== app.timeSlot);
+    try {
+      localStorage.setItem('carepulse_booked_slots', JSON.stringify(state.bookedSlotsCache));
+    } catch (e) { }
   }
 
   try {
@@ -2658,12 +2887,36 @@ window.addToCalendar = function (tokenId, mode = 'ics') {
     return;
   }
 
+  // Parse appointment date & time slot for valid DTSTART / DTEND
+  const dateStr = app.isoDate || getISTIsoDate();
+  const timeStr = app.timeSlot || '09:00 AM';
+  const parts = timeStr.trim().split(' ');
+  const timeParts = (parts[0] || '09:00').split(':');
+  let h = parseInt(timeParts[0], 10) || 9;
+  const m = parseInt(timeParts[1], 10) || 0;
+  if (parts[1] === 'PM' && h < 12) h += 12;
+  if (parts[1] === 'AM' && h === 12) h = 0;
+
+  // In IST (UTC+5:30)
+  const [y, mon, d] = dateStr.split('-').map(n => parseInt(n, 10));
+  // Convert IST to UTC timestamp
+  const startDate = new Date(Date.UTC(y, mon - 1, d, h - 5, m - 30));
+  const endDate = new Date(startDate.getTime() + 30 * 60000); // 30 min consultation
+
+  const formatICSDate = (dt) => {
+    return dt.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  };
+
+  const dtStart = formatICSDate(startDate);
+  const dtEnd = formatICSDate(endDate);
+
   const title = `CarePulse OPD: ${app.doctorName} (${app.tokenId})`;
-  const desc = `Consultation with ${app.doctorName}\\nDepartment: ${app.doctorSpecialty}\\nRoom: ${app.room}\\nToken: ${app.tokenId}\\nHelpline: 1800-180-2026`;
-  const loc = `CarePulse Super Speciality Hospital, GT Road, Near Sugar Mill Crossing, Phagwara, Punjab - 144401`;
+  const desc = `Consultation with ${app.doctorName}\\nDepartment: ${app.doctorSpecialty}\\nRoom: ${app.room}\\nToken: ${app.tokenId}\\nHelpline: 1800-180-2026\\nPortal: https://hospital-project-tawny.vercel.app/`;
+  const loc = `CarePulse Multi-Specialty Hospital, GT Road, Near Sugar Mill Crossing, Phagwara, Punjab - 144401`;
 
   if (mode === 'google') {
-    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&details=${encodeURIComponent(desc)}&location=${encodeURIComponent(loc)}`;
+    const datesParam = `${dtStart}/${dtEnd}`;
+    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${datesParam}&details=${encodeURIComponent(desc)}&location=${encodeURIComponent(loc)}`;
     window.open(url, '_blank');
     return;
   }
@@ -2672,11 +2925,15 @@ window.addToCalendar = function (tokenId, mode = 'ics') {
   const ics = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//CarePulse Super Speciality Hospital//EN',
+    'PRODID:-//CarePulse Multi-Specialty Hospital//EN',
     'CALSCALE:GREGORIAN',
     'BEGIN:VEVENT',
+    `UID:cp-${app.tokenId}-${Date.now()}@carepulse.hospital`,
+    `DTSTAMP:${formatICSDate(new Date())}`,
+    `DTSTART:${dtStart}`,
+    `DTEND:${dtEnd}`,
     `SUMMARY:${title}`,
-    `DESCRIPTION:${desc}`,
+    `DESCRIPTION:${desc.replace(/\n/g, '\\n')}`,
     `LOCATION:${loc}`,
     'STATUS:CONFIRMED',
     'END:VEVENT',
@@ -2688,7 +2945,7 @@ window.addToCalendar = function (tokenId, mode = 'ics') {
   a.href = URL.createObjectURL(blob);
   a.download = `CarePulse_Appointment_${app.tokenId}.ics`;
   a.click();
-  showToast('Calendar invite (.ics) downloaded!', 'success');
+  showToast('Calendar invite (.ics) downloaded with scheduled date & time!', 'success');
 };
 
 // ==========================================================================
@@ -2754,10 +3011,18 @@ function reloadAppointmentsFromStorage() {
   } catch (e) { }
 }
 
+function requireStaffAuth() {
+  if (!sessionStorage.getItem('carepulse_staff_auth')) {
+    showToast('Staff authentication required. Please unlock console.', 'error');
+    return false;
+  }
+  return true;
+}
+
 window.openReceptionDesk = function () {
   const isAuth = sessionStorage.getItem('carepulse_staff_auth');
   if (!isAuth) {
-    const pin = typeof window.prompt === 'function' ? window.prompt('🔒 Restricted Hospital Staff Console\n\nEnter 4-digit Staff Security PIN (Authorized PIN: 8708):') : null;
+    const pin = typeof window.prompt === 'function' ? window.prompt('🔒 CarePulse Staff Console [Simulated Demo Role]\n\nEnter 4-digit Staff Security PIN:') : null;
     if (pin !== '8708' && pin !== '2026') {
       if (pin !== null) showToast('⛔ Access Denied: Invalid Staff Security PIN', 'error');
       return;
@@ -2787,10 +3052,22 @@ window.closeReceptionDesk = function () {
 };
 
 window.callNextPatientToken = function (doctorId) {
+  if (!requireStaffAuth()) return;
   const doc = DOCTORS.find(d => d.id === doctorId);
   if (!doc) return;
 
-  doc.currentServingToken = (doc.currentServingToken || 0) + 1;
+  // Advance counter, skipping any cancelled, completed, or no-show tokens
+  let nextToken = (doc.currentServingToken || 0) + 1;
+  while (true) {
+    const skippedApp = state.userAppointments.find(a => a.doctorId === doctorId && a.tokenNumber === nextToken);
+    if (skippedApp && (skippedApp.status === 'Cancelled' || skippedApp.status === 'No-Show' || skippedApp.status === 'Completed')) {
+      nextToken++;
+    } else {
+      break;
+    }
+  }
+
+  doc.currentServingToken = nextToken;
   if (doc.currentServingToken > doc.totalTodayTokens) {
     doc.totalTodayTokens = doc.currentServingToken + 2;
   }
@@ -2815,6 +3092,7 @@ window.callNextPatientToken = function (doctorId) {
 };
 
 window.markTokenCompleted = function (tokenId) {
+  if (!requireStaffAuth()) return;
   const app = state.userAppointments.find(a => a.tokenId === tokenId);
   if (app) {
     app.status = 'Completed';
@@ -2827,6 +3105,7 @@ window.markTokenCompleted = function (tokenId) {
 };
 
 window.markTokenNoShow = function (tokenId) {
+  if (!requireStaffAuth()) return;
   const app = state.userAppointments.find(a => a.tokenId === tokenId);
   if (app) {
     app.status = 'No-Show';
@@ -2839,6 +3118,7 @@ window.markTokenNoShow = function (tokenId) {
 };
 
 window.issueWalkinToken = function (doctorId) {
+  if (!requireStaffAuth()) return;
   const doc = DOCTORS.find(d => d.id === doctorId) || DOCTORS[0];
   let patientName = 'Walk-in Patient';
   let phone = '9814022737';
@@ -2927,7 +3207,7 @@ function renderReceptionDashboard() {
 
         ${servingApp ? `
           <div style="background: #e0f2fe; padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.78rem; color: #0369a1; margin-bottom: 0.75rem;">
-            👤 Patient: <strong>${servingApp.patientName}</strong> (${servingApp.patientPhone})
+            👤 Patient: <strong>${escapeHtml(servingApp.patientName)}</strong> (${escapeHtml(servingApp.patientPhone)})
           </div>
         ` : ''}
 
@@ -2951,19 +3231,19 @@ function renderReceptionDashboard() {
     } else {
       tableBody.innerHTML = state.userAppointments.slice(0, 15).map(a => `
         <tr>
-          <td><strong style="font-family: monospace; color: var(--primary-dark);">${a.tokenId}</strong></td>
-          <td><strong>${a.patientName}</strong><br /><span style="font-size: 0.75rem; color: var(--slate-600);">${a.patientPhone}</span></td>
-          <td>${a.doctorName}<br /><span style="font-size: 0.72rem; color: var(--slate-600);">${a.room.split(',')[0]}</span></td>
-          <td>${a.timeSlot}</td>
+          <td><strong style="font-family: monospace; color: var(--primary-dark);">${escapeHtml(a.tokenId)}</strong></td>
+          <td><strong>${escapeHtml(a.patientName)}</strong><br /><span style="font-size: 0.75rem; color: var(--slate-600);">${escapeHtml(a.patientPhone)}</span></td>
+          <td>${escapeHtml(a.doctorName)}<br /><span style="font-size: 0.72rem; color: var(--slate-600);">${escapeHtml((a.room || '').split(',')[0])}</span></td>
+          <td>${escapeHtml(a.timeSlot)}</td>
           <td>
             <span class="status-badge-report ${a.status === 'Completed' ? 'normal' : a.status === 'Cancelled' ? 'abnormal' : 'high'}">
-              ${a.status}
+              ${escapeHtml(a.status)}
             </span>
           </td>
           <td>
             <div style="display: flex; gap: 0.25rem;">
-              <button class="btn-rx-add" onclick="markTokenCompleted('${a.tokenId}')" title="Mark consultation done">✓ Done</button>
-              <button class="btn-rx-add" onclick="markTokenNoShow('${a.tokenId}')" style="color: #b91c1c;" title="Mark patient absent">✗ No-Show</button>
+              <button class="btn-rx-add" onclick="markTokenCompleted('${escapeHtml(a.tokenId)}')" title="Mark consultation done">✓ Done</button>
+              <button class="btn-rx-add" onclick="markTokenNoShow('${escapeHtml(a.tokenId)}')" style="color: #b91c1c;" title="Mark patient absent">✗ No-Show</button>
             </div>
           </td>
         </tr>
@@ -2993,67 +3273,80 @@ function checkTokenLiveStatus(searchVal) {
   const resultBox = document.getElementById('tracker-result-box');
   if (!resultBox) return;
 
-  if (!searchVal) {
-    showToast('Please enter your Token ID or Mobile number', 'warning');
+  if (!searchVal || !searchVal.trim()) {
+    showToast('Please enter your Token ID (e.g. TK-014) or registered 10-digit mobile number', 'warning');
     return;
   }
 
-  const cleanVal = searchVal.replace('#', '').toUpperCase();
+  const cleanVal = searchVal.replace('#', '').trim().toUpperCase();
+  const cleanPhone = searchVal.replace(/[^0-9]/g, '');
 
-  // Find in userAppointments or mock a realistic lookup
-  let found = state.userAppointments.find(a =>
+  // Find strictly in user appointments
+  const found = state.userAppointments.find(a =>
     a.tokenId.toUpperCase() === cleanVal ||
-    a.patientPhone.includes(cleanVal)
+    (cleanPhone.length === 10 && (a.patientPhone || '').replace(/[^0-9]/g, '') === cleanPhone)
   );
 
-  let doc = null;
-  let tokenNum = 0;
-  let patientName = '';
-
-  if (found) {
-    doc = DOCTORS.find(d => d.id === found.doctorId) || DOCTORS[0];
-    tokenNum = found.tokenNumber;
-    patientName = found.patientName;
-  } else {
-    // If user types any token number like TK-018 or 18, allow live lookup simulation
-    const extractedNum = parseInt(cleanVal.replace(/[^0-9]/g, ''), 10);
-    if (!isNaN(extractedNum) && extractedNum > 0) {
-      doc = DOCTORS[0]; // default GP
-      tokenNum = extractedNum;
-      patientName = 'Registered Patient';
-    } else {
-      showToast(`No active token record found for "${searchVal}". Try booking a new token above.`, 'warning');
-      resultBox.classList.remove('active');
-      return;
-    }
+  if (!found) {
+    showToast(`No appointment record found for "${escapeHtml(searchVal)}". Please verify your token number or book a new appointment.`, 'warning');
+    resultBox.classList.remove('active');
+    activeTrackerToken = null;
+    return;
   }
 
-  const currentlyServing = doc.currentServingToken;
-  const ahead = Math.max(0, tokenNum - currentlyServing);
-  const estWait = ahead * doc.avgWaitPerPatient;
+  activeTrackerToken = found.tokenId;
+  const doc = DOCTORS.find(d => d.id === found.doctorId) || DOCTORS[0];
+  const tokenNum = found.tokenNumber;
+  const patientName = found.patientName || 'Registered Patient';
 
-  // Determine queue stage
+  const todayIST = getISTIsoDate();
+  const isToday = (found.isoDate === todayIST || found.date?.includes('Today'));
+
+  const currentlyServing = doc.currentServingToken || 0;
+  const ahead = Math.max(0, tokenNum - currentlyServing);
+  const estWait = ahead * (doc.avgWaitPerPatient || 12);
+
+  // Determine queue stage based on whether consultation is today or a future date
   let stageText = '';
+  let waitDisplay = '';
   let step1Class = 'completed';
   let step2Class = 'completed';
   let step3Class = '';
   let progressWidth = '50%';
 
-  if (tokenNum < currentlyServing) {
+  if (!isToday) {
+    stageText = `📅 Scheduled for ${escapeHtml(found.date)} (${escapeHtml(found.timeSlot)}). Live counter activates on appointment day.`;
+    waitDisplay = 'Upcoming';
+    step1Class = 'completed';
+    step2Class = '';
+    step3Class = '';
+    progressWidth = '25%';
+  } else if (found.status === 'Completed' || tokenNum < currentlyServing) {
     stageText = 'Consultation Completed';
+    waitDisplay = '0 mins';
+    step2Class = 'completed';
     step3Class = 'completed';
     progressWidth = '100%';
+  } else if (found.status === 'Cancelled') {
+    stageText = 'Appointment Cancelled';
+    waitDisplay = 'Cancelled';
+    step2Class = '';
+    step3Class = '';
+    progressWidth = '0%';
   } else if (tokenNum === currentlyServing) {
     stageText = 'Now Serving - Please Enter Doctor Consultation Room';
+    waitDisplay = 'Now Serving';
     step2Class = 'completed';
     step3Class = 'current';
     progressWidth = '75%';
   } else if (ahead === 1) {
     stageText = 'You are NEXT in line! Please wait directly outside the chamber door.';
+    waitDisplay = `~${doc.avgWaitPerPatient || 12} mins`;
     step2Class = 'current';
     progressWidth = '50%';
   } else {
     stageText = `Waiting in Lobby (${ahead} patients ahead of you)`;
+    waitDisplay = `~${estWait} mins`;
     step2Class = 'current';
     progressWidth = '40%';
   }
@@ -3061,15 +3354,15 @@ function checkTokenLiveStatus(searchVal) {
   resultBox.innerHTML = `
     <div class="tracker-top-info">
       <div>
-        <span style="font-size: 0.78rem; color: #a7f3d0; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Active Token Verification</span>
-        <div class="tracker-token-badge" id="tracker-token-num">#TK-${String(tokenNum).padStart(3, '0')}</div>
-        <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 0.2rem;">Patient: <strong>${patientName}</strong> • ${doc.name} (${doc.specialty})</div>
+        <span style="font-size: 0.78rem; color: #a7f3d0; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Verified Token Status</span>
+        <div class="tracker-token-badge" id="tracker-token-num">#${escapeHtml(found.tokenId)}</div>
+        <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 0.2rem;">Patient: <strong>${escapeHtml(patientName)}</strong> • ${escapeHtml(doc.name)} (${escapeHtml(doc.specialty)})</div>
       </div>
 
       <div style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: var(--radius-md); padding: 0.75rem 1.25rem; text-align: right;">
-        <div style="font-size: 0.75rem; color: #94a3b8;">Current OPD Status</div>
-        <div style="font-size: 1.25rem; font-weight: 800; color: #34d399;">Now Serving: #TK-${String(currentlyServing).padStart(2, '0')}</div>
-        <div style="font-size: 0.75rem; color: #cbd5e1;">Room: ${doc.room.split(',')[0]}</div>
+        <div style="font-size: 0.75rem; color: #94a3b8;">${isToday ? 'Current OPD Status' : 'Scheduled Date'}</div>
+        <div style="font-size: 1.25rem; font-weight: 800; color: #34d399;">${isToday ? `Now Serving: #TK-${String(currentlyServing).padStart(2, '0')}` : escapeHtml(found.date)}</div>
+        <div style="font-size: 0.75rem; color: #cbd5e1;">Room: ${escapeHtml((doc.room || '').split(',')[0])}</div>
       </div>
     </div>
 
@@ -3101,13 +3394,17 @@ function checkTokenLiveStatus(searchVal) {
       </div>
       <div style="text-align: right;">
         <div style="font-size: 0.75rem; color: #cbd5e1;">Estimated Wait Time</div>
-        <div style="font-size: 1.4rem; font-weight: 800; color: #fde047;">${tokenNum <= currentlyServing ? '0 mins' : `~${estWait} mins`}</div>
+        <div style="font-size: 1.4rem; font-weight: 800; color: #fde047;">${waitDisplay}</div>
       </div>
     </div>
   `;
 
   resultBox.classList.add('active');
-  showToast(`Queue verified: ${ahead} patients ahead of you.`, 'info');
+  if (isToday) {
+    showToast(`Queue verified: ${ahead} patients ahead of you.`, 'info');
+  } else {
+    showToast(`Appointment confirmed for ${found.date}!`, 'info');
+  }
 }
 
 // --- My Bookings Drawer / List Modal ---
@@ -3977,7 +4274,7 @@ const CHAT_KNOWLEDGE = [
     specialty: 'General Physician',
     doctor: 'doc-gp-1',
     doctorName: 'Dr. Rajesh Sharma',
-    degree: 'MBBS, MD (General Medicine - AIIMS New Delhi)',
+    degree: 'MBBS, MD (General Medicine - Premier Institute of Medical Sciences)',
     fee: '₹500',
     response: 'Fever accompanied by body aches, chills, or headache is frequently caused by seasonal viral infections, dengue, or throat inflammation.',
     homeTips: [
@@ -4064,7 +4361,7 @@ const CHAT_KNOWLEDGE = [
     specialty: 'Cardiologist',
     doctor: 'doc-card-1',
     doctorName: 'Dr. Gurpreet Singh Sandhu',
-    degree: 'MBBS, MD, DM (Cardiology - PGIMER Chandigarh)',
+    degree: 'MBBS, MD, DM (Cardiology - National Postgraduate Medical Institute)',
     fee: '₹650',
     response: 'Persistent blood pressure fluctuations, palpitations, or exertional fatigue warrant electrocardiogram (ECG) and echocardiography assessment.',
     homeTips: [
@@ -4081,7 +4378,7 @@ const CHAT_KNOWLEDGE = [
     specialty: 'Orthopedic Surgeon',
     doctor: 'doc-ortho-1',
     doctorName: 'Dr. Maninderjit Bawa',
-    degree: 'MBBS, MS (Orthopedics - CMC Ludhiana), MCh Ortho (UK)',
+    degree: 'MBBS, MS (Orthopedics - Regional Medical College), MCh Ortho (UK)',
     fee: '₹600',
     response: 'Joint stiffness, back pain, or knee discomfort often stems from cartilage degeneration, ligament strain, or postural misalignment.',
     homeTips: [
@@ -4098,7 +4395,7 @@ const CHAT_KNOWLEDGE = [
     specialty: 'Gynecologist & Obstetrician',
     doctor: 'doc-gyn-1',
     doctorName: 'Dr. Simranjit Kaur Randhawa',
-    degree: 'MBBS, MS (Obstetrics & Gynaecology - GMC Amritsar)',
+    degree: 'MBBS, MS (Obstetrics & Gynaecology - Government Medical College)',
     fee: '₹550',
     response: 'Menstrual irregularities, pelvic cramping, PCOS, and antenatal care require personalized hormonal and clinical ultrasound evaluation.',
     homeTips: [
@@ -4115,7 +4412,7 @@ const CHAT_KNOWLEDGE = [
     specialty: 'ENT Specialist',
     doctor: 'doc-ent-1',
     doctorName: 'Dr. Harvinder Singh Kohli',
-    degree: 'MBBS, MS (ENT - GMC Patiala)',
+    degree: 'MBBS, MS (ENT - State Medical College)',
     fee: '₹450',
     response: 'Persistent ear discharge, sinus blockage, throat irritation, or balance issues (vertigo) necessitate otoscopic and endoscopic diagnosis.',
     homeTips: [
@@ -4132,7 +4429,7 @@ const CHAT_KNOWLEDGE = [
     specialty: 'Eye Specialist',
     doctor: 'doc-eye-1',
     doctorName: 'Dr. Ravneet Oberoi',
-    degree: 'MBBS, MS (Ophthalmology - Dr. RP Centre AIIMS New Delhi)',
+    degree: 'MBBS, MS (Ophthalmology - National Eye Centre)',
     fee: '₹450',
     response: 'Eye redness, blurred vision, refractive errors, or digital strain should be clinically assessed with slit-lamp and intraocular pressure checks.',
     homeTips: [
