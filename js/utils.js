@@ -76,7 +76,8 @@ function showToast(message, type = 'info') {
   const iconSpan = document.createElement('span');
   iconSpan.textContent = icon;
   const msgDiv = document.createElement('div');
-  msgDiv.textContent = message; // Safe against script injection attacks
+  const translatedMsg = (window.t && typeof window.t === 'function') ? window.t(message, message) : message;
+  msgDiv.textContent = translatedMsg; // Safe against script injection attacks and translated via i18n
 
   toast.appendChild(iconSpan);
   toast.appendChild(msgDiv);

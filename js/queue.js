@@ -2,6 +2,25 @@
 import { DOCTORS, DEMO_STAFF_PIN, state } from './config.js';
 import { escapeHtml, showToast, playClinicChime } from './utils.js';
 
+function renderQueueSkeletons(count = 4) {
+  const container = document.getElementById('live-queue-cards');
+  if (!container) return;
+  container.innerHTML = Array(count).fill(0).map(() => `
+    <div class="skeleton-card">
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <div class="skeleton-shimmer skeleton-avatar"></div>
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5rem;">
+          <div class="skeleton-shimmer skeleton-badge"></div>
+          <div class="skeleton-shimmer skeleton-title"></div>
+          <div class="skeleton-shimmer skeleton-text"></div>
+        </div>
+      </div>
+      <div class="skeleton-shimmer skeleton-hud"></div>
+      <div class="skeleton-shimmer skeleton-btn"></div>
+    </div>
+  `).join('');
+}
+
 function renderLiveOPDBoard() {
   const container = document.getElementById('live-queue-cards');
   if (!container) return;
@@ -37,10 +56,11 @@ function renderLiveOPDBoard() {
 
   if (filtered.length === 0) {
     container.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem 1rem; background: white; border-radius: var(--radius-xl); border: 1px dashed var(--slate-300);">
-        <p style="font-size: 1.15rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem;">No active consultation chambers match "${escapeHtml(state.queueSearch)}"</p>
-        <p style="color: var(--slate-600); margin-bottom: 1rem; font-size: 0.88rem;">Try clearing your search query or switching to All Chambers.</p>
-        <button class="btn btn-outline btn-sm" data-action="filter-queue-specialty" data-specialty="all">
+      <div class="empty-state-card">
+        <div class="empty-state-icon" aria-hidden="true">🩺</div>
+        <div class="empty-state-title" data-i18n="empty_queue_title">No Active Consultation Chambers Found</div>
+        <div class="empty-state-desc" data-i18n="empty_queue_desc">No active chamber matches "${escapeHtml(state.queueSearch)}". Try clearing your search query or switching to All Chambers.</div>
+        <button class="btn btn-primary btn-sm" data-action="filter-queue-specialty" data-specialty="all" data-i18n="btn_reset_filters">
           Reset Chamber Filters
         </button>
       </div>
@@ -205,6 +225,25 @@ window.simulateNextToken = function (docId) {
   }
 };
 
+function renderDoctorSkeletons(count = 4) {
+  const grid = document.getElementById('doctors-grid');
+  if (!grid) return;
+  grid.innerHTML = Array(count).fill(0).map(() => `
+    <div class="skeleton-card">
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <div class="skeleton-shimmer skeleton-avatar"></div>
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5rem;">
+          <div class="skeleton-shimmer skeleton-badge"></div>
+          <div class="skeleton-shimmer skeleton-title"></div>
+          <div class="skeleton-shimmer skeleton-text"></div>
+        </div>
+      </div>
+      <div class="skeleton-shimmer" style="height: 40px; border-radius: 8px;"></div>
+      <div class="skeleton-shimmer skeleton-btn"></div>
+    </div>
+  `).join('');
+}
+
 // --- Render Doctor Profile Cards ---
 function renderDoctorCards() {
   const grid = document.getElementById('doctors-grid');
@@ -223,10 +262,11 @@ function renderDoctorCards() {
 
   if (filtered.length === 0) {
     grid.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; background: white; border-radius: var(--radius-xl); border: 1px dashed var(--slate-300);">
-        <p style="font-size: 1.2rem; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem;">No specialists found matching "${escapeHtml(state.searchQuery)}"</p>
-        <p style="color: var(--slate-600); margin-bottom: 1rem;">Search by consultant name (e.g. 'Dr. Gurpreet', 'Dr. Simranjit') or condition (e.g. 'heart', 'knee joint', 'pregnancy', 'skin').</p>
-        <button class="btn btn-outline" data-action="reset-doctor-filters">Reset All Filters</button>
+      <div class="empty-state-card">
+        <div class="empty-state-icon" aria-hidden="true">👨‍⚕️</div>
+        <div class="empty-state-title" data-i18n="empty_doctors_title">No Specialists Found Matching Your Search</div>
+        <div class="empty-state-desc" data-i18n="empty_doctors_desc">No consultant match found for "${escapeHtml(state.searchQuery)}". Search by consultant name, specialty, or condition.</div>
+        <button class="btn btn-primary btn-sm" data-action="reset-doctor-filters" data-i18n="btn_reset_filters">Reset All Filters</button>
       </div>
     `;
     return;
@@ -319,7 +359,10 @@ window.openLiveQueueModal = function () {
   if (!modal) return;
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
-  if (typeof renderLiveOPDBoard === 'function') renderLiveOPDBoard();
+  renderQueueSkeletons(4);
+  setTimeout(() => {
+    if (typeof renderLiveOPDBoard === 'function') renderLiveOPDBoard();
+  }, 120);
 };
 
 window.closeLiveQueueModal = function () {
@@ -666,6 +709,8 @@ function setupSpecialtyFilters() {
 
 
 export {
+  renderQueueSkeletons,
+  renderDoctorSkeletons,
   renderLiveOPDBoard,
   filterQueueSpecialty,
   handleQueueSearch,

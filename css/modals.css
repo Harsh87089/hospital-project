@@ -3649,21 +3649,14 @@ body.theme-dark .campus-pulse-sub {
 
 /* Hospital Footer Alias */
 
-/* Mobile Sticky Helpline Pill Bar (Over Bottom Dock) */
+/* Mobile Sticky Helpline Pill Bar (Consolidated into unified bottom dock) */
 .mobile-sticky-helpline-bar {
-  display: none;
+  display: none !important;
 }
 
 @media (max-width: 767px) {
   .mobile-sticky-helpline-bar {
-    display: flex;
-    position: fixed;
-    bottom: 64px;
-    left: 12px;
-    right: 12px;
-    z-index: 989;
-    gap: 0.5rem;
-    pointer-events: auto;
+    display: none !important;
   }
 
   .mobile-helpline-btn {

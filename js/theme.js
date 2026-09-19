@@ -5,14 +5,31 @@ const ThemeEngine = {
   currentTheme: 'light',
 
   init() {
-    const saved = localStorage.getItem('carepulse_theme') || 'light';
-    this.setTheme(saved);
+    const saved = localStorage.getItem('carepulse_theme');
+    if (saved) {
+      this.setTheme(saved, false);
+    } else {
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      this.setTheme(prefersDark ? 'dark' : 'light', false);
+    }
+
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('carepulse_theme')) {
+          this.setTheme(e.matches ? 'dark' : 'light', false);
+        }
+      });
+    }
   },
 
-  setTheme(theme) {
+  setTheme(theme, persist = true) {
     this.currentTheme = theme;
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('carepulse_theme', theme);
+    if (persist) {
+      try {
+        localStorage.setItem('carepulse_theme', theme);
+      } catch (e) {}
+    }
 
     // Update all theme toggle buttons
     const buttons = document.querySelectorAll('.theme-toggle-btn');
@@ -27,8 +44,10 @@ const ThemeEngine = {
 
   toggle() {
     const next = this.currentTheme === 'dark' ? 'light' : 'dark';
-    this.setTheme(next);
-    showToast(`Switched to ${next === 'dark' ? 'Dark' : 'Light'} Mode`, 'info');
+    this.setTheme(next, true);
+    const toastKey = next === 'dark' ? 'toast_theme_dark' : 'toast_theme_light';
+    const fallbackMsg = `Switched to ${next === 'dark' ? 'Dark' : 'Light'} Mode`;
+    showToast(toastKey, 'info');
   }
 };
 

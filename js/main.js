@@ -21,18 +21,39 @@ import * as Gateway from './gateway.js';
 // Bind all module exports to window for global interoperability
 Object.assign(window, Config, Utils, Auth, Booking, Queue, Tokens, Pharmacy, Lab, SOS, Calculators, Theme, I18n, Search, Voice, Tele, Wayfinder, HealthCard, Gateway);
 
+// Skeleton loader for Beds & ICU Capacity
+function renderBedSkeletons(count = 4) {
+  const container = document.getElementById('beds-capacity-grid');
+  if (!container) return;
+  container.innerHTML = Array(count).fill(0).map(() => `
+    <div class="skeleton-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="skeleton-shimmer" style="width: 140px; height: 24px;"></div>
+        <div class="skeleton-shimmer" style="width: 80px; height: 20px; border-radius: 9999px;"></div>
+      </div>
+      <div class="skeleton-shimmer" style="height: 36px; width: 60%; margin: 0.5rem 0;"></div>
+      <div class="skeleton-shimmer" style="height: 12px; border-radius: 9999px;"></div>
+      <div class="skeleton-shimmer" style="height: 18px; width: 40%; margin-top: 0.5rem;"></div>
+    </div>
+  `).join('');
+}
+window.renderBedSkeletons = renderBedSkeletons;
+
 // Additional window modal openers/closers
 window.openBedsModal = function () {
   const modal = document.getElementById('beds-modal');
   if (!modal) return;
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
-  if (window.BedsCapacityEngine && typeof window.BedsCapacityEngine.render === 'function') {
-    window.BedsCapacityEngine.render();
-    setTimeout(() => {
-      window.BedsCapacityEngine.startECGMonitor();
-    }, 150);
-  }
+  renderBedSkeletons(4);
+  setTimeout(() => {
+    if (window.BedsCapacityEngine && typeof window.BedsCapacityEngine.render === 'function') {
+      window.BedsCapacityEngine.render();
+      setTimeout(() => {
+        window.BedsCapacityEngine.startECGMonitor();
+      }, 50);
+    }
+  }, 120);
 };
 
 window.closeBedsModal = function () {
@@ -56,7 +77,10 @@ window.openDoctorsModal = function (specialtyFilter = null) {
   }
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
-  if (typeof renderDoctorCards === 'function') renderDoctorCards();
+  if (typeof renderDoctorSkeletons === 'function') renderDoctorSkeletons(4);
+  setTimeout(() => {
+    if (typeof renderDoctorCards === 'function') renderDoctorCards();
+  }, 120);
 };
 
 window.closeDoctorsModal = function () {
