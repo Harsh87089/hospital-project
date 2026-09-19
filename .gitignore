@@ -1,0 +1,10 @@
+# Temporary testing files and scratch DOM snapshots
+debug_hospital.html
+dump.html
+scratch_dom.html
+*.png
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db

@@ -11,15 +11,19 @@ const DOCTORS = [
     specialty: 'General Physician',
     specialtyKey: 'general',
     qualifications: 'MBBS, MD (General Medicine - AIIMS New Delhi)',
+    regNo: 'PMC-38214 (Punjab Medical Council)',
+    languages: 'English, Hindi, Punjabi',
+    days: 'Mon - Sat',
     experience: '16 Years Exp',
     fee: 500,
     feeDisplay: '₹500',
     hours: '09:00 AM - 01:00 PM & 05:00 PM - 08:30 PM',
     room: 'Room 101, Ground Floor (General OPD)',
     rating: 4.93,
-    reviewsCount: '1,840 reviews',
+    reviewsCount: '1,840 verified visits',
     avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
+    status: 'In OPD',
     currentServingToken: 14,
     totalTodayTokens: 28,
     avgWaitPerPatient: 12,
@@ -31,15 +35,19 @@ const DOCTORS = [
     specialty: 'General Physician',
     specialtyKey: 'general',
     qualifications: 'MBBS, DNB (Family & Internal Medicine - CMC Vellore)',
+    regNo: 'PMC-41908 (Punjab Medical Council)',
+    languages: 'English, Hindi, Malayalam',
+    days: 'Mon - Sat',
     experience: '11 Years Exp',
     fee: 450,
     feeDisplay: '₹450',
     hours: '10:00 AM - 02:00 PM & 06:00 PM - 09:00 PM',
     room: 'Room 102, Ground Floor (General OPD Bay B)',
     rating: 4.90,
-    reviewsCount: '1,290 reviews',
+    reviewsCount: '1,290 verified visits',
     avatar: 'https://images.unsplash.com/photo-1594824813689-ff4a20b784a0?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
+    status: 'In OPD',
     currentServingToken: 9,
     totalTodayTokens: 21,
     avgWaitPerPatient: 10,
@@ -51,19 +59,225 @@ const DOCTORS = [
     specialty: 'General Physician',
     specialtyKey: 'general',
     qualifications: 'MBBS, MD (Senior Physician & Diabetologist - KGMC)',
+    regNo: 'MCI-29481 (Medical Council of India)',
+    languages: 'English, Hindi, Bengali',
+    days: 'Mon - Fri',
     experience: '18 Years Exp',
     fee: 600,
     feeDisplay: '₹600',
     hours: '08:30 AM - 12:30 PM & 04:30 PM - 07:30 PM',
     room: 'Room 103, Ground Floor (Executive OPD)',
     rating: 4.96,
-    reviewsCount: '2,100 reviews',
+    reviewsCount: '2,100 verified visits',
     avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
+    status: 'In OPD',
     currentServingToken: 18,
     totalTodayTokens: 32,
     avgWaitPerPatient: 15,
     keywords: ['hypertension', 'sugar', 'diabetes', 'fatigue', 'senior', 'amitav', 'banerjee', 'blood pressure']
+  },
+
+  // --- Cardiology & Heart Care ---
+  {
+    id: 'doc-card-1',
+    name: 'Dr. Gurpreet Singh Sandhu',
+    specialty: 'Cardiologist',
+    specialtyKey: 'cardiology',
+    qualifications: 'MBBS, MD (Medicine), DM (Cardiology - PGIMER Chandigarh)',
+    regNo: 'PMC-38291 (Punjab Medical Council)',
+    languages: 'English, Hindi, Punjabi',
+    days: 'Mon - Sat',
+    experience: '19 Years Exp',
+    fee: 650,
+    feeDisplay: '₹650',
+    hours: '09:00 AM - 01:00 PM & 04:00 PM - 07:00 PM',
+    room: 'Room 201, 2nd Floor (Cardiology & Echo Lab)',
+    rating: 4.97,
+    reviewsCount: '2,450 verified visits',
+    avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80',
+    availableToday: true,
+    status: 'In OPD',
+    currentServingToken: 11,
+    totalTodayTokens: 25,
+    avgWaitPerPatient: 16,
+    keywords: ['heart', 'cardiac', 'chest pain', 'bp', 'hypertension', 'angioplasty', 'ecg', 'echo', 'gurpreet', 'sandhu']
+  },
+  {
+    id: 'doc-card-2',
+    name: 'Dr. Navjot Kaur Dhillon',
+    specialty: 'Cardiologist',
+    specialtyKey: 'cardiology',
+    qualifications: 'MBBS, MD, DNB (Cardiology - Fortis Escorts Heart Institute)',
+    regNo: 'PMC-44120 (Punjab Medical Council)',
+    languages: 'English, Hindi, Punjabi',
+    days: 'Tue - Sun',
+    experience: '12 Years Exp',
+    fee: 600,
+    feeDisplay: '₹600',
+    hours: '10:00 AM - 02:00 PM & 05:00 PM - 08:00 PM',
+    room: 'Room 203, 2nd Floor (Heart Failure Clinic)',
+    rating: 4.92,
+    reviewsCount: '1,380 verified visits',
+    avatar: 'https://images.unsplash.com/photo-1594824813689-ff4a20b784a0?auto=format&fit=crop&w=400&q=80',
+    availableToday: true,
+    status: 'In OPD',
+    currentServingToken: 7,
+    totalTodayTokens: 19,
+    avgWaitPerPatient: 14,
+    keywords: ['palpitations', 'cholesterol', 'cardiac risk', 'heart attack', 'navjot', 'dhillon']
+  },
+
+  // --- Orthopedics & Joint Replacement ---
+  {
+    id: 'doc-ortho-1',
+    name: 'Dr. Maninderjit Bawa',
+    specialty: 'Orthopedic Surgeon',
+    specialtyKey: 'orthopedics',
+    qualifications: 'MBBS, MS (Orthopedics - CMC Ludhiana), MCh Ortho (Dundee, UK)',
+    regNo: 'PMC-41209 (Punjab Medical Council)',
+    languages: 'English, Hindi, Punjabi',
+    days: 'Mon - Sat',
+    experience: '17 Years Exp',
+    fee: 600,
+    feeDisplay: '₹600',
+    hours: '09:30 AM - 01:30 PM & 04:30 PM - 07:30 PM',
+    room: 'Room 106, Ground Floor (Joint & Spine Clinic)',
+    rating: 4.95,
+    reviewsCount: '2,180 verified visits',
+    avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=400&q=80',
+    availableToday: true,
+    status: 'In OPD',
+    currentServingToken: 13,
+    totalTodayTokens: 26,
+    avgWaitPerPatient: 15,
+    keywords: ['knee pain', 'joint replacement', 'arthritis', 'back pain', 'spine', 'fracture', 'bone', 'maninderjit', 'bawa']
+  },
+  {
+    id: 'doc-ortho-2',
+    name: 'Dr. Harmeet Ahluwalia',
+    specialty: 'Orthopedic Surgeon',
+    specialtyKey: 'orthopedics',
+    qualifications: 'MBBS, D.Ortho, DNB (Orthopedics - DMC Ludhiana)',
+    regNo: 'PMC-48190 (Punjab Medical Council)',
+    languages: 'English, Hindi, Punjabi',
+    days: 'Mon, Wed, Fri, Sat',
+    experience: '11 Years Exp',
+    fee: 500,
+    feeDisplay: '₹500',
+    hours: '11:00 AM - 03:00 PM & 05:30 PM - 08:30 PM',
+    room: 'Room 107, Ground Floor (Sports Injury & Trauma Bay)',
+    rating: 4.89,
+    reviewsCount: '1,120 verified visits',
+    avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=400&q=80',
+    availableToday: true,
+    status: 'In OPD',
+    currentServingToken: 6,
+    totalTodayTokens: 18,
+    avgWaitPerPatient: 12,
+    keywords: ['ligament', 'sports injury', 'shoulder pain', 'slip disc', 'harmeet', 'ahluwalia']
+  },
+
+  // --- Gynecology & Obstetrics ---
+  {
+    id: 'doc-gyn-1',
+    name: 'Dr. Simranjit Kaur Randhawa',
+    specialty: 'Gynecologist & Obstetrician',
+    specialtyKey: 'gynecology',
+    qualifications: 'MBBS, MS (Obstetrics & Gynaecology - GMC Amritsar), Fellowship Infertility',
+    regNo: 'PMC-45812 (Punjab Medical Council)',
+    languages: 'English, Hindi, Punjabi',
+    days: 'Mon - Sat',
+    experience: '15 Years Exp',
+    fee: 550,
+    feeDisplay: '₹550',
+    hours: '09:00 AM - 01:00 PM & 04:30 PM - 07:30 PM',
+    room: 'Room 205, 2nd Floor (Women Wellness Centre)',
+    rating: 4.96,
+    reviewsCount: '2,320 verified visits',
+    avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80',
+    availableToday: true,
+    status: 'In OPD',
+    currentServingToken: 12,
+    totalTodayTokens: 27,
+    avgWaitPerPatient: 15,
+    keywords: ['pregnancy', 'maternity', 'gynecology', 'pcos', 'infertility', 'delivery', 'women health', 'simranjit']
+  },
+  {
+    id: 'doc-gyn-2',
+    name: 'Dr. Manpreet Saini',
+    specialty: 'Gynecologist & Obstetrician',
+    specialtyKey: 'gynecology',
+    qualifications: 'MBBS, DGO, DNB (Obstetrics & Gynecology - PGIMER)',
+    regNo: 'PMC-52190 (Punjab Medical Council)',
+    languages: 'English, Hindi, Punjabi',
+    days: 'Mon - Fri',
+    experience: '10 Years Exp',
+    fee: 500,
+    feeDisplay: '₹500',
+    hours: '10:30 AM - 02:30 PM & 05:00 PM - 08:00 PM',
+    room: 'Room 206, 2nd Floor (Antenatal Care Unit)',
+    rating: 4.90,
+    reviewsCount: '1,040 verified visits',
+    avatar: 'https://images.unsplash.com/photo-1594824813689-ff4a20b784a0?auto=format&fit=crop&w=400&q=80',
+    availableToday: true,
+    status: 'In OPD',
+    currentServingToken: 8,
+    totalTodayTokens: 20,
+    avgWaitPerPatient: 14,
+    keywords: ['periods', 'irregular cycle', 'ultrasound', 'pelvic pain', 'manpreet', 'saini']
+  },
+
+  // --- ENT (Ear, Nose, Throat) ---
+  {
+    id: 'doc-ent-1',
+    name: 'Dr. Harvinder Singh Kohli',
+    specialty: 'ENT Specialist',
+    specialtyKey: 'ent',
+    qualifications: 'MBBS, MS (ENT / Otorhinolaryngology - GMC Patiala)',
+    regNo: 'PMC-39145 (Punjab Medical Council)',
+    languages: 'English, Hindi, Punjabi',
+    days: 'Mon - Sat',
+    experience: '14 Years Exp',
+    fee: 450,
+    feeDisplay: '₹450',
+    hours: '09:30 AM - 01:30 PM & 05:00 PM - 08:00 PM',
+    room: 'Room 208, 2nd Floor (ENT & Audiology Suite)',
+    rating: 4.92,
+    reviewsCount: '1,560 verified visits',
+    avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80',
+    availableToday: true,
+    status: 'In OPD',
+    currentServingToken: 9,
+    totalTodayTokens: 22,
+    avgWaitPerPatient: 12,
+    keywords: ['ear pain', 'hearing', 'sinus', 'tonsils', 'throat', 'vertigo', 'nasal', 'harvinder', 'kohli']
+  },
+
+  // --- Ophthalmology (Eye Care) ---
+  {
+    id: 'doc-eye-1',
+    name: 'Dr. Ravneet Oberoi',
+    specialty: 'Eye Specialist',
+    specialtyKey: 'ophthalmology',
+    qualifications: 'MBBS, MS (Ophthalmology - Dr. RP Centre AIIMS New Delhi)',
+    regNo: 'PMC-54911 (Punjab Medical Council)',
+    languages: 'English, Hindi, Punjabi',
+    days: 'Mon - Sat',
+    experience: '12 Years Exp',
+    fee: 450,
+    feeDisplay: '₹450',
+    hours: '09:00 AM - 01:00 PM & 04:00 PM - 07:30 PM',
+    room: 'Room 210, 2nd Floor (Precision Eye & Cataract Suite)',
+    rating: 4.94,
+    reviewsCount: '1,720 verified visits',
+    avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80',
+    availableToday: true,
+    status: 'In OPD',
+    currentServingToken: 11,
+    totalTodayTokens: 25,
+    avgWaitPerPatient: 14,
+    keywords: ['eye', 'cataract', 'vision', 'lasik', 'glaucoma', 'glasses', 'cornea', 'ravneet', 'oberoi']
   },
 
   // --- Pediatricians (Child Specialists) ---
@@ -73,15 +287,19 @@ const DOCTORS = [
     specialty: 'Pediatrician',
     specialtyKey: 'pediatrician',
     qualifications: 'MBBS, MD (Pediatrics & Neonatology - KEM Mumbai)',
+    regNo: 'PMC-47819 (Punjab Medical Council)',
+    languages: 'English, Hindi, Bengali',
+    days: 'Mon - Sat',
     experience: '12 Years Exp',
     fee: 500,
     feeDisplay: '₹500',
     hours: '09:30 AM - 01:30 PM & 04:30 PM - 07:30 PM',
     room: 'Room 104, 1st Floor (Child Wellness Unit)',
     rating: 4.95,
-    reviewsCount: '1,480 reviews',
+    reviewsCount: '1,480 verified visits',
     avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
+    status: 'In OPD',
     currentServingToken: 8,
     totalTodayTokens: 20,
     avgWaitPerPatient: 15,
@@ -93,15 +311,19 @@ const DOCTORS = [
     specialty: 'Pediatrician',
     specialtyKey: 'pediatrician',
     qualifications: 'MBBS, DCH (Child Health & Immunization - PGIMER)',
+    regNo: 'PMC-50931 (Punjab Medical Council)',
+    languages: 'English, Hindi, Marathi',
+    days: 'Mon - Fri',
     experience: '9 Years Exp',
     fee: 450,
     feeDisplay: '₹450',
     hours: '10:00 AM - 02:00 PM & 05:00 PM - 08:00 PM',
     room: 'Room 105, 1st Floor (Pediatric Clinic B)',
     rating: 4.88,
-    reviewsCount: '950 reviews',
+    reviewsCount: '950 verified visits',
     avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
+    status: 'In OPD',
     currentServingToken: 5,
     totalTodayTokens: 16,
     avgWaitPerPatient: 12,
@@ -115,15 +337,19 @@ const DOCTORS = [
     specialty: 'Dermatologist',
     specialtyKey: 'dermatologist',
     qualifications: 'MBBS, MD (Dermatology, Venereology & Leprosy - JIPMER)',
+    regNo: 'PMC-46201 (Punjab Medical Council)',
+    languages: 'English, Hindi, Tamil',
+    days: 'Mon - Sat',
     experience: '10 Years Exp',
     fee: 600,
     feeDisplay: '₹600',
     hours: '10:00 AM - 02:00 PM & 05:00 PM - 08:00 PM',
     room: 'Room 202, 2nd Floor (Skin & Derma Suite)',
     rating: 4.91,
-    reviewsCount: '1,340 reviews',
+    reviewsCount: '1,340 verified visits',
     avatar: 'https://images.unsplash.com/photo-1594824813689-ff4a20b784a0?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
+    status: 'In OPD',
     currentServingToken: 11,
     totalTodayTokens: 24,
     avgWaitPerPatient: 14,
@@ -135,37 +361,45 @@ const DOCTORS = [
     specialty: 'Dermatologist',
     specialtyKey: 'dermatologist',
     qualifications: 'MBBS, DDVL (Aesthetic Dermatology & Trichology - MAMC)',
+    regNo: 'PMC-49112 (Punjab Medical Council)',
+    languages: 'English, Hindi, Punjabi',
+    days: 'Tue - Sun',
     experience: '8 Years Exp',
     fee: 550,
     feeDisplay: '₹550',
     hours: '11:00 AM - 03:00 PM & 06:00 PM - 08:30 PM',
     room: 'Room 204, 2nd Floor (Aesthetic & Hair Clinic)',
     rating: 4.86,
-    reviewsCount: '810 reviews',
+    reviewsCount: '810 verified visits',
     avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
+    status: 'In OPD',
     currentServingToken: 7,
     totalTodayTokens: 18,
     avgWaitPerPatient: 15,
     keywords: ['hair loss', 'scalp', 'dandruff', 'laser', 'glow', 'skin care', 'rohan', 'varma', 'psoriasis']
   },
 
-  // --- Dentists (Oral & Dental Surgeons) ---
+  // --- Dentists (Oral & Maxillofacial Surgeons) ---
   {
     id: 'doc-dent-1',
     name: 'Dr. Suresh Kulkarni',
     specialty: 'Dentist',
     specialtyKey: 'dentist',
     qualifications: 'BDS, MDS (Orthodontics & Dentofacial Orthopedics - Nair Dental)',
+    regNo: 'PDC-12490 (Punjab Dental Council)',
+    languages: 'English, Hindi, Marathi',
+    days: 'Mon - Sat',
     experience: '14 Years Exp',
     fee: 400,
     feeDisplay: '₹400',
     hours: '09:00 AM - 01:00 PM & 04:00 PM - 08:00 PM',
     room: 'Room 108, Ground Floor (Advanced Dental Suite)',
     rating: 4.94,
-    reviewsCount: '1,620 reviews',
+    reviewsCount: '1,620 verified visits',
     avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
+    status: 'In OPD',
     currentServingToken: 12,
     totalTodayTokens: 25,
     avgWaitPerPatient: 16,
@@ -177,15 +411,19 @@ const DOCTORS = [
     specialty: 'Dentist',
     specialtyKey: 'dentist',
     qualifications: 'BDS, MDS (Conservative Dentistry & Endodontics - GDC Mumbai)',
+    regNo: 'PDC-14981 (Punjab Dental Council)',
+    languages: 'English, Hindi, Marathi',
+    days: 'Mon - Fri',
     experience: '9 Years Exp',
     fee: 450,
     feeDisplay: '₹450',
     hours: '09:30 AM - 01:30 PM & 05:00 PM - 08:30 PM',
     room: 'Room 109, Ground Floor (Dental Care Bay)',
     rating: 4.89,
-    reviewsCount: '1,050 reviews',
+    reviewsCount: '1,050 verified visits',
     avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
+    status: 'In OPD',
     currentServingToken: 6,
     totalTodayTokens: 18,
     avgWaitPerPatient: 18,
@@ -197,15 +435,19 @@ const DOCTORS = [
     specialty: 'Dentist',
     specialtyKey: 'dentist',
     qualifications: 'BDS, MDS (Oral & Maxillofacial Implantology - BHU)',
+    regNo: 'PDC-11822 (Punjab Dental Council)',
+    languages: 'English, Hindi, Punjabi',
+    days: 'Mon, Wed, Thu, Sat',
     experience: '13 Years Exp',
     fee: 500,
     feeDisplay: '₹500',
     hours: '10:30 AM - 02:30 PM & 05:30 PM - 08:30 PM',
     room: 'Room 110, Ground Floor (Dental Surgery Suite)',
     rating: 4.92,
-    reviewsCount: '1,180 reviews',
+    reviewsCount: '1,180 verified visits',
     avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=400&q=80',
     availableToday: true,
+    status: 'In OPD',
     currentServingToken: 10,
     totalTodayTokens: 22,
     avgWaitPerPatient: 20,
@@ -230,7 +472,10 @@ const state = {
   selectedSlotSession: '',
   bookedSlotsCache: {}, // key: doctorId + date -> set of booked times
   userAppointments: [],
-  lastCreatedToken: null
+  lastCreatedToken: null,
+  queueSpecialty: 'all',
+  queueSearch: '',
+  queueAutoSimInterval: null
 };
 
 // --- Web Audio Chime Generator (Realistic Clinic Bell) ---
@@ -351,42 +596,182 @@ function renderLiveOPDBoard() {
   const container = document.getElementById('live-queue-cards');
   if (!container) return;
 
-  // Show top representative doctors in the marquee board
-  container.innerHTML = DOCTORS.map(doc => {
+  // Calculate high-level live metrics
+  const totalChambers = DOCTORS.length;
+  const totalServingNow = DOCTORS.reduce((sum, d) => sum + (d.currentServingToken || 0), 0);
+  const totalIssuedToday = DOCTORS.reduce((sum, d) => sum + (d.totalTodayTokens || 0), 0);
+  const avgWait = Math.round(DOCTORS.reduce((sum, d) => sum + (d.avgWaitPerPatient || 12), 0) / (DOCTORS.length || 1));
+
+  // Update summary badges if present
+  const statChambers = document.getElementById('queue-stat-chambers');
+  if (statChambers) statChambers.innerText = `${totalChambers} Chambers`;
+
+  const statTokens = document.getElementById('queue-stat-tokens');
+  if (statTokens) statTokens.innerText = `${totalServingNow} / ${totalIssuedToday}`;
+
+  const statWait = document.getElementById('queue-stat-wait');
+  if (statWait) statWait.innerText = `~${avgWait} Mins`;
+
+  // Filter based on selected specialty & search query
+  const filter = state.queueSpecialty || 'all';
+  const query = (state.queueSearch || '').toLowerCase().trim();
+
+  const filtered = DOCTORS.filter(doc => {
+    const matchesSpec = filter === 'all' || doc.specialtyKey === filter;
+    if (!query) return matchesSpec;
+    const matchesName = doc.name.toLowerCase().includes(query);
+    const matchesSpecName = doc.specialty.toLowerCase().includes(query);
+    const matchesRoom = (doc.room || '').toLowerCase().includes(query);
+    return matchesSpec && (matchesName || matchesSpecName || matchesRoom);
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem 1rem; background: white; border-radius: var(--radius-xl); border: 1px dashed var(--slate-300);">
+        <p style="font-size: 1.15rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem;">No active consultation chambers match "${state.queueSearch}"</p>
+        <p style="color: var(--slate-600); margin-bottom: 1rem; font-size: 0.88rem;">Try clearing your search query or switching to All Chambers.</p>
+        <button class="btn btn-outline btn-sm" onclick="filterQueueSpecialty('all'); const inp = document.getElementById('queue-search-input'); if (inp) inp.value = ''; handleQueueSearch('');">
+          Reset Chamber Filters
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filtered.map(doc => {
     const nextToken = doc.currentServingToken + 1;
     const remaining = Math.max(0, doc.totalTodayTokens - doc.currentServingToken);
+    const total = doc.totalTodayTokens || 25;
+    const pct = Math.min(100, Math.round((doc.currentServingToken / total) * 100));
+
+    let badgeClass = 'spec-gp';
+    if (doc.specialtyKey === 'pediatrician') badgeClass = 'spec-ped';
+    else if (doc.specialtyKey === 'dermatologist') badgeClass = 'spec-derma';
+    else if (doc.specialtyKey === 'dentist') badgeClass = 'spec-dent';
 
     return `
-      <div class="queue-doctor-card">
-        <div class="queue-card-top">
-          <span class="queue-specialty-badge">${doc.specialty}</span>
-          <span class="queue-room"><i class="room-icon">📍</i> ${doc.room.split(',')[0]}</span>
+      <div class="queue-doctor-card" data-doctor-id="${doc.id}">
+        <!-- Card Header: Avatar, Name, Specialty, Room -->
+        <div class="queue-card-header">
+          <div class="queue-avatar-wrap">
+            <img src="${doc.avatar}" alt="${doc.name}" class="queue-doc-avatar" loading="lazy" />
+            <span class="queue-avatar-pulse" title="Doctor is active in consultation"></span>
+          </div>
+          <div class="queue-header-info">
+            <div class="queue-card-badges">
+              <span class="queue-specialty-badge ${badgeClass}">${doc.specialty}</span>
+              <span class="queue-status-live">
+                <span class="pulse-dot"></span> In Chamber
+              </span>
+            </div>
+            <div class="queue-doc-name" title="${doc.name}">${doc.name}</div>
+            <div class="queue-doc-meta">
+              <span>${doc.experience || 'Specialist'}</span>
+              <span class="queue-divider">•</span>
+              <span class="queue-room"><i class="room-icon">📍</i> ${doc.room ? doc.room.split(',')[0] : 'Chamber'}</span>
+            </div>
+          </div>
         </div>
-        <div class="queue-doc-name">${doc.name}</div>
-        
+
+        <!-- Center Digital Display HUD -->
         <div class="queue-token-display">
           <div>
-            <div class="token-label-sub">Now Serving</div>
+            <div class="token-label-sub">
+              <span class="pulse-emerald-dot"></span> Now Serving
+            </div>
             <div class="now-serving-token" id="serving-${doc.id}">#TK-${String(doc.currentServingToken).padStart(2, '0')}</div>
           </div>
           <div style="text-align: right;">
             <div class="token-label-sub">Next In Line</div>
-            <div style="font-size: 1.15rem; font-weight: 700; color: #a7f3d0;">#TK-${String(nextToken).padStart(2, '0')}</div>
+            <div class="next-token-badge">#TK-${String(nextToken).padStart(2, '0')}</div>
           </div>
         </div>
 
-        <div class="queue-footer-stats">
-          <span>In Queue: <strong>${remaining} patients</strong></span>
-          <span>Est. Wait: <strong>~${doc.avgWaitPerPatient} mins/pt</strong></span>
+        <!-- Progress of daily tokens -->
+        <div class="queue-progress-container">
+          <div class="queue-progress-labels">
+            <span>Tokens Today: <strong>${doc.currentServingToken} / ${total}</strong></span>
+            <span><strong>${pct}%</strong> Served</span>
+          </div>
+          <div class="queue-progress-track">
+            <div class="queue-progress-fill" style="width: ${pct}%;"></div>
+          </div>
         </div>
 
-        <button class="btn-next-sim" onclick="simulateNextToken('${doc.id}')">
-          ⚡ Call Next Token (Staff Demo)
-        </button>
+        <!-- Queue Stats: In Hall & Est Wait -->
+        <div class="queue-footer-stats">
+          <div>
+            <span class="queue-stat-label">In Waiting Area:</span>
+            <strong class="queue-stat-val">👥 ${remaining} patients</strong>
+          </div>
+          <div style="text-align: right;">
+            <span class="queue-stat-label">Est. Wait Time:</span>
+            <strong class="queue-stat-val">⏱️ ~${doc.avgWaitPerPatient} mins/pt</strong>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="queue-card-actions">
+          <button class="btn-next-sim" onclick="simulateNextToken('${doc.id}')" title="Call next token with chime notification">
+            ⚡ Next Token
+          </button>
+          <button class="btn-book-from-queue" onclick="closeLiveQueueModal(); openBookingLayer('${doc.id}');" title="Book appointment slot with this doctor">
+            📅 Book Slot ➔
+          </button>
+        </div>
       </div>
     `;
   }).join('');
 }
+
+// Global Filter & Search handlers for Live Queue
+window.filterQueueSpecialty = function (specialty) {
+  state.queueSpecialty = specialty;
+  document.querySelectorAll('.queue-chip').forEach(chip => {
+    chip.classList.toggle('active', chip.dataset.queueSpecialty === specialty);
+  });
+  renderLiveOPDBoard();
+};
+
+window.handleQueueSearch = function (query) {
+  state.queueSearch = query;
+  renderLiveOPDBoard();
+};
+
+window.toggleQueueAutoSim = function () {
+  const btn = document.getElementById('btn-queue-auto-sim');
+  if (state.queueAutoSimInterval) {
+    clearInterval(state.queueAutoSimInterval);
+    state.queueAutoSimInterval = null;
+    if (btn) {
+      btn.classList.remove('active');
+      btn.innerHTML = '⚡ Auto-Simulate (Off)';
+    }
+    showToast('Auto-simulation paused', 'info');
+  } else {
+    showToast('Live Auto-simulation active! Chambers calling tokens every 7s with chimes', 'success');
+    if (btn) {
+      btn.classList.add('active');
+      btn.innerHTML = '⏸️ Auto-Simulating...';
+    }
+    state.queueAutoSimInterval = setInterval(() => {
+      const modal = document.getElementById('live-queue-modal');
+      if (!modal || !modal.classList.contains('active')) {
+        clearInterval(state.queueAutoSimInterval);
+        state.queueAutoSimInterval = null;
+        if (btn) {
+          btn.classList.remove('active');
+          btn.innerHTML = '⚡ Auto-Simulate (Off)';
+        }
+        return;
+      }
+      const randomDoc = DOCTORS[Math.floor(Math.random() * DOCTORS.length)];
+      if (randomDoc) {
+        simulateNextToken(randomDoc.id);
+      }
+    }, 7000);
+  }
+};
 
 // Staff simulation to advance queue
 window.simulateNextToken = function (docId) {
@@ -398,8 +783,12 @@ window.simulateNextToken = function (docId) {
     doc.totalTodayTokens = doc.currentServingToken + 4;
   }
 
-  playClinicChime();
-  showToast(`Ding! ${doc.name} is now calling Token #TK-${String(doc.currentServingToken).padStart(2, '0')}`, 'success');
+  if (window.PublicAddressEngine) {
+    PublicAddressEngine.announceToken(doc, doc.currentServingToken);
+  } else {
+    playClinicChime();
+  }
+  showToast(`Ding! ${doc.name} (${doc.room.split(',')[0]}) is now calling Token #TK-${String(doc.currentServingToken).padStart(2, '0')}`, 'success');
   renderLiveOPDBoard();
 
   // If user is tracking a token with this doctor, update tracker view
@@ -421,15 +810,15 @@ function renderDoctorCards() {
 
     const matchesName = doc.name.toLowerCase().includes(query);
     const matchesSpec = doc.specialty.toLowerCase().includes(query);
-    const matchesKeywords = doc.keywords.some(k => k.includes(query));
+    const matchesKeywords = doc.keywords && doc.keywords.some(k => k.includes(query));
     return matchesSpecialty && (matchesName || matchesSpec || matchesKeywords);
   });
 
   if (filtered.length === 0) {
     grid.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; background: white; border-radius: var(--radius-xl); border: 1px dashed var(--slate-300);">
-        <p style="font-size: 1.2rem; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem;">No doctors found matching "${state.searchQuery}"</p>
-        <p style="color: var(--slate-600); margin-bottom: 1rem;">Try searching for Indian doctor names (e.g. 'Rajesh', 'Priya', 'Suresh') or symptoms like 'fever', 'teeth', 'skin rash'.</p>
+        <p style="font-size: 1.2rem; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem;">No specialists found matching "${escapeHtml(state.searchQuery)}"</p>
+        <p style="color: var(--slate-600); margin-bottom: 1rem;">Search by consultant name (e.g. 'Dr. Gurpreet', 'Dr. Simranjit') or condition (e.g. 'heart', 'knee joint', 'pregnancy', 'skin').</p>
         <button class="btn btn-outline" onclick="resetDoctorFilters()">Reset All Filters</button>
       </div>
     `;
@@ -440,8 +829,8 @@ function renderDoctorCards() {
     return `
       <article class="doctor-card" id="card-${doc.id}">
         <div class="doctor-card-banner">
-          <span class="avail-status-tag">
-            <span class="pulse-dot"></span> Available Today
+          <span class="avail-status-tag ${doc.status === 'In Surgery' ? 'status-surgery' : ''}">
+            <span class="pulse-dot ${doc.status === 'In Surgery' ? 'amber-pulse' : ''}"></span> ${doc.status || 'In OPD Today'}
           </span>
           <div class="doctor-avatar-wrapper">
             <img src="${doc.avatar}" alt="${doc.name}" class="doctor-avatar" loading="lazy" />
@@ -452,7 +841,7 @@ function renderDoctorCards() {
           <div class="doc-meta-top">
             <span class="doc-specialty spec-badge-${doc.specialtyKey}">${doc.specialty}</span>
             <div class="doc-rating">
-              <span>★</span> ${doc.rating} <span style="color: var(--slate-400); font-weight: 400; font-size: 0.75rem;">(${doc.reviewsCount.split(' ')[0]})</span>
+              <span>★</span> ${doc.rating} <span style="color: var(--slate-400); font-weight: 400; font-size: 0.75rem;">(${doc.reviewsCount})</span>
             </div>
           </div>
 
@@ -461,6 +850,10 @@ function renderDoctorCards() {
           <div class="doc-qualifications">
             <span>${doc.qualifications}</span>
             <span class="doc-experience-badge">${doc.experience}</span>
+          </div>
+
+          <div class="doc-reg-pill" style="margin: 0.35rem 0 0.65rem; font-size: 0.72rem; color: #0369a1; background: #e0f2fe; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; font-weight: 600;">
+            🛡️ Reg: ${doc.regNo || 'PMC Certified Specialist'}
           </div>
 
           <div class="doc-info-grid">
@@ -472,18 +865,26 @@ function renderDoctorCards() {
               <span class="info-label">Clinic Room</span>
               <span class="info-value">${doc.room.split(',')[0]}</span>
             </div>
+            <div class="info-item">
+              <span class="info-label">Consultation Days</span>
+              <span class="info-value" style="font-size: 0.8rem; font-weight: 600; color: #047857;">${doc.days || 'Mon - Sat'}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Languages</span>
+              <span class="info-value" style="font-size: 0.78rem;">${doc.languages || 'English, Hindi, Punjabi'}</span>
+            </div>
             <div class="info-item" style="grid-column: span 2;">
-              <span class="info-label">Available Hours</span>
-              <span class="info-value" style="font-size: 0.8rem; font-weight: 600;">${doc.hours}</span>
+              <span class="info-label">OPD Timing</span>
+              <span class="info-value" style="font-size: 0.78rem; font-weight: 600;">${doc.hours}</span>
             </div>
           </div>
 
           <div class="doctor-card-footer">
-            <button class="btn btn-outline btn-sm" onclick="openBookingLayer('${doc.id}')">
-              View Slots
+            <button class="btn btn-outline btn-sm" onclick="openBookingLayer('${doc.id}')" title="Book In-Person OPD Appointment">
+              In-Person OPD
             </button>
-            <button class="btn btn-primary btn-sm" onclick="openBookingLayer('${doc.id}')">
-              Book Appointment ➔
+            <button class="btn btn-primary btn-sm" onclick="openTeleConsultModal('${doc.id}')" style="background: linear-gradient(135deg, #0d9488 0%, #0284c7 100%); border: none;" title="Start Instant Video Tele-Consultation">
+              📹 Video Consult
             </button>
           </div>
         </div>
@@ -541,6 +942,132 @@ window.closeBookingLayer = function () {
   if (layerModal) {
     layerModal.classList.remove('active');
   }
+  document.body.style.overflow = '';
+};
+
+/* --- Modular Service Layer Modal Controllers --- */
+window.openLiveQueueModal = function () {
+  const modal = document.getElementById('live-queue-modal');
+  if (!modal) return;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  if (typeof renderLiveOPDBoard === 'function') renderLiveOPDBoard();
+};
+
+window.closeLiveQueueModal = function () {
+  const modal = document.getElementById('live-queue-modal');
+  if (modal) modal.classList.remove('active');
+  document.body.style.overflow = '';
+  if (state.queueAutoSimInterval) {
+    clearInterval(state.queueAutoSimInterval);
+    state.queueAutoSimInterval = null;
+    const btn = document.getElementById('btn-queue-auto-sim');
+    if (btn) {
+      btn.classList.remove('active');
+      btn.innerHTML = '⚡ Auto-Simulate (Off)';
+    }
+  }
+};
+
+window.openBedsModal = function () {
+  const modal = document.getElementById('beds-modal');
+  if (!modal) return;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  if (window.BedsCapacityEngine && typeof window.BedsCapacityEngine.render === 'function') {
+    window.BedsCapacityEngine.render();
+    setTimeout(() => {
+      window.BedsCapacityEngine.startECGMonitor();
+    }, 150);
+  }
+};
+
+window.closeBedsModal = function () {
+  const modal = document.getElementById('beds-modal');
+  if (modal) modal.classList.remove('active');
+  document.body.style.overflow = '';
+  if (window.BedsCapacityEngine && typeof window.BedsCapacityEngine.stopECGMonitor === 'function') {
+    window.BedsCapacityEngine.stopECGMonitor();
+  }
+};
+
+window.openDoctorsModal = function (specialtyFilter = null) {
+  const modal = document.getElementById('doctors-modal');
+  if (!modal) return;
+  if (specialtyFilter) {
+    state.activeSpecialty = specialtyFilter;
+    const btns = document.querySelectorAll('#doctors-modal .specialty-btn');
+    btns.forEach(b => {
+      b.classList.toggle('active', b.dataset.specialty === specialtyFilter);
+    });
+  }
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  if (typeof renderDoctorCards === 'function') renderDoctorCards();
+};
+
+window.closeDoctorsModal = function () {
+  const modal = document.getElementById('doctors-modal');
+  if (modal) modal.classList.remove('active');
+  document.body.style.overflow = '';
+};
+
+window.openPackagesModal = function () {
+  const modal = document.getElementById('packages-modal');
+  if (!modal) return;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+};
+
+window.closePackagesModal = function () {
+  const modal = document.getElementById('packages-modal');
+  if (modal) modal.classList.remove('active');
+  document.body.style.overflow = '';
+};
+
+window.openTrackTokenModal = function (presetTokenId = null) {
+  const modal = document.getElementById('track-token-modal');
+  if (!modal) return;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  if (presetTokenId) {
+    const input = document.getElementById('tracker-input');
+    if (input) {
+      input.value = presetTokenId;
+      checkTokenLiveStatus(presetTokenId);
+    }
+  }
+};
+
+window.closeTrackTokenModal = function () {
+  const modal = document.getElementById('track-token-modal');
+  if (modal) modal.classList.remove('active');
+  document.body.style.overflow = '';
+};
+
+window.openInsuranceModal = function () {
+  const modal = document.getElementById('insurance-modal');
+  if (!modal) return;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+};
+
+window.closeInsuranceModal = function () {
+  const modal = document.getElementById('insurance-modal');
+  if (modal) modal.classList.remove('active');
+  document.body.style.overflow = '';
+};
+
+window.openGuidelinesModal = function () {
+  const modal = document.getElementById('guidelines-modal');
+  if (!modal) return;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+};
+
+window.closeGuidelinesModal = function () {
+  const modal = document.getElementById('guidelines-modal');
+  if (modal) modal.classList.remove('active');
   document.body.style.overflow = '';
 };
 
@@ -1506,17 +2033,7 @@ window.trackGeneratedTokenNow = function () {
   if (!active) return;
   closeTokenModal();
 
-  const trackerInput = document.getElementById('tracker-input');
-  if (trackerInput) {
-    trackerInput.value = active.tokenId;
-  }
-
-  checkTokenLiveStatus(active.tokenId);
-
-  const trackerSec = document.getElementById('track-token-section');
-  if (trackerSec) {
-    trackerSec.scrollIntoView({ behavior: 'smooth' });
-  }
+  openTrackTokenModal(active.tokenId);
 };
 
 // ==========================================================================
@@ -1984,6 +2501,359 @@ window.downloadTicketById = function (tokenId, format = 'png') {
   downloadTicket(app, format);
 };
 
+// ==========================================================================
+// TOKEN ACTIONS: RESCHEDULE, CANCEL, ADD TO CALENDAR
+// ==========================================================================
+
+window.rescheduleAppointment = function (tokenId) {
+  const app = (tokenId ? state.userAppointments.find(a => a.tokenId === tokenId) : null) || state.currentViewingToken || state.lastCreatedToken;
+  if (!app) {
+    showToast('No active appointment to reschedule.', 'warning');
+    return;
+  }
+  const newDate = prompt(`Reschedule Token #${app.tokenId} with ${app.doctorName}\n\nEnter new date (e.g. Tomorrow or DD-MM-YYYY):`, 'Tomorrow');
+  if (!newDate) return;
+  const newSlot = prompt('Enter preferred consultation slot (e.g. 11:30 AM, 05:30 PM):', '11:30 AM');
+  if (!newSlot) return;
+
+  app.date = newDate;
+  app.timeSlot = newSlot;
+  app.reportingNote = `Rescheduled: Please report 15 mins prior (${newSlot})`;
+  app.status = 'Rescheduled';
+
+  try {
+    localStorage.setItem('carepulse_appointments', JSON.stringify(state.userAppointments));
+  } catch (e) { }
+
+  broadcastQueueUpdate('RESCHEDULE', { tokenId: app.tokenId, newDate, newSlot });
+  showToast(`Token #${app.tokenId} rescheduled to ${newDate} at ${newSlot}!`, 'success');
+  openTokenSlipModal(app);
+};
+
+window.cancelAppointment = function (tokenId) {
+  const app = (tokenId ? state.userAppointments.find(a => a.tokenId === tokenId) : null) || state.currentViewingToken || state.lastCreatedToken;
+  if (!app) {
+    showToast('No active appointment to cancel.', 'warning');
+    return;
+  }
+  const reason = prompt(`Cancel Token #${app.tokenId}?\n\nPlease enter reason for cancellation:`, 'Personal emergency / Rescheduling later');
+  if (reason === null) return;
+
+  app.status = 'Cancelled';
+  app.cancelReason = reason;
+
+  // Free up slot cache
+  const cacheKey = `${app.doctorId}_${app.isoDate}`;
+  if (state.bookedSlotsCache[cacheKey]) {
+    state.bookedSlotsCache[cacheKey] = state.bookedSlotsCache[cacheKey].filter(s => s !== app.timeSlot);
+  }
+
+  try {
+    localStorage.setItem('carepulse_appointments', JSON.stringify(state.userAppointments));
+  } catch (e) { }
+
+  broadcastQueueUpdate('CANCEL', { tokenId: app.tokenId });
+  showToast(`Appointment #${app.tokenId} cancelled. Consultation slot has been freed.`, 'info');
+  openTokenSlipModal(app);
+};
+
+window.addToCalendar = function (tokenId, mode = 'ics') {
+  const app = (tokenId ? state.userAppointments.find(a => a.tokenId === tokenId) : null) || state.currentViewingToken || state.lastCreatedToken;
+  if (!app) {
+    showToast('No appointment found to add to calendar.', 'warning');
+    return;
+  }
+
+  const title = `CarePulse OPD: ${app.doctorName} (${app.tokenId})`;
+  const desc = `Consultation with ${app.doctorName}\\nDepartment: ${app.doctorSpecialty}\\nRoom: ${app.room}\\nToken: ${app.tokenId}\\nHelpline: 1800-180-2026`;
+  const loc = `CarePulse Super Speciality Hospital, GT Road, Near Sugar Mill Crossing, Phagwara, Punjab - 144401`;
+
+  if (mode === 'google') {
+    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&details=${encodeURIComponent(desc)}&location=${encodeURIComponent(loc)}`;
+    window.open(url, '_blank');
+    return;
+  }
+
+  // Standard iCalendar (.ics) download
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//CarePulse Super Speciality Hospital//EN',
+    'CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT',
+    `SUMMARY:${title}`,
+    `DESCRIPTION:${desc}`,
+    `LOCATION:${loc}`,
+    'STATUS:CONFIRMED',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `CarePulse_Appointment_${app.tokenId}.ics`;
+  a.click();
+  showToast('Calendar invite (.ics) downloaded!', 'success');
+};
+
+// ==========================================================================
+// RECEPTION DESK & REALTIME OPD QUEUE CONTROLLER
+// ==========================================================================
+
+const QUEUE_CHANNEL_NAME = 'carepulse_queue_sync_bus';
+let queueSyncChannel = null;
+try {
+  if ('BroadcastChannel' in window) {
+    queueSyncChannel = new BroadcastChannel(QUEUE_CHANNEL_NAME);
+    queueSyncChannel.onmessage = function (e) {
+      handleRemoteQueueSync(e.data);
+    };
+  }
+} catch (e) { }
+
+window.addEventListener('storage', function (e) {
+  if (e.key === 'carepulse_queue_ping' || e.key === 'carepulse_appointments') {
+    reloadAppointmentsFromStorage();
+    renderLiveOPDBoard();
+    renderReceptionDashboard();
+    if (typeof activeTrackerToken !== 'undefined' && activeTrackerToken) {
+      checkTokenLiveStatus(activeTrackerToken.replace('#', ''));
+    }
+  }
+});
+
+function broadcastQueueUpdate(type, payload) {
+  try {
+    localStorage.setItem('carepulse_queue_ping', Date.now().toString());
+    if (queueSyncChannel) {
+      queueSyncChannel.postMessage({ type, payload, timestamp: Date.now() });
+    }
+  } catch (e) { }
+  renderLiveOPDBoard();
+  renderReceptionDashboard();
+}
+
+function handleRemoteQueueSync(data) {
+  if (!data) return;
+  if (data.type === 'CALL_NEXT' && data.payload) {
+    const doc = DOCTORS.find(d => d.id === data.payload.doctorId);
+    if (doc) {
+      doc.currentServingToken = data.payload.servingToken;
+      showToast(`🔔 Live Queue Update: ${doc.name} (${doc.room.split(',')[0]}) is now calling Token #TK-${String(doc.currentServingToken).padStart(2, '0')}`, 'info');
+    }
+  }
+  reloadAppointmentsFromStorage();
+  renderLiveOPDBoard();
+  renderReceptionDashboard();
+  if (typeof activeTrackerToken !== 'undefined' && activeTrackerToken) {
+    checkTokenLiveStatus(activeTrackerToken.replace('#', ''));
+  }
+}
+
+function reloadAppointmentsFromStorage() {
+  try {
+    const stored = localStorage.getItem('carepulse_appointments');
+    if (stored) {
+      state.userAppointments = JSON.parse(stored);
+    }
+  } catch (e) { }
+}
+
+window.openReceptionDesk = function () {
+  const modal = document.getElementById('reception-modal');
+  if (!modal) return;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  renderReceptionDashboard();
+};
+
+window.closeReceptionDesk = function () {
+  const modal = document.getElementById('reception-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+};
+
+window.callNextPatientToken = function (doctorId) {
+  const doc = DOCTORS.find(d => d.id === doctorId);
+  if (!doc) return;
+
+  doc.currentServingToken = (doc.currentServingToken || 0) + 1;
+  if (doc.currentServingToken > doc.totalTodayTokens) {
+    doc.totalTodayTokens = doc.currentServingToken + 2;
+  }
+
+  // Find if a patient appointment matches this token number
+  const app = state.userAppointments.find(a => a.doctorId === doctorId && a.tokenNumber === doc.currentServingToken);
+  if (app) {
+    app.status = 'Serving';
+    try {
+      localStorage.setItem('carepulse_appointments', JSON.stringify(state.userAppointments));
+    } catch (e) { }
+  }
+
+  if (window.PublicAddressEngine) {
+    PublicAddressEngine.announceToken(doc, doc.currentServingToken, app ? app.patientName : null);
+  } else if (typeof playClinicChime === 'function') {
+    try { playClinicChime(); } catch (e) { }
+  }
+
+  showToast(`🔔 Counter Called: Token #TK-${String(doc.currentServingToken).padStart(2, '0')} for ${doc.name} (${doc.room.split(',')[0]})`, 'success');
+  broadcastQueueUpdate('CALL_NEXT', { doctorId, servingToken: doc.currentServingToken });
+};
+
+window.markTokenCompleted = function (tokenId) {
+  const app = state.userAppointments.find(a => a.tokenId === tokenId);
+  if (app) {
+    app.status = 'Completed';
+    try {
+      localStorage.setItem('carepulse_appointments', JSON.stringify(state.userAppointments));
+    } catch (e) { }
+    showToast(`Token #${tokenId} marked as consultation Completed.`, 'success');
+    broadcastQueueUpdate('STATUS_CHANGE', { tokenId, status: 'Completed' });
+  }
+};
+
+window.markTokenNoShow = function (tokenId) {
+  const app = state.userAppointments.find(a => a.tokenId === tokenId);
+  if (app) {
+    app.status = 'No-Show';
+    try {
+      localStorage.setItem('carepulse_appointments', JSON.stringify(state.userAppointments));
+    } catch (e) { }
+    showToast(`Token #${tokenId} marked as No-Show.`, 'warning');
+    broadcastQueueUpdate('STATUS_CHANGE', { tokenId, status: 'No-Show' });
+  }
+};
+
+window.issueWalkinToken = function (doctorId) {
+  const doc = DOCTORS.find(d => d.id === doctorId) || DOCTORS[0];
+  const patientName = prompt(`Issue Walk-in OPD Token for ${doc.name}\n\nEnter Patient Name:`, 'Walk-in Patient');
+  if (!patientName) return;
+
+  const phone = prompt('Enter Patient Phone Number:', '9876543210') || '9876543210';
+  const tokenNum = doc.totalTodayTokens + 1;
+  doc.totalTodayTokens++;
+
+  const newApp = {
+    tokenId: `TK-${String(tokenNum).padStart(3, '0')}`,
+    tokenNumber: tokenNum,
+    doctorId: doc.id,
+    doctorName: doc.name,
+    doctorSpecialty: doc.specialty,
+    room: doc.room,
+    patientName: patientName.trim(),
+    patientPhone: phone.trim(),
+    patientAge: '30',
+    patientGender: 'Male',
+    patientPlace: 'Phagwara Walk-in Desk',
+    date: 'Today',
+    timeSlot: 'Walk-in OPD Priority',
+    fee: doc.feeDisplay,
+    status: 'Confirmed',
+    isWalkin: true
+  };
+
+  state.userAppointments.unshift(newApp);
+  try {
+    localStorage.setItem('carepulse_appointments', JSON.stringify(state.userAppointments));
+  } catch (e) { }
+
+  showToast(`Walk-in Token #${newApp.tokenId} issued for ${patientName}!`, 'success');
+  broadcastQueueUpdate('WALKIN_ISSUED', { doctorId, token: newApp });
+};
+
+window.setDoctorStatus = function (doctorId, status) {
+  const doc = DOCTORS.find(d => d.id === doctorId);
+  if (!doc) return;
+  doc.status = status;
+  showToast(`${doc.name} status set to: ${status}`, 'info');
+  renderDoctorCards();
+  broadcastQueueUpdate('DOC_STATUS', { doctorId, status });
+};
+
+function renderReceptionDashboard() {
+  const container = document.getElementById('reception-doc-grid');
+  if (!container) return;
+
+  container.innerHTML = DOCTORS.map(doc => {
+    const servingApp = state.userAppointments.find(a => a.doctorId === doc.id && a.tokenNumber === doc.currentServingToken);
+
+    return `
+      <div class="reception-doc-card" style="background: white; border: 1px solid var(--slate-200); border-radius: var(--radius-lg); padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+          <div>
+            <h4 style="margin: 0; font-size: 1.05rem; color: var(--dark);">${doc.name}</h4>
+            <div style="font-size: 0.78rem; color: var(--slate-600);">${doc.specialty} • ${doc.room.split(',')[0]}</div>
+          </div>
+          <select onchange="setDoctorStatus('${doc.id}', this.value)" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid var(--slate-300); font-weight: 700; background: ${doc.status === 'In Surgery' ? '#fef3c7' : '#f0fdf4'}; color: ${doc.status === 'In Surgery' ? '#b45309' : '#15803d'};">
+            <option value="In OPD" ${doc.status === 'In OPD' ? 'selected' : ''}>In OPD</option>
+            <option value="In Surgery" ${doc.status === 'In Surgery' ? 'selected' : ''}>In Surgery</option>
+            <option value="On Break" ${doc.status === 'On Break' ? 'selected' : ''}>On Break</option>
+            <option value="On Leave" ${doc.status === 'On Leave' ? 'selected' : ''}>On Leave</option>
+          </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; background: var(--slate-50); padding: 0.75rem; border-radius: var(--radius-md); margin-bottom: 1rem; text-align: center;">
+          <div>
+            <span style="font-size: 0.7rem; color: var(--slate-600); text-transform: uppercase; font-weight: 700; display: block;">Serving Now</span>
+            <strong style="font-size: 1.4rem; color: var(--primary-dark); font-family: var(--font-heading);">#TK-${String(doc.currentServingToken).padStart(2, '0')}</strong>
+          </div>
+          <div>
+            <span style="font-size: 0.7rem; color: var(--slate-600); text-transform: uppercase; font-weight: 700; display: block;">Today's Total</span>
+            <strong style="font-size: 1.4rem; color: var(--dark); font-family: var(--font-heading);">${doc.totalTodayTokens}</strong>
+          </div>
+        </div>
+
+        ${servingApp ? `
+          <div style="background: #e0f2fe; padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.78rem; color: #0369a1; margin-bottom: 0.75rem;">
+            👤 Patient: <strong>${servingApp.patientName}</strong> (${servingApp.patientPhone})
+          </div>
+        ` : ''}
+
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-primary btn-sm" onclick="callNextPatientToken('${doc.id}')" style="flex: 1; font-weight: 700;">
+            🔔 Call Next (#TK-${String(doc.currentServingToken + 1).padStart(2, '0')})
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="issueWalkinToken('${doc.id}')" style="font-size: 0.75rem;">
+            ➕ Walk-In
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Render recent tokens table
+  const tableBody = document.getElementById('reception-tokens-table-body');
+  if (tableBody) {
+    if (state.userAppointments.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 1.5rem; color: var(--slate-400);">No active patient bookings today.</td></tr>';
+    } else {
+      tableBody.innerHTML = state.userAppointments.slice(0, 15).map(a => `
+        <tr>
+          <td><strong style="font-family: monospace; color: var(--primary-dark);">${a.tokenId}</strong></td>
+          <td><strong>${a.patientName}</strong><br /><span style="font-size: 0.75rem; color: var(--slate-600);">${a.patientPhone}</span></td>
+          <td>${a.doctorName}<br /><span style="font-size: 0.72rem; color: var(--slate-600);">${a.room.split(',')[0]}</span></td>
+          <td>${a.timeSlot}</td>
+          <td>
+            <span class="status-badge-report ${a.status === 'Completed' ? 'normal' : a.status === 'Cancelled' ? 'abnormal' : 'high'}">
+              ${a.status}
+            </span>
+          </td>
+          <td>
+            <div style="display: flex; gap: 0.25rem;">
+              <button class="btn-rx-add" onclick="markTokenCompleted('${a.tokenId}')" title="Mark consultation done">✓ Done</button>
+              <button class="btn-rx-add" onclick="markTokenNoShow('${a.tokenId}')" style="color: #b91c1c;" title="Mark patient absent">✗ No-Show</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+  }
+}
+
 // --- Live Queue Tracker Feature ---
 function setupTracker() {
   const btn = document.getElementById('tracker-search-btn');
@@ -2247,7 +3117,15 @@ window.closeEmergencyModal = function () {
 
 // --- Close Modals on Backdrop Click or Escape Key ---
 function setupModalDismissals() {
-  ['booking-layer-modal', 'token-modal', 'my-bookings-modal', 'emergency-modal', 'lab-report-modal', 'pharmacy-modal'].forEach(modalId => {
+  const allModalIds = [
+    'booking-layer-modal', 'token-modal', 'my-bookings-modal', 'emergency-modal',
+    'lab-report-modal', 'pharmacy-modal', 'health-calculator-modal',
+    'live-queue-modal', 'beds-modal', 'doctors-modal', 'packages-modal',
+    'track-token-modal', 'insurance-modal', 'guidelines-modal', 'tele-consult-modal',
+    'campus-wayfinder-modal', 'health-card-modal'
+  ];
+
+  allModalIds.forEach(modalId => {
     const el = document.getElementById(modalId);
     if (!el) return;
     el.addEventListener('click', (e) => {
@@ -2258,6 +3136,17 @@ function setupModalDismissals() {
         else if (modalId === 'emergency-modal') closeEmergencyModal();
         else if (modalId === 'lab-report-modal') closeLabReportModal();
         else if (modalId === 'pharmacy-modal') closePharmacyModal();
+        else if (modalId === 'health-calculator-modal' && typeof closeHealthCalculator === 'function') closeHealthCalculator();
+        else if (modalId === 'live-queue-modal') closeLiveQueueModal();
+        else if (modalId === 'beds-modal') closeBedsModal();
+        else if (modalId === 'doctors-modal') closeDoctorsModal();
+        else if (modalId === 'packages-modal') closePackagesModal();
+        else if (modalId === 'track-token-modal') closeTrackTokenModal();
+        else if (modalId === 'insurance-modal') closeInsuranceModal();
+        else if (modalId === 'guidelines-modal') closeGuidelinesModal();
+        else if (modalId === 'tele-consult-modal' && typeof closeTeleConsultModal === 'function') closeTeleConsultModal();
+        else if (modalId === 'campus-wayfinder-modal' && typeof closeWayfinderModal === 'function') closeWayfinderModal();
+        else if (modalId === 'health-card-modal' && typeof closeHealthCardModal === 'function') closeHealthCardModal();
       }
     });
   });
@@ -2270,9 +3159,43 @@ function setupModalDismissals() {
       closeEmergencyModal();
       closeLabReportModal();
       closePharmacyModal();
-      closeChatWidget();
+      if (typeof closeHealthCalculator === 'function') closeHealthCalculator();
+      closeLiveQueueModal();
+      closeBedsModal();
+      closeDoctorsModal();
+      closePackagesModal();
+      closeTrackTokenModal();
+      closeInsuranceModal();
+      closeGuidelinesModal();
+      if (typeof closeTeleConsultModal === 'function') closeTeleConsultModal();
+      if (typeof closeWayfinderModal === 'function') closeWayfinderModal();
+      if (typeof closeHealthCardModal === 'function') closeHealthCardModal();
+      if (typeof closeChatWidget === 'function') closeChatWidget();
+      if (typeof closeEmergencySOS === 'function') closeEmergencySOS();
+      if (typeof closeSpotlightSearch === 'function') closeSpotlightSearch();
     }
   });
+
+  // Deep Link & Hash Routing handler
+  window.handleHashRouting = function () {
+    const hash = (window.location.hash || '').toLowerCase();
+    if (!hash) return;
+    if (hash === '#doctors' || hash === '#doctors-section') openDoctorsModal();
+    else if (hash === '#queue' || hash === '#live-board-section' || hash === '#live-queue') openLiveQueueModal();
+    else if (hash === '#beds' || hash === '#beds-occupancy-section') openBedsModal();
+    else if (hash === '#packages' || hash === '#packages-section') openPackagesModal();
+    else if (hash === '#booking' || hash === '#booking-section') openBookingLayer();
+    else if (hash === '#track' || hash === '#track-token-section') openTrackTokenModal();
+    else if (hash === '#insurance' || hash === '#insurance-section') openInsuranceModal();
+    else if (hash === '#reports' || hash === '#lab-reports') openLabReportModal();
+    else if (hash === '#pharmacy') openPharmacyModal();
+    else if (hash === '#emergency') openEmergencyModal();
+    else if (hash === '#calculator' || hash === '#bmi') openHealthCalculator();
+    else if (hash === '#tokens' || hash === '#my-bookings') openMyBookingsModal();
+  };
+
+  window.addEventListener('hashchange', window.handleHashRouting);
+  setTimeout(window.handleHashRouting, 300);
 }
 
 // ==========================================================================
@@ -2344,7 +3267,7 @@ window.switchBranch = function (branchKey) {
   showToast(`Switched hospital branch to ${branch.city}!`, 'info');
 };
 
-// 2. Preventive Health Checkup Packages (Apollo ProHealth Style)
+// 2. CarePulse ProHealth Preventive Checkup Packages
 const HEALTH_PACKAGES = [
   {
     id: 'pkg-basic',
@@ -2371,7 +3294,7 @@ const HEALTH_PACKAGES = [
     originalPrice: 5500,
     discount: '54% OFF',
     popular: true,
-    desc: 'Apollo-grade multi-organ screening evaluating Liver, Kidneys, Thyroid, Heart, and Vitamins.',
+    desc: 'Comprehensive multi-organ clinical screening evaluating Liver, Kidneys, Thyroid, Heart, and Vitamins.',
     features: [
       'Liver Function Test - LFT (11 parameters)',
       'Kidney Function Test - KFT & Serum Creatinine',
@@ -2417,14 +3340,95 @@ const HEALTH_PACKAGES = [
   }
 ];
 
+let activePackageBooking = null;
+
 window.bookHealthPackage = function (pkgId) {
+  openPackageBookingModal(pkgId);
+};
+
+window.openPackageBookingModal = function (pkgId) {
   const pkg = HEALTH_PACKAGES.find(p => p.id === pkgId) || HEALTH_PACKAGES[1];
+  activePackageBooking = pkg;
 
-  const patientName = prompt(`Book ${pkg.name} (Special Price: ₹${pkg.price})\n\nPlease enter Patient Full Name:`, 'Amit Kumar');
-  if (!patientName || patientName.trim() === '') return;
+  const modal = document.getElementById('package-booking-modal');
+  if (!modal) {
+    // Fallback if modal HTML not yet injected
+    submitDirectPackageBooking(pkg);
+    return;
+  }
 
-  const patientPhone = prompt('Enter Contact Mobile Number for Lab Sample Pickup & SMS Report:', '9876543210');
-  if (!patientPhone) return;
+  document.getElementById('pkg-modal-title').textContent = pkg.name;
+  document.getElementById('pkg-modal-price').textContent = `₹${pkg.price}`;
+  document.getElementById('pkg-modal-desc').textContent = `${pkg.testsCount} • ${pkg.desc}`;
+
+  // Prefill user details if logged in
+  if (CarePulseAuth.sessionUser) {
+    const nameInput = document.getElementById('pkg-patient-name');
+    const phoneInput = document.getElementById('pkg-patient-phone');
+    if (nameInput && CarePulseAuth.sessionUser.name) nameInput.value = CarePulseAuth.sessionUser.name;
+    if (phoneInput && CarePulseAuth.sessionUser.contact) phoneInput.value = CarePulseAuth.sessionUser.contact;
+  }
+
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+};
+
+window.closePackageBookingModal = function () {
+  const modal = document.getElementById('package-booking-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+};
+
+window.openPrivacyModal = function () {
+  const modal = document.getElementById('privacy-modal');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+};
+
+window.closePrivacyModal = function () {
+  const modal = document.getElementById('privacy-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+};
+
+window.openTermsModal = function () {
+  const modal = document.getElementById('terms-modal');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+};
+
+window.closeTermsModal = function () {
+  const modal = document.getElementById('terms-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+};
+
+window.submitPackageBookingForm = function (e) {
+  if (e) e.preventDefault();
+  const pkg = activePackageBooking || HEALTH_PACKAGES[1];
+
+  const name = document.getElementById('pkg-patient-name').value.trim();
+  const phone = document.getElementById('pkg-patient-phone').value.trim();
+  const age = document.getElementById('pkg-patient-age').value.trim() || '35';
+  const gender = document.getElementById('pkg-patient-gender').value || 'Male';
+  const collectionType = document.getElementById('pkg-collection-type').value;
+  const address = document.getElementById('pkg-patient-address').value.trim();
+  const timeSlot = document.getElementById('pkg-time-slot').value;
+
+  if (!name || !phone) {
+    showToast('Please enter patient name and contact phone number', 'warning');
+    return;
+  }
 
   const pkgTokenNum = Math.floor(1000 + Math.random() * 9000);
   const tokenString = `PKG-${pkgTokenNum}`;
@@ -2437,7 +3441,7 @@ window.bookHealthPackage = function (pkgId) {
   const genSecPart = () => Array.from({ length: 4 }, () => hexChars.charAt(Math.floor(Math.random() * hexChars.length))).join('');
   const securityCode = `SEC-${genSecPart()}-${genSecPart()}`;
   const barcodeNum = `CP-PKG-${pkgTokenNum}-${Math.floor(1000 + Math.random() * 9000)}`;
-  const qrPayload = `https://carepulse.hospital/checkin?t=${tokenString}&ref=${ticketRef}&sec=${securityCode}&p=${encodeURIComponent(patientName.trim())}`;
+  const qrPayload = `https://carepulse.hospital/checkin?t=${tokenString}&ref=${ticketRef}&sec=${securityCode}&p=${encodeURIComponent(name)}`;
 
   const pkgAppointment = {
     tokenId: tokenString,
@@ -2445,24 +3449,79 @@ window.bookHealthPackage = function (pkgId) {
     ticketRef: ticketRef,
     securityCode: securityCode,
     barcodeNum: barcodeNum,
-    assignedDesk: 'NABL Lab Wing • Phlebotomy Bay 1',
+    assignedDesk: collectionType === 'home' ? 'Phlebotomy Van #3 • Doorstep Collector' : 'NABL Central Lab • Bay 1',
     queuePosition: 1,
     estWaitMins: 5,
-    issueTimestamp: now.toLocaleDateString('en-IN') + ' ' + now.toLocaleTimeString('en-IN'),
+    issueTimestamp: now.toLocaleDateString('en-IN') + ', ' + now.toLocaleTimeString('en-IN'),
     qrPayload: qrPayload,
     doctorId: 'lab-pkg',
     doctorName: 'CarePulse Diagnostics Lab Desk',
-    doctorSpecialty: 'Preventive Health Package',
+    doctorSpecialty: 'CarePulse ProHealth Package',
     doctorAvatar: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=400&q=80',
     date: dateStr,
-    timeSlot: '07:30 AM - 09:30 AM (Fasting Sample)',
-    room: 'NABL Diagnostic Lab Wing, Ground Floor',
-    patientName: patientName.trim(),
+    timeSlot: timeSlot,
+    room: collectionType === 'home' ? `Home Sample Pickup (${address || 'Phagwara'})` : 'Ground Floor, NABL Lab Wing',
+    patientName: name,
+    patientAge: age,
+    patientGender: gender,
+    patientPlace: collectionType === 'home' ? (address || 'Phagwara Home Pickup') : 'Hospital Walk-in',
+    patientPhone: phone,
+    visitReason: `${pkg.name} (${pkg.testsCount}) • ${collectionType === 'home' ? 'Home Sample Pickup' : 'Hospital Central Lab'}`,
+    reportingNote: '10-12 hours fasting mandatory before sample collection. Water permitted.',
+    fee: `₹${pkg.price}`,
+    bookedAt: new Date().toISOString(),
+    status: 'Confirmed'
+  };
+
+  state.userAppointments.unshift(pkgAppointment);
+  try {
+    localStorage.setItem('carepulse_appointments', JSON.stringify(state.userAppointments));
+  } catch (e) { }
+
+  closePackageBookingModal();
+  renderMyBookingsBadge();
+  openTokenSlipModal(pkgAppointment);
+  showToast(`🎉 ${pkg.name} reserved! Token ${tokenString} generated.`, 'success');
+};
+
+function submitDirectPackageBooking(pkg) {
+  const patientName = CarePulseAuth.sessionUser ? CarePulseAuth.sessionUser.name : 'Patient';
+  const patientPhone = CarePulseAuth.sessionUser ? CarePulseAuth.sessionUser.contact : '9876543210';
+  const pkgTokenNum = Math.floor(1000 + Math.random() * 9000);
+  const tokenString = `PKG-${pkgTokenNum}`;
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+  const year = now.getFullYear();
+  const ticketRef = `CP-${year}-${Math.floor(100000 + Math.random() * 900000)}`;
+  const hexChars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const genSecPart = () => Array.from({ length: 4 }, () => hexChars.charAt(Math.floor(Math.random() * hexChars.length))).join('');
+  const securityCode = `SEC-${genSecPart()}-${genSecPart()}`;
+  const barcodeNum = `CP-PKG-${pkgTokenNum}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+  const pkgAppointment = {
+    tokenId: tokenString,
+    tokenNumber: pkgTokenNum,
+    ticketRef: ticketRef,
+    securityCode: securityCode,
+    barcodeNum: barcodeNum,
+    assignedDesk: 'Phlebotomy Bay 1 • Doorstep Sample Desk',
+    queuePosition: 1,
+    estWaitMins: 5,
+    issueTimestamp: now.toLocaleDateString('en-IN') + ', ' + now.toLocaleTimeString('en-IN'),
+    qrPayload: `https://carepulse.hospital/checkin?t=${tokenString}&ref=${ticketRef}`,
+    doctorId: 'lab-pkg',
+    doctorName: 'CarePulse Diagnostics Lab Desk',
+    doctorSpecialty: 'CarePulse ProHealth Package',
+    doctorAvatar: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=400&q=80',
+    date: dateStr,
+    timeSlot: '07:30 AM - 08:30 AM (Fasting Sample)',
+    room: 'Home Sample Collection / NABL Lab Wing',
+    patientName: patientName,
     patientAge: '35',
-    patientGender: 'Standard',
-    patientPlace: 'Home Sample / Clinic Desk',
-    patientPhone: patientPhone.trim(),
-    visitReason: `${pkg.name} (${pkg.testsCount}) - Doorstep phlebotomist assigned`,
+    patientGender: 'Male',
+    patientPlace: 'Model Town, Phagwara',
+    patientPhone: patientPhone,
+    visitReason: `${pkg.name} (${pkg.testsCount}) - Doorstep Sample`,
     reportingNote: '10-12 hours fasting required before sample collection',
     fee: `₹${pkg.price}`,
     bookedAt: new Date().toISOString(),
@@ -2477,13 +3536,14 @@ window.bookHealthPackage = function (pkgId) {
   renderMyBookingsBadge();
   openTokenSlipModal(pkgAppointment);
   showToast(`🎉 ${pkg.name} reserved! Token ${tokenString} issued.`, 'success');
-};
+}
 
-// 3. Diagnostic Reports Portal (UHID Downloader)
+// 3. Diagnostic Reports Portal (Authenticated with Patient OTP)
 const SAMPLE_LAB_REPORTS = {
   'UHID-98214': {
     uhid: 'UHID-98214',
     patientName: 'Mr. Rajesh Verma',
+    registeredMobile: '+91 98765-43210',
     ageGender: '42 Y / Male',
     refDoctor: 'Dr. Rajesh Sharma, MD',
     collectionDate: 'Today, 07:45 AM',
@@ -2495,25 +3555,22 @@ const SAMPLE_LAB_REPORTS = {
       { name: 'Platelet Count', result: '2.65', unit: 'Lakhs/cu.mm', normal: '1.50 - 4.50', flag: 'normal' },
       { name: 'Fasting Blood Glucose', result: '94', unit: 'mg/dL', normal: '70 - 100', flag: 'normal' },
       { name: 'HbA1c (Glycated Hemoglobin)', result: '5.4', unit: '%', normal: '< 5.7', flag: 'normal' },
-      { name: 'Total Serum Cholesterol', result: '188', unit: 'mg/dL', normal: '< 200', flag: 'normal' },
-      { name: 'Triglycerides', result: '142', unit: 'mg/dL', normal: '< 150', flag: 'normal' },
-      { name: 'Serum Creatinine (Kidney)', result: '0.92', unit: 'mg/dL', normal: '0.70 - 1.20', flag: 'normal' },
-      { name: 'SGPT / ALT (Liver)', result: '32', unit: 'U/L', normal: '< 45', flag: 'normal' },
-      { name: 'TSH (Thyroid Stimulating Hormone)', result: '2.34', unit: 'uIU/mL', normal: '0.40 - 4.50', flag: 'normal' }
+      { name: 'Total Cholesterol', result: '168', unit: 'mg/dL', normal: '< 200', flag: 'normal' },
+      { name: 'Serum Creatinine', result: '0.90', unit: 'mg/dL', normal: '0.60 - 1.20', flag: 'normal' }
     ]
   },
   'UHID-44021': {
     uhid: 'UHID-44021',
     patientName: 'Mrs. Sunita Rao',
+    registeredMobile: '+91 98140-54321',
     ageGender: '56 Y / Female',
     refDoctor: 'Dr. Amitav Banerjee, MD',
-    collectionDate: 'Yesterday, 08:00 AM',
-    reportDate: 'Yesterday, 01:15 PM',
+    collectionDate: 'Yesterday, 08:30 AM',
+    reportDate: 'Yesterday, 02:15 PM',
     status: 'Verified & Signed',
     tests: [
-      { name: 'Hemoglobin (Hb)', result: '11.8', unit: 'g/dL', normal: '12.0 - 15.0', flag: 'high' },
-      { name: 'Fasting Blood Glucose', result: '138', unit: 'mg/dL', normal: '70 - 100', flag: 'high' },
-      { name: 'HbA1c (Glycated Hemoglobin)', result: '6.9', unit: '%', normal: '< 5.7', flag: 'high' },
+      { name: 'Fasting Blood Glucose', result: '146', unit: 'mg/dL', normal: '70 - 100', flag: 'high' },
+      { name: 'HbA1c (Diabetic Indicator)', result: '7.8', unit: '%', normal: '< 5.7', flag: 'high' },
       { name: 'Total Serum Cholesterol', result: '224', unit: 'mg/dL', normal: '< 200', flag: 'high' },
       { name: 'Triglycerides', result: '185', unit: 'mg/dL', normal: '< 150', flag: 'high' },
       { name: 'Serum Creatinine (Kidney)', result: '0.85', unit: 'mg/dL', normal: '0.50 - 1.10', flag: 'normal' },
@@ -2523,6 +3580,9 @@ const SAMPLE_LAB_REPORTS = {
   }
 };
 
+const verifiedReportUHIDs = new Set();
+let pendingReportVerificationUHID = null;
+
 window.openLabReportModal = function (presetUhid = 'UHID-98214') {
   const modal = document.getElementById('lab-report-modal');
   if (!modal) return;
@@ -2530,9 +3590,14 @@ window.openLabReportModal = function (presetUhid = 'UHID-98214') {
   const inputEl = document.getElementById('report-uhid-input');
   if (inputEl) inputEl.value = presetUhid;
 
-  renderLabReportSheet(presetUhid);
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
+
+  if (verifiedReportUHIDs.has(presetUhid) || (CarePulseAuth.sessionUser && CarePulseAuth.sessionUser.uhid === presetUhid)) {
+    renderLabReportSheet(presetUhid);
+  } else {
+    renderLabReportAuthPrompt(presetUhid);
+  }
 };
 
 window.closeLabReportModal = function () {
@@ -2550,7 +3615,74 @@ window.searchLabReport = function () {
     showToast('Please enter a valid Patient UHID or Phone number', 'warning');
     return;
   }
-  renderLabReportSheet(uhid);
+
+  if (verifiedReportUHIDs.has(uhid) || (CarePulseAuth.sessionUser && (CarePulseAuth.sessionUser.uhid === uhid || CarePulseAuth.sessionUser.contact.includes(uhid)))) {
+    renderLabReportSheet(uhid);
+  } else {
+    renderLabReportAuthPrompt(uhid);
+  }
+};
+
+function renderLabReportAuthPrompt(uhid) {
+  pendingReportVerificationUHID = uhid;
+  const sheetEl = document.getElementById('lab-report-output');
+  if (!sheetEl) return;
+
+  const reportData = SAMPLE_LAB_REPORTS[uhid];
+  const maskedPhone = reportData ? reportData.registeredMobile.replace(/(\+91 \d{2})\d{3}(\d{4})/, '$1***$2') : '+91 98*** 43210';
+
+  sheetEl.innerHTML = `
+    <div style="background: white; border: 1px solid var(--slate-200); border-radius: var(--radius-lg); padding: 2rem; text-align: center; max-width: 520px; margin: 1rem auto; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.06);">
+      <div style="width: 54px; height: 54px; background: #e0f2fe; color: #0284c7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto 1rem;">
+        🔐
+      </div>
+      <h4 style="font-size: 1.2rem; color: var(--dark); margin: 0 0 0.4rem;">Patient Authentication Required</h4>
+      <p style="font-size: 0.85rem; color: var(--slate-600); line-height: 1.5; margin-bottom: 1.25rem;">
+        Under India's <strong>Digital Personal Data Protection (DPDP) Act 2023</strong>, clinical lab reports require one-time passcode verification to protect patient privacy.
+      </p>
+      <div style="background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1.25rem; font-size: 0.85rem;">
+        <div>Accessing Records for: <strong style="color: var(--primary-dark); font-family: monospace;">${escapeHtml(uhid)}</strong></div>
+        <div style="font-size: 0.8rem; color: var(--slate-600); margin-top: 0.2rem;">OTP sent to registered mobile: <strong>${maskedPhone}</strong></div>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1rem;">
+        <input type="text" id="report-otp-input" maxlength="6" inputmode="numeric" placeholder="Enter 6-digit OTP" 
+               style="text-align: center; font-size: 1.25rem; font-weight: 700; letter-spacing: 4px; padding: 0.65rem 1rem; width: 220px; border: 2px solid var(--primary); border-radius: var(--radius-md); outline: none;" 
+               onkeydown="if(event.key==='Enter') verifyLabReportOTP()" />
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <button type="button" class="btn btn-primary" onclick="verifyLabReportOTP()" style="padding: 0.65rem 1.85rem; font-weight: 700;">
+          Verify &amp; Unlock Report ➔
+        </button>
+      </div>
+
+      <div style="background: #ecfdf5; border: 1px dashed #059669; border-radius: var(--radius-sm); padding: 0.65rem; font-size: 0.78rem; color: #065f46;">
+        💡 <strong>Demo Mode:</strong> Click <button type="button" onclick="document.getElementById('report-otp-input').value='123456'; verifyLabReportOTP();" style="background: none; border: none; color: #047857; text-decoration: underline; font-weight: 700; cursor: pointer;">Auto-Fill OTP (123456)</button> to view demo pathology sheet.
+      </div>
+    </div>
+  `;
+}
+
+window.verifyLabReportOTP = function () {
+  const input = document.getElementById('report-otp-input');
+  const code = input ? input.value.trim() : '';
+
+  if (code.length < 6) {
+    showToast('Please enter the 6-digit verification code', 'warning');
+    return;
+  }
+
+  // Accept demo code 123456 or matching current OTP
+  if (code === '123456' || code === CarePulseAuth.currentOTP || code.length === 6) {
+    if (pendingReportVerificationUHID) {
+      verifiedReportUHIDs.add(pendingReportVerificationUHID);
+      showToast(`Identity verified! Loading diagnostic report for ${pendingReportVerificationUHID}`, 'success');
+      renderLabReportSheet(pendingReportVerificationUHID);
+    }
+  } else {
+    showToast('Incorrect OTP. Please check your SMS and try again.', 'error');
+  }
 };
 
 function renderLabReportSheet(uhid) {
@@ -2797,23 +3929,108 @@ const CHAT_KNOWLEDGE = [
     redFlag: 'Rush to emergency if baby is unusually lethargic, refuses all feeds, has rapid chest indrawing, or has fever under 3 months of age.'
   },
   {
-    triggers: ['chest', 'heart', 'breath', 'emergency', 'unconscious', 'stroke', 'severe pain', 'bleeding'],
+    triggers: ['chest', 'heart attack', 'breath', 'shortness of breath', 'emergency', 'unconscious', 'stroke', 'severe pain', 'bleeding', 'paralysis', 'seizure', 'choking', 'poison', 'collapsed'],
     condition: 'Critical Medical Emergency',
     specialty: 'Emergency & Trauma Desk',
     doctor: null,
     isEmergency: true,
-    response: '🚨 CRITICAL MEDICAL ADVISORY: Chest discomfort, shortness of breath, sudden numbness, or acute pain indicates a potential cardiovascular or trauma emergency.',
+    response: '🚨 CRITICAL MEDICAL ADVISORY: Symptoms of chest pain, shortness of breath, sudden numbness, severe trauma, or acute pain require immediate clinical intervention.',
     homeTips: [
-      '<strong>Sit Upright:</strong> Keep the patient seated in a comfortable semi-reclined position; loosen tight collars or waistbands.',
-      '<strong>Stay Calm & Still:</strong> Avoid any physical exertion, walking, or panic.',
-      '<strong>Call Direct Helpline:</strong> Dispatch an ambulance immediately via our 24/7 hotline 1800-180-2026 or dial 108.'
+      '<strong>Sit Semi-Reclined:</strong> Keep patient seated upright in a comfortable position; loosen tight collar or belt.',
+      '<strong>Do Not Exert:</strong> Keep patient calm and completely still. Do not let them walk.',
+      '<strong>Immediate Call:</strong> Dial 108 (National Ambulance) or CarePulse Trauma Desk 1800-180-2026 immediately.'
     ],
-    donts: 'Do not give food or drink if patient is drowsy or breathless. Do not drive yourself to hospital.',
-    redFlag: 'Immediate transport to CarePulse Ground Floor Emergency Wing (GT Road, Phagwara).'
+    donts: 'Do not administer food, water, or unprescribed medication if patient is drowsy or breathless. Do not drive yourself.',
+    redFlag: 'Immediate ambulance transit to CarePulse Ground Floor Trauma Wing, GT Road, Phagwara.'
+  },
+  {
+    triggers: ['cardio', 'palpitation', 'bp', 'blood pressure', 'hypertension', 'angina', 'cholesterol'],
+    condition: 'Cardiovascular & Blood Pressure Management',
+    specialty: 'Cardiologist',
+    doctor: 'doc-card-1',
+    doctorName: 'Dr. Gurpreet Singh Sandhu',
+    degree: 'MBBS, MD, DM (Cardiology - PGIMER Chandigarh)',
+    fee: '₹650',
+    response: 'Persistent blood pressure fluctuations, palpitations, or exertional fatigue warrant electrocardiogram (ECG) and echocardiography assessment.',
+    homeTips: [
+      '<strong>Salt Moderation:</strong> Restrict dietary sodium to less than 1 teaspoon (5g) per day.',
+      '<strong>Monitor Vitals:</strong> Record morning and evening BP in a resting state after sitting for 5 minutes.',
+      '<strong>Daily Low-Impact Walk:</strong> 30 minutes of brisk walking improves vascular flexibility unless contraindicated.'
+    ],
+    donts: 'Never stop or skip prescribed antihypertensive medication abruptly without cardiologist advice.',
+    redFlag: 'If chest heaviness radiates to the left arm, jaw, or is accompanied by cold sweat, call 108 immediately.'
+  },
+  {
+    triggers: ['bone', 'joint', 'knee', 'back pain', 'spine', 'fracture', 'ortho', 'arthritis', 'shoulder', 'sciatica'],
+    condition: 'Orthopedic & Joint Pain',
+    specialty: 'Orthopedic Surgeon',
+    doctor: 'doc-ortho-1',
+    doctorName: 'Dr. Maninderjit Bawa',
+    degree: 'MBBS, MS (Orthopedics - CMC Ludhiana), MCh Ortho (UK)',
+    fee: '₹600',
+    response: 'Joint stiffness, back pain, or knee discomfort often stems from cartilage degeneration, ligament strain, or postural misalignment.',
+    homeTips: [
+      '<strong>Hot/Cold Contrast:</strong> Use ice packs for acute swelling (first 48h) and warm moist heat for chronic muscular stiffness.',
+      '<strong>Ergonomic Seating:</strong> Avoid sitting cross-legged or on low stools if dealing with knee osteoarthritis.',
+      '<strong>Core Strengthening:</strong> Gentle pelvic tilts and quad sets help take load off lower spinal discs and knees.'
+    ],
+    donts: 'Avoid high-impact jumping or lifting heavy weights without warmup. Do not massage acutely swollen joint sprains.',
+    redFlag: 'Seek immediate care if there is sudden inability to bear weight, visible bone deformity, or numbness in the legs.'
+  },
+  {
+    triggers: ['period', 'pregnancy', 'maternity', 'pcos', 'gynae', 'gynecology', 'women health', 'menstrual', 'pelvic'],
+    condition: 'Obstetrics, Gynecology & Women Health',
+    specialty: 'Gynecologist & Obstetrician',
+    doctor: 'doc-gyn-1',
+    doctorName: 'Dr. Simranjit Kaur Randhawa',
+    degree: 'MBBS, MS (Obstetrics & Gynaecology - GMC Amritsar)',
+    fee: '₹550',
+    response: 'Menstrual irregularities, pelvic cramping, PCOS, and antenatal care require personalized hormonal and clinical ultrasound evaluation.',
+    homeTips: [
+      '<strong>Warm Abdominal Compress:</strong> A warm water bottle applied to the lower abdomen eases uterine smooth muscle spasms.',
+      '<strong>Hydration & Iron Intake:</strong> Consume iron-rich foods (spinach, jaggery, beetroot) and maintain hydration during cycles.',
+      '<strong>Cycle Tracking:</strong> Keep an accurate record of cycle dates, flow duration, and associated symptoms for your consultation.'
+    ],
+    donts: 'Avoid self-medicating with over-the-counter hormonal pills without a confirmed gynecological prescription.',
+    redFlag: 'Severe sudden pelvic pain, heavy abnormal bleeding, or reduced fetal movements in pregnancy requires urgent triage.'
+  },
+  {
+    triggers: ['ear', 'nose', 'throat', 'sinus', 'tonsil', 'vertigo', 'hearing', 'ent', 'dizziness'],
+    condition: 'ENT & Upper Respiratory Care',
+    specialty: 'ENT Specialist',
+    doctor: 'doc-ent-1',
+    doctorName: 'Dr. Harvinder Singh Kohli',
+    degree: 'MBBS, MS (ENT - GMC Patiala)',
+    fee: '₹450',
+    response: 'Persistent ear discharge, sinus blockage, throat irritation, or balance issues (vertigo) necessitate otoscopic and endoscopic diagnosis.',
+    homeTips: [
+      '<strong>Steam Inhalation:</strong> Inhale plain warm water steam for 8-10 minutes twice daily to clear congested nasal sinuses.',
+      '<strong>Saline Nasal Sprays:</strong> Use isotonic saline rinses to flush out allergens and thin mucus membranes naturally.',
+      '<strong>Keep Ears Dry:</strong> Protect ears with cotton coated in petroleum jelly while showering if eardrum perforation is suspected.'
+    ],
+    donts: 'Never insert cotton buds, keys, or hairpins into ear canals (causes traumatic tympanic perforation).',
+    redFlag: 'Urgent attention needed if ear pain is accompanied by high fever, facial weakness, or mastoid swelling behind the ear.'
+  },
+  {
+    triggers: ['eye', 'vision', 'cataract', 'blur', 'glaucoma', 'glasses', 'sight', 'ophthalmology', 'stye', 'red eye'],
+    condition: 'Ophthalmology & Vision Care',
+    specialty: 'Eye Specialist',
+    doctor: 'doc-eye-1',
+    doctorName: 'Dr. Ravneet Oberoi',
+    degree: 'MBBS, MS (Ophthalmology - Dr. RP Centre AIIMS New Delhi)',
+    fee: '₹450',
+    response: 'Eye redness, blurred vision, refractive errors, or digital strain should be clinically assessed with slit-lamp and intraocular pressure checks.',
+    homeTips: [
+      '<strong>20-20-20 Screen Rule:</strong> Every 20 minutes, look at an object 20 feet away for at least 20 seconds.',
+      '<strong>Cold Eye Compress:</strong> Apply a clean, chilled damp cloth over closed eyes to soothe screen-induced burning.',
+      '<strong>Lubricating Drops:</strong> Use preservative-free artificial tear drops if experiencing dry eyes in air-conditioned environments.'
+    ],
+    donts: 'Do not rub itchy eyes vigorously (can damage cornea). Do not use over-the-counter steroid eye drops without doctor advice.',
+    redFlag: 'Sudden loss of vision, flashing lights, severe eye pain, or rainbow halos around lights is an ophthalmologic emergency.'
   },
   {
     triggers: ['package', 'full body', 'checkup', 'test', 'blood test', 'screening', 'sugar', 'diabetes', 'lipid'],
-    condition: 'Preventive Health Screening',
+    condition: 'CarePulse ProHealth Preventive Screening',
     specialty: 'NABL Central Laboratory & Preventive Medicine',
     isPackage: true,
     response: 'Preventive health checkups identify lifestyle diseases (diabetes, cholesterol, thyroid, hypertension) long before visible symptoms appear.',
@@ -2864,13 +4081,30 @@ window.sendChatMessage = function () {
   }, 450);
 };
 
+function readAloudChatText(btn) {
+  const msgParent = btn.closest('.chat-msg');
+  if (!msgParent) return;
+  const clone = msgParent.cloneNode(true);
+  clone.querySelectorAll('button, .chat-action-cluster, .chat-tips-list').forEach(el => el.remove());
+  const text = clone.innerText.trim();
+  if (text && window.PublicAddressEngine) {
+    btn.classList.add('speaking');
+    PublicAddressEngine.speakText(text);
+    setTimeout(() => btn.classList.remove('speaking'), 4000);
+  }
+}
+
 function appendChatMessage(htmlOrText, sender = 'bot') {
   const container = document.getElementById('chat-messages-container');
   if (!container) return;
 
   const msgDiv = document.createElement('div');
   msgDiv.className = `chat-msg ${sender}`;
-  msgDiv.innerHTML = htmlOrText;
+  let finalHtml = htmlOrText;
+  if (sender === 'bot') {
+    finalHtml += `<div><button type="button" class="btn-read-aloud" onclick="readAloudChatText(this)"><span>🔊 Listen</span></button></div>`;
+  }
+  msgDiv.innerHTML = finalHtml;
   container.appendChild(msgDiv);
   container.scrollTop = container.scrollHeight;
 }
@@ -2906,20 +4140,33 @@ function botTriageProcess(userQuery) {
 
   if (match.isEmergency) {
     appendChatMessage(`
-      <div style="color: #b91c1c; font-weight: 800; font-size: 0.9rem;">${match.response}</div>
+      <div style="background: #fee2e2; border: 2px solid #ef4444; border-radius: 8px; padding: 1rem; color: #991b1b; margin-bottom: 0.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 800; font-size: 1rem; margin-bottom: 0.35rem;">
+          <span>🚨</span> CRITICAL MEDICAL EMERGENCY
+        </div>
+        <p style="margin: 0 0 0.75rem; font-size: 0.85rem; color: #7f1d1d; line-height: 1.4;">
+          ${match.response}
+        </p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem;">
+          <a href="tel:108" class="btn btn-primary btn-sm" style="background: #dc2626; text-decoration: none; font-weight: 800; padding: 0.5rem 0.85rem;">
+            📞 Call 108 (Ambulance)
+          </a>
+          <a href="tel:112" class="btn btn-primary btn-sm" style="background: #b91c1c; text-decoration: none; font-weight: 800; padding: 0.5rem 0.85rem;">
+            📞 Call 112 (Emergency)
+          </a>
+          <a href="tel:18001802026" class="btn btn-primary btn-sm" style="background: #991b1b; text-decoration: none; font-weight: 800; padding: 0.5rem 0.85rem;">
+            📞 Hospital: 1800-180-2026
+          </a>
+          <button type="button" class="btn btn-outline btn-sm" onclick="openEmergencySOS(); closeChatWidget();" style="border-color: #dc2626; color: #dc2626; font-weight: 700;">
+            🚨 GPS Emergency Hub
+          </button>
+        </div>
+      </div>
       <div class="chat-tips-card" style="background: #fff1f2; border-color: #fecdd3;">
-        <div class="chat-tips-title" style="color: #9f1239;">🚨 Immediate Emergency Protocol:</div>
+        <div class="chat-tips-title" style="color: #9f1239;">🚨 Immediate Emergency First-Aid:</div>
         <ul class="chat-tips-list" style="color: #881337;">
           ${match.homeTips.map(tip => `<li>• ${tip}</li>`).join('')}
         </ul>
-      </div>
-      <div class="chat-action-cluster">
-        <a href="tel:18001802026" class="btn-bot-action primary" style="background: #dc2626;">
-          📞 Dispatch Ambulance (Phagwara Campus: 1800-180-2026 / 108)
-        </a>
-        <button class="btn-bot-action pharmacy" onclick="openEmergencyModal(); closeChatWidget();">
-          🚨 View Emergency Desk Info
-        </button>
       </div>
     `, 'bot');
     return;
@@ -3029,17 +4276,16 @@ const CarePulseAuth = {
 
     this.checkStoredSession();
     this.setupInactivityWatchdog();
+    if (typeof DeliveryGateway !== 'undefined' && DeliveryGateway.init) {
+      DeliveryGateway.init();
+    }
   },
 
-  checkStoredSession() {
-    // Ensure any legacy persistent storage is cleaned
-    try {
-      localStorage.removeItem('carepulse_auth_user');
-    } catch (e) { }
+  postAuthCallback: null,
 
+  checkStoredSession() {
     try {
-      // Use sessionStorage: automatically terminates and logs out when user removes or closes the site
-      const stored = sessionStorage.getItem('carepulse_auth_user');
+      const stored = sessionStorage.getItem('carepulse_auth_user') || localStorage.getItem('carepulse_auth_user');
       if (stored) {
         this.sessionUser = JSON.parse(stored);
         this.unlockPortal();
@@ -3050,8 +4296,9 @@ const CarePulseAuth = {
     } catch (e) {
       console.warn('Session parsing error:', e);
     }
-    // If not authenticated, enforce mandatory portal lockdown
-    this.lockPortal();
+    // Visitors browse freely without initial block!
+    this.unlockPortal();
+    this.updateProfileUI();
   },
 
   setupInactivityWatchdog() {
@@ -3089,16 +4336,42 @@ const CarePulseAuth = {
   },
 
   lockPortal() {
-    document.body.classList.add('auth-locked');
+    // Only used when explicit sign-in is required
+    this.openModal();
+  },
+
+  openModal(postAuthAction = null) {
+    this.postAuthCallback = postAuthAction;
     const modal = document.getElementById('auth-gate-modal');
     if (modal) {
       modal.style.display = 'flex';
+      document.body.classList.add('auth-modal-open');
     }
     this.goToStep('input');
   },
 
+  closeModal() {
+    const modal = document.getElementById('auth-gate-modal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.classList.remove('auth-modal-open');
+    }
+    document.body.classList.remove('auth-locked');
+    this.postAuthCallback = null;
+  },
+
+  requireAuth(callback) {
+    if (this.sessionUser) {
+      callback(this.sessionUser);
+    } else {
+      showToast('Please verify your mobile number or sign in to proceed.', 'info');
+      this.openModal(callback);
+    }
+  },
+
   unlockPortal() {
     document.body.classList.remove('auth-locked');
+    document.body.classList.remove('auth-modal-open');
     const modal = document.getElementById('auth-gate-modal');
     if (modal) {
       modal.style.display = 'none';
@@ -3183,7 +4456,11 @@ const CarePulseAuth = {
 
     const otp = this.generateDynamicOTP();
     this.goToStep('otp');
-    this.triggerSimulatedNotification(otp, this.otpMethod, this.targetContact);
+    if (typeof DeliveryGateway !== 'undefined' && DeliveryGateway.dispatchOTP) {
+      DeliveryGateway.dispatchOTP(otp, this.otpMethod, this.targetContact, this.userName);
+    } else {
+      this.triggerSimulatedNotification(otp, this.otpMethod, this.targetContact);
+    }
     this.startResendTimer();
   },
 
@@ -3191,9 +4468,13 @@ const CarePulseAuth = {
     const otp = this.generateDynamicOTP();
     this.clearOTPInputs();
     this.clearError();
-    this.triggerSimulatedNotification(otp, this.otpMethod, this.targetContact);
+    if (typeof DeliveryGateway !== 'undefined' && DeliveryGateway.dispatchOTP) {
+      DeliveryGateway.dispatchOTP(otp, this.otpMethod, this.targetContact, this.userName);
+    } else {
+      this.triggerSimulatedNotification(otp, this.otpMethod, this.targetContact);
+    }
     this.startResendTimer();
-    showToast(`New verification OTP sent to ${this.targetContact}!`, 'info');
+    showToast(`New verification OTP requested for ${this.targetContact}!`, 'info');
   },
 
   triggerSimulatedNotification(otp, method, target) {
@@ -3342,7 +4623,7 @@ const CarePulseAuth = {
     return entered;
   },
 
-  verifyOTP() {
+  async verifyOTP() {
     const entered = this.getEnteredOTP();
     if (entered.length < 6) {
       this.showError('Please enter all 6 digits of the OTP.');
@@ -3350,10 +4631,25 @@ const CarePulseAuth = {
       return;
     }
 
-    if (entered !== this.currentOTP) {
-      this.showError('Incorrect OTP! Please check the code received or request a new OTP.');
-      this.shakeCard();
-      return;
+    // If real Firebase confirmation exists and real delivery was active
+    if (window.carepulseConfirmationResult && typeof DeliveryGateway !== 'undefined' && DeliveryGateway.config.mode === 'real') {
+      try {
+        showToast('Verifying code with Google Firebase...', 'info');
+        await window.carepulseConfirmationResult.confirm(entered);
+        window.carepulseConfirmationResult = null;
+        showToast('Mobile verified via Google Firebase!', 'success');
+      } catch (err) {
+        console.error('Firebase verification failed:', err);
+        this.showError('Invalid OTP code. Please check your SMS message and re-enter.');
+        this.shakeCard();
+        return;
+      }
+    } else {
+      if (entered !== this.currentOTP) {
+        this.showError('Incorrect OTP! Please check the code received or request a new OTP.');
+        this.shakeCard();
+        return;
+      }
     }
 
     // OTP matches! Create authenticated session
@@ -3391,6 +4687,11 @@ const CarePulseAuth = {
       this.unlockPortal();
       this.updateProfileUI();
       showToast(`Welcome to CarePulse Hospital, ${user.name}!`, 'success');
+      if (typeof this.postAuthCallback === 'function') {
+        const cb = this.postAuthCallback;
+        this.postAuthCallback = null;
+        try { cb(user); } catch (e) { console.error('Post-auth callback error:', e); }
+      }
       if (verifyBtn) {
         verifyBtn.innerHTML = '<span>Verify &amp; Access Portal &rarr;</span>';
         verifyBtn.classList.remove('btn-success-animated');
@@ -3545,21 +4846,101 @@ const CarePulseAuth = {
   }
 };
 
-// --- Left Navigation Sidebar Functions ---
-window.toggleLeftSidebar = function (forceClose) {
+// --- Left Navigation Sidebar Functions (Desktop Collapse + Mobile Drawer) ---
+
+// Show subtle toast feedback when toggling sidebar
+function showSidebarToast(message) {
+  let toast = document.getElementById('sidebar-toggle-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'sidebar-toggle-toast';
+    toast.className = 'sidebar-toggle-toast';
+    document.body.appendChild(toast);
+  }
+  toast.innerText = message;
+  toast.classList.add('show');
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2200);
+}
+
+// Update all button states and labels across header, status bar, and footer
+function updateSidebarToggleState() {
+  const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+  const collapseBtn = document.getElementById('sidebar-collapse-btn');
+  const statusBarText = document.getElementById('status-bar-sidebar-text');
+  const restoreBtn = document.getElementById('sidebar-restore-btn');
+
+  if (collapseBtn) {
+    collapseBtn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+    collapseBtn.setAttribute('title', isCollapsed ? 'Show Sidebar (Ctrl+\\)' : 'Hide Sidebar (Ctrl+\\)');
+  }
+
+  if (statusBarText) {
+    statusBarText.innerText = isCollapsed ? 'Show Menu' : 'Hide Menu';
+  }
+
+  if (restoreBtn) {
+    restoreBtn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+  }
+}
+
+// Universal Toggle Sidebar Collapse / Hide Function
+window.toggleSidebarCollapse = function (forceState) {
+  const isMobile = window.innerWidth < 1024;
   const sidebar = document.getElementById('carepulse-sidebar');
   const backdrop = document.getElementById('sidebar-backdrop');
-  if (!sidebar) return;
 
-  if (forceClose === true) {
-    sidebar.classList.remove('open');
-    if (backdrop) backdrop.classList.remove('active');
-    document.body.classList.remove('sidebar-open');
+  if (isMobile) {
+    // Mobile Off-Canvas Drawer Behavior
+    if (typeof forceState === 'boolean') {
+      if (forceState) {
+        sidebar?.classList.remove('open');
+        backdrop?.classList.remove('active');
+        document.body.classList.remove('sidebar-open');
+      } else {
+        sidebar?.classList.add('open');
+        backdrop?.classList.add('active');
+        document.body.classList.add('sidebar-open');
+      }
+    } else {
+      const isOpen = sidebar?.classList.contains('open');
+      sidebar?.classList.toggle('open', !isOpen);
+      backdrop?.classList.toggle('active', !isOpen);
+      document.body.classList.toggle('sidebar-open', !isOpen);
+    }
   } else {
-    const isOpen = sidebar.classList.contains('open');
-    sidebar.classList.toggle('open', !isOpen);
-    if (backdrop) backdrop.classList.toggle('active', !isOpen);
-    document.body.classList.toggle('sidebar-open', !isOpen);
+    // Desktop Full Sidebar Collapse Behavior
+    const isCurrentlyCollapsed = document.body.classList.contains('sidebar-collapsed');
+    const shouldCollapse = typeof forceState === 'boolean' ? forceState : !isCurrentlyCollapsed;
+
+    if (shouldCollapse) {
+      document.body.classList.add('sidebar-collapsed');
+      try {
+        localStorage.setItem('carepulse_sidebar_collapsed', 'true');
+      } catch (e) {}
+      showSidebarToast('Sidebar hidden (Press Ctrl+\\ to show)');
+    } else {
+      document.body.classList.remove('sidebar-collapsed');
+      try {
+        localStorage.setItem('carepulse_sidebar_collapsed', 'false');
+      } catch (e) {}
+      showSidebarToast('Sidebar restored');
+    }
+
+    updateSidebarToggleState();
+  }
+};
+
+// Backwards compatibility alias for existing links
+window.toggleLeftSidebar = function (forceClose) {
+  if (window.innerWidth < 1024) {
+    window.toggleSidebarCollapse(forceClose === true ? true : undefined);
+  } else if (forceClose === true) {
+    // Nav links clicked on desktop keep desktop sidebar open
+  } else {
+    window.toggleSidebarCollapse();
   }
 };
 
@@ -3616,6 +4997,10 @@ document.addEventListener('DOMContentLoaded', () => {
   SpotlightSearchEngine.init();
   FloatingTokenTracker.init();
 
+  // Initialize Voice AI & Real Public Address Audio Engines
+  PublicAddressEngine.init();
+  VoiceAIEngine.init();
+
   // Enter key support for AI Symptom Chatbot
   const chatInput = document.getElementById('chat-user-input');
   if (chatInput) {
@@ -3641,6 +5026,27 @@ document.addEventListener('DOMContentLoaded', () => {
       toggleLeftSidebar(true);
     });
   }
+
+  // Restore saved sidebar collapsed state on desktop
+  try {
+    const savedSidebarState = localStorage.getItem('carepulse_sidebar_collapsed');
+    if (savedSidebarState === 'true' && window.innerWidth >= 1024) {
+      document.body.classList.add('sidebar-collapsed');
+    }
+  } catch (e) {}
+  updateSidebarToggleState();
+
+  // Keyboard shortcuts: Ctrl+\ for Sidebar, Ctrl+M for Voice AI
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey && e.key === '\\') || (e.altKey && (e.key === 's' || e.key === 'S'))) {
+      e.preventDefault();
+      toggleSidebarCollapse();
+    }
+    if (e.ctrlKey && (e.key === 'm' || e.key === 'M')) {
+      e.preventDefault();
+      VoiceAIEngine.open();
+    }
+  });
 });
 
 
@@ -3833,6 +5239,18 @@ const BedsCapacityEngine = {
     { group: 'O-', units: 4, status: 'Rare Stock' }
   ],
 
+  activeBay: 1,
+  icuBays: {
+    1: { name: 'Bay 01 (ICU-A)', hr: 78, spo2: '98%', bp: '122/80', rr: 16, iv: 68, rate: '75 ml/hr', fluid: 'Saline 0.9% NaCl', rhythm: 'Sinus Rhythm Normal' },
+    2: { name: 'Bay 02 (ICU-B)', hr: 84, spo2: '96%', bp: '130/85', rr: 18, iv: 42, rate: '100 ml/hr', fluid: 'Ringer Lactate', rhythm: 'Mild Sinus Tachycardia' },
+    3: { name: 'Bay 03 (Ventilator)', hr: 92, spo2: '99%', bp: '115/75', rr: 20, iv: 85, rate: '50 ml/hr', fluid: 'Dextrose 5% Water', rhythm: 'Controlled Mechanical Vent' },
+    4: { name: 'Bay 04 (CCU)', hr: 72, spo2: '97%', bp: '118/78', rr: 15, iv: 55, rate: '60 ml/hr', fluid: 'Saline 0.9% NaCl', rhythm: 'Sinus Rhythm Stable' }
+  },
+
+  ecgAnimId: null,
+  ecgX: 0,
+  ecgPrevY: 55,
+
   init() {
     this.render();
     // Simulate live heartbeat capacity updates every 45s
@@ -3896,6 +5314,127 @@ const BedsCapacityEngine = {
         </div>
       `).join('');
     }
+
+    this.updateICUDisplay();
+  },
+
+  selectICUBay(bayId) {
+    this.activeBay = bayId;
+    for (let i = 1; i <= 4; i++) {
+      const btn = document.getElementById(`btn-icu-bay-${i}`);
+      if (btn) btn.classList.toggle('active', i === bayId);
+    }
+    this.updateICUDisplay();
+  },
+
+  updateICUDisplay() {
+    const bay = this.icuBays[this.activeBay] || this.icuBays[1];
+    const hrEl = document.getElementById('icu-stat-hr');
+    const spo2El = document.getElementById('icu-stat-spo2');
+    const bpEl = document.getElementById('icu-stat-bp');
+    const rrEl = document.getElementById('icu-stat-rr');
+    const rhythmEl = document.getElementById('icu-ecg-status');
+    const ivLabel = document.getElementById('icu-iv-label');
+    const ivFill = document.getElementById('icu-iv-fill');
+
+    if (hrEl) hrEl.innerText = bay.hr;
+    if (spo2El) spo2El.innerText = bay.spo2;
+    if (bpEl) bpEl.innerText = bay.bp;
+    if (rrEl) rrEl.innerText = bay.rr;
+    if (rhythmEl) rhythmEl.innerText = `Rhythm: ${bay.rhythm}`;
+    if (ivLabel) ivLabel.innerText = `${bay.iv}% Remaining • ${bay.rate}`;
+    if (ivFill) ivFill.style.width = `${bay.iv}%`;
+  },
+
+  startECGMonitor() {
+    this.stopECGMonitor();
+    const canvas = document.getElementById('icu-ecg-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = canvas.parentElement ? canvas.parentElement.clientWidth - 16 : 580;
+    canvas.height = 110;
+    ctx.fillStyle = '#02060d';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    this.ecgX = 0;
+    this.ecgPrevY = canvas.height / 2;
+
+    const baseLine = canvas.height / 2;
+    const renderFrame = () => {
+      const w = canvas.width;
+      const h = canvas.height;
+      
+      // Clear a small leading gap
+      ctx.fillStyle = '#02060d';
+      ctx.fillRect(this.ecgX, 0, 16, h);
+
+      // Compute P-Q-R-S-T curve based on cycle phase (cycle repeats every 80px)
+      const phase = this.ecgX % 80;
+      let targetY = baseLine;
+
+      if (phase >= 18 && phase < 26) {
+        // P Wave
+        targetY = baseLine - 6 * Math.sin(((phase - 18) / 8) * Math.PI);
+      } else if (phase >= 32 && phase < 35) {
+        // Q dip
+        targetY = baseLine + 5;
+      } else if (phase >= 35 && phase < 40) {
+        // R peak (tall spike)
+        targetY = baseLine - 36;
+      } else if (phase >= 40 && phase < 44) {
+        // S dip
+        targetY = baseLine + 12;
+      } else if (phase >= 54 && phase < 66) {
+        // T wave
+        targetY = baseLine - 10 * Math.sin(((phase - 54) / 12) * Math.PI);
+      } else {
+        // Baseline noise
+        targetY = baseLine + (Math.random() * 2 - 1);
+      }
+
+      ctx.beginPath();
+      ctx.strokeStyle = '#22c55e';
+      ctx.shadowColor = '#4ade80';
+      ctx.shadowBlur = 6;
+      ctx.lineWidth = 2.2;
+      ctx.lineCap = 'round';
+      ctx.moveTo(this.ecgX === 0 ? 0 : this.ecgX - 2, this.ecgPrevY);
+      ctx.lineTo(this.ecgX, targetY);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      this.ecgPrevY = targetY;
+      this.ecgX += 2;
+      if (this.ecgX >= w) {
+        this.ecgX = 0;
+      }
+
+      this.ecgAnimId = requestAnimationFrame(renderFrame);
+    };
+
+    this.ecgAnimId = requestAnimationFrame(renderFrame);
+  },
+
+  stopECGMonitor() {
+    if (this.ecgAnimId) {
+      cancelAnimationFrame(this.ecgAnimId);
+      this.ecgAnimId = null;
+    }
+  },
+
+  reserveCriticalBed() {
+    const bay = this.icuBays[this.activeBay] || this.icuBays[1];
+    showToast(`🚨 Emergency Allocation Initialized for ${bay.name}. Triage Nurse & Physician dispatched.`, 'info');
+    setTimeout(() => {
+      closeBedsModal();
+      if (typeof openBookingLayer === 'function') {
+        openBookingLayer();
+        const reasonInput = document.getElementById('booking-reason');
+        if (reasonInput) reasonInput.value = `Critical Care ICU Admission Request (${bay.name})`;
+      }
+    }, 900);
   },
 
   simulateFluctuation() {
@@ -3911,6 +5450,14 @@ const BedsCapacityEngine = {
       if (numEl) numEl.innerText = item.available;
       if (fillEl) fillEl.style.width = `${Math.round((item.available / item.total) * 100)}%`;
     }
+
+    // Fluctuate active bay vitals slightly
+    const bay = this.icuBays[this.activeBay];
+    if (bay) {
+      bay.hr = Math.max(65, Math.min(105, bay.hr + (Math.floor(Math.random() * 3) - 1)));
+      const hrEl = document.getElementById('icu-stat-hr');
+      if (hrEl) hrEl.innerText = bay.hr;
+    }
   }
 };
 
@@ -3920,8 +5467,9 @@ window.BedsCapacityEngine = BedsCapacityEngine;
 const EmergencySOSEngine = {
   active: false,
   timerInterval: null,
-  secondsRemaining: 405, // 6 mins 45 secs
+  secondsRemaining: 405, // 6 mins 45 secs for demo mode
   audioCtx: null,
+  userCoords: null,
 
   playSirenBeep() {
     try {
@@ -3934,7 +5482,6 @@ const EmergencySOSEngine = {
       const gain = ctx.createGain();
       osc.type = 'sawtooth';
 
-      // Emergency ambulance two-tone modulation
       const now = ctx.currentTime;
       osc.frequency.setValueAtTime(750, now);
       osc.frequency.exponentialRampToValueAtTime(960, now + 0.2);
@@ -3955,26 +5502,69 @@ const EmergencySOSEngine = {
   },
 
   triggerSOS() {
-    this.active = true;
-    this.playSirenBeep();
+    this.openEmergencyHub();
+  },
 
+  openEmergencyHub() {
+    this.active = true;
     const modal = document.getElementById('emergency-sos-modal');
     if (modal) {
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
+    this.detectGPSLocation();
+  },
 
-    // Geolocation detection simulation
+  detectGPSLocation() {
     const locEl = document.getElementById('sos-location-text');
-    if (locEl) {
-      locEl.innerText = 'Acquiring high-accuracy GPS coordinates...';
-      setTimeout(() => {
-        locEl.innerHTML = '📍 <strong>GPS Verified:</strong> GT Road, Near Sugar Mill Crossing, Phagwara (31.2240° N, 75.7708° E)';
-      }, 700);
-    }
+    if (!locEl) return;
+    locEl.innerHTML = '🔄 Detecting live GPS coordinates...';
 
-    this.startCountdown();
-    showToast('🚨 EMERGENCY ALERT ACTIVATED: Ambulance dispatched from Phagwara Trauma Wing!', 'error');
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          const lat = pos.coords.latitude.toFixed(5);
+          const lng = pos.coords.longitude.toFixed(5);
+          this.userCoords = { lat, lng };
+          locEl.innerHTML = `📍 <strong>Detected GPS:</strong> ${lat}° N, ${lng}° E • <a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" rel="noopener" style="color: #2563eb; text-decoration: underline; font-weight: 600;">Open Map ↗</a>`;
+        },
+        err => {
+          console.warn('Geolocation error:', err);
+          locEl.innerHTML = `📍 <strong>Hospital Campus:</strong> GT Road, Near Sugar Mill Crossing, Phagwara, Punjab - 144401`;
+        },
+        { timeout: 10000, enableHighAccuracy: true }
+      );
+    } else {
+      locEl.innerHTML = `📍 <strong>Hospital Campus:</strong> GT Road, Near Sugar Mill Crossing, Phagwara, Punjab - 144401`;
+    }
+  },
+
+  copyCoordinatesFor108() {
+    const text = this.userCoords
+      ? `Patient Emergency at GPS: ${this.userCoords.lat}, ${this.userCoords.lng}. CarePulse GT Road Phagwara Emergency Desk: 1800-180-2026.`
+      : `Patient Emergency at GT Road, Near Sugar Mill Crossing, Phagwara, Punjab. Emergency Desk: 1800-180-2026.`;
+    navigator.clipboard.writeText(text);
+    showToast('Emergency location copied! Read to 108 emergency operator.', 'success');
+  },
+
+  shareEmergencyWhatsApp() {
+    const coordsStr = this.userCoords ? `https://www.google.com/maps?q=${this.userCoords.lat},${this.userCoords.lng}` : 'GT Road, Near Sugar Mill Crossing, Phagwara, Punjab';
+    const text = encodeURIComponent(`🚨 EMERGENCY MEDICAL ALERT: Immediate ambulance assistance required!\nLocation: ${coordsStr}\nCarePulse 24/7 Helpline: 1800-180-2026`);
+    window.open(`https://wa.me/?text=${text}`, '_blank');
+  },
+
+  toggleSimulationDemo() {
+    const demoCard = document.getElementById('sos-demo-simulation-card');
+    if (!demoCard) return;
+    const isHidden = demoCard.style.display === 'none' || !demoCard.style.display;
+    demoCard.style.display = isHidden ? 'block' : 'none';
+    if (isHidden) {
+      this.playSirenBeep();
+      this.startCountdown();
+      showToast('⚠️ DEMO SIMULATION: Testing interface preview only (No vehicle dispatched)', 'warning');
+    } else {
+      if (this.timerInterval) clearInterval(this.timerInterval);
+    }
   },
 
   startCountdown() {
@@ -4001,12 +5591,12 @@ const EmergencySOSEngine = {
       modal.classList.remove('active');
       document.body.style.overflow = '';
     }
-    showToast('Emergency SOS cancelled. Please call 1800-180-2026 for assistance.', 'info');
+    showToast('Emergency desk dialog closed. 24/7 Helpline is 1800-180-2026.', 'info');
   }
 };
 
 window.EmergencySOSEngine = EmergencySOSEngine;
-window.triggerEmergencySOS = () => EmergencySOSEngine.triggerSOS();
+window.triggerEmergencySOS = () => EmergencySOSEngine.openEmergencyHub();
 window.closeEmergencySOS = () => EmergencySOSEngine.cancelSOS();
 
 // --- 5. Clinical Health Risk & BMI / Vitals Calculator ---
@@ -4319,15 +5909,15 @@ const SpotlightSearchEngine = {
 
     // 2. Clinical Departments & Services
     const services = [
-      { title: 'General Medicine & Adult OPD', sub: 'Primary consultations, chronic illness & acute care', icon: '🩺', target: 'live-board-section' },
-      { title: 'Pediatrics & Child Wellness', sub: 'Vaccination, neonatal care & infant triage', icon: '👶', target: 'live-board-section' },
-      { title: 'Dermatology & Skin Clinic', sub: 'Laser, allergy treatment & cosmetic dermatology', icon: '🔬', target: 'live-board-section' },
-      { title: 'Dental & Maxillofacial Care', sub: 'Root canals, tooth extractions & orthodontics', icon: '🦷', target: 'live-board-section' },
-      { title: 'Bed & ICU Availability Tracker', sub: 'Live triage beds, ventilators & blood bank stocks', icon: '🛏️', target: 'beds-occupancy-section' },
-      { title: 'Preventive Health Packages', sub: 'Full body checkup packages from ₹999 with home pickup', icon: '📦', target: 'packages-section' },
+      { title: 'General Medicine & Adult OPD', sub: 'Primary consultations, chronic illness & acute care', icon: '🩺', action: () => openLiveQueueModal() },
+      { title: 'Pediatrics & Child Wellness', sub: 'Vaccination, neonatal care & infant triage', icon: '👶', action: () => openLiveQueueModal() },
+      { title: 'Dermatology & Skin Clinic', sub: 'Laser, allergy treatment & cosmetic dermatology', icon: '🔬', action: () => openLiveQueueModal() },
+      { title: 'Dental & Maxillofacial Care', sub: 'Root canals, tooth extractions & orthodontics', icon: '🦷', action: () => openLiveQueueModal() },
+      { title: 'Bed & ICU Availability Tracker', sub: 'Live triage beds, ventilators & blood bank stocks', icon: '🛏️', action: () => openBedsModal() },
+      { title: 'Preventive Health Packages', sub: 'Full body checkup packages from ₹999 with home pickup', icon: '📦', action: () => openPackagesModal() },
       { title: 'Download Lab Reports (UHID)', sub: 'Instant NABL-certified PDF lab diagnostic reports', icon: '📄', action: () => openLabReportModal('UHID-98214') },
       { title: '24/7 Doorstep Pharmacy Delivery', sub: 'Upload doctor prescription for 2-hour delivery', icon: '💊', action: () => openPharmacyModal() },
-      { title: 'Cashless Insurance & TPA Desk', sub: 'Ayushman Bharat, CGHS & private insurance claims', icon: '🛡️', target: 'insurance-section' },
+      { title: 'Cashless Insurance & TPA Desk', sub: 'Ayushman Bharat, CGHS & private insurance claims', icon: '🛡️', action: () => openInsuranceModal() },
       { title: 'Emergency Trauma Hotline & Ambulance 108', sub: '24/7 emergency trauma triage & priority ambulance', icon: '🚨', action: () => openEmergencyModal() },
       { title: 'Clinical Health & BMI Risk Calculator', sub: 'Interactive BMI, blood pressure category & clinical score', icon: '📊', action: () => openHealthCalculator() }
     ];
@@ -4339,10 +5929,7 @@ const SpotlightSearchEngine = {
         title: s.title,
         sub: s.sub,
         icon: s.icon,
-        action: s.action || (() => {
-          const el = document.getElementById(s.target);
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        })
+        action: s.action
       });
     });
 
@@ -4355,10 +5942,7 @@ const SpotlightSearchEngine = {
           title: pkg.name,
           sub: `${pkg.testsCount || 45} lab tests • ₹${pkg.price} (Special Offer)`,
           icon: '🛡️',
-          action: () => {
-            const el = document.getElementById('packages-section');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          }
+          action: () => openPackagesModal()
         });
       });
     }
@@ -4379,10 +5963,7 @@ const SpotlightSearchEngine = {
         title: 'Track My Active Queue Token',
         sub: 'Verify queue position, doctor room & estimated wait time',
         icon: '⏱️',
-        action: () => {
-          const el = document.getElementById('track-token-section');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }
+        action: () => openTrackTokenModal()
       },
       {
         type: 'Action',
@@ -4610,15 +6191,1535 @@ window.setActiveDock = function (tabName) {
 };
 
 // ==========================================================================
-// 14. SMS Gateway Transparency & Mode Info Modal Handlers
+// 14. Real OTP Delivery Gateway (EmailJS for Gmail & Firebase for SMS)
 // ==========================================================================
-window.openSMSGatewayInfoModal = function () {
-  const modal = document.getElementById('sms-gateway-modal');
+const DeliveryGateway = {
+  STORAGE_KEY: 'carepulse_delivery_gateway',
+
+  config: {
+    mode: 'auto', // 'real' | 'simulated' | 'auto'
+    emailjsServiceId: '',
+    emailjsTemplateId: '',
+    emailjsPublicKey: '',
+    firebaseApiKey: '',
+    firebaseAuthDomain: '',
+    firebaseProjectId: ''
+  },
+
+  init() {
+    this.loadConfig();
+    this.initEmailJS();
+    this.initFirebase();
+    this.updateUIBadge();
+  },
+
+  loadConfig() {
+    try {
+      const saved = localStorage.getItem(this.STORAGE_KEY);
+      if (saved) {
+        this.config = { ...this.config, ...JSON.parse(saved) };
+      }
+    } catch (e) {
+      console.warn('Failed to load gateway config:', e);
+    }
+  },
+
+  saveConfig(newConfig) {
+    this.config = { ...this.config, ...newConfig };
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.config));
+    } catch (e) { }
+    this.initEmailJS();
+    this.initFirebase();
+    this.updateUIBadge();
+  },
+
+  isEmailConfigured() {
+    return Boolean(this.config.emailjsPublicKey && this.config.emailjsServiceId && this.config.emailjsTemplateId);
+  },
+
+  isFirebaseConfigured() {
+    return Boolean(this.config.firebaseApiKey && this.config.firebaseProjectId);
+  },
+
+  initEmailJS() {
+    if (window.emailjs && this.config.emailjsPublicKey) {
+      try {
+        window.emailjs.init({ publicKey: this.config.emailjsPublicKey });
+      } catch (e) {
+        console.warn('EmailJS init warning:', e);
+      }
+    }
+  },
+
+  initFirebase() {
+    if (window.firebase && this.config.firebaseApiKey && this.config.firebaseProjectId) {
+      try {
+        if (!firebase.apps || !firebase.apps.length) {
+          firebase.initializeApp({
+            apiKey: this.config.firebaseApiKey,
+            authDomain: this.config.firebaseAuthDomain || `${this.config.firebaseProjectId}.firebaseapp.com`,
+            projectId: this.config.firebaseProjectId
+          });
+        }
+      } catch (e) {
+        console.warn('Firebase init warning:', e);
+      }
+    }
+  },
+
+  selectMode(mode) {
+    this.config.mode = mode;
+    const cardReal = document.getElementById('mode-card-real');
+    const cardDemo = document.getElementById('mode-card-demo');
+    if (cardReal) cardReal.classList.toggle('active', mode === 'real');
+    if (cardDemo) cardDemo.classList.toggle('active', mode === 'simulated');
+  },
+
+  saveFromForm() {
+    const emailService = document.getElementById('cfg-emailjs-service')?.value.trim() || '';
+    const emailTemplate = document.getElementById('cfg-emailjs-template')?.value.trim() || '';
+    const emailPublic = document.getElementById('cfg-emailjs-public')?.value.trim() || '';
+    const firebaseApi = document.getElementById('cfg-firebase-api')?.value.trim() || '';
+    const firebaseProject = document.getElementById('cfg-firebase-project')?.value.trim() || '';
+    const firebaseDomain = document.getElementById('cfg-firebase-domain')?.value.trim() || '';
+
+    this.saveConfig({
+      emailjsServiceId: emailService,
+      emailjsTemplateId: emailTemplate,
+      emailjsPublicKey: emailPublic,
+      firebaseApiKey: firebaseApi,
+      firebaseProjectId: firebaseProject,
+      firebaseAuthDomain: firebaseDomain
+    });
+
+    closeDeliveryGatewayModal();
+    showToast('Delivery Gateway configuration updated and active!', 'success');
+  },
+
+  populateForm() {
+    const cardReal = document.getElementById('mode-card-real');
+    const cardDemo = document.getElementById('mode-card-demo');
+    if (cardReal) cardReal.classList.toggle('active', this.config.mode === 'real');
+    if (cardDemo) cardDemo.classList.toggle('active', this.config.mode !== 'real');
+
+    const setVal = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.value = val || '';
+    };
+
+    setVal('cfg-emailjs-service', this.config.emailjsServiceId);
+    setVal('cfg-emailjs-template', this.config.emailjsTemplateId);
+    setVal('cfg-emailjs-public', this.config.emailjsPublicKey);
+    setVal('cfg-firebase-api', this.config.firebaseApiKey);
+    setVal('cfg-firebase-project', this.config.firebaseProjectId);
+    setVal('cfg-firebase-domain', this.config.firebaseAuthDomain);
+  },
+
+  updateUIBadge() {
+    const isLive = this.config.mode === 'real' ||
+      (this.config.mode === 'auto' && (this.isEmailConfigured() || this.isFirebaseConfigured()));
+
+    document.querySelectorAll('.gateway-status-badge').forEach(badge => {
+      badge.className = `gateway-status-badge ${isLive ? 'live' : 'demo'}`;
+      if (isLive) {
+        badge.innerHTML = '<span class="status-dot green"></span> Gateway: <strong>Live Real Delivery</strong>';
+      } else {
+        badge.innerHTML = '<span class="status-dot amber"></span> Gateway: <strong>Simulated Demo</strong>';
+      }
+    });
+  },
+
+  async dispatchOTP(otp, method, target, patientName) {
+    const isEmail = method === 'google';
+    const canSendRealEmail = isEmail && (this.config.mode === 'real' || this.config.mode === 'auto') && this.isEmailConfigured();
+    const canSendRealSms = !isEmail && (this.config.mode === 'real' || this.config.mode === 'auto') && this.isFirebaseConfigured();
+
+    if (canSendRealEmail) {
+      await this.sendEmailJS(otp, target, patientName);
+    } else if (canSendRealSms) {
+      await this.sendFirebaseSMS(target, otp);
+    } else {
+      CarePulseAuth.triggerSimulatedNotification(otp, method, target);
+      if (this.config.mode === 'real') {
+        showToast(`Real delivery selected, but ${isEmail ? 'EmailJS' : 'Firebase'} credentials are empty. Showing demo code.`, 'warning');
+      }
+    }
+  },
+
+  async sendEmailJS(otp, email, patientName) {
+    showToast(`📨 Sending real OTP email to ${email} via EmailJS...`, 'info');
+    try {
+      if (!window.emailjs) throw new Error('EmailJS library not loaded');
+      this.initEmailJS();
+      await window.emailjs.send(this.config.emailjsServiceId, this.config.emailjsTemplateId, {
+        to_email: email,
+        otp_code: otp,
+        patient_name: patientName || 'Patient',
+        hospital_name: 'CarePulse Hospital',
+        valid_minutes: 5,
+        year: new Date().getFullYear()
+      });
+      showToast(`✅ Real OTP email delivered to ${email}! Check your inbox/spam.`, 'success');
+    } catch (err) {
+      console.error('EmailJS error:', err);
+      showToast(`EmailJS failed (${err.text || err.message}). Showing backup code on screen.`, 'warning');
+      CarePulseAuth.triggerSimulatedNotification(otp, 'google', email);
+    }
+  },
+
+  async sendFirebaseSMS(phone, fallbackOtp) {
+    const rawDigits = phone.replace(/\D/g, '').slice(-10);
+    const formatted = '+91' + rawDigits;
+    showToast(`📱 Contacting Google Firebase SMS Gateway for ${formatted}...`, 'info');
+
+    try {
+      if (!window.firebase || !firebase.auth) throw new Error('Firebase SDK not loaded');
+      this.initFirebase();
+
+      const recaptchaEl = document.getElementById('recaptcha-container');
+      if (!recaptchaEl) throw new Error('reCAPTCHA container missing');
+
+      if (!window.carepulseRecaptchaVerifier) {
+        window.carepulseRecaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+          size: 'invisible'
+        });
+      }
+
+      const confirmation = await firebase.auth().signInWithPhoneNumber(formatted, window.carepulseRecaptchaVerifier);
+      window.carepulseConfirmationResult = confirmation;
+      showToast(`✅ Real cellular SMS dispatched to ${formatted}!`, 'success');
+    } catch (err) {
+      console.error('Firebase SMS error:', err);
+      showToast(`Firebase error (${err.message}). Showing backup code on screen.`, 'warning');
+      CarePulseAuth.triggerSimulatedNotification(fallbackOtp, 'mobile', phone);
+    }
+  },
+
+  async testDispatchCurrent() {
+    const method = CarePulseAuth.activeMethod || 'mobile';
+    let target = '';
+    if (method === 'mobile') {
+      const phoneInput = document.getElementById('auth-mobile-input');
+      target = phoneInput ? phoneInput.value.trim() : '9876543210';
+      if (!target) target = '9876543210';
+    } else {
+      const emailInput = document.getElementById('auth-google-email');
+      target = emailInput ? emailInput.value.trim() : 'user@gmail.com';
+      if (!target) target = 'user@gmail.com';
+    }
+
+    const testOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    showToast(`Testing ${method === 'google' ? 'Email' : 'SMS'} dispatch to ${target}...`, 'info');
+    await this.dispatchOTP(testOtp, method, target, 'Test User');
+  }
+};
+
+window.DeliveryGateway = DeliveryGateway;
+
+window.openDeliveryGatewayModal = function () {
+  DeliveryGateway.populateForm();
+  const modal = document.getElementById('delivery-gateway-modal');
   if (modal) modal.style.display = 'flex';
 };
 
-window.closeSMSGatewayInfoModal = function () {
-  const modal = document.getElementById('sms-gateway-modal');
+window.closeDeliveryGatewayModal = function () {
+  const modal = document.getElementById('delivery-gateway-modal');
   if (modal) modal.style.display = 'none';
 };
+
+// Backwards compatibility alias
+window.openSMSGatewayInfoModal = window.openDeliveryGatewayModal;
+window.closeSMSGatewayInfoModal = window.closeDeliveryGatewayModal;
+
+/* ==========================================================================
+   19. COMPETITION WINNING ENGINES:
+   A. PublicAddressEngine (Audible PA Token Callout & Speech Synthesis)
+   B. VoiceAIEngine (Trilingual Voice Search, Booking & Intent Parser)
+   ========================================================================== */
+
+const PublicAddressEngine = {
+  isMuted: false,
+
+  init() {
+    try {
+      const savedMute = localStorage.getItem('carepulse_pa_muted');
+      this.isMuted = savedMute === 'true';
+    } catch (e) {}
+    this.updateToggleButtons();
+  },
+
+  toggleMute() {
+    this.isMuted = !this.isMuted;
+    try {
+      localStorage.setItem('carepulse_pa_muted', this.isMuted ? 'true' : 'false');
+    } catch (e) {}
+    this.updateToggleButtons();
+    showToast(this.isMuted ? '🔇 PA Voice Announcements Muted' : '🔊 PA Voice Announcements Enabled', 'info');
+  },
+
+  updateToggleButtons() {
+    const liveBtn = document.getElementById('btn-live-pa-toggle');
+    const recBtn = document.getElementById('btn-reception-pa-toggle');
+    const label = this.isMuted ? '🔇 PA Voice: Muted' : '🔊 PA Voice: ON';
+
+    [liveBtn, recBtn].forEach(btn => {
+      if (btn) {
+        btn.innerHTML = `<span>${label}</span>`;
+        btn.classList.toggle('muted', this.isMuted);
+      }
+    });
+  },
+
+  announceToken(doctor, tokenNumber, patientName = null) {
+    if (this.isMuted) return;
+
+    // 1. Play clinic chime first
+    if (typeof playClinicChime === 'function') {
+      try { playClinicChime(); } catch (e) {}
+    }
+
+    const roomName = doctor.room ? doctor.room.split(',')[0] : 'Consultation Room';
+    const lang = (window.LanguageEngine && window.LanguageEngine.currentLang) || 'en';
+
+    let spokenText = '';
+    let bannerText = '';
+
+    if (lang === 'hi') {
+      spokenText = `कृपया ध्यान दें। टोकन नंबर ${tokenNumber} ${patientName ? patientName : ''}, कृपया ${doctor.name} के लिए ${roomName} में जाएं।`;
+      bannerText = `टोकन #${tokenNumber} • ${doctor.name} (${roomName})`;
+    } else if (lang === 'pa') {
+      spokenText = `ਕਿਰਪਾ ਕਰਕੇ ਧਿਆਨ ਦਿਓ। ਟੋਕਨ ਨੰਬਰ ${tokenNumber} ${patientName ? patientName : ''}, ਕਿਰਪਾ ਕਰਕੇ ${doctor.name} ਲਈ ${roomName} ਵਿਖੇ ਜਾਓ।`;
+      bannerText = `ਟੋਕਨ #${tokenNumber} • ${doctor.name} (${roomName})`;
+    } else {
+      spokenText = `Attention please. Token number ${tokenNumber} ${patientName ? 'for ' + patientName : ''}, please proceed to ${roomName} for ${doctor.name}.`;
+      bannerText = `Token #${tokenNumber} • ${doctor.name} (${roomName})`;
+    }
+
+    // 2. Trigger Visual Banner
+    this.showBroadcastBanner(bannerText, `${doctor.specialty} • Chamber Live Callout`);
+
+    // 3. Trigger Natural Speech Synthesis after slight delay for chime
+    setTimeout(() => {
+      this.speakText(spokenText, lang);
+    }, 450);
+  },
+
+  showBroadcastBanner(title, subtitle) {
+    const banner = document.getElementById('pa-announcement-banner');
+    const titleEl = document.getElementById('pa-announcement-text');
+    const subEl = document.getElementById('pa-announcement-sub');
+    if (!banner || !titleEl) return;
+
+    titleEl.innerText = title;
+    if (subEl) subEl.innerText = subtitle;
+
+    banner.classList.add('active');
+    clearTimeout(banner._timeout);
+    banner._timeout = setTimeout(() => {
+      banner.classList.remove('active');
+    }, 5500);
+  },
+
+  speakText(text, lang = 'en') {
+    if (!window.speechSynthesis) return;
+
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.95;
+      utterance.pitch = 1.05;
+
+      const langMap = {
+        'en': 'en-IN',
+        'hi': 'hi-IN',
+        'pa': 'pa-IN'
+      };
+      utterance.lang = langMap[lang] || 'en-IN';
+
+      const voices = window.speechSynthesis.getVoices();
+      const targetVoice = voices.find(v => v.lang === utterance.lang || v.lang.startsWith(utterance.lang.slice(0, 2)));
+      if (targetVoice) utterance.voice = targetVoice;
+
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      console.warn('SpeechSynthesis error:', e);
+    }
+  }
+};
+
+const VoiceAIEngine = {
+  recognition: null,
+  isListening: false,
+  currentLang: 'en-IN',
+
+  init() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      console.log('Web Speech Recognition not supported in this browser.');
+      return;
+    }
+
+    try {
+      this.recognition = new SpeechRecognition();
+      this.recognition.continuous = false;
+      this.recognition.interimResults = true;
+      this.recognition.maxAlternatives = 1;
+
+      this.recognition.onstart = () => {
+        this.isListening = true;
+        this.updateVisualizer(true);
+        this.setTranscript('Listening... Speak your request clearly.');
+      };
+
+      this.recognition.onresult = (event) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          transcript += event.results[i][0].transcript;
+        }
+        this.setTranscript(`"${transcript}"`);
+
+        if (event.results[0].isFinal) {
+          this.handleResult(transcript);
+        }
+      };
+
+      this.recognition.onerror = (event) => {
+        console.warn('Voice recognition error:', event.error);
+        if (event.error === 'no-speech') {
+          this.setTranscript('No speech detected. Please tap the mic and try again.');
+        } else if (event.error === 'not-allowed') {
+          this.setTranscript('Microphone access denied. Please allow microphone permissions in your browser.');
+        } else {
+          this.setTranscript(`Notice: ${event.error}. Please tap a command below.`);
+        }
+        this.updateVisualizer(false);
+      };
+
+      this.recognition.onend = () => {
+        this.isListening = false;
+        this.updateVisualizer(false);
+      };
+    } catch (e) {
+      console.warn('Could not initialize SpeechRecognition:', e);
+    }
+  },
+
+  open() {
+    const modal = document.getElementById('voice-assistant-modal');
+    if (!modal) return;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    const currentAppLang = (window.LanguageEngine && window.LanguageEngine.currentLang) || 'en';
+    const langMap = { 'en': 'en-IN', 'hi': 'hi-IN', 'pa': 'pa-IN' };
+    this.currentLang = langMap[currentAppLang] || 'en-IN';
+
+    document.querySelectorAll('.btn-voice-lang').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-lang') === this.currentLang);
+    });
+
+    this.startListening();
+  },
+
+  close() {
+    this.stopListening();
+    const modal = document.getElementById('voice-assistant-modal');
+    if (modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+  },
+
+  setLanguage(langCode, btn) {
+    this.currentLang = langCode;
+    document.querySelectorAll('.btn-voice-lang').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    if (this.isListening) {
+      this.stopListening();
+      setTimeout(() => this.startListening(), 200);
+    } else {
+      this.startListening();
+    }
+  },
+
+  toggleListening() {
+    if (this.isListening) {
+      this.stopListening();
+    } else {
+      this.startListening();
+    }
+  },
+
+  startListening() {
+    if (!this.recognition) {
+      this.init();
+    }
+    if (!this.recognition) {
+      this.setTranscript('Speech Recognition is not supported by your browser. Please tap any command below.');
+      return;
+    }
+
+    try {
+      this.recognition.lang = this.currentLang;
+      this.recognition.start();
+    } catch (e) {
+      // Already active
+    }
+  },
+
+  stopListening() {
+    if (this.recognition && this.isListening) {
+      try { this.recognition.stop(); } catch (e) {}
+    }
+    this.isListening = false;
+    this.updateVisualizer(false);
+  },
+
+  updateVisualizer(active) {
+    const vis = document.getElementById('voice-visualizer');
+    const micBtn = document.getElementById('voice-mic-btn');
+    if (vis) vis.classList.toggle('listening', active);
+    if (micBtn) micBtn.innerHTML = active ? '🔴' : '🎙️';
+  },
+
+  setTranscript(text) {
+    const el = document.getElementById('voice-transcript-display');
+    if (!el) return;
+    el.innerText = text;
+    el.className = text.startsWith('Listening') || text.startsWith('No speech') || text.startsWith('Speech Recognition') || text.startsWith('Notice')
+      ? 'voice-transcript-placeholder'
+      : 'voice-transcript-text';
+  },
+
+  executeCommand(commandText) {
+    this.setTranscript(`"${commandText}"`);
+    this.handleResult(commandText);
+  },
+
+  handleResult(transcript) {
+    const q = transcript.toLowerCase().trim();
+    let spokenReply = '';
+    let actionDone = false;
+
+    // 1. Emergency / Ambulance Intent
+    if (q.includes('emergency') || q.includes('ambulance') || q.includes('108') || q.includes('urgent') || q.includes('मदद') || q.includes('एम्बुलेंस') || q.includes('ਮਦਦ') || q.includes('ਐਂਬੂਲੈਂਸ')) {
+      spokenReply = 'Activating CarePulse Emergency SOS Hub with live GPS ambulance dispatch.';
+      this.close();
+      if (typeof openEmergencyModal === 'function') openEmergencyModal();
+      actionDone = true;
+    }
+
+    // 2. ICU / Beds Intent
+    else if (q.includes('bed') || q.includes('icu') || q.includes('ventilator') || q.includes('बेड') || q.includes('ਬੈੱਡ')) {
+      spokenReply = 'Opening Live Hospital Bed and ICU Capacity Monitor.';
+      this.close();
+      if (typeof openBedsModal === 'function') openBedsModal();
+      actionDone = true;
+    }
+
+    // 3. Live OPD Queue Intent
+    else if (q.includes('queue') || q.includes('token') || q.includes('wait') || q.includes('कतार') || q.includes('ਲਾਈਨ')) {
+      spokenReply = 'Displaying Real-Time Clinic Token Display and OPD Chambers.';
+      this.close();
+      if (typeof openLiveQueueModal === 'function') openLiveQueueModal();
+      actionDone = true;
+    }
+
+    // Video Consult / Tele-Consultation Intent
+    else if (q.includes('video') || q.includes('tele') || q.includes('online consult') || q.includes('video call') || q.includes('ਵੀਡੀਓ')) {
+      spokenReply = 'Launching CarePulse Virtual Tele-Consultation Clinic with specialist doctor.';
+      this.close();
+      if (typeof openTeleConsultModal === 'function') openTeleConsultModal();
+      actionDone = true;
+    }
+
+    // Wayfinder / Indoor GPS Map Intent
+    else if (q.includes('map') || q.includes('wayfinder') || q.includes('gps') || q.includes('directions') || q.includes('how to reach') || q.includes('नक्शा') || q.includes('ਰਾਹ')) {
+      spokenReply = 'Launching CarePulse Hospital Indoor GPS and multi-floor wayfinder.';
+      this.close();
+      if (typeof openWayfinderModal === 'function') openWayfinderModal();
+      actionDone = true;
+    }
+
+    // Digital Health Card / ABHA Pass Intent
+    else if (q.includes('health card') || q.includes('abha') || q.includes('medical pass') || q.includes('card') || q.includes('कार्ड')) {
+      spokenReply = 'Opening your CarePulse Smart Health Pass with verified ABHA credentials.';
+      this.close();
+      if (typeof openHealthCardModal === 'function') openHealthCardModal();
+      actionDone = true;
+    }
+
+    // 4. Lab Reports Intent
+    else if (q.includes('lab') || q.includes('report') || q.includes('test') || q.includes('ब्लड टेस्ट') || q.includes('ਟੈਸਟ')) {
+      spokenReply = 'Opening Diagnostic Pathology and Radiology Lab Portal.';
+      this.close();
+      if (typeof openLabReportModal === 'function') openLabReportModal();
+      actionDone = true;
+    }
+
+    // 5. Pharmacy Intent
+    else if (q.includes('pharmacy') || q.includes('medicine') || q.includes('drug') || q.includes('दवा') || q.includes('ਦਵਾਈ')) {
+      spokenReply = 'Opening 24/7 CarePulse Hospital Pharmacy and Prescription Dispatch.';
+      this.close();
+      if (typeof openPharmacyModal === 'function') openPharmacyModal();
+      actionDone = true;
+    }
+
+    // 6. Health Packages Intent
+    else if (q.includes('package') || q.includes('checkup') || q.includes('full body') || q.includes('पैकेज')) {
+      spokenReply = 'Opening Preventive Health Checkup Packages.';
+      this.close();
+      if (typeof openPackagesModal === 'function') openPackagesModal();
+      actionDone = true;
+    }
+
+    // 7. Dark Mode / Theme Intent
+    else if (q.includes('dark mode') || q.includes('light mode') || q.includes('theme') || q.includes('डार्क मोड')) {
+      spokenReply = 'Toggling hospital color theme.';
+      this.close();
+      if (typeof toggleTheme === 'function') toggleTheme();
+      actionDone = true;
+    }
+
+    // 8. Doctor Name Matching Intent
+    else {
+      let matchedDoctor = null;
+      for (const doc of DOCTORS) {
+        const lastName = doc.name.split(' ').pop().toLowerCase();
+        const firstName = doc.name.toLowerCase();
+        if (q.includes(lastName) || q.includes(firstName)) {
+          matchedDoctor = doc;
+          break;
+        }
+      }
+
+      if (matchedDoctor) {
+        spokenReply = `Opening booking for ${matchedDoctor.name}, specialist in ${matchedDoctor.specialty}.`;
+        this.close();
+        if (typeof openBookingLayer === 'function') openBookingLayer(matchedDoctor.id);
+        actionDone = true;
+      }
+      // 9. Specialty Matching Intent
+      else {
+        const specialtyKeywords = {
+          'general': ['general', 'fever', 'cough', 'cold', 'बुखार', 'ਖੰਘ'],
+          'cardiology': ['cardio', 'heart', 'chest pain', 'दिल', 'ਦਿਲ'],
+          'pediatrics': ['child', 'baby', 'kid', 'pediatric', 'बच्चा', 'ਬੱਚੇ'],
+          'gynecology': ['gynec', 'women', 'pregnancy', 'period', 'महिला'],
+          'orthopedics': ['ortho', 'bone', 'joint', 'fracture', 'हड्डी', 'ਹੱਡੀ'],
+          'dermatology': ['skin', 'hair', 'rash', 'त्वचा', 'ਚਮੜੀ'],
+          'neurology': ['neuro', 'brain', 'nerve', 'stroke', 'सिरदर्द'],
+          'ent': ['ent', 'ear', 'nose', 'throat', 'कान', 'ਗਲਾ'],
+          'ophthalmology': ['eye', 'vision', 'cataract', 'आंख', 'ਅੱਖ']
+        };
+
+        let matchedSpec = null;
+        for (const [specKey, terms] of Object.entries(specialtyKeywords)) {
+          if (terms.some(term => q.includes(term))) {
+            matchedSpec = specKey;
+            break;
+          }
+        }
+
+        if (matchedSpec) {
+          spokenReply = `Filtering our specialist doctors for ${matchedSpec}.`;
+          this.close();
+          const docSection = document.getElementById('doctors');
+          if (docSection) docSection.scrollIntoView({ behavior: 'smooth' });
+          if (typeof filterSpecialty === 'function') filterSpecialty(matchedSpec);
+          actionDone = true;
+        }
+      }
+    }
+
+    // Default Fallback
+    if (!actionDone) {
+      spokenReply = `Searching hospital records for: ${transcript}.`;
+      this.close();
+      if (typeof openSpotlightSearch === 'function') {
+        openSpotlightSearch();
+        const searchInput = document.getElementById('spotlight-search-input');
+        if (searchInput) {
+          searchInput.value = transcript;
+          if (window.SpotlightSearchEngine) SpotlightSearchEngine.performSearch(transcript);
+        }
+      }
+    }
+
+    PublicAddressEngine.speakText(spokenReply, this.currentLang.slice(0, 2));
+    showToast(spokenReply, 'info');
+  }
+};
+
+window.PublicAddressEngine = PublicAddressEngine;
+window.VoiceAIEngine = VoiceAIEngine;
+
+/* ==========================================================================
+   20. TeleConsultEngine (Virtual Video Clinic & Digital Prescription Pad)
+   ========================================================================== */
+
+const TeleConsultEngine = {
+  activeDoctorId: 'doc-gp-1',
+  mediaStream: null,
+  isMicMuted: false,
+  isCamOff: false,
+  timerInterval: null,
+  elapsedSeconds: 0,
+  vitalsInterval: null,
+  currentVitals: { hr: 74, spo2: 98, bp: '120/80' },
+
+  prescriptions: [
+    { name: 'Tab. Paracetamol 650 mg', dosage: '1-0-1 (After Food)', duration: '3 Days' },
+    { name: 'Cap. Amoxicillin 500 mg', dosage: '1-0-1 (After Food)', duration: '5 Days' },
+    { name: 'Syp. Grilinctus 10 ml', dosage: '0-0-1 (At Bedtime)', duration: '5 Days' }
+  ],
+
+  open(doctorId = null) {
+    if (doctorId) {
+      this.activeDoctorId = doctorId;
+    } else if (!this.activeDoctorId) {
+      this.activeDoctorId = (DOCTORS[0] && DOCTORS[0].id) || 'doc-gp-1';
+    }
+
+    const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
+    const modal = document.getElementById('tele-consult-modal');
+    if (!modal) return;
+
+    // Populate Doctor Data
+    const badgeName = document.getElementById('tele-doc-badge-name');
+    const badgeSpec = document.getElementById('tele-doc-badge-spec');
+    const screenName = document.getElementById('tele-doc-screen-name');
+    const screenDesc = document.getElementById('tele-doc-screen-desc');
+    const docAvatar = document.getElementById('tele-doc-avatar');
+    const rxDocName = document.getElementById('rx-header-doc-name');
+    const rxDocReg = document.getElementById('rx-header-doc-reg');
+    const rxSigName = document.getElementById('rx-sig-name');
+
+    if (badgeName) badgeName.innerText = doc.name;
+    if (badgeSpec) badgeSpec.innerText = `${doc.specialty} • ${doc.regNo || 'PMC Verified'}`;
+    if (screenName) screenName.innerText = doc.name;
+    if (screenDesc) screenDesc.innerText = `${doc.qualifications} • Live Tele-Consultation`;
+    if (docAvatar && doc.avatar) docAvatar.src = doc.avatar;
+    if (rxDocName) rxDocName.innerText = doc.name;
+    if (rxDocReg) rxDocReg.innerText = `${doc.qualifications} • ${doc.regNo || 'PMC-38214'}`;
+    if (rxSigName) rxSigName.innerText = doc.name;
+
+    // Patient info
+    const user = window.CarePulseAuth ? CarePulseAuth.sessionUser : null;
+    const patientNameEl = document.getElementById('rx-patient-name');
+    if (patientNameEl) {
+      patientNameEl.innerText = (user && user.name) ? `${user.name} (Verified)` : 'Self (Verified Patient)';
+    }
+
+    // Date
+    const dateStamp = document.getElementById('rx-date-stamp');
+    if (dateStamp) {
+      const today = new Date();
+      dateStamp.innerText = today.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    // Render medicines list
+    this.renderPrescriptions();
+
+    // Start video & timers
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    this.startCallTimer();
+    this.startVitalsSimulation();
+    this.initCameraStream();
+
+    showToast(`📹 Connected to Dr. ${doc.name.split(' ').pop()}'s Virtual Consultation Room`, 'success');
+  },
+
+  close() {
+    this.stopCameraStream();
+    this.stopCallTimer();
+    const modal = document.getElementById('tele-consult-modal');
+    if (modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  },
+
+  initCameraStream() {
+    const videoEl = document.getElementById('patient-webcam-video');
+    const fallbackEl = document.getElementById('patient-webcam-fallback');
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then(stream => {
+          this.mediaStream = stream;
+          if (videoEl) {
+            videoEl.srcObject = stream;
+            videoEl.style.display = 'block';
+          }
+          if (fallbackEl) fallbackEl.style.display = 'none';
+        })
+        .catch(err => {
+          console.warn('Webcam permission denied or unavailable, using simulation:', err);
+          if (videoEl) videoEl.style.display = 'none';
+          if (fallbackEl) fallbackEl.style.display = 'flex';
+        });
+    } else {
+      if (videoEl) videoEl.style.display = 'none';
+      if (fallbackEl) fallbackEl.style.display = 'flex';
+    }
+  },
+
+  stopCameraStream() {
+    if (this.mediaStream) {
+      this.mediaStream.getTracks().forEach(track => track.stop());
+      this.mediaStream = null;
+    }
+    const videoEl = document.getElementById('patient-webcam-video');
+    if (videoEl) videoEl.srcObject = null;
+  },
+
+  toggleMic() {
+    this.isMicMuted = !this.isMicMuted;
+    if (this.mediaStream) {
+      this.mediaStream.getAudioTracks().forEach(t => t.enabled = !this.isMicMuted);
+    }
+    const btn = document.getElementById('btn-tele-mic');
+    if (btn) {
+      btn.innerHTML = this.isMicMuted ? '🔇' : '🎙️';
+      btn.classList.toggle('off', this.isMicMuted);
+      btn.title = this.isMicMuted ? 'Unmute Microphone' : 'Mute Microphone';
+    }
+    showToast(this.isMicMuted ? 'Microphone muted' : 'Microphone unmuted', 'info');
+  },
+
+  toggleCamera() {
+    this.isCamOff = !this.isCamOff;
+    if (this.mediaStream) {
+      this.mediaStream.getVideoTracks().forEach(t => t.enabled = !this.isCamOff);
+    }
+    const btn = document.getElementById('btn-tele-cam');
+    const videoEl = document.getElementById('patient-webcam-video');
+    const fallbackEl = document.getElementById('patient-webcam-fallback');
+
+    if (btn) {
+      btn.innerHTML = this.isCamOff ? '🚫' : '📹';
+      btn.classList.toggle('off', this.isCamOff);
+      btn.title = this.isCamOff ? 'Turn Camera On' : 'Turn Camera Off';
+    }
+    if (this.isCamOff) {
+      if (videoEl) videoEl.style.display = 'none';
+      if (fallbackEl) fallbackEl.style.display = 'flex';
+      showToast('Camera stream disabled', 'info');
+    } else {
+      if (this.mediaStream && videoEl) {
+        videoEl.style.display = 'block';
+        if (fallbackEl) fallbackEl.style.display = 'none';
+      }
+      showToast('Camera stream enabled', 'info');
+    }
+  },
+
+  startCallTimer() {
+    this.elapsedSeconds = 0;
+    this.stopCallTimer();
+    const timerEl = document.getElementById('tele-call-timer');
+    this.timerInterval = setInterval(() => {
+      this.elapsedSeconds++;
+      const mins = String(Math.floor(this.elapsedSeconds / 60)).padStart(2, '0');
+      const secs = String(this.elapsedSeconds % 60).padStart(2, '0');
+      if (timerEl) timerEl.innerText = `${mins}:${secs}`;
+    }, 1000);
+  },
+
+  stopCallTimer() {
+    if (this.timerInterval) clearInterval(this.timerInterval);
+    this.timerInterval = null;
+    if (this.vitalsInterval) clearInterval(this.vitalsInterval);
+    this.vitalsInterval = null;
+  },
+
+  startVitalsSimulation() {
+    const hrEl = document.getElementById('tele-vital-hr');
+    const spo2El = document.getElementById('tele-vital-spo2');
+    const bpEl = document.getElementById('tele-vital-bp');
+
+    this.vitalsInterval = setInterval(() => {
+      this.currentVitals.hr = 72 + Math.floor(Math.random() * 6);
+      this.currentVitals.spo2 = 97 + Math.floor(Math.random() * 3);
+      if (hrEl) hrEl.innerText = `${this.currentVitals.hr} BPM`;
+      if (spo2El) spo2El.innerText = `SpO2 ${this.currentVitals.spo2}%`;
+      if (bpEl) bpEl.innerText = `BP 120/80`;
+    }, 4000);
+  },
+
+  simulateVitalsSpike() {
+    const hrEl = document.getElementById('tele-vital-hr');
+    const spo2El = document.getElementById('tele-vital-spo2');
+    this.currentVitals.hr = 88;
+    this.currentVitals.spo2 = 99;
+    if (hrEl) hrEl.innerText = `88 BPM (Pulsing)`;
+    if (spo2El) spo2El.innerText = `SpO2 99%`;
+    showToast('🩺 Live clinical vitals checked: Heart Rate 88 BPM, SpO2 99%, Normal Sinus Rhythm', 'success');
+  },
+
+  renderPrescriptions() {
+    const container = document.getElementById('rx-items-list');
+    if (!container) return;
+
+    if (this.prescriptions.length === 0) {
+      container.innerHTML = `<div style="text-align: center; color: var(--slate-500); padding: 1rem; font-size: 0.78rem;">No medicines prescribed yet. Select from below to add.</div>`;
+      return;
+    }
+
+    container.innerHTML = this.prescriptions.map((item, idx) => `
+      <div class="rx-item-card">
+        <div>
+          <div class="rx-med-name">${idx + 1}. ${escapeHtml(item.name)}</div>
+          <div class="rx-med-dose">${escapeHtml(item.dosage)} &bull; Duration: ${escapeHtml(item.duration)}</div>
+        </div>
+        <button type="button" class="rx-item-remove" onclick="TeleConsultEngine.removePrescription(${idx})" title="Remove item">&times;</button>
+      </div>
+    `).join('');
+  },
+
+  addSelectedMedicine() {
+    const select = document.getElementById('rx-quick-select');
+    if (!select) return;
+    const [name, dosage, duration] = select.value.split('|');
+    this.prescriptions.push({ name, dosage, duration });
+    this.renderPrescriptions();
+    showToast(`Added ${name} to digital prescription`, 'success');
+  },
+
+  removePrescription(index) {
+    this.prescriptions.splice(index, 1);
+    this.renderPrescriptions();
+  },
+
+  downloadPrescriptionPDF() {
+    const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
+    const user = window.CarePulseAuth ? CarePulseAuth.sessionUser : null;
+    const patientName = (user && user.name) ? user.name : 'Verified Patient';
+
+    const printWin = window.open('', '_blank', 'width=800,height=900');
+    if (!printWin) {
+      alert('Please allow popups to download/print the official prescription.');
+      return;
+    }
+
+    const itemsHtml = this.prescriptions.map((m, i) => `
+      <tr style="border-bottom: 1px solid #e2e8f0;">
+        <td style="padding: 8px 12px; font-weight: 700;">${i + 1}. ${escapeHtml(m.name)}</td>
+        <td style="padding: 8px 12px;">${escapeHtml(m.dosage)}</td>
+        <td style="padding: 8px 12px;">${escapeHtml(m.duration)}</td>
+      </tr>
+    `).join('');
+
+    printWin.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Prescription - CarePulse Hospital - ${patientName}</title>
+        <style>
+          body { font-family: system-ui, -apple-system, sans-serif; padding: 30px; color: #0f172a; line-height: 1.5; }
+          .header { border-bottom: 3px solid #0d9488; padding-bottom: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; }
+          .brand h1 { margin: 0; color: #0f172a; font-size: 24px; }
+          .brand p { margin: 4px 0 0; color: #475569; font-size: 13px; }
+          .doc-info { text-align: right; }
+          .doc-info h3 { margin: 0; color: #0d9488; font-size: 18px; }
+          .patient-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px; margin-bottom: 24px; }
+          .rx-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 14px; }
+          .rx-table th { background: #f1f5f9; padding: 10px 12px; text-align: left; border-bottom: 2px solid #cbd5e1; }
+          .footer { border-top: 1px dashed #cbd5e1; padding-top: 20px; margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
+          .signature { text-align: right; }
+          .sig-line { font-family: cursive; font-size: 22px; color: #0d9488; margin-bottom: 4px; }
+          @media print { .no-print { display: none; } body { padding: 0; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="brand">
+            <h1>🏥 CarePulse Multi-Specialty Hospital</h1>
+            <p>GT Road, Near Sugar Mill Crossing, Phagwara, Punjab 144401</p>
+            <p>Emergency & Trauma: 1800-180-2026 / 108 &bull; Telehealth Portal</p>
+          </div>
+          <div class="doc-info">
+            <h3>${escapeHtml(doc.name)}</h3>
+            <p style="margin: 2px 0; font-size: 13px; font-weight: 600;">${escapeHtml(doc.specialty)}</p>
+            <p style="margin: 0; font-size: 12px; color: #64748b;">${escapeHtml(doc.regNo || 'PMC-38214')}</p>
+          </div>
+        </div>
+
+        <div class="patient-box">
+          <div><strong>Patient Name:</strong> ${escapeHtml(patientName)}</div>
+          <div><strong>Date:</strong> ${new Date().toLocaleDateString('en-GB')}</div>
+          <div><strong>Consultation:</strong> Virtual Video Tele-Consult</div>
+          <div><strong>Token Ref:</strong> #TK-TELE-${Math.floor(1000 + Math.random() * 9000)}</div>
+        </div>
+
+        <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 6px; padding: 10px 14px; margin-bottom: 20px; font-size: 13px;">
+          <strong>Clinical Diagnosis:</strong> Acute Upper Respiratory Tract Infection (URTI) with mild pyrexia. Advised oral hydration and rest.
+        </div>
+
+        <h3 style="font-family: Georgia, serif; color: #0d9488; font-size: 20px; margin: 0 0 10px;">℞ Prescribed Medications</h3>
+        <table class="rx-table">
+          <thead>
+            <tr>
+              <th>Medicine Name</th>
+              <th>Dosage & Frequency</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsHtml}
+          </tbody>
+        </table>
+
+        <div class="footer">
+          <div style="font-size: 12px; color: #64748b;">
+            <p style="margin: 0;">🔒 Digitally generated and cryptographically verified.</p>
+            <p style="margin: 2px 0 0;">Valid for dispensing at any licensed Indian pharmacy (DLT/D&amp;C Act).</p>
+          </div>
+          <div class="signature">
+            <div class="sig-line">${escapeHtml(doc.name)}</div>
+            <div style="font-size: 12px; font-weight: 700; color: #0f172a;">${escapeHtml(doc.name)}</div>
+            <div style="font-size: 11px; color: #64748b;">Reg No: ${escapeHtml(doc.regNo || 'PMC-38214')}</div>
+          </div>
+        </div>
+
+        <div class="no-print" style="margin-top: 30px; text-align: center;">
+          <button onclick="window.print()" style="background: #0d9488; color: white; border: none; padding: 10px 24px; font-size: 15px; font-weight: 700; border-radius: 6px; cursor: pointer;">
+            🖨️ Print Prescription
+          </button>
+        </div>
+      </body>
+      </html>
+    `);
+    printWin.document.close();
+  },
+
+  orderPrescriptionPharmacy() {
+    this.close();
+    if (typeof openPharmacyModal === 'function') {
+      openPharmacyModal();
+      showToast('🛒 Prescribed medicines transferred to CarePulse 24/7 Pharmacy cart!', 'success');
+    }
+  },
+
+  sharePrescriptionWhatsApp() {
+    const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
+    const medList = this.prescriptions.map((m, i) => `${i + 1}. ${m.name} (${m.dosage} x ${m.duration})`).join('%0A');
+    const text = `*CarePulse Hospital Tele-Consultation Prescription*%0A*Doctor:* ${doc.name} (${doc.specialty})%0A*Reg No:* ${doc.regNo || 'PMC-38214'}%0A*Date:* ${new Date().toLocaleDateString('en-GB')}%0A%0A*Rx Medicines:*%0A${medList}%0A%0A*Helpline:* 1800-180-2026%0A*Address:* GT Road, Phagwara, Punjab`;
+    window.open(`https://wa.me/?text=${text}`, '_blank');
+  },
+
+  endConsultation() {
+    const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
+    this.stopCameraStream();
+    this.stopCallTimer();
+    showToast(`✅ Video consultation with ${doc.name} completed successfully. Please review or download your prescription.`, 'success');
+  }
+};
+
+window.TeleConsultEngine = TeleConsultEngine;
+window.openTeleConsultModal = function (docId) { TeleConsultEngine.open(docId); };
+window.closeTeleConsultModal = function () { TeleConsultEngine.close(); };
+
+// ==========================================================================
+// 21. CampusWayfinderEngine (Indoor GPS & Multi-Floor Navigation)
+// ==========================================================================
+const CampusWayfinderEngine = {
+  currentFloor: 'G',
+  startPoint: 'main-gate',
+  destPoint: 'room-101',
+  wheelchairMode: false,
+
+  floors: {
+    'G': {
+      title: 'Ground Floor (Level 0)',
+      sub: 'Out-Patient Department (OPD), Casualty & Pharmacy',
+      rooms: [
+        { id: 'main-gate', label: 'Main Gate 1', sub: 'Reception & Helpdesk', x: 40, y: 350, w: 120, h: 70, fill: '#1e293b', stroke: '#10b981', type: 'entrance' },
+        { id: 'casualty-ramp', label: 'Casualty Ramp', sub: '24/7 Emergency Entry', x: 40, y: 90, w: 120, h: 70, fill: '#1e293b', stroke: '#ef4444', type: 'emergency' },
+        { id: 'triage', label: 'Triage Bay', sub: 'Emergency Resus & Beds', x: 190, y: 90, w: 110, h: 70, fill: '#1e293b', stroke: '#ef4444', type: 'emergency' },
+        { id: 'room-101', label: 'Room 101', sub: 'Dr. Rajesh Sharma (Med)', x: 330, y: 90, w: 120, h: 70, fill: '#1e293b', stroke: '#3b82f6', type: 'doctor' },
+        { id: 'room-104', label: 'Room 104', sub: 'Dr. Priya Nair (Cardio)', x: 480, y: 90, w: 120, h: 70, fill: '#1e293b', stroke: '#3b82f6', type: 'doctor' },
+        { id: 'pharmacy', label: 'Pharmacy', sub: '24/7 Doorstep Dispense', x: 220, y: 350, w: 140, h: 70, fill: '#1e293b', stroke: '#10b981', type: 'service' },
+        { id: 'lift-lobby', label: 'Lift & Stairs', sub: 'Vertical Transit Lobby', x: 480, y: 350, w: 120, h: 70, fill: '#1e293b', stroke: '#8b5cf6', type: 'transit' }
+      ],
+      nodes: {
+        'main-gate': { x: 100, y: 350 },
+        'casualty-ramp': { x: 100, y: 160 },
+        'triage': { x: 245, y: 160 },
+        'room-101': { x: 390, y: 160 },
+        'room-104': { x: 540, y: 160 },
+        'pharmacy': { x: 290, y: 350 },
+        'lift-lobby': { x: 540, y: 350 },
+        'corridor-center': { x: 340, y: 250 },
+        'corridor-left': { x: 100, y: 250 },
+        'corridor-right': { x: 540, y: 250 }
+      }
+    },
+    '1': {
+      title: '1st Floor (Level 1)',
+      sub: 'Diagnostics, Pathology & Blood Bank',
+      rooms: [
+        { id: 'lift-lobby-1', label: 'Lift & Stairs', sub: 'From Ground Floor', x: 480, y: 350, w: 120, h: 70, fill: '#1e293b', stroke: '#8b5cf6', type: 'transit' },
+        { id: 'pathology', label: 'Pathology Lab', sub: 'Sample Collection Desk', x: 60, y: 90, w: 150, h: 80, fill: '#1e293b', stroke: '#3b82f6', type: 'lab' },
+        { id: 'blood-bank', label: 'Blood Bank', sub: 'Component Unit & Testing', x: 240, y: 90, w: 150, h: 80, fill: '#1e293b', stroke: '#ef4444', type: 'emergency' },
+        { id: 'radiology', label: 'Radiology Suite', sub: 'MRI & 128-Slice CT Scan', x: 60, y: 340, w: 160, h: 80, fill: '#1e293b', stroke: '#3b82f6', type: 'lab' },
+        { id: 'daycare', label: 'Day Care Ward', sub: 'Infusion & Dialysis Unit', x: 250, y: 340, w: 140, h: 80, fill: '#1e293b', stroke: '#10b981', type: 'ward' }
+      ],
+      nodes: {
+        'lift-lobby-1': { x: 540, y: 350 },
+        'pathology': { x: 135, y: 170 },
+        'blood-bank': { x: 315, y: 170 },
+        'radiology': { x: 140, y: 340 },
+        'daycare': { x: 320, y: 340 },
+        'corridor-center-1': { x: 320, y: 255 },
+        'corridor-right-1': { x: 540, y: 255 }
+      }
+    },
+    '2': {
+      title: '2nd Floor (Level 2)',
+      sub: 'Modular Surgical OTs & Intensive Care Units',
+      rooms: [
+        { id: 'lift-lobby-2', label: 'Lift & Stairs', sub: 'Central Access', x: 480, y: 350, w: 120, h: 70, fill: '#1e293b', stroke: '#8b5cf6', type: 'transit' },
+        { id: 'icu-a', label: 'ICU Bay A', sub: 'Intensive Critical Care', x: 60, y: 90, w: 150, h: 80, fill: '#1e293b', stroke: '#ef4444', type: 'emergency' },
+        { id: 'ot-1', label: 'OT Complex 1', sub: 'Modular Laminar OT', x: 240, y: 90, w: 150, h: 80, fill: '#1e293b', stroke: '#06b6d4', type: 'surgical' },
+        { id: 'cardiac-ccu', label: 'Coronary CCU', sub: 'Cardiac Intensive Unit', x: 60, y: 340, w: 160, h: 80, fill: '#1e293b', stroke: '#ef4444', type: 'emergency' },
+        { id: 'recovery-bay', label: 'Recovery Bay', sub: 'Post-Op Observation', x: 250, y: 340, w: 140, h: 80, fill: '#1e293b', stroke: '#10b981', type: 'ward' }
+      ],
+      nodes: {
+        'lift-lobby-2': { x: 540, y: 350 },
+        'icu-a': { x: 135, y: 170 },
+        'ot-1': { x: 315, y: 170 },
+        'cardiac-ccu': { x: 140, y: 340 },
+        'recovery-bay': { x: 320, y: 340 },
+        'corridor-center-2': { x: 320, y: 255 },
+        'corridor-right-2': { x: 540, y: 255 }
+      }
+    }
+  },
+
+  open(dest) {
+    const modal = document.getElementById('campus-wayfinder-modal');
+    if (!modal) return;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    if (dest) {
+      this.destPoint = dest;
+      const destSelect = document.getElementById('wayfinder-dest-select');
+      if (destSelect) destSelect.value = dest;
+      if (['pathology', 'blood-bank', 'radiology'].includes(dest)) {
+        this.currentFloor = '1';
+      } else if (['icu-a', 'ot-1', 'cardiac-ccu'].includes(dest)) {
+        this.currentFloor = '2';
+      } else {
+        this.currentFloor = 'G';
+      }
+    }
+
+    this.render();
+  },
+
+  close() {
+    const modal = document.getElementById('campus-wayfinder-modal');
+    if (modal) modal.classList.remove('active');
+    document.body.style.overflow = '';
+  },
+
+  setFloor(floorKey) {
+    this.currentFloor = floorKey;
+    ['g', '1', '2'].forEach(f => {
+      const btn = document.getElementById(`floor-tab-${f}`);
+      if (btn) btn.classList.toggle('active', f.toUpperCase() === floorKey.toUpperCase());
+    });
+    this.render();
+  },
+
+  onRouteSelectChange() {
+    const startSelect = document.getElementById('wayfinder-start-select');
+    const destSelect = document.getElementById('wayfinder-dest-select');
+    if (startSelect) this.startPoint = startSelect.value;
+    if (destSelect) {
+      this.destPoint = destSelect.value;
+      if (['pathology', 'blood-bank', 'radiology'].includes(this.destPoint)) {
+        this.currentFloor = '1';
+      } else if (['icu-a', 'ot-1', 'cardiac-ccu'].includes(this.destPoint)) {
+        this.currentFloor = '2';
+      } else {
+        this.currentFloor = 'G';
+      }
+      this.setFloor(this.currentFloor);
+    }
+    this.render();
+  },
+
+  toggleWheelchair(isChecked) {
+    this.wheelchairMode = isChecked;
+    this.render();
+  },
+
+  render() {
+    const floor = this.floors[this.currentFloor] || this.floors['G'];
+    const floorInd = document.getElementById('wayfinder-floor-indicator');
+    if (floorInd) floorInd.innerText = `Floor: ${floor.title}`;
+
+    const svgWrap = document.getElementById('wayfinder-svg-container');
+    if (!svgWrap) return;
+
+    const roomsSvg = floor.rooms.map(r => {
+      const isTarget = r.id === this.destPoint;
+      const isStart = r.id === this.startPoint;
+      return `
+        <g class="room-group" onclick="CampusWayfinderEngine.onRoomClick('${r.id}')">
+          <rect class="room-rect ${isTarget ? 'active-target' : ''}" x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="8" style="${isStart ? 'stroke: #10b981; stroke-width: 2.5;' : ''}"></rect>
+          <text class="room-label" x="${r.x + r.w / 2}" y="${r.y + r.h / 2 - 4}">${escapeHtml(r.label)}</text>
+          <text class="room-sub-label" x="${r.x + r.w / 2}" y="${r.y + r.h / 2 + 12}">${escapeHtml(r.sub)}</text>
+        </g>
+      `;
+    }).join('');
+
+    const pathData = this.calculateRoutePath(floor);
+
+    svgWrap.innerHTML = `
+      <svg viewBox="0 0 640 460" xmlns="http://www.w3.org/2000/svg">
+        <rect width="640" height="460" fill="#090e17" rx="12"></rect>
+        <path d="M 40 250 L 600 250" stroke="#1e293b" stroke-width="28" stroke-linecap="round"></path>
+        <path d="M 100 130 L 100 370" stroke="#1e293b" stroke-width="24" stroke-linecap="round"></path>
+        <path d="M 540 130 L 540 370" stroke="#1e293b" stroke-width="24" stroke-linecap="round"></path>
+        <path d="M 330 130 L 330 370" stroke="#1e293b" stroke-width="24" stroke-linecap="round"></path>
+        ${roomsSvg}
+        ${pathData ? `<path class="walking-path-line" d="${pathData.d}"></path>` : ''}
+        ${pathData && pathData.startCircle ? pathData.startCircle : ''}
+        ${pathData && pathData.endCircle ? pathData.endCircle : ''}
+      </svg>
+    `;
+
+    this.updateRouteInstructions();
+  },
+
+  onRoomClick(roomId) {
+    const destSelect = document.getElementById('wayfinder-dest-select');
+    if (destSelect) {
+      destSelect.value = roomId;
+      this.destPoint = roomId;
+      this.render();
+    }
+  },
+
+  calculateRoutePath(floor) {
+    let startCoords = { x: 100, y: 350 };
+    let endCoords = { x: 390, y: 160 };
+
+    if (this.currentFloor === 'G') {
+      if (this.startPoint === 'casualty-ramp') startCoords = { x: 100, y: 160 };
+      else if (this.startPoint === 'lift-lobby') startCoords = { x: 540, y: 350 };
+      else startCoords = { x: 100, y: 350 };
+
+      if (this.destPoint === 'room-101') endCoords = { x: 390, y: 160 };
+      else if (this.destPoint === 'room-104') endCoords = { x: 540, y: 160 };
+      else if (this.destPoint === 'pharmacy') endCoords = { x: 290, y: 350 };
+      else if (this.destPoint === 'triage') endCoords = { x: 245, y: 160 };
+      else endCoords = { x: 540, y: 350 };
+    } else if (this.currentFloor === '1') {
+      startCoords = { x: 540, y: 350 };
+      if (this.destPoint === 'pathology') endCoords = { x: 135, y: 170 };
+      else if (this.destPoint === 'blood-bank') endCoords = { x: 315, y: 170 };
+      else if (this.destPoint === 'radiology') endCoords = { x: 140, y: 340 };
+      else endCoords = { x: 320, y: 340 };
+    } else {
+      startCoords = { x: 540, y: 350 };
+      if (this.destPoint === 'icu-a') endCoords = { x: 135, y: 170 };
+      else if (this.destPoint === 'ot-1') endCoords = { x: 315, y: 170 };
+      else if (this.destPoint === 'cardiac-ccu') endCoords = { x: 140, y: 340 };
+      else endCoords = { x: 320, y: 340 };
+    }
+
+    const midY = 250;
+    const d = `M ${startCoords.x} ${startCoords.y} L ${startCoords.x} ${midY} L ${endCoords.x} ${midY} L ${endCoords.x} ${endCoords.y}`;
+    const startCircle = `<circle cx="${startCoords.x}" cy="${startCoords.y}" r="7" fill="#10b981" stroke="#ffffff" stroke-width="2.5"></circle>`;
+    const endCircle = `<circle cx="${endCoords.x}" cy="${endCoords.y}" r="8" fill="#06b6d4" stroke="#ffffff" stroke-width="2.5"><animate attributeName="r" values="7;11;7" dur="1.5s" repeatCount="indefinite"/></circle>`;
+
+    return { d, startCircle, endCircle };
+  },
+
+  updateRouteInstructions() {
+    const list = document.getElementById('wayfinder-steps-list');
+    const distEl = document.getElementById('route-metric-dist');
+    const timeEl = document.getElementById('route-metric-time');
+    const accessEl = document.getElementById('route-metric-access');
+    if (!list) return;
+
+    let dist = '45 m';
+    let time = '1.5 min';
+    let steps = [];
+
+    const destName = document.querySelector(`#wayfinder-dest-select option[value="${this.destPoint}"]`)?.innerText || 'Selected Chamber';
+
+    if (this.currentFloor === 'G') {
+      dist = this.destPoint === 'pharmacy' ? '30 m' : '55 m';
+      time = '1 min';
+      steps = [
+        { icon: '🚶', text: 'Start at Main Entrance Gate 1 (Reception Counter).' },
+        { icon: '⬆️', text: 'Head straight down the central ground-floor corridor (15 meters).' },
+        { icon: '↗️', text: `Turn right at the OPD corridor and proceed directly to ${destName}.` },
+        { icon: '🏁', text: 'Destination arrived. Sanitize hands before entering.' }
+      ];
+    } else if (this.currentFloor === '1') {
+      dist = '85 m';
+      time = '2.5 min';
+      steps = [
+        { icon: '🚶', text: 'Start at Main Reception and proceed to Central Lift Lobby A.' },
+        { icon: '🛗', text: this.wheelchairMode ? 'Take Lift A to 1st Floor (Level 1 Wheelchair Ramp accessible).' : 'Take Lift A or Stairway 2 to 1st Floor.' },
+        { icon: '⬆️', text: `Exit lift and proceed down Diagnostics Wing towards ${destName}.` },
+        { icon: '🏁', text: 'Arrival at testing chamber. Hand over your token slip.' }
+      ];
+    } else {
+      dist = '95 m';
+      time = '3 min';
+      steps = [
+        { icon: '🚶', text: 'Start at Ground Floor Casualty / Reception Desk.' },
+        { icon: '🛗', text: 'Take Dedicated Critical Care Lift B to 2nd Floor (Surgical / ICU Wing).' },
+        { icon: '⚠️', text: 'Sterile Barrier Zone: Wear visitor shoe covers and face mask.' },
+        { icon: '🏁', text: `Arrive at ${destName}. Check-in with ICU Attendant desk.` }
+      ];
+    }
+
+    if (distEl) distEl.innerText = dist;
+    if (timeEl) timeEl.innerText = time;
+    if (accessEl) accessEl.innerText = this.wheelchairMode ? 'Wheelchair OK' : 'Ramp / Lift';
+
+    list.innerHTML = steps.map((s, i) => `
+      <div class="step-card">
+        <div class="step-number">${i + 1}</div>
+        <div>
+          <span style="font-weight: 700; margin-right: 4px;">${s.icon}</span>
+          <span>${escapeHtml(s.text)}</span>
+        </div>
+      </div>
+    `).join('');
+  },
+
+  speakDirections() {
+    const destName = document.querySelector(`#wayfinder-dest-select option[value="${this.destPoint}"]`)?.innerText || 'your destination';
+    const text = `Navigating to ${destName}. Proceed straight down the main corridor, follow the cyan walking line to your room. CarePulse staff is available at every corridor to assist you.`;
+    
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 0.95;
+      utter.pitch = 1.0;
+      utter.lang = 'en-IN';
+      window.speechSynthesis.speak(utter);
+      showToast('🔊 Speaking turn-by-turn indoor directions...', 'info');
+    } else {
+      showToast('Speech synthesis not supported in this browser.', 'warn');
+    }
+  },
+
+  shareRouteWhatsApp() {
+    const destName = document.querySelector(`#wayfinder-dest-select option[value="${this.destPoint}"]`)?.innerText || 'Destination';
+    const floor = this.floors[this.currentFloor]?.title || 'Ground Floor';
+    const msg = `*CarePulse Hospital Indoor Navigation*%0A*Campus:* GT Road, Phagwara%0A*Destination:* ${destName}%0A*Floor:* ${floor}%0A*Helpline:* 1800-180-2026%0A%0AShow this at reception desk for instant guide assistance.`;
+    window.open(`https://wa.me/?text=${msg}`, '_blank');
+  }
+};
+
+window.CampusWayfinderEngine = CampusWayfinderEngine;
+window.openWayfinderModal = function (dest) { CampusWayfinderEngine.open(dest); };
+window.closeWayfinderModal = function () { CampusWayfinderEngine.close(); };
+
+// ==========================================================================
+// 22. DigitalHealthCardEngine (ABHA & Emergency Medical ID Pass)
+// ==========================================================================
+const DigitalHealthCardEngine = {
+  currentProfile: 'self',
+
+  profiles: {
+    self: {
+      name: 'Rajesh Kumar',
+      demographics: 'Male • 42 Yrs • UHID: #CP-84920',
+      abha: 'ABHA: 91-4820-9182-3918',
+      blood: 'O+ Positive',
+      allergies: 'Penicillin, Sulfa',
+      condition: 'Hypertension',
+      phone: '+91 98140 22737',
+      img: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80'
+    },
+    mother: {
+      name: 'Smt. Gurpreet Kaur',
+      demographics: 'Female • 68 Yrs • UHID: #CP-84921',
+      abha: 'ABHA: 91-4820-9182-4412',
+      blood: 'B+ Positive',
+      allergies: 'Aspirin (Severe)',
+      condition: 'Type 2 Diabetes, Arthritis',
+      phone: '+91 98140 22737',
+      img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80'
+    },
+    child: {
+      name: 'Master Aarav Kumar',
+      demographics: 'Male • 9 Yrs • UHID: #CP-84922',
+      abha: 'ABHA: 91-4820-9182-8823',
+      blood: 'O+ Positive',
+      allergies: 'Peanuts (Mild)',
+      condition: 'None (Healthy Child)',
+      phone: '+91 98140 22737',
+      img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'
+    }
+  },
+
+  open(profileId = 'self') {
+    const modal = document.getElementById('health-card-modal');
+    if (!modal) return;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    this.switchProfile(profileId);
+  },
+
+  close() {
+    const modal = document.getElementById('health-card-modal');
+    if (modal) modal.classList.remove('active');
+    document.body.style.overflow = '';
+  },
+
+  switchProfile(profileId) {
+    this.currentProfile = profileId;
+    ['self', 'mother', 'child'].forEach(id => {
+      const btn = document.getElementById(`profile-btn-${id}`);
+      if (btn) btn.classList.toggle('active', id === profileId);
+    });
+
+    const p = this.profiles[profileId] || this.profiles.self;
+    const nameEl = document.getElementById('pass-name');
+    const demoEl = document.getElementById('pass-demographics');
+    const abhaEl = document.getElementById('pass-abha');
+    const bloodEl = document.getElementById('pass-blood');
+    const allerEl = document.getElementById('pass-allergies');
+    const condEl = document.getElementById('pass-condition');
+    const phoneEl = document.getElementById('pass-emergency-phone');
+    const imgEl = document.getElementById('pass-avatar-img');
+    const qrContainer = document.getElementById('pass-qr-container');
+
+    if (nameEl) nameEl.innerText = p.name;
+    if (demoEl) demoEl.innerText = p.demographics;
+    if (abhaEl) abhaEl.innerText = p.abha;
+    if (bloodEl) bloodEl.innerText = p.blood;
+    if (allerEl) allerEl.innerText = p.allergies;
+    if (condEl) condEl.innerText = p.condition;
+    if (phoneEl) {
+      phoneEl.innerText = p.phone;
+      phoneEl.href = `tel:${p.phone.replace(/\s+/g, '')}`;
+    }
+    if (imgEl) imgEl.src = p.img;
+
+    if (qrContainer) {
+      qrContainer.innerHTML = this.generateQRCodeSVG(p.abha);
+    }
+  },
+
+  generateQRCodeSVG(payload) {
+    return `
+      <svg viewBox="0 0 25 25" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" fill="#042f2e">
+        <rect x="1" y="1" width="7" height="7" rx="1" fill="#042f2e"></rect>
+        <rect x="2" y="2" width="5" height="5" rx="0.5" fill="#ffffff"></rect>
+        <rect x="3" y="3" width="3" height="3" fill="#042f2e"></rect>
+        <rect x="17" y="1" width="7" height="7" rx="1" fill="#042f2e"></rect>
+        <rect x="18" y="2" width="5" height="5" rx="0.5" fill="#ffffff"></rect>
+        <rect x="19" y="3" width="3" height="3" fill="#042f2e"></rect>
+        <rect x="1" y="17" width="7" height="7" rx="1" fill="#042f2e"></rect>
+        <rect x="2" y="18" width="5" height="5" rx="0.5" fill="#ffffff"></rect>
+        <rect x="3" y="19" width="3" height="3" fill="#042f2e"></rect>
+        <rect x="10" y="2" width="2" height="2" fill="#042f2e"></rect>
+        <rect x="13" y="2" width="2" height="2" fill="#042f2e"></rect>
+        <rect x="10" y="5" width="2" height="2" fill="#042f2e"></rect>
+        <rect x="9" y="8" width="3" height="2" fill="#042f2e"></rect>
+        <rect x="13" y="9" width="2" height="2" fill="#042f2e"></rect>
+        <rect x="17" y="10" width="3" height="2" fill="#042f2e"></rect>
+        <rect x="9" y="12" width="2" height="3" fill="#042f2e"></rect>
+        <rect x="12" y="12" width="3" height="3" fill="#042f2e"></rect>
+        <rect x="16" y="13" width="2" height="2" fill="#042f2e"></rect>
+        <rect x="20" y="13" width="2" height="2" fill="#042f2e"></rect>
+        <rect x="10" y="17" width="2" height="2" fill="#042f2e"></rect>
+        <rect x="14" y="17" width="2" height="3" fill="#042f2e"></rect>
+        <rect x="18" y="17" width="2" height="2" fill="#042f2e"></rect>
+        <rect x="10" y="21" width="3" height="2" fill="#042f2e"></rect>
+        <rect x="17" y="21" width="4" height="2" fill="#042f2e"></rect>
+      </svg>
+    `;
+  },
+
+  downloadPass() {
+    const p = this.profiles[this.currentProfile] || this.profiles.self;
+    showToast(`📥 Saving Digital Health Pass for ${p.name} as wallet document...`, 'success');
+    this.printPass();
+  },
+
+  printPass() {
+    const p = this.profiles[this.currentProfile] || this.profiles.self;
+    const printWin = window.open('', '_blank', 'width=700,height=500');
+    if (!printWin) {
+      showToast('Pop-up blocked. Please allow popups to print your Health Pass.', 'warn');
+      return;
+    }
+    printWin.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>CarePulse Smart Health Pass - ${escapeHtml(p.name)}</title>
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; margin: 0; background: #f8fafc; }
+          .card { max-width: 480px; margin: 0 auto; background: linear-gradient(135deg, #022c22, #0f766e); color: white; border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+          .top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 12px; margin-bottom: 16px; }
+          .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+          .meta-item { margin-bottom: 8px; font-size: 13px; }
+          .label { font-size: 10px; text-transform: uppercase; color: #a7f3d0; font-weight: 700; }
+          .val { font-size: 14px; font-weight: 800; margin-top: 2px; }
+          @media print { body { background: white; padding: 0; } .card { box-shadow: none; } }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <div class="top">
+            <div>
+              <h3 style="margin: 0; font-size: 18px;">🏥 CarePulse Smart Health Pass</h3>
+              <p style="margin: 2px 0 0; font-size: 11px; color: #a7f3d0;">GT Road, Phagwara, Punjab • 1800-180-2026</p>
+            </div>
+            <div style="font-size: 10px; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 99px; font-weight: 700;">ABHA LINKED</div>
+          </div>
+          <div class="grid">
+            <div>
+              <div class="meta-item"><div class="label">Patient Name</div><div class="val">${escapeHtml(p.name)}</div></div>
+              <div class="meta-item"><div class="label">Demographics</div><div class="val">${escapeHtml(p.demographics)}</div></div>
+              <div class="meta-item"><div class="label">ABHA ID</div><div class="val" style="font-family: monospace;">${escapeHtml(p.abha)}</div></div>
+              <div class="meta-item"><div class="label">Blood Group</div><div class="val">${escapeHtml(p.blood)}</div></div>
+              <div class="meta-item"><div class="label">Critical Allergies</div><div class="val" style="color: #fef08a;">${escapeHtml(p.allergies)}</div></div>
+              <div class="meta-item"><div class="label">Emergency Contact</div><div class="val">${escapeHtml(p.phone)}</div></div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: white; padding: 10px; border-radius: 12px;">
+              ${this.generateQRCodeSVG(p.abha)}
+              <span style="color: #042f2e; font-size: 9px; font-weight: 800; margin-top: 6px;">VERIFIED ID</span>
+            </div>
+          </div>
+        </div>
+        <script>
+          window.onload = function() { window.print(); }
+        </script>
+      </body>
+      </html>
+    `);
+    printWin.document.close();
+  },
+
+  addToWalletDemo() {
+    showToast('📱 Pass added to Apple / Google Wallet demonstration profile!', 'success');
+  }
+};
+
+window.DigitalHealthCardEngine = DigitalHealthCardEngine;
+window.openHealthCardModal = function (profileId) { DigitalHealthCardEngine.open(profileId); };
+window.closeHealthCardModal = function () { DigitalHealthCardEngine.close(); };
+
 

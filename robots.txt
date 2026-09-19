@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Direct Google & Search Engine crawlers to sitemap
-Sitemap: sitemap.xml
+Sitemap: https://harsh87089.github.io/hospital-project/sitemap.xml
