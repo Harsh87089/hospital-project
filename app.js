@@ -2,6 +2,15 @@
    CarePulse Local Clinic & Token Booking Portal - JavaScript Logic
    ========================================================================== */
 
+// ============================================================================
+// CarePulse Demo Configuration Constants
+// ============================================================================
+const DEMO_PHONE = '1800-000-0000';
+const DEMO_PHONE_RAW = '18000000000';
+const DEMO_WHATSAPP = '910000000000';
+const DEMO_WHATSAPP_DISPLAY = '+91 00000 00000';
+const DEMO_STAFF_PIN = '2026';
+
 // Dynamically synchronize canonical link and og:url with whatever live domain is hosting the app (e.g. Vercel)
 (function syncSEOWithCurrentHost() {
   if (typeof window !== 'undefined' && window.location && window.location.protocol && window.location.protocol.startsWith('http')) {
@@ -2283,7 +2292,7 @@ function downloadTicket(app, format = 'png') {
   ctx.fillText('CarePulse Hospital Clinical UX Demo • Simulated OPD E-Pass', 96, 78);
   ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.fillStyle = '#ccfbf1';
-  ctx.fillText('GT Road, Near Sugar Mill Crossing, Phagwara, Punjab • 24/7 Helpline: 1800-180-2026', 96, 98);
+  ctx.fillText(`GT Road, Near Sugar Mill Crossing, Phagwara, Punjab • 24/7 Helpline: ${DEMO_PHONE}`, 96, 98);
 
   // Demo Prototype Badge (Top Right)
   ctx.fillStyle = '#dc2626';
@@ -2428,7 +2437,7 @@ function downloadTicket(app, format = 'png') {
   ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.fillText('• Please report at reception 15 minutes prior to scheduled time for vitals check.', 54, 936);
   ctx.fillText('• Keep this digital ticket handy on your phone or in printed copy at the hospital.', 54, 958);
-  ctx.fillText('• Emergency Ambulance Line: 108 / 1800-180-2026 | GT Road, Phagwara, Punjab', 54, 980);
+  ctx.fillText(`• Emergency Ambulance: 108 / 112 | Demo Line: ${DEMO_PHONE}`, 54, 980);
   ctx.fillText('• Demonstration Prototype – Not an active commercial clinic | Real emergencies dial 108 / 112', 54, 1002);
 
   // Official Seal Graphic (Right side)
@@ -2608,7 +2617,7 @@ function downloadTicketPDF(app) {
         <div class="header">
           <h1>🏥 CarePulse Multi-Specialty Hospital</h1>
           <p>CarePulse Clinical UX Prototype • GT Road, Phagwara, Punjab - 144401</p>
-          <p>Emergency Hotline: 108 / 112 | 24x7 Ambulance: 1800-180-2026</p>
+          <p>Real Emergency: 108 / 112 | Demo Helpline: ${DEMO_PHONE}</p>
         </div>
         <div class="demo-tag-bar">
           ⚠️ DEMO PROTOTYPE &bull; NOT A VALID MEDICAL OR HOSPITAL ADMISSION PASS
@@ -2911,7 +2920,7 @@ window.addToCalendar = function (tokenId, mode = 'ics') {
   const dtEnd = formatICSDate(endDate);
 
   const title = `CarePulse OPD: ${app.doctorName} (${app.tokenId})`;
-  const desc = `Consultation with ${app.doctorName}\\nDepartment: ${app.doctorSpecialty}\\nRoom: ${app.room}\\nToken: ${app.tokenId}\\nHelpline: 1800-180-2026\\nPortal: https://hospital-project-tawny.vercel.app/`;
+  const desc = `Consultation with ${app.doctorName}\\nDepartment: ${app.doctorSpecialty}\\nRoom: ${app.room}\\nToken: ${app.tokenId}\\nDemo Helpline: ${DEMO_PHONE}\\nPortal: https://hospital-project-tawny.vercel.app/`;
   const loc = `CarePulse Multi-Specialty Hospital, GT Road, Near Sugar Mill Crossing, Phagwara, Punjab - 144401`;
 
   if (mode === 'google') {
@@ -3022,8 +3031,8 @@ function requireStaffAuth() {
 window.openReceptionDesk = function () {
   const isAuth = sessionStorage.getItem('carepulse_staff_auth');
   if (!isAuth) {
-    const pin = typeof window.prompt === 'function' ? window.prompt('🔒 CarePulse Staff Console [Simulated Demo Role]\n\nEnter 4-digit Staff Security PIN:') : null;
-    if (pin !== '8708' && pin !== '2026') {
+    const pin = typeof window.prompt === 'function' ? window.prompt(`🔒 CarePulse Staff Console [Simulated Demo Role]\n\nEnter Staff Security PIN (Demo PIN: ${DEMO_STAFF_PIN}):`) : null;
+    if (pin !== DEMO_STAFF_PIN) {
       if (pin !== null) showToast('⛔ Access Denied: Invalid Staff Security PIN', 'error');
       return;
     }
@@ -3121,13 +3130,13 @@ window.issueWalkinToken = function (doctorId) {
   if (!requireStaffAuth()) return;
   const doc = DOCTORS.find(d => d.id === doctorId) || DOCTORS[0];
   let patientName = 'Walk-in Patient';
-  let phone = '9814022737';
+  let phone = '9876543210';
   try {
     const inputName = typeof window.prompt === 'function' ? window.prompt(`Issue Walk-in OPD Token for ${doc.name}\n\nEnter Patient Name:`, 'Walk-in Patient') : 'Walk-in Patient';
     if (inputName === null) return; // User pressed Cancel
     if (inputName && inputName.trim()) patientName = inputName.trim();
 
-    const inputPhone = typeof window.prompt === 'function' ? window.prompt('Enter Patient Phone Number:', '9814022737') : '9814022737';
+    const inputPhone = typeof window.prompt === 'function' ? window.prompt('Enter Patient Phone Number:', '9876543210') : '9876543210';
     if (inputPhone && inputPhone.trim()) phone = inputPhone.trim();
   } catch (e) {
     // Fallback if browser blocks modal prompts
@@ -3646,16 +3655,16 @@ const CLINIC_BRANCHES = {
     city: 'Phagwara, Punjab',
     name: 'CarePulse Multi-Specialty Hospital & Research Institute',
     address: 'GT Road, Near Sugar Mill Crossing, Model Town, Phagwara, Punjab - 144401, India',
-    phone: '+91 1828 223456 / +91 98765 12345',
-    emergency: '1800-180-2026 / 108',
+    phone: `+91 0000 000000 (Demo) / ${DEMO_PHONE}`,
+    emergency: `${DEMO_PHONE} (Demo) / 108 (Real Emergency)`,
     hours: '08:00 AM – 10:00 PM (Emergency 24/7)'
   },
   ludhiana: {
     city: 'Ludhiana, Punjab',
     name: 'CarePulse Healthcare Pavilion (Ludhiana OPD Center)',
     address: 'Ferozepur Road, Near Mall Road Crossing, Ludhiana, Punjab - 141001',
-    phone: '+91 161 500 1234 / 1800-180-2026',
-    emergency: '1800-180-2026 / 108',
+    phone: `+91 000 000 0000 (Demo) / ${DEMO_PHONE}`,
+    emergency: `${DEMO_PHONE} (Demo) / 108 (Real Emergency)`,
     hours: '08:30 AM – 08:30 PM'
   }
 };
@@ -3974,7 +3983,7 @@ const SAMPLE_LAB_REPORTS = {
   'UHID-44021': {
     uhid: 'UHID-44021',
     patientName: 'Mrs. Sunita Rao',
-    registeredMobile: '+91 98140-54321',
+    registeredMobile: '+91 98765-54321',
     ageGender: '56 Y / Female',
     refDoctor: 'Dr. Amitav Banerjee, MD',
     collectionDate: 'Yesterday, 08:30 AM',
@@ -4320,7 +4329,7 @@ const CHAT_KNOWLEDGE = [
       '<strong>Lukewarm Baths:</strong> Avoid steaming hot showers; use soap-free, pH-neutral cleansers.'
     ],
     donts: 'Do NOT scratch or rub vigorously (prevents secondary bacterial infection). Avoid applying over-the-counter steroid creams without diagnosis.',
-    redFlag: 'If the rash is accompanied by facial swelling, lip swelling, or difficulty breathing, call 1800-180-2026 immediately (Anaphylaxis).'
+    redFlag: `If the rash is accompanied by facial swelling, lip swelling, or difficulty breathing, dial 108 immediately (Anaphylaxis). Demo Helpline: ${DEMO_PHONE}.`
   },
   {
     triggers: ['child', 'baby', 'pediatric', 'infant', 'kid', 'vaccine', 'vaccination', 'growth', 'teething'],
@@ -4350,7 +4359,7 @@ const CHAT_KNOWLEDGE = [
     homeTips: [
       '<strong>Sit Semi-Reclined:</strong> Keep patient seated upright in a comfortable position; loosen tight collar or belt.',
       '<strong>Do Not Exert:</strong> Keep patient calm and completely still. Do not let them walk.',
-      '<strong>Immediate Call:</strong> Dial 108 (National Ambulance) or CarePulse Trauma Desk 1800-180-2026 immediately.'
+      `<strong>Immediate Call:</strong> Dial 108 (National Ambulance) or 112 immediately. (CarePulse Demo Trauma Desk: ${DEMO_PHONE}).`
     ],
     donts: 'Do not administer food, water, or unprescribed medication if patient is drowsy or breathless. Do not drive yourself.',
     redFlag: 'Immediate ambulance transit to CarePulse Ground Floor Trauma Wing, GT Road, Phagwara.'
@@ -4566,8 +4575,8 @@ function botTriageProcess(userQuery) {
           <a href="tel:112" class="btn btn-primary btn-sm" style="background: #b91c1c; text-decoration: none; font-weight: 800; padding: 0.5rem 0.85rem;">
             📞 Call 112 (Emergency)
           </a>
-          <a href="tel:18001802026" class="btn btn-primary btn-sm" style="background: #991b1b; text-decoration: none; font-weight: 800; padding: 0.5rem 0.85rem;">
-            📞 Hospital: 1800-180-2026
+          <a href="tel:${DEMO_PHONE_RAW}" class="btn btn-primary btn-sm" style="background: #991b1b; text-decoration: none; font-weight: 800; padding: 0.5rem 0.85rem;">
+            📞 Demo Desk: ${DEMO_PHONE}
           </a>
           <button type="button" class="btn btn-outline btn-sm" onclick="openEmergencySOS(); closeChatWidget();" style="border-color: #dc2626; color: #dc2626; font-weight: 700;">
             🚨 GPS Emergency Hub
@@ -4905,6 +4914,7 @@ const CarePulseAuth = {
           <div class="simulated-app-tag">
             <span class="app-icon">💬</span>
             <span class="app-name">MESSAGES • Just Now</span>
+            <span class="demo-simulated-tag" style="background: #fef08a; color: #854d0e; font-size: 0.68rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-left: 6px;">DEMO – no SMS/email was actually sent</span>
           </div>
           <button class="simulated-close-btn" onclick="this.closest('.simulated-otp-banner').remove()">&times;</button>
         </div>
@@ -4929,6 +4939,7 @@ const CarePulseAuth = {
           <div class="simulated-app-tag">
             <span class="app-icon">🔴</span>
             <span class="app-name">GMAIL • Just Now</span>
+            <span class="demo-simulated-tag" style="background: #fef08a; color: #854d0e; font-size: 0.68rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-left: 6px;">DEMO – no SMS/email was actually sent</span>
           </div>
           <button class="simulated-close-btn" onclick="this.closest('.simulated-otp-banner').remove()">&times;</button>
         </div>
@@ -5551,7 +5562,7 @@ const TRANSLATIONS = {
     btn_confirm: 'Confirm OPD Appointment & Generate Token',
     btn_reschedule: 'Reschedule Slot',
     btn_cancel: 'Cancel Appointment',
-    call_hospital: '📞 Call Hospital: 1800-180-2026',
+    call_hospital: `📞 Call Hospital (Demo): ${DEMO_PHONE}`,
     call_108: '🚨 Call National Ambulance: 108',
     wa_helpline: '💬 WhatsApp OPD Desk'
   },
@@ -5595,7 +5606,7 @@ const TRANSLATIONS = {
     btn_confirm: 'अपॉइंटमेंट पक्का करें व टोकन लें',
     btn_reschedule: 'अपॉइंटमेंट रीशेड्यूल करें',
     btn_cancel: 'अपॉइंटमेंट रद्द करें',
-    call_hospital: '📞 अस्पताल कॉल: 1800-180-2026',
+    call_hospital: `📞 अस्पताल कॉल (डेमो): ${DEMO_PHONE}`,
     call_108: '🚨 एम्बुलेंस डायल: 108',
     wa_helpline: '💬 व्हाट्सएप ओपीडी हेल्प'
   },
@@ -5639,7 +5650,7 @@ const TRANSLATIONS = {
     btn_confirm: 'ਮੁਲਾਕਾਤ ਪੱਕੀ ਕਰੋ ਅਤੇ ਟੋਕਨ ਪ੍ਰਾਪਤ ਕਰੋ',
     btn_reschedule: 'ਸਲਾਟ ਦਾ ਸਮਾਂ ਬਦਲੋ',
     btn_cancel: 'ਮੁਲਾਕਾਤ ਰੱਦ ਕਰੋ',
-    call_hospital: '📞 ਹਸਪਤਾਲ ਕਾਲ: 1800-180-2026',
+    call_hospital: `📞 ਹਸਪਤਾਲ ਕਾਲ (ਡੈਮੋ): ${DEMO_PHONE}`,
     call_108: '🚨 ਐਂਬੂਲੈਂਸ ਡਾਇਲ: 108',
     wa_helpline: '💬 ਵਟਸਐਪ ਓਪੀਡੀ ਹੈਲਪ'
   }
@@ -6007,15 +6018,15 @@ const EmergencySOSEngine = {
 
   copyCoordinatesFor108() {
     const text = this.userCoords
-      ? `Patient Emergency at GPS: ${this.userCoords.lat}, ${this.userCoords.lng}. CarePulse GT Road Phagwara Emergency Desk: 1800-180-2026.`
-      : `Patient Emergency at GT Road, Near Sugar Mill Crossing, Phagwara, Punjab. Emergency Desk: 1800-180-2026.`;
+      ? `Patient Emergency at GPS: ${this.userCoords.lat}, ${this.userCoords.lng}. CarePulse GT Road Phagwara Demo Desk: ${DEMO_PHONE}.`
+      : `Patient Emergency at GT Road, Near Sugar Mill Crossing, Phagwara, Punjab. Demo Desk: ${DEMO_PHONE}.`;
     navigator.clipboard.writeText(text);
     showToast('Emergency location copied! Read to 108 emergency operator.', 'success');
   },
 
   shareEmergencyWhatsApp() {
     const coordsStr = this.userCoords ? `https://www.google.com/maps?q=${this.userCoords.lat},${this.userCoords.lng}` : 'GT Road, Near Sugar Mill Crossing, Phagwara, Punjab';
-    const text = encodeURIComponent(`🚨 EMERGENCY MEDICAL ALERT: Immediate ambulance assistance required!\nLocation: ${coordsStr}\nCarePulse 24/7 Helpline: 1800-180-2026`);
+    const text = encodeURIComponent(`🚨 EMERGENCY MEDICAL ALERT: Immediate ambulance assistance required!\nLocation: ${coordsStr}\nCarePulse Demo Helpline: ${DEMO_PHONE}`);
     window.open(`https://wa.me/?text=${text}`, '_blank');
   },
 
@@ -6057,7 +6068,7 @@ const EmergencySOSEngine = {
       modal.classList.remove('active');
       document.body.style.overflow = '';
     }
-    showToast('Emergency desk dialog closed. 24/7 Helpline is 1800-180-2026.', 'info');
+    showToast(`Emergency desk dialog closed. Demo helpline is ${DEMO_PHONE}. (For real emergency, dial 108)`, 'info');
   }
 };
 
@@ -7607,7 +7618,7 @@ const TeleConsultEngine = {
           <div class="brand">
             <h1>🏥 CarePulse Multi-Specialty Hospital</h1>
             <p>GT Road, Near Sugar Mill Crossing, Phagwara, Punjab 144401</p>
-            <p>Emergency & Trauma: 1800-180-2026 / 108 &bull; Telehealth Portal</p>
+            <p>Emergency & Trauma: 108 / 112 &bull; Demo Helpline: ${DEMO_PHONE} &bull; Telehealth Prototype</p>
           </div>
           <div class="doc-info">
             <h3>${escapeHtml(doc.name)}</h3>
@@ -7675,7 +7686,7 @@ const TeleConsultEngine = {
   sharePrescriptionWhatsApp() {
     const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
     const medList = this.prescriptions.map((m, i) => `${i + 1}. ${m.name} (${m.dosage} x ${m.duration})`).join('%0A');
-    const text = `*CarePulse Hospital Tele-Consultation Prescription*%0A*Doctor:* ${doc.name} (${doc.specialty})%0A*Reg No:* ${doc.regNo || 'PMC-38214'}%0A*Date:* ${new Date().toLocaleDateString('en-GB')}%0A%0A*Rx Medicines:*%0A${medList}%0A%0A*Helpline:* 1800-180-2026%0A*Address:* GT Road, Phagwara, Punjab`;
+    const text = `*CarePulse Hospital Tele-Consultation Prescription (Demo)*%0A*Doctor:* ${doc.name} (${doc.specialty})%0A*Reg No:* ${doc.regNo || 'PMC-38214'}%0A*Date:* ${new Date().toLocaleDateString('en-GB')}%0A%0A*Rx Medicines:*%0A${medList}%0A%0A*Demo Helpline:* ${DEMO_PHONE}%0A*Address:* GT Road, Phagwara, Punjab`;
     window.open(`https://wa.me/?text=${text}`, '_blank');
   },
 
@@ -7989,7 +8000,7 @@ const CampusWayfinderEngine = {
   shareRouteWhatsApp() {
     const destName = document.querySelector(`#wayfinder-dest-select option[value="${this.destPoint}"]`)?.innerText || 'Destination';
     const floor = this.floors[this.currentFloor]?.title || 'Ground Floor';
-    const msg = `*CarePulse Hospital Indoor Navigation*%0A*Campus:* GT Road, Phagwara%0A*Destination:* ${destName}%0A*Floor:* ${floor}%0A*Helpline:* 1800-180-2026%0A%0AShow this at reception desk for instant guide assistance.`;
+    const msg = `*CarePulse Hospital Indoor Navigation (Demo)*%0A*Campus:* GT Road, Phagwara%0A*Destination:* ${destName}%0A*Floor:* ${floor}%0A*Demo Helpline:* ${DEMO_PHONE}%0A%0AShow this at reception desk for instant guide assistance.`;
     window.open(`https://wa.me/?text=${msg}`, '_blank');
   }
 };
@@ -8012,7 +8023,7 @@ const DigitalHealthCardEngine = {
       blood: 'O+ Positive',
       allergies: 'Penicillin, Sulfa',
       condition: 'Hypertension',
-      phone: '+91 98140 22737',
+      phone: DEMO_WHATSAPP_DISPLAY,
       img: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80'
     },
     mother: {
@@ -8022,7 +8033,7 @@ const DigitalHealthCardEngine = {
       blood: 'B+ Positive',
       allergies: 'Aspirin (Severe)',
       condition: 'Type 2 Diabetes, Arthritis',
-      phone: '+91 98140 22737',
+      phone: DEMO_WHATSAPP_DISPLAY,
       img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80'
     },
     child: {
@@ -8032,7 +8043,7 @@ const DigitalHealthCardEngine = {
       blood: 'O+ Positive',
       allergies: 'Peanuts (Mild)',
       condition: 'None (Healthy Child)',
-      phone: '+91 98140 22737',
+      phone: DEMO_WHATSAPP_DISPLAY,
       img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'
     }
   },
@@ -8151,7 +8162,7 @@ const DigitalHealthCardEngine = {
           <div class="top">
             <div>
               <h3 style="margin: 0; font-size: 18px;">🏥 CarePulse Smart Health Pass</h3>
-              <p style="margin: 2px 0 0; font-size: 11px; color: #a7f3d0;">GT Road, Phagwara, Punjab • 1800-180-2026</p>
+              <p style="margin: 2px 0 0; font-size: 11px; color: #a7f3d0;">GT Road, Phagwara, Punjab • Demo Helpline: ${DEMO_PHONE}</p>
             </div>
             <div style="font-size: 10px; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 99px; font-weight: 700;">ABHA LINKED</div>
           </div>
