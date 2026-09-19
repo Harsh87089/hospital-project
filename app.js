@@ -2,6 +2,17 @@
    CarePulse Local Clinic & Token Booking Portal - JavaScript Logic
    ========================================================================== */
 
+// Dynamically synchronize canonical link and og:url with whatever live domain is hosting the app (e.g. Vercel)
+(function syncSEOWithCurrentHost() {
+  if (typeof window !== 'undefined' && window.location && window.location.protocol && window.location.protocol.startsWith('http')) {
+    const liveCanonical = window.location.origin + window.location.pathname;
+    const canonEl = document.querySelector('link[rel="canonical"]');
+    if (canonEl) canonEl.setAttribute('href', liveCanonical);
+    const ogUrlEl = document.querySelector('meta[property="og:url"]');
+    if (ogUrlEl) ogUrlEl.setAttribute('content', liveCanonical);
+  }
+})();
+
 // --- Doctors Data with Indian Names across required specialties ---
 const DOCTORS = [
   // --- General Physicians ---
@@ -3528,7 +3539,7 @@ window.submitPackageBookingForm = function (e) {
     ticketRef: ticketRef,
     securityCode: securityCode,
     barcodeNum: barcodeNum,
-    assignedDesk: collectionType === 'home' ? 'Phlebotomy Van #3 • Doorstep Collector' : 'NABL Central Lab • Bay 1',
+    assignedDesk: collectionType === 'home' ? 'Phlebotomy Van #3 • Doorstep Collector' : 'Hospital Central Lab • Bay 1',
     queuePosition: 1,
     estWaitMins: 5,
     issueTimestamp: now.toLocaleDateString('en-IN') + ', ' + now.toLocaleTimeString('en-IN'),
@@ -3539,7 +3550,7 @@ window.submitPackageBookingForm = function (e) {
     doctorAvatar: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=400&q=80',
     date: dateStr,
     timeSlot: timeSlot,
-    room: collectionType === 'home' ? `Home Sample Pickup (${address || 'Phagwara'})` : 'Ground Floor, NABL Lab Wing',
+    room: collectionType === 'home' ? `Home Sample Pickup (${address || 'Phagwara'})` : 'Ground Floor, Clinical Lab Wing',
     patientName: name,
     patientAge: age,
     patientGender: gender,
@@ -3594,7 +3605,7 @@ function submitDirectPackageBooking(pkg) {
     doctorAvatar: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=400&q=80',
     date: dateStr,
     timeSlot: '07:30 AM - 08:30 AM (Fasting Sample)',
-    room: 'Home Sample Collection / NABL Lab Wing',
+    room: 'Home Sample Collection / Clinical Lab Wing',
     patientName: patientName,
     patientAge: '35',
     patientGender: 'Male',
@@ -3807,7 +3818,7 @@ function renderLabReportSheet(uhid) {
             <span style="font-size: 1.4rem;">🔬</span>
             <strong style="font-size: 1.15rem; color: var(--dark);">CarePulse Central Diagnostic Laboratory</strong>
           </div>
-          <div style="font-size: 0.75rem; color: var(--slate-600);">GT Road, Model Town, Phagwara, Punjab - 144401 • NABL Cert # MC-4829</div>
+          <div style="font-size: 0.75rem; color: var(--slate-600);">GT Road, Model Town, Phagwara, Punjab - 144401 • Punjab Reg # CEA-PB-4829</div>
         </div>
         <div style="text-align: right;">
           <span class="accred-badge emerald">AUTHENTIC REPORT</span>
@@ -4110,7 +4121,7 @@ const CHAT_KNOWLEDGE = [
   {
     triggers: ['package', 'full body', 'checkup', 'test', 'blood test', 'screening', 'sugar', 'diabetes', 'lipid'],
     condition: 'CarePulse ProHealth Preventive Screening',
-    specialty: 'NABL Central Laboratory & Preventive Medicine',
+    specialty: 'Central Diagnostic Laboratory & Preventive Medicine',
     isPackage: true,
     response: 'Preventive health checkups identify lifestyle diseases (diabetes, cholesterol, thyroid, hypertension) long before visible symptoms appear.',
     homeTips: [
@@ -6048,7 +6059,7 @@ const SpotlightSearchEngine = {
       { title: 'Dental & Maxillofacial Care', sub: 'Root canals, tooth extractions & orthodontics', icon: '🦷', action: () => openLiveQueueModal() },
       { title: 'Bed & ICU Availability Tracker', sub: 'Live triage beds, ventilators & blood bank stocks', icon: '🛏️', action: () => openBedsModal() },
       { title: 'Preventive Health Packages', sub: 'Full body checkup packages from ₹999 with home pickup', icon: '📦', action: () => openPackagesModal() },
-      { title: 'Download Lab Reports (UHID)', sub: 'Instant NABL-certified PDF lab diagnostic reports', icon: '📄', action: () => openLabReportModal('UHID-98214') },
+      { title: 'Download Lab Reports (UHID)', sub: 'Instant certified PDF lab diagnostic reports', icon: '📄', action: () => openLabReportModal('UHID-98214') },
       { title: '24/7 Doorstep Pharmacy Delivery', sub: 'Upload doctor prescription for 2-hour delivery', icon: '💊', action: () => openPharmacyModal() },
       { title: 'Cashless Insurance & TPA Desk', sub: 'Ayushman Bharat, CGHS & private insurance claims', icon: '🛡️', action: () => openInsuranceModal() },
       { title: 'Emergency Trauma Hotline & Ambulance 108', sub: '24/7 emergency trauma triage & priority ambulance', icon: '🚨', action: () => openEmergencyModal() },
