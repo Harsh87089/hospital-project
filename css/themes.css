@@ -1,0 +1,167 @@
+/* ==========================================================================
+   Visual Vibrancy: Rich Specialty Colors, Gradient Accents & Glowing Borders
+   ========================================================================== */
+
+/* Specialty Badge Colors */
+.spec-badge-general {
+  background: linear-gradient(135deg, #1d4ed8 0%, #0284c7 100%) !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+}
+
+.spec-badge-pediatrician {
+  background: linear-gradient(135deg, #e11d48 0%, #f97316 100%) !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.35);
+}
+
+.spec-badge-dermatologist {
+  background: linear-gradient(135deg, #7c3aed 0%, #c026d3 100%) !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.35);
+}
+
+.spec-badge-dentist {
+  background: linear-gradient(135deg, #0d9488 0%, #06b6d4 100%) !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.35);
+}
+
+/* Vibrant Glow Accents for Service Hub Tiles */
+.service-hub-tile.tile-blue:hover {
+  border-color: #0284c7;
+  box-shadow: 0 12px 30px -5px rgba(2, 132, 199, 0.25);
+}
+
+.service-hub-tile.tile-emerald:hover {
+  border-color: #10b981;
+  box-shadow: 0 12px 30px -5px rgba(16, 185, 129, 0.25);
+}
+
+.service-hub-tile.tile-purple:hover {
+  border-color: #8b5cf6;
+  box-shadow: 0 12px 30px -5px rgba(139, 92, 246, 0.25);
+}
+
+.service-hub-tile.tile-amber:hover {
+  border-color: #f59e0b;
+  box-shadow: 0 12px 30px -5px rgba(245, 158, 11, 0.25);
+}
+
+.service-hub-tile.tile-teal:hover {
+  border-color: #14b8a6;
+  box-shadow: 0 12px 30px -5px rgba(20, 184, 166, 0.25);
+}
+
+.service-hub-tile.tile-rose:hover {
+  border-color: #f43f5e;
+  box-shadow: 0 12px 30px -5px rgba(244, 63, 94, 0.25);
+}
+
+/* ==========================================================================
+   8. Multi-Palette Healthcare Theme System
+   ========================================================================== */
+/* Palette 1: Royal Sapphire Blue */
+[data-palette="blue"] {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-light: #3b82f6;
+  --primary-subtle: #dbeafe;
+  --primary-glow: rgba(37, 99, 235, 0.2);
+}
+
+[data-theme="dark"][data-palette="blue"] {
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-light: #60a5fa;
+  --primary-subtle: rgba(59, 130, 246, 0.18);
+  --primary-glow: rgba(59, 130, 246, 0.35);
+}
+
+/* Palette 2: Lavender & Rose (Mother & Child / Calm) */
+[data-palette="purple"] {
+  --primary: #7c3aed;
+  --primary-dark: #6d28d9;
+  --primary-light: #8b5cf6;
+  --primary-subtle: #ede9fe;
+  --primary-glow: rgba(124, 58, 237, 0.2);
+}
+
+[data-theme="dark"][data-palette="purple"] {
+  --primary: #8b5cf6;
+  --primary-dark: #7c3aed;
+  --primary-light: #a78bfa;
+  --primary-subtle: rgba(139, 92, 246, 0.18);
+  --primary-glow: rgba(139, 92, 246, 0.35);
+}
+
+/* Palette 3: Ayush Warm Amber & Gold */
+[data-palette="amber"] {
+  --primary: #d97706;
+  --primary-dark: #b45309;
+  --primary-light: #f59e0b;
+  --primary-subtle: #fef3c7;
+  --primary-glow: rgba(217, 119, 6, 0.2);
+}
+
+[data-theme="dark"][data-palette="amber"] {
+  --primary: #f59e0b;
+  --primary-dark: #d97706;
+  --primary-light: #fbbf24;
+  --primary-subtle: rgba(245, 158, 11, 0.18);
+  --primary-glow: rgba(245, 158, 11, 0.35);
+}
+
+/* ==========================================================================
+   Dark Theme Overrides for Sections 21 & 22
+   ========================================================================== */
+[data-theme="dark"] .wayfinder-container,
+[data-theme="dark"] .health-pass-container {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .wayfinder-floor-bar,
+[data-theme="dark"] .route-selector-box,
+[data-theme="dark"] .pass-profile-selector,
+[data-theme="dark"] .pass-actions-footer {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .wayfinder-route-panel {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .route-select {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .route-metric-pill,
+[data-theme="dark"] .step-card {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .btn-pass-action {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .profile-pill-btn {
+  background: #0f172a;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .profile-pill-btn.active {
+  background: #0f766e;
+  border-color: #0f766e;
+  color: #ffffff;
+}
+

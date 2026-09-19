@@ -8188,4 +8188,401 @@ window.DigitalHealthCardEngine = DigitalHealthCardEngine;
 window.openHealthCardModal = function (profileId) { DigitalHealthCardEngine.open(profileId); };
 window.closeHealthCardModal = function () { DigitalHealthCardEngine.close(); };
 
+// --- Centralized Delegated Action Dispatcher ---
+document.addEventListener('click', function (e) {
+  const target = e.target.closest('[data-action]');
+  if (!target) return;
+
+  const action = target.getAttribute('data-action');
+  const d = target.dataset;
+
+  if (target.tagName === 'A' && (target.getAttribute('href') === '#' || target.getAttribute('href')?.startsWith('javascript:'))) {
+    e.preventDefault();
+  }
+
+  switch (action) {
+    case 'open-booking-layer':
+      if (typeof window.openBookingLayer === 'function') window.openBookingLayer(d.doctorId || null);
+      break;
+    case 'close-booking-layer':
+      if (typeof window.closeBookingLayer === 'function') window.closeBookingLayer();
+      break;
+    case 'open-emergency-modal':
+      if (typeof window.openEmergencyModal === 'function') window.openEmergencyModal();
+      break;
+    case 'close-emergency-modal':
+      if (typeof window.closeEmergencyModal === 'function') window.closeEmergencyModal();
+      break;
+    case 'open-emergency-sos':
+      if (typeof window.openEmergencySOS === 'function') window.openEmergencySOS();
+      break;
+    case 'close-emergency-sos':
+      if (typeof window.closeEmergencySOS === 'function') window.closeEmergencySOS();
+      break;
+    case 'trigger-emergency-sos':
+      if (typeof window.triggerEmergencySOS === 'function') window.triggerEmergencySOS();
+      break;
+    case 'open-my-bookings-modal':
+      if (typeof window.openMyBookingsModal === 'function') window.openMyBookingsModal();
+      break;
+    case 'close-my-bookings-modal':
+      if (typeof window.closeMyBookingsModal === 'function') window.closeMyBookingsModal();
+      break;
+    case 'open-live-queue-modal':
+      if (typeof window.openLiveQueueModal === 'function') window.openLiveQueueModal();
+      break;
+    case 'close-live-queue-modal':
+      if (typeof window.closeLiveQueueModal === 'function') window.closeLiveQueueModal();
+      break;
+    case 'open-doctors-modal':
+      if (typeof window.openDoctorsModal === 'function') window.openDoctorsModal(d.specialty || null);
+      break;
+    case 'close-doctors-modal':
+      if (typeof window.closeDoctorsModal === 'function') window.closeDoctorsModal();
+      break;
+    case 'open-beds-modal':
+      if (typeof window.openBedsModal === 'function') window.openBedsModal();
+      break;
+    case 'close-beds-modal':
+      if (typeof window.closeBedsModal === 'function') window.closeBedsModal();
+      break;
+    case 'open-track-token-modal':
+      if (typeof window.openTrackTokenModal === 'function') window.openTrackTokenModal();
+      break;
+    case 'close-track-token-modal':
+      if (typeof window.closeTrackTokenModal === 'function') window.closeTrackTokenModal();
+      break;
+    case 'open-insurance-modal':
+      if (typeof window.openInsuranceModal === 'function') window.openInsuranceModal();
+      break;
+    case 'close-insurance-modal':
+      if (typeof window.closeInsuranceModal === 'function') window.closeInsuranceModal();
+      break;
+    case 'open-packages-modal':
+      if (typeof window.openPackagesModal === 'function') window.openPackagesModal();
+      break;
+    case 'close-packages-modal':
+      if (typeof window.closePackagesModal === 'function') window.closePackagesModal();
+      break;
+    case 'open-pharmacy-modal':
+      if (typeof window.openPharmacyModal === 'function') window.openPharmacyModal();
+      break;
+    case 'close-pharmacy-modal':
+      if (typeof window.closePharmacyModal === 'function') window.closePharmacyModal();
+      break;
+    case 'open-lab-report-modal':
+      if (typeof window.openLabReportModal === 'function') window.openLabReportModal(d.uhid || 'UHID-98214');
+      break;
+    case 'close-lab-report-modal':
+      if (typeof window.closeLabReportModal === 'function') window.closeLabReportModal();
+      break;
+    case 'open-health-card-modal':
+      if (typeof window.openHealthCardModal === 'function') window.openHealthCardModal(d.profile || 'carepulse-self');
+      break;
+    case 'close-health-card-modal':
+      if (typeof window.closeHealthCardModal === 'function') window.closeHealthCardModal();
+      break;
+    case 'open-wayfinder-modal':
+      if (typeof window.openWayfinderModal === 'function') window.openWayfinderModal();
+      break;
+    case 'close-wayfinder-modal':
+      if (typeof window.closeWayfinderModal === 'function') window.closeWayfinderModal();
+      break;
+    case 'open-teleconsult-modal':
+    case 'open-tele-consult-modal':
+      if (typeof window.openTeleConsultModal === 'function') window.openTeleConsultModal();
+      break;
+    case 'close-teleconsult-modal':
+      if (typeof window.closeTeleConsultModal === 'function') window.closeTeleConsultModal();
+      break;
+    case 'open-reception-desk':
+      if (typeof window.openReceptionDesk === 'function') window.openReceptionDesk();
+      break;
+    case 'close-reception-desk':
+      if (typeof window.closeReceptionDesk === 'function') window.closeReceptionDesk();
+      break;
+    case 'open-spotlight-search':
+      if (typeof window.openSpotlightSearch === 'function') window.openSpotlightSearch();
+      break;
+    case 'close-spotlight-search':
+      if (typeof window.closeSpotlightSearch === 'function') window.closeSpotlightSearch();
+      break;
+    case 'open-health-calculator':
+      if (typeof window.openHealthCalculator === 'function') window.openHealthCalculator();
+      break;
+    case 'close-health-calculator':
+      if (typeof window.closeHealthCalculator === 'function') window.closeHealthCalculator();
+      break;
+    case 'open-guidelines-modal':
+      if (typeof window.openGuidelinesModal === 'function') window.openGuidelinesModal();
+      break;
+    case 'close-guidelines-modal':
+      if (typeof window.closeGuidelinesModal === 'function') window.closeGuidelinesModal();
+      break;
+    case 'close-token-modal':
+      if (typeof window.closeTokenModal === 'function') window.closeTokenModal();
+      break;
+    case 'close-package-booking-modal':
+      if (typeof window.closePackageBookingModal === 'function') window.closePackageBookingModal();
+      break;
+    case 'close-cancel-modal':
+      if (typeof window.closeCancelModal === 'function') window.closeCancelModal();
+      break;
+    case 'confirm-cancellation':
+      if (typeof window.confirmCancellation === 'function') window.confirmCancellation();
+      break;
+    case 'close-reschedule-modal':
+      if (typeof window.closeRescheduleModal === 'function') window.closeRescheduleModal();
+      break;
+    case 'confirm-reschedule':
+      if (typeof window.confirmReschedule === 'function') window.confirmReschedule();
+      break;
+    case 'cancel-appointment':
+      if (typeof window.cancelAppointment === 'function') window.cancelAppointment();
+      break;
+    case 'reschedule-appointment':
+      if (typeof window.rescheduleAppointment === 'function') window.rescheduleAppointment();
+      break;
+    case 'toggle-theme':
+      if (typeof window.toggleTheme === 'function') window.toggleTheme();
+      break;
+    case 'toggle-sidebar-collapse':
+      if (typeof window.toggleSidebarCollapse === 'function') window.toggleSidebarCollapse();
+      break;
+    case 'toggle-sidebar-dropdown':
+      if (typeof window.toggleSidebarDropdown === 'function') window.toggleSidebarDropdown(target);
+      break;
+    case 'close-left-sidebar':
+      if (typeof window.toggleLeftSidebar === 'function') window.toggleLeftSidebar(true);
+      break;
+    case 'close-sidebar-mobile':
+      if (window.innerWidth < 1024 && typeof window.toggleLeftSidebar === 'function') window.toggleLeftSidebar(true);
+      break;
+    case 'toggle-chat-widget':
+      if (typeof window.toggleChatWidget === 'function') window.toggleChatWidget();
+      break;
+    case 'close-chat-widget':
+      if (typeof window.closeChatWidget === 'function') window.closeChatWidget();
+      break;
+    case 'send-chat-message':
+      if (typeof window.sendChatMessage === 'function') window.sendChatMessage();
+      break;
+    case 'print-token-slip':
+      if (typeof window.printTokenSlip === 'function') window.printTokenSlip();
+      break;
+    case 'share-token-whatsapp':
+      if (typeof window.shareTokenWhatsApp === 'function') window.shareTokenWhatsApp();
+      break;
+    case 'track-generated-token-now':
+      if (typeof window.trackGeneratedTokenNow === 'function') window.trackGeneratedTokenNow();
+      break;
+    case 'download-lab-report-pdf':
+      if (typeof window.downloadLabReportPDF === 'function') window.downloadLabReportPDF();
+      break;
+    case 'search-lab-report':
+      if (typeof window.searchLabReport === 'function') window.searchLabReport();
+      break;
+    case 'render-reception-dashboard':
+      if (typeof window.renderReceptionDashboard === 'function') window.renderReceptionDashboard();
+      break;
+    case 'logout-reception-staff':
+      if (typeof window.logoutReceptionStaff === 'function') window.logoutReceptionStaff();
+      break;
+    case 'calculate-health-risk':
+      if (typeof window.calculateHealthRisk === 'function') window.calculateHealthRisk();
+      break;
+    case 'floating-token-dismiss':
+      if (window.FloatingTokenTracker && typeof window.FloatingTokenTracker.dismiss === 'function') window.FloatingTokenTracker.dismiss();
+      break;
+    case 'pa-toggle-mute':
+      if (window.PublicAddressEngine && typeof window.PublicAddressEngine.toggleMute === 'function') window.PublicAddressEngine.toggleMute();
+      break;
+    case 'sos-copy-coords':
+      if (window.EmergencySOSEngine && typeof window.EmergencySOSEngine.copyCoordinatesFor108 === 'function') window.EmergencySOSEngine.copyCoordinatesFor108();
+      break;
+    case 'sos-share-wa':
+      if (window.EmergencySOSEngine && typeof window.EmergencySOSEngine.shareEmergencyWhatsApp === 'function') window.EmergencySOSEngine.shareEmergencyWhatsApp();
+      break;
+    case 'sos-toggle-demo':
+      if (window.EmergencySOSEngine && typeof window.EmergencySOSEngine.toggleSimulationDemo === 'function') window.EmergencySOSEngine.toggleSimulationDemo();
+      break;
+    case 'auth-send-otp':
+      if (window.CarePulseAuth && typeof window.CarePulseAuth.sendOTP === 'function') window.CarePulseAuth.sendOTP();
+      break;
+    case 'auth-verify-otp':
+      if (window.CarePulseAuth && typeof window.CarePulseAuth.verifyOTP === 'function') window.CarePulseAuth.verifyOTP();
+      break;
+    case 'auth-resend-otp':
+      if (window.CarePulseAuth && typeof window.CarePulseAuth.resendOTP === 'function') window.CarePulseAuth.resendOTP();
+      break;
+    case 'auth-close-modal':
+      if (window.CarePulseAuth && typeof window.CarePulseAuth.closeModal === 'function') window.CarePulseAuth.closeModal();
+      break;
+    case 'auth-logout':
+      if (window.CarePulseAuth && typeof window.CarePulseAuth.logout === 'function') window.CarePulseAuth.logout();
+      break;
+    case 'auth-back':
+      if (window.CarePulseAuth && typeof window.CarePulseAuth.backToInput === 'function') window.CarePulseAuth.backToInput();
+      break;
+    case 'auth-switch-tab':
+      if (window.CarePulseAuth && typeof window.CarePulseAuth.switchTab === 'function') window.CarePulseAuth.switchTab(d.tab);
+      break;
+    case 'beds-reserve':
+      if (window.BedsCapacityEngine && typeof window.BedsCapacityEngine.reserveCriticalBed === 'function') window.BedsCapacityEngine.reserveCriticalBed();
+      break;
+    case 'beds-select-bay':
+      if (window.BedsCapacityEngine && typeof window.BedsCapacityEngine.selectICUBay === 'function') window.BedsCapacityEngine.selectICUBay(parseInt(d.bay, 10));
+      break;
+    case 'wayfinder-share-wa':
+      if (window.CampusWayfinderEngine && typeof window.CampusWayfinderEngine.shareRouteWhatsApp === 'function') window.CampusWayfinderEngine.shareRouteWhatsApp();
+      break;
+    case 'wayfinder-speak':
+      if (window.CampusWayfinderEngine && typeof window.CampusWayfinderEngine.speakDirections === 'function') window.CampusWayfinderEngine.speakDirections();
+      break;
+    case 'wayfinder-floor':
+      if (window.CampusWayfinderEngine && typeof window.CampusWayfinderEngine.setFloor === 'function') window.CampusWayfinderEngine.setFloor(d.floor);
+      break;
+    case 'healthcard-download':
+      if (window.DigitalHealthCardEngine && typeof window.DigitalHealthCardEngine.downloadPass === 'function') window.DigitalHealthCardEngine.downloadPass();
+      break;
+    case 'healthcard-print':
+      if (window.DigitalHealthCardEngine && typeof window.DigitalHealthCardEngine.printPass === 'function') window.DigitalHealthCardEngine.printPass();
+      break;
+    case 'healthcard-wallet':
+      if (window.DigitalHealthCardEngine && typeof window.DigitalHealthCardEngine.addToWalletDemo === 'function') window.DigitalHealthCardEngine.addToWalletDemo();
+      break;
+    case 'healthcard-profile':
+      if (window.DigitalHealthCardEngine && typeof window.DigitalHealthCardEngine.switchProfile === 'function') window.DigitalHealthCardEngine.switchProfile(d.profile);
+      break;
+    case 'tele-mic':
+      if (window.TeleConsultEngine && typeof window.TeleConsultEngine.toggleMic === 'function') window.TeleConsultEngine.toggleMic();
+      break;
+    case 'tele-cam':
+      if (window.TeleConsultEngine && typeof window.TeleConsultEngine.toggleCamera === 'function') window.TeleConsultEngine.toggleCamera();
+      break;
+    case 'tele-vitals':
+      if (window.TeleConsultEngine && typeof window.TeleConsultEngine.simulateVitalsSpike === 'function') window.TeleConsultEngine.simulateVitalsSpike();
+      break;
+    case 'tele-end':
+      if (window.TeleConsultEngine && typeof window.TeleConsultEngine.endConsultation === 'function') window.TeleConsultEngine.endConsultation();
+      break;
+    case 'tele-add-medicine':
+      if (window.TeleConsultEngine && typeof window.TeleConsultEngine.addSelectedMedicine === 'function') window.TeleConsultEngine.addSelectedMedicine();
+      break;
+    case 'tele-order-pharmacy':
+      if (window.TeleConsultEngine && typeof window.TeleConsultEngine.orderPrescriptionPharmacy === 'function') window.TeleConsultEngine.orderPrescriptionPharmacy();
+      break;
+    case 'tele-share-wa':
+      if (window.TeleConsultEngine && typeof window.TeleConsultEngine.sharePrescriptionWhatsApp === 'function') window.TeleConsultEngine.sharePrescriptionWhatsApp();
+      break;
+    case 'tele-download-pdf':
+      if (window.TeleConsultEngine && typeof window.TeleConsultEngine.downloadPrescriptionPDF === 'function') window.TeleConsultEngine.downloadPrescriptionPDF();
+      break;
+    case 'voice-ai-open':
+      if (window.VoiceAIEngine && typeof window.VoiceAIEngine.open === 'function') window.VoiceAIEngine.open();
+      break;
+    case 'voice-ai-close':
+      if (window.VoiceAIEngine && typeof window.VoiceAIEngine.close === 'function') window.VoiceAIEngine.close();
+      break;
+    case 'voice-ai-toggle':
+      if (window.VoiceAIEngine && typeof window.VoiceAIEngine.toggleListening === 'function') window.VoiceAIEngine.toggleListening();
+      break;
+    case 'voice-ai-backdrop-close':
+      if (e.target === target && window.VoiceAIEngine && typeof window.VoiceAIEngine.close === 'function') window.VoiceAIEngine.close();
+      break;
+    case 'voice-ai-lang':
+      if (window.VoiceAIEngine && typeof window.VoiceAIEngine.setLanguage === 'function') window.VoiceAIEngine.setLanguage(d.lang, target);
+      break;
+    case 'voice-ai-cmd':
+      if (window.VoiceAIEngine && typeof window.VoiceAIEngine.executeCommand === 'function') window.VoiceAIEngine.executeCommand(d.cmd);
+      break;
+    case 'gateway-save':
+      if (window.DeliveryGateway && typeof window.DeliveryGateway.saveFromForm === 'function') window.DeliveryGateway.saveFromForm();
+      break;
+    case 'gateway-test':
+      if (window.DeliveryGateway && typeof window.DeliveryGateway.testDispatchCurrent === 'function') window.DeliveryGateway.testDispatchCurrent();
+      break;
+    case 'close-delivery-gateway':
+      if (typeof window.closeDeliveryGatewayModal === 'function') window.closeDeliveryGatewayModal();
+      break;
+    case 'gateway-mode':
+      if (window.DeliveryGateway && typeof window.DeliveryGateway.selectMode === 'function') window.DeliveryGateway.selectMode(d.mode);
+      break;
+    case 'trigger-rx-upload':
+      document.getElementById('rx-file-input')?.click();
+      break;
+    case 'open-privacy-modal':
+      if (typeof window.openPrivacyModal === 'function') window.openPrivacyModal();
+      else document.getElementById('privacy-modal')?.classList.add('active');
+      break;
+    case 'close-privacy-modal':
+      if (typeof window.closePrivacyModal === 'function') window.closePrivacyModal();
+      else document.getElementById('privacy-modal')?.classList.remove('active');
+      break;
+    case 'open-terms-modal':
+      if (typeof window.openTermsModal === 'function') window.openTermsModal();
+      else document.getElementById('terms-modal')?.classList.add('active');
+      break;
+    case 'close-terms-modal':
+      if (typeof window.closeTermsModal === 'function') window.closeTermsModal();
+      else document.getElementById('terms-modal')?.classList.remove('active');
+      break;
+    case 'emergency-to-sos':
+      if (typeof window.closeEmergencyModal === 'function') window.closeEmergencyModal();
+      if (typeof window.triggerEmergencySOS === 'function') window.triggerEmergencySOS();
+      break;
+    case 'queue-to-booking':
+      if (typeof window.closeLiveQueueModal === 'function') window.closeLiveQueueModal();
+      if (typeof window.openBookingLayer === 'function') window.openBookingLayer();
+      break;
+    case 'queue-to-track':
+      if (typeof window.closeLiveQueueModal === 'function') window.closeLiveQueueModal();
+      if (typeof window.openTrackTokenModal === 'function') window.openTrackTokenModal();
+      break;
+    case 'calc-to-package':
+      if (typeof window.closeHealthCalculator === 'function') window.closeHealthCalculator();
+      if (typeof window.bookHealthPackage === 'function') window.bookHealthPackage(d.pkg || 'pkg-exec');
+      break;
+    case 'calc-to-booking':
+      if (typeof window.closeHealthCalculator === 'function') window.closeHealthCalculator();
+      if (typeof window.openBookingLayer === 'function') window.openBookingLayer();
+      break;
+    case 'set-active-dock':
+      if (typeof window.setActiveDock === 'function') window.setActiveDock(d.tab);
+      break;
+    case 'filter-queue-specialty':
+      if (typeof window.filterQueueSpecialty === 'function') window.filterQueueSpecialty(d.specialty);
+      break;
+    case 'set-language':
+      if (typeof window.setLanguage === 'function') window.setLanguage(d.lang);
+      break;
+    case 'set-font-scale':
+      if (typeof window.setFontScale === 'function') window.setFontScale(d.scale);
+      break;
+    case 'chat-chip':
+      if (typeof window.handleChatChip === 'function') window.handleChatChip(d.text);
+      break;
+    case 'download-token-ticket':
+      if (typeof window.downloadCurrentTokenTicket === 'function') window.downloadCurrentTokenTicket(d.format);
+      break;
+    case 'add-to-calendar':
+      if (typeof window.addToCalendar === 'function') window.addToCalendar('', d.mode);
+      break;
+    case 'book-package':
+      if (typeof window.closePackagesModal === 'function') window.closePackagesModal();
+      if (typeof window.bookHealthPackage === 'function') window.bookHealthPackage(d.pkg);
+      break;
+    case 'toggle-medicine':
+      if (typeof window.toggleMedicineSelection === 'function') window.toggleMedicineSelection(target, d.name, parseFloat(d.price));
+      break;
+  }
+
+  if (d.closeSidebar === 'true') {
+    if (window.innerWidth < 1024 && typeof window.toggleLeftSidebar === 'function') {
+      window.toggleLeftSidebar(true);
+    }
+  }
+});
+
+
 
