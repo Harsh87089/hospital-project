@@ -1855,6 +1855,15 @@ function generateUniqueTicketDetails(doc, patientData) {
 
 // --- Common Appointment Booking Processor ---
 function processBookingSubmission(patientData) {
+  if (!patientData.name || patientData.name.trim().length < 2) {
+    showToast('Please provide a valid patient name (minimum 2 characters).', 'warning');
+    return false;
+  }
+  const cleanPhone = (patientData.phone || '').replace(/[^0-9]/g, '');
+  if (cleanPhone.length < 10) {
+    showToast('Please enter a valid 10-digit mobile number for SMS/ticket delivery.', 'warning');
+    return false;
+  }
   if (!state.selectedSlot) {
     showToast('Please select an available consultation time-slot before booking!', 'warning');
     return false;
