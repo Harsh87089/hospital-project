@@ -9339,3 +9339,30 @@ body.theme-dark .campus-pulse-sub {
     transform: scale(0.96);
   }
 }
+
+/* Academic Demonstration Project Notice Banner */
+.demo-project-banner {
+  background: #0f172a;
+  color: #94a3b8;
+  font-size: 0.74rem;
+  padding: 0.4rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1.4;
+  z-index: 900;
+}
+
+.demo-project-banner strong {
+  color: #38bdf8;
+}
+
+/* Accessible Keyboard Navigation for Service Hub Tiles */
+.service-hub-tile:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -4px rgba(2, 132, 199, 0.25);
+}

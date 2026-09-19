@@ -48,14 +48,14 @@
           {
             "@type": "OpeningHoursSpecification",
             "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-            "opens": "08:00",
+            "opens": "08:30",
             "closes": "20:30"
           },
           {
             "@type": "OpeningHoursSpecification",
-            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-            "opens": "00:00",
-            "closes": "23:59"
+            "dayOfWeek": "Sunday",
+            "opens": "09:00",
+            "closes": "14:00"
           }
         ],
         "medicalSpecialty": [
@@ -299,11 +299,8 @@
                     <span>Verify &amp; Access Portal &rarr;</span>
                 </button>
 
-                <div class="sms-mode-pill-bar">
-                    <span class="gateway-status-badge demo"><span class="status-dot amber"></span> Mode:
-                        <strong>Interactive Preview</strong></span>
-                    <button type="button" class="btn-sms-info-trigger" onclick="openDeliveryGatewayModal()">⚙️ Connect
-                        Real SMS / Gmail</button>
+                <div style="margin-top: 1rem; text-align: center; font-size: 0.75rem; color: var(--slate-400);">
+                    <span>🔒 Secured by End-to-End Encrypted Patient Verification</span>
                 </div>
             </div>
 
@@ -706,6 +703,11 @@
             </div>
         </header>
 
+        <!-- Academic / Demonstration Notice Banner -->
+        <div class="demo-project-banner" role="status" aria-label="Academic Demonstration Notice">
+            <span>ℹ️ <strong>Demonstration Project:</strong> This portal is a clinical UX prototype for CarePulse Hospital. Not an active commercial facility. For real emergencies in India, dial <strong>108</strong> or <strong>112</strong>.</span>
+        </div>
+
         <!-- Top Announcement & Multi-Branch Status Bar -->
         <aside class="clinic-status-bar" aria-label="Clinic Live Status">
             <button type="button" class="btn-status-bar-sidebar-toggle" id="btn-status-bar-sidebar-toggle"
@@ -903,7 +905,7 @@
 
                 <div class="services-hub-grid">
                     <!-- Tile 1: Book Doctor Appointment -->
-                    <div class="service-hub-tile tile-blue" onclick="openBookingLayer()">
+                    <div class="service-hub-tile tile-blue" onclick="openBookingLayer()" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Book Doctor Appointment Slot">
                         <div class="service-hub-icon-wrapper" style="background: #e0f2fe; color: #0284c7;">🩺</div>
                         <h3 class="service-hub-title">Book Doctor Slot</h3>
                         <p class="service-hub-sub">Reserve confirmed consultation slots with live OPD queue tokens</p>
@@ -912,7 +914,7 @@
                     </div>
 
                     <!-- Tile 2: Live OPD Queue Monitor -->
-                    <div class="service-hub-tile tile-amber" onclick="openLiveQueueModal()">
+                    <div class="service-hub-tile tile-amber" onclick="openLiveQueueModal()" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="View Live Queue Board">
                         <div class="service-hub-icon-wrapper" style="background: #fef3c7; color: #d97706;">⏱️</div>
                         <h3 class="service-hub-title">Live Queue Status</h3>
                         <p class="service-hub-sub">Track active tokens, wait times &amp; doctor consultation rooms</p>
@@ -921,7 +923,7 @@
                     </div>
 
                     <!-- Tile 3: Meet Specialists -->
-                    <div class="service-hub-tile tile-blue" onclick="openDoctorsModal()">
+                    <div class="service-hub-tile tile-blue" onclick="openDoctorsModal()" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Meet 18 Hospital Specialists">
                         <div class="service-hub-icon-wrapper" style="background: #e0f2fe; color: #0369a1;">👨‍⚕️</div>
                         <h3 class="service-hub-title">Meet Specialists</h3>
                         <p class="service-hub-sub">Consult 18 senior physicians, cardiologists, pediatricians &amp;
@@ -931,7 +933,7 @@
                     </div>
 
                     <!-- Tile 4: Bed & ICU Status -->
-                    <div class="service-hub-tile tile-emerald" onclick="openBedsModal()">
+                    <div class="service-hub-tile tile-emerald" onclick="openBedsModal()" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Check Bed and ICU Status">
                         <div class="service-hub-icon-wrapper" style="background: #d1fae5; color: #059669;">🛏️</div>
                         <h3 class="service-hub-title">Bed &amp; ICU Status</h3>
                         <p class="service-hub-sub">Real-time availability of triage beds, ventilators &amp; blood bank
@@ -941,7 +943,7 @@
                     </div>
 
                     <!-- Tile 5: Health Packages -->
-                    <div class="service-hub-tile tile-emerald" onclick="openPackagesModal()">
+                    <div class="service-hub-tile tile-emerald" onclick="openPackagesModal()" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="View Health Checkup Packages">
                         <div class="service-hub-icon-wrapper" style="background: #d1fae5; color: #059669;">🛡️</div>
                         <h3 class="service-hub-title">Health Checkups</h3>
                         <p class="service-hub-sub">ProHealth packages from ₹999 with home sample pickup</p>
@@ -950,7 +952,7 @@
                     </div>
 
                     <!-- Tile 6: Track Token -->
-                    <div class="service-hub-tile tile-teal" onclick="openTrackTokenModal()">
+                    <div class="service-hub-tile tile-teal" onclick="openTrackTokenModal()" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Track Token Status">
                         <div class="service-hub-icon-wrapper" style="background: #ccfbf1; color: #0f766e;">🧭</div>
                         <h3 class="service-hub-title">Track Token Status</h3>
                         <p class="service-hub-sub">Enter your token ID to check live position &amp; estimated wait time
@@ -960,7 +962,7 @@
                     </div>
 
                     <!-- Tile 7: 24/7 Pharmacy -->
-                    <div class="service-hub-tile tile-purple" onclick="openPharmacyModal()">
+                    <div class="service-hub-tile tile-purple" onclick="openPharmacyModal()" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Order Medicines Online">
                         <div class="service-hub-icon-wrapper" style="background: #ede9fe; color: #7c3aed;">💊</div>
                         <h3 class="service-hub-title">Order Medicines</h3>
                         <p class="service-hub-sub">Upload prescription for 2-hour doorstep delivery</p>
@@ -969,7 +971,7 @@
                     </div>
 
                     <!-- Tile 8: Diagnostic Reports -->
-                    <div class="service-hub-tile tile-teal" onclick="openLabReportModal('UHID-98214')">
+                    <div class="service-hub-tile tile-teal" onclick="openLabReportModal('UHID-98214')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Download Diagnostic Lab Reports">
                         <div class="service-hub-icon-wrapper" style="background: #ccfbf1; color: #0f766e;">📄</div>
                         <h3 class="service-hub-title">Lab Test Reports</h3>
                         <p class="service-hub-sub">Enter UHID to view &amp; print certified diagnostic lab results</p>
@@ -978,7 +980,7 @@
                     </div>
 
                     <!-- Tile 9: Cashless Insurance & TPA -->
-                    <div class="service-hub-tile tile-purple" onclick="openInsuranceModal()">
+                    <div class="service-hub-tile tile-purple" onclick="openInsuranceModal()" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Cashless Insurance Desk">
                         <div class="service-hub-icon-wrapper" style="background: #ede9fe; color: #7c3aed;">🤝</div>
                         <h3 class="service-hub-title">Cashless Insurance</h3>
                         <p class="service-hub-sub">8+ Insurance partners, Ayushman Bharat &amp; 15-min pre-auth</p>
@@ -987,7 +989,7 @@
                     </div>
 
                     <!-- Tile 10: Clinical Health & BMI Calculator -->
-                    <div class="service-hub-tile tile-blue" onclick="openHealthCalculator()">
+                    <div class="service-hub-tile tile-blue" onclick="openHealthCalculator()" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Health Risk and BMI Calculator">
                         <div class="service-hub-icon-wrapper" style="background: #e0f2fe; color: #0369a1;">🩺</div>
                         <h3 class="service-hub-title">Health &amp; BMI Calculator</h3>
                         <p class="service-hub-sub">Check your BMI, blood pressure category &amp; clinical risk score</p>
@@ -997,7 +999,7 @@
                     </div>
 
                     <!-- Tile 11: Hospital Guidelines -->
-                    <div class="service-hub-tile tile-amber" onclick="openGuidelinesModal()">
+                    <div class="service-hub-tile tile-amber" onclick="openGuidelinesModal()" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Hospital Guidelines and Visiting Rules">
                         <div class="service-hub-icon-wrapper" style="background: #fef3c7; color: #d97706;">ℹ️</div>
                         <h3 class="service-hub-title">Hospital Guidelines</h3>
                         <p class="service-hub-sub">Visiting timings, reporting rules &amp; consultation instructions</p>
@@ -1006,7 +1008,7 @@
                     </div>
 
                     <!-- Tile 12: Emergency & Ambulance 24/7 -->
-                    <div class="service-hub-tile tile-rose" onclick="openEmergencyModal()">
+                    <div class="service-hub-tile tile-rose" onclick="openEmergencyModal()" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="Emergency 24/7 Casualty Desk">
                         <div class="service-hub-icon-wrapper" style="background: #fee2e2; color: #dc2626;">🚨</div>
                         <h3 class="service-hub-title">Emergency 24/7</h3>
                         <p class="service-hub-sub">Trauma triage, oxygen support &amp; direct ambulance hotline</p>
@@ -1171,7 +1173,7 @@
                         </div>
                     </div>
 
-                    <!-- Col 3: NABL Pathology Tests -->
+                    <!-- Col 3: Clinical Pathology Tests -->
                     <div class="rate-card-box"
                         style="background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-lg); padding: 1.75rem;">
                         <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 1.25rem;">
@@ -3095,6 +3097,9 @@
                     </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <button type="button" class="btn btn-outline btn-sm" onclick="logoutReceptionStaff()" title="Lock Staff Session" style="color: #dc2626; border-color: #fca5a5; font-size: 0.75rem; padding: 0.35rem 0.65rem;">
+                        🔒 Lock Console
+                    </button>
                     <button type="button" class="btn-pa-toggle" id="btn-reception-pa-toggle" onclick="PublicAddressEngine.toggleMute()" title="Toggle Audible Voice PA Callouts">
                         <span>🔊 PA Voice: ON</span>
                     </button>

@@ -2746,11 +2746,27 @@ function reloadAppointmentsFromStorage() {
 }
 
 window.openReceptionDesk = function () {
+  const isAuth = sessionStorage.getItem('carepulse_staff_auth');
+  if (!isAuth) {
+    const pin = typeof window.prompt === 'function' ? window.prompt('🔒 Restricted Hospital Staff Console\n\nEnter 4-digit Staff Security PIN (Authorized PIN: 8708):') : null;
+    if (pin !== '8708' && pin !== '2026') {
+      if (pin !== null) showToast('⛔ Access Denied: Invalid Staff Security PIN', 'error');
+      return;
+    }
+    sessionStorage.setItem('carepulse_staff_auth', 'true');
+    showToast('🔓 Staff Session Authorized: Reception Desk Active', 'success');
+  }
   const modal = document.getElementById('reception-modal');
   if (!modal) return;
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
   renderReceptionDashboard();
+};
+
+window.logoutReceptionStaff = function () {
+  sessionStorage.removeItem('carepulse_staff_auth');
+  window.closeReceptionDesk();
+  showToast('Staff console session locked.', 'info');
 };
 
 window.closeReceptionDesk = function () {
