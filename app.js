@@ -5499,6 +5499,70 @@ window.toggleSidebarDropdown = function (groupHeader) {
 // Expose CarePulseAuth to window
 window.CarePulseAuth = CarePulseAuth;
 
+window.clearAllDemoData = function () {
+  const confirmed = window.confirm('Are you sure you want to permanently erase all demo data (appointments, active tokens, and session history) from this browser?');
+  if (!confirmed) return;
+
+  const knownKeys = [
+    'carepulse_appointments',
+    'carepulse_auth_user',
+    'carepulse_booked_slots',
+    'carepulse_cart',
+    'carepulse_theme',
+    'carepulse_palette',
+    'carepulse_font_scale',
+    'carepulse_lang',
+    'carepulse_delivery_gateway',
+    'carepulse_active_token',
+    'carepulse_recent_searches'
+  ];
+  knownKeys.forEach(k => {
+    try { localStorage.removeItem(k); } catch (e) {}
+  });
+
+  const toRemove = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && (k.startsWith('carepulse_') || k.startsWith('carepulse-'))) {
+      toRemove.push(k);
+    }
+  }
+  toRemove.forEach(k => {
+    try { localStorage.removeItem(k); } catch (e) {}
+  });
+
+  try {
+    sessionStorage.removeItem('carepulse_auth_user');
+    sessionStorage.removeItem('carepulse_last_active');
+  } catch (e) {}
+
+  if (typeof state !== 'undefined') {
+    state.userAppointments = [];
+    state.bookedSlotsCache = {};
+  }
+
+  if (typeof CarePulseAuth !== 'undefined') {
+    CarePulseAuth.sessionUser = null;
+    if (typeof CarePulseAuth.updateProfileUI === 'function') {
+      CarePulseAuth.updateProfileUI();
+    }
+  }
+
+  if (typeof window.renderMyBookingsModal === 'function') {
+    window.renderMyBookingsModal();
+  }
+  if (typeof window.renderMyBookingsBadge === 'function') {
+    window.renderMyBookingsBadge();
+  }
+  if (typeof window.renderLiveOPDBoard === 'function') {
+    window.renderLiveOPDBoard();
+  }
+
+  if (typeof showToast === 'function') {
+    showToast('All CarePulse demo data has been cleared from this browser.', 'info');
+  }
+};
+
 // --- Initial Bootstrapping ---
 document.addEventListener('DOMContentLoaded', () => {
   // Enforce authentication gate & load session
@@ -7894,7 +7958,7 @@ const TeleConsultEngine = {
 
     // Patient info
     const user = window.CarePulseAuth ? CarePulseAuth.sessionUser : null;
-    const patientNameEl = document.getElementById('rx-patient-name');
+    const patientNameEl = document.getElementById('rx-tele-patient-name') || document.getElementById('rx-patient-name');
     if (patientNameEl) {
       patientNameEl.innerText = (user && user.name) ? `${user.name} (Verified)` : 'Self (Verified Patient)';
     }

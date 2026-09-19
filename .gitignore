@@ -3,8 +3,14 @@ debug_hospital.html
 dump.html
 scratch_dom.html
 *.png
+!icons/*.png
 *.log
+
+# Python
+__pycache__/
+*.pyc
 
 # OS generated files
 .DS_Store
 Thumbs.db
+

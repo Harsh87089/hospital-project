@@ -50,7 +50,7 @@ const TeleConsultEngine = {
 
     // Patient info
     const user = window.CarePulseAuth ? CarePulseAuth.sessionUser : null;
-    const patientNameEl = document.getElementById('rx-patient-name');
+    const patientNameEl = document.getElementById('rx-tele-patient-name') || document.getElementById('rx-patient-name');
     if (patientNameEl) {
       patientNameEl.innerText = (user && user.name) ? `${user.name} (Verified)` : 'Self (Verified Patient)';
     }

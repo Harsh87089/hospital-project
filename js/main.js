@@ -847,6 +847,23 @@ window.clearAllDemoData = function () {
   const confirmed = window.confirm('Are you sure you want to permanently erase all demo data (appointments, active tokens, and session history) from this browser?');
   if (!confirmed) return;
 
+  const knownKeys = [
+    'carepulse_appointments',
+    'carepulse_auth_user',
+    'carepulse_booked_slots',
+    'carepulse_cart',
+    'carepulse_theme',
+    'carepulse_palette',
+    'carepulse_font_scale',
+    'carepulse_lang',
+    'carepulse_delivery_gateway',
+    'carepulse_active_token',
+    'carepulse_recent_searches'
+  ];
+  knownKeys.forEach(k => {
+    try { localStorage.removeItem(k); } catch (e) {}
+  });
+
   const toRemove = [];
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
