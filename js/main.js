@@ -316,7 +316,7 @@ function appendChatMessage(htmlOrText, sender = 'bot') {
   msgDiv.className = `chat-msg ${sender}`;
   let finalHtml = htmlOrText;
   if (sender === 'bot') {
-    finalHtml += `<div><button type="button" class="btn-read-aloud" onclick="readAloudChatText(this)"><span>🔊 Listen</span></button></div>`;
+    finalHtml += `<div><button type="button" class="btn-read-aloud" data-action="read-aloud-chat"><span>🔊 Listen</span></button></div>`;
   }
   msgDiv.innerHTML = finalHtml;
   container.appendChild(msgDiv);
@@ -341,10 +341,10 @@ function botTriageProcess(userQuery) {
         <li>🦷 <strong>Dental Surgeons</strong> (Toothache, root canal & cleaning)</li>
       </ul>
       <div class="chat-action-cluster">
-        <button class="btn-bot-action primary" onclick="openBookingLayer(); closeChatWidget();">
+        <button class="btn-bot-action primary" data-action="chat-book-opd">
           ⚡ Open Doctor Booking Layer ↗
         </button>
-        <button class="btn-bot-action pharmacy" onclick="openPharmacyModal(); closeChatWidget();">
+        <button class="btn-bot-action pharmacy" data-action="chat-open-pharmacy">
           💊 Order OTC Medicines (24/7 Pharmacy) ↗
         </button>
       </div>
@@ -371,7 +371,7 @@ function botTriageProcess(userQuery) {
           <a href="tel:${DEMO_PHONE_RAW}" class="btn btn-primary btn-sm" style="background: #991b1b; text-decoration: none; font-weight: 800; padding: 0.5rem 0.85rem;">
             📞 Demo Desk: ${DEMO_PHONE}
           </a>
-          <button type="button" class="btn btn-outline btn-sm" onclick="openEmergencySOS(); closeChatWidget();" style="border-color: #dc2626; color: #dc2626; font-weight: 700;">
+          <button type="button" class="btn btn-outline btn-sm" data-action="chat-open-sos" style="border-color: #dc2626; color: #dc2626; font-weight: 700;">
             🚨 GPS Emergency Hub
           </button>
         </div>
@@ -396,10 +396,10 @@ function botTriageProcess(userQuery) {
         </ul>
       </div>
       <div class="chat-action-cluster">
-        <button class="btn-bot-action package" onclick="bookHealthPackage('pkg-exec'); closeChatWidget();">
+        <button class="btn-bot-action package" data-action="chat-book-package" data-package="pkg-exec">
           🛡️ Book Executive Full Body Checkup (₹2,499) ↗
         </button>
-        <button class="btn-bot-action primary" onclick="bookHealthPackage('pkg-basic'); closeChatWidget();">
+        <button class="btn-bot-action primary" data-action="chat-book-package" data-package="pkg-basic">
           🩸 Book Basic Wellness Screen (₹999) ↗
         </button>
       </div>
@@ -443,19 +443,19 @@ function botTriageProcess(userQuery) {
       <div style="font-size: 0.72rem; color: var(--slate-600);">${match.degree}</div>
       <div style="font-size: 0.75rem; font-weight: 700; color: #059669; margin-top: 0.2rem;">Consultation Fee: ${match.fee}</div>
 
-      <button class="btn-auto-book-slot" onclick="autoBookDoctorFromChat('${match.doctor}', '${match.condition}');">
+      <button class="btn-auto-book-slot" data-action="auto-book-from-chat" data-doctor="${match.doctor}" data-condition="${match.condition}">
         ⚡ 1-Click Auto-Book ${match.doctorName} (Next Available Slot)
       </button>
     </div>
 
     <div class="chat-action-cluster">
-      <button class="btn-bot-action primary" onclick="openBookingLayer('${match.doctor}'); closeChatWidget();">
+      <button class="btn-bot-action primary" data-action="chat-book-opd" data-doctor="${match.doctor}">
         📅 Option 1: Book Consultation with ${match.doctorName} ➔
       </button>
-      <button class="btn-bot-action pharmacy" onclick="openPharmacyModal(); closeChatWidget();">
+      <button class="btn-bot-action pharmacy" data-action="chat-open-pharmacy">
         💊 Option 2: Order Relief Kit (2-Hr Delivery) ↗
       </button>
-      <button class="btn-bot-action package" onclick="openLabReportModal(); closeChatWidget();">
+      <button class="btn-bot-action package" data-action="chat-open-lab">
         🔬 Option 3: Check Lab Reports & Diagnostic Tests ↗
       </button>
     </div>
@@ -819,10 +819,52 @@ const BedsCapacityEngine = {
   }
 };
 
-window.BedsCapacityEngine = BedsCapacityEngine;
+window.clearAllDemoData = function () {
+  const confirmed = window.confirm('Are you sure you want to permanently erase all demo data (appointments, active tokens, and session history) from this browser?');
+  if (!confirmed) return;
 
-// --- 4. 1-Click Emergency SOS Simulator ---
+  const toRemove = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && (k.startsWith('carepulse_') || k.startsWith('carepulse-'))) {
+      toRemove.push(k);
+    }
+  }
+  toRemove.forEach(k => {
+    try { localStorage.removeItem(k); } catch (e) {}
+  });
 
+  try {
+    sessionStorage.removeItem('carepulse_auth_user');
+    sessionStorage.removeItem('carepulse_last_active');
+  } catch (e) {}
+
+  if (typeof state !== 'undefined') {
+    state.userAppointments = [];
+    state.bookedSlotsCache = {};
+  }
+
+  if (typeof CarePulseAuth !== 'undefined') {
+    CarePulseAuth.sessionUser = null;
+    if (typeof CarePulseAuth.updateProfileUI === 'function') {
+      CarePulseAuth.updateProfileUI();
+    }
+  }
+
+  if (typeof window.renderMyBookingsModal === 'function') {
+    window.renderMyBookingsModal();
+  }
+  if (typeof window.renderMyBookingsBadge === 'function') {
+    window.renderMyBookingsBadge();
+  }
+  if (typeof window.renderLiveOPDBoard === 'function') {
+    window.renderLiveOPDBoard();
+  }
+
+  if (typeof showToast === 'function') {
+    showToast('All CarePulse demo data has been cleared from this browser.', 'info');
+  }
+};
 
 // Initial Bootstrapping
 document.addEventListener('DOMContentLoaded', () => {
@@ -1313,6 +1355,115 @@ document.addEventListener('click', function (e) {
     case 'book-package':
       if (typeof window.closePackagesModal === 'function') window.closePackagesModal();
       if (typeof window.bookHealthPackage === 'function') window.bookHealthPackage(d.pkg);
+      break;
+    case 'clear-demo-data':
+      if (typeof window.clearAllDemoData === 'function') window.clearAllDemoData();
+      break;
+    case 'open-delivery-gateway':
+      if (typeof window.openDeliveryGatewayModal === 'function') window.openDeliveryGatewayModal();
+      break;
+    case 'select-date':
+      if (typeof window.selectDate === 'function') window.selectDate(d.date, d.full);
+      break;
+    case 'select-slot':
+      if (typeof window.selectSlot === 'function') window.selectSlot(d.time, d.session);
+      break;
+    case 'reopen-token-slip':
+      if (typeof window.reopenTokenSlip === 'function') window.reopenTokenSlip(d.id);
+      break;
+    case 'download-token':
+      if (typeof window.downloadTicketById === 'function') window.downloadTicketById(d.id, 'png');
+      break;
+    case 'cancel-appointment':
+      if (typeof window.cancelAppointment === 'function') window.cancelAppointment(d.id);
+      break;
+    case 'queue-book-doc':
+      if (typeof window.closeLiveQueueModal === 'function') window.closeLiveQueueModal();
+      if (typeof window.openBookingLayer === 'function') window.openBookingLayer(d.id);
+      break;
+    case 'reset-doctor-filters':
+      if (typeof window.resetDoctorFilters === 'function') window.resetDoctorFilters();
+      break;
+    case 'open-booking-doc':
+      if (typeof window.openBookingLayer === 'function') window.openBookingLayer(d.id);
+      break;
+    case 'open-teleconsult-doc':
+      if (typeof window.openTeleConsultModal === 'function') window.openTeleConsultModal(d.id);
+      break;
+    case 'call-next-patient':
+      if (typeof window.callNextPatientToken === 'function') window.callNextPatientToken(d.id);
+      break;
+    case 'issue-walkin-token':
+      if (typeof window.issueWalkinToken === 'function') window.issueWalkinToken(d.id);
+      break;
+    case 'mark-token-completed':
+      if (typeof window.markTokenCompleted === 'function') window.markTokenCompleted(d.id);
+      break;
+    case 'mark-token-no-show':
+      if (typeof window.markTokenNoShow === 'function') window.markTokenNoShow(d.id);
+      break;
+    case 'verify-lab-report-otp':
+      if (typeof window.verifyLabReportOTP === 'function') window.verifyLabReportOTP();
+      break;
+    case 'autofill-lab-otp':
+      {
+        const inp = document.getElementById('report-otp-input');
+        if (inp) inp.value = '123456';
+        if (typeof window.verifyLabReportOTP === 'function') window.verifyLabReportOTP();
+      }
+      break;
+    case 'remove-prescription':
+      if (window.TeleConsultEngine && typeof window.TeleConsultEngine.removePrescription === 'function') {
+        window.TeleConsultEngine.removePrescription(parseInt(d.idx, 10));
+      }
+      break;
+    case 'print-rx':
+      window.print();
+      break;
+    case 'wayfinder-room-click':
+      if (window.CampusWayfinderEngine && typeof window.CampusWayfinderEngine.onRoomClick === 'function') {
+        window.CampusWayfinderEngine.onRoomClick(d.id);
+      }
+      break;
+    case 'read-aloud-chat':
+      if (typeof window.readAloudChatText === 'function') window.readAloudChatText(target);
+      break;
+    case 'chat-book-opd':
+      if (typeof window.openBookingLayer === 'function') window.openBookingLayer(d.doctor || null);
+      if (typeof window.closeChatWidget === 'function') window.closeChatWidget();
+      break;
+    case 'chat-open-pharmacy':
+      if (typeof window.openPharmacyModal === 'function') window.openPharmacyModal();
+      if (typeof window.closeChatWidget === 'function') window.closeChatWidget();
+      break;
+    case 'chat-open-sos':
+      if (typeof window.openEmergencySOS === 'function') window.openEmergencySOS();
+      if (typeof window.closeChatWidget === 'function') window.closeChatWidget();
+      break;
+    case 'chat-book-package':
+      if (typeof window.bookHealthPackage === 'function') window.bookHealthPackage(d.package || 'pkg-basic');
+      if (typeof window.closeChatWidget === 'function') window.closeChatWidget();
+      break;
+    case 'auto-book-from-chat':
+      if (typeof window.autoBookDoctorFromChat === 'function') window.autoBookDoctorFromChat(d.doctor, d.condition);
+      break;
+    case 'chat-open-lab':
+      if (typeof window.openLabReportModal === 'function') window.openLabReportModal();
+      if (typeof window.closeChatWidget === 'function') window.closeChatWidget();
+      break;
+    case 'dismiss-simulated-banner':
+      target.closest('.simulated-otp-banner')?.remove();
+      break;
+    case 'autofill-otp':
+      if (window.CarePulseAuth && typeof window.CarePulseAuth.autoFillOTP === 'function') {
+        window.CarePulseAuth.autoFillOTP(d.otp);
+      }
+      break;
+    case 'copy-otp':
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(d.otp || '');
+        if (typeof window.showToast === 'function') window.showToast('OTP ' + d.otp + ' copied!', 'success');
+      }
       break;
     case 'toggle-medicine':
       if (typeof window.toggleMedicineSelection === 'function') window.toggleMedicineSelection(target, d.name, parseFloat(d.price));

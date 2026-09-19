@@ -615,6 +615,8 @@ window.openRescheduleModal = function (app) {
     if (dateEl) {
       dateEl.value = tmrwIso;
       dateEl.min = getISTIsoDate();
+      const maxDate = new Date(getISTDate().getTime() + 30 * 86400000);
+      dateEl.max = getISTIsoDate(maxDate);
       dateEl.onchange = function () {
         populateRescheduleSlots(app.doctorId, dateEl.value);
       };
@@ -652,6 +654,18 @@ window.confirmReschedule = function () {
   const slotInput = document.getElementById('reschedule-slot-select');
   const newDateIso = (dateInput && dateInput.value) ? dateInput.value : getISTIsoDate();
   const newSlot = (slotInput && slotInput.value) ? slotInput.value : '';
+
+  const todayIso = getISTIsoDate();
+  const maxDateIso = getISTIsoDate(new Date(getISTDate().getTime() + 30 * 86400000));
+  if (newDateIso < todayIso || newDateIso > maxDateIso) {
+    showToast('Please select a reschedule date within the allowed 30-day window.', 'warning');
+    const errEl = document.getElementById('reschedule-date-error');
+    if (errEl) {
+      errEl.textContent = 'Please choose a date between today and the next 30 days.';
+      errEl.classList.add('visible');
+    }
+    return;
+  }
 
   if (!newSlot || newSlot.includes('Off-Duty') || newSlot.includes('No open')) {
     showToast('Please select an available consultation slot.', 'warning');
@@ -1049,14 +1063,14 @@ window.openMyBookingsModal = function () {
           </div>
           <div style="display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-end;">
             <div style="display: flex; gap: 0.35rem; align-items: center;">
-              <button class="btn btn-outline btn-sm" onclick="reopenTokenSlip('${safeTokenId}')" title="View token slip">
+              <button type="button" class="btn btn-outline btn-sm" data-action="reopen-token-slip" data-id="${safeTokenId}" title="View token slip">
                 View ↗
               </button>
-              <button class="btn btn-sm btn-download-ticket" style="padding: 0.3rem 0.65rem; font-size: 0.76rem;" onclick="downloadTicketById('${safeTokenId}', 'png')" title="Download E-Pass">
+              <button type="button" class="btn btn-sm btn-download-ticket" style="padding: 0.3rem 0.65rem; font-size: 0.76rem;" data-action="download-token" data-id="${safeTokenId}" title="Download E-Pass">
                 📥 Download
               </button>
             </div>
-            <button class="btn btn-sm" style="color: var(--accent-rose); background: transparent; border: none; font-size: 0.75rem; padding: 0.1rem 0.3rem;" onclick="cancelAppointment('${safeTokenId}')">
+            <button type="button" class="btn btn-sm" style="color: var(--accent-rose); background: transparent; border: none; font-size: 0.75rem; padding: 0.1rem 0.3rem;" data-action="cancel-appointment" data-id="${safeTokenId}">
               Cancel
             </button>
           </div>

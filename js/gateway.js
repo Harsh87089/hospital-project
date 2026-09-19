@@ -226,14 +226,27 @@ const DeliveryGateway = {
 window.DeliveryGateway = DeliveryGateway;
 
 window.openDeliveryGatewayModal = function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('dev') !== '1') {
+    showToast('Developer Gateway is restricted to dev mode. Append ?dev=1 to URL to access.', 'warning');
+    return;
+  }
   DeliveryGateway.populateForm();
-  const modal = document.getElementById('delivery-gateway-modal');
-  if (modal) modal.style.display = 'flex';
+  if (typeof openModal === 'function') {
+    openModal('delivery-gateway-modal');
+  } else {
+    const modal = document.getElementById('delivery-gateway-modal');
+    if (modal) modal.style.display = 'flex';
+  }
 };
 
 window.closeDeliveryGatewayModal = function () {
-  const modal = document.getElementById('delivery-gateway-modal');
-  if (modal) modal.style.display = 'none';
+  if (typeof closeModal === 'function') {
+    closeModal('delivery-gateway-modal');
+  } else {
+    const modal = document.getElementById('delivery-gateway-modal');
+    if (modal) modal.style.display = 'none';
+  }
 };
 
 // Backwards compatibility alias

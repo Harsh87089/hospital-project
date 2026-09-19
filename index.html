@@ -147,12 +147,13 @@
                     </div>
                     <div>
                         <h2 id="auth-modal-title" class="auth-title">CarePulse Hospital Portal</h2>
-                        <span class="auth-subtitle">Patient Sign-In &amp; Secure Verification</span>
+                        <span class="auth-subtitle">Patient Sign-In (Demo Simulation • No Real Accounts)</span>
                     </div>
                 </div>
                 <div class="auth-shield-badge">
                     <span class="shield-dot"></span> Secure SSL
                 </div>
+                <span class="demo-auth-pill">Demo login (no real accounts)</span>
             </div>
 
             <!-- Error Banner Container -->
@@ -197,6 +198,7 @@
                                 onkeydown="if(event.key==='Enter') CarePulseAuth.sendOTP()" />
                         </div>
                         <span class="auth-help-text">A unique 6-digit one-time passcode (OTP) will be sent via SMS for verification.</span>
+                        <div class="field-error-msg" id="auth-mobile-input-error" role="alert" aria-live="polite"></div>
                     </div>
 
                     <button type="button" class="btn-auth-primary" data-action="auth-send-otp">
@@ -238,9 +240,9 @@
 
                 <!-- Trust Footer -->
                 <div class="auth-trust-footer">
-                    <div class="trust-item"><span>🔒</span> 256-Bit SSL Encrypted</div>
-                    <div class="trust-item"><span>🏥</span> Punjab CEA &amp; ISO 9001 Certified</div>
-                    <div class="trust-item"><span>⚡</span> 24/7 Instant Token Access</div>
+                    <div class="trust-item"><span>🔒</span> Local Browser Storage Only</div>
+                    <div class="trust-item"><span>🛡️</span> DPDP Act 2023 Compliant Demo</div>
+                    <div class="trust-item"><span>⚡</span> Simulated Verification (No SMS Sent)</div>
                 </div>
             </div>
 
@@ -1272,7 +1274,7 @@
                         </div>
 
                         <div class="u-flex-box-68">
-                            <a href="https://maps.google.com/?q=GT+Road+Phagwara+Punjab" target="_blank" rel="noopener"
+                            <a href="https://maps.google.com/?q=GT+Road+Phagwara+Punjab" target="_blank" rel="noopener noreferrer"
                                 class="btn btn-primary u-box-flex-69">
                                 🗺️ Get Driving Directions
                             </a>
@@ -2059,6 +2061,7 @@
                                         class="req">*</span></label>
                                 <input type="text" id="layer-patient-name" class="form-control"
                                     placeholder="e.g. Gurpreet Singh" required />
+                                <div class="field-error-msg" id="layer-patient-name-error" role="alert" aria-live="polite"></div>
                             </div>
 
                             <div class="form-row">
@@ -2067,6 +2070,7 @@
                                             class="req">*</span></label>
                                     <input type="number" id="layer-patient-age" class="form-control"
                                         placeholder="e.g. 32" min="1" max="110" required />
+                                    <div class="field-error-msg" id="layer-patient-age-error" role="alert" aria-live="polite"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label" for="layer-patient-gender">Gender <span
@@ -2091,6 +2095,7 @@
                                             class="req">*</span></label>
                                     <input type="tel" id="layer-patient-phone" class="form-control"
                                         placeholder="e.g. +91 98765 43210" required />
+                                    <div class="field-error-msg" id="layer-patient-phone-error" role="alert" aria-live="polite"></div>
                                 </div>
                             </div>
 
@@ -2300,6 +2305,9 @@
                 <span class="u-icon-decorative" aria-hidden="true">📋</span>
                 <h3 id="modal-title-my-bookings" class="u-font-size-1-35rem">My Active Token Bookings</h3>
             </div>
+            <div class="demo-data-notice-banner">
+                🔒 <strong>Privacy Notice (DPDP Act 2023):</strong> Demo data stays only in this browser and is never transmitted to any external server.
+            </div>
             <p class="u-box-font-size-143">
                 Tokens booked on this device. Click on any item to view or reprint your digital token slip.
             </p>
@@ -2308,7 +2316,10 @@
                 <!-- Dynamically populated by app.js -->
             </div>
 
-            <div class="u-box-margin-top-144">
+            <div class="u-box-margin-top-144" style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <button type="button" class="btn btn-outline-danger btn-sm" data-action="clear-demo-data" id="btn-clear-demo-data" title="Erase all stored demo bookings and data">
+                    🗑️ Clear My Demo Data
+                </button>
                 <button class="btn btn-outline btn-sm" data-action="close-my-bookings-modal">Close</button>
             </div>
         </div>
@@ -2332,6 +2343,7 @@
                 <div>
                     <label for="reschedule-date-input"class="u-box-font-size-150">Preferred New Date</label>
                     <input type="date" id="reschedule-date-input" class="form-control" />
+                    <div class="field-error-msg" id="reschedule-date-error" role="alert" aria-live="polite"></div>
                 </div>
                 <div>
                     <label for="reschedule-slot-select"class="u-box-font-size-150">Preferred Time Slot</label>
@@ -3050,32 +3062,34 @@
             </div>
 
             <div class="u-box-font-size-255">
-                <h4 class="u-box-color-256">1. Principles of Data Collection
-                </h4>
-                <p>CarePulse Super Speciality Hospital collects patient identifiers (Name, Age, Gender, Mobile Number,
-                    Place of Residence, Symptoms, and ABHA ID) solely for clinical triage, OPD token queue scheduling,
-                    and verified pathology report generation.</p>
+                <h4 class="u-box-color-256">1. Prototype Demonstration Architecture (Client-Side Only)</h4>
+                <p>CarePulse is a demonstration prototype application. In compliance with the <strong>Digital Personal Data Protection (DPDP) Act, 2023 (India)</strong>, no personal data, health data, or appointment bookings are sent or saved to any external database or backend server. All information stays exclusively inside your browser.</p>
 
-                <h4 class="u-box-color-256">2. OTP-Protected Diagnostic
-                    Reports</h4>
-                <p>In accordance with clinical confidentiality standards, all digital diagnostic test sheets and
-                    pathology records are shielded behind mandatory 6-digit OTP verification sent to the patient's
-                    registered contact number.</p>
+                <h4 class="u-box-color-256">2. Exact LocalStorage Keys Stored on this Device</h4>
+                <p>In accordance with the DPDP Act 2023 data transparency requirements, the following keys are stored in your browser's HTML5 <code>localStorage</code> / <code>sessionStorage</code>:</p>
+                <ul style="margin: 0.5rem 0 0.75rem 1.25rem; font-size: 0.84rem; line-height: 1.5;">
+                    <li><code>carepulse_appointments</code>: Array of booked OPD tokens (patient name, age, phone number, token ID, doctor details).</li>
+                    <li><code>carepulse_auth_user</code>: Authenticated demo session user details (name, contact, UHID, login timestamp).</li>
+                    <li><code>carepulse_booked_slots</code>: Time slots reserved on this client to prevent double bookings.</li>
+                    <li><code>carepulse_theme</code>, <code>carepulse_palette</code>, <code>carepulse_font_scale</code>, <code>carepulse_lang</code>: UI presentation preferences.</li>
+                    <li><code>carepulse_delivery_gateway</code>: Developer public keys for EmailJS/Firebase (dev preview only).</li>
+                    <li><code>carepulse_pa_muted</code>: Audio chime and audible public address toggle state.</li>
+                </ul>
 
-                <h4 class="u-box-color-256">3. Zero Commercial Monetization
-                </h4>
-                <p>We do not sell, license, or transmit your private health records to advertising networks or
-                    unverified third parties. Data is stored on secure, encrypted hospital servers situated within the
-                    territory of India.</p>
+                <h4 class="u-box-color-256">3. Zero Third-Party Monetization or Transmission</h4>
+                <p>Your demo information is never sold, licensed, profiled, or transmitted to any third-party marketing network or data brokers. All verification codes and token slips are simulated entirely on the client side.</p>
 
-                <h4 class="u-box-color-256">4. Right to Correction and Erasure
-                </h4>
-                <p>Under Section 12 of the DPDP Act 2023, patients maintain the right to review, update, or request the
-                    closure of their digital portal profile by contacting the Hospital Data Protection Officer (DPO) at
-                    <code>privacy@carepulsephagwara.org</code>.</p>
+                <h4 class="u-box-color-256">4. DPDP Act 2023 Right to Correction and Complete Erasure</h4>
+                <p>Under Section 12 of the DPDP Act 2023, you have the right to erase all digital personal data. You can exercise this right instantly with 1-click by clicking the button below, which wipes all <code>carepulse_*</code> storage entries immediately:</p>
+                
+                <div style="margin-top: 0.75rem;">
+                    <button type="button" class="btn btn-outline-danger btn-sm" data-action="clear-demo-data" style="font-weight: 700;">
+                        🗑️ Erase All Stored Demo Data from this Browser
+                    </button>
+                </div>
             </div>
 
-            <div class="u-box-margin-top-144">
+            <div class="u-box-margin-top-144" style="display: flex; justify-content: flex-end;">
                 <button class="btn btn-primary btn-sm"
                     data-action="close-privacy-modal">
                     I Understand &amp; Agree
@@ -3779,6 +3793,9 @@
                 <button class="modal-close-btn" data-action="close-delivery-gateway">&times;</button>
             </div>
             <div class="modal-body u-box-font-size-300">
+                <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.82rem; color: #92400e; line-height: 1.45;">
+                    <strong>⚠️ Developer Environment Notice:</strong> This configuration console is restricted to developer preview (<code>?dev=1</code>). Only public client-safe API credentials belong here (e.g. EmailJS Public Key, Firebase Public Config). Never store secret API keys, private tokens, or production service account credentials in browser storage.
+                </div>
                 <p class="u-margin-bottom-1rem">
                     Configure how CarePulse delivers login verification codes. You can enable <strong>Real
                         Delivery</strong> to send live SMS to phones and emails to Gmail, or use <strong>Interactive
@@ -3810,7 +3827,7 @@
                 <div class="gateway-section-card">
                     <div class="gateway-section-title">
                         <span>📧 1. Real Gmail Delivery (EmailJS API)</span>
-                        <a href="https://dashboard.emailjs.com/sign-up" target="_blank" rel="noopener"
+                        <a href="https://dashboard.emailjs.com/sign-up" target="_blank" rel="noopener noreferrer"
                             class="gateway-helper-link">
                             🔗 Get Free Keys (No Card Required)
                         </a>
@@ -3839,7 +3856,7 @@
                 <div class="gateway-section-card">
                     <div class="gateway-section-title">
                         <span>📱 2. Real Mobile SMS Delivery (Google Firebase)</span>
-                        <a href="https://console.firebase.google.com/" target="_blank" rel="noopener"
+                        <a href="https://console.firebase.google.com/" target="_blank" rel="noopener noreferrer"
                             class="gateway-helper-link">
                             🔗 Firebase Console (Free 10K SMS)
                         </a>
@@ -3897,9 +3914,9 @@
     <div id="recaptcha-container"></div>
 
     <!-- Real Delivery SDKs: EmailJS (Free Gmail Delivery) & Firebase (Free 10K Mobile SMS) -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" integrity="sha384-SALc35EccAf6RzGw4iNsyj7kTPr33K7RoGzYu+7heZhT8s0GZouafRiCg1qy44AS" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" integrity="sha384-4gq9w/AGf72FXdNQ3Kn3EqWP7633NbCMjpYHt8YCZyXf23o2opcuAr4cif41tLrC" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" integrity="sha384-xtdq4MQqPj1dB5DQsuw9O7dh4kHhMP/Wp5u8O1jiaWiou13ZfJIgiccjtVK2pBhL" crossorigin="anonymous"></script>
 
     <!-- Main JavaScript Logic (ES Modules with Legacy Fallback Bundle) -->
     <script type="module" src="js/main.js"></script>

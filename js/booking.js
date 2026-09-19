@@ -60,7 +60,7 @@ function renderDateRibbon() {
       <div class="date-card-pill ${isActive ? 'active' : ''}" 
            data-date="${day.isoDate}" 
            data-full="${day.fullDateStr}"
-           onclick="selectDate('${day.isoDate}', '${day.fullDateStr}')">
+           data-action="select-date">
         <span class="date-pill-day">${day.label}</span>
         <span class="date-pill-num">${day.dayNum}</span>
         <span class="date-pill-month">${day.month}</span>
@@ -141,7 +141,7 @@ function renderSlots() {
 
       html += `
         <div class="slot-item ${statusClass} ${isSelected ? 'selected' : ''}" 
-             ${isSelectable ? `onclick="selectSlot('${slot.time}', '${slot.session}')"` : 'style="opacity: 0.45; cursor: not-allowed;"'}
+             ${isSelectable ? `data-action="select-slot" data-time="${slot.time}" data-session="${slot.session}"` : 'style="opacity: 0.45; cursor: not-allowed;"'}
              title="${slot.status === 'past' ? 'This slot time has already passed for today' : (slot.status === 'booked' ? 'Slot already reserved' : 'Click to select this slot')}">
           <span class="slot-time">${slot.time}</span>
           <span class="slot-status-tag">${isSelected ? '✓ Selected' : statusTagText}</span>

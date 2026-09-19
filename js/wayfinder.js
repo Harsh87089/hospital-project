@@ -148,7 +148,7 @@ const CampusWayfinderEngine = {
       const isTarget = r.id === this.destPoint;
       const isStart = r.id === this.startPoint;
       return `
-        <g class="room-group" onclick="CampusWayfinderEngine.onRoomClick('${r.id}')">
+        <g class="room-group" data-action="wayfinder-room-click" data-id="${r.id}">
           <rect class="room-rect ${isTarget ? 'active-target' : ''}" x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="8" style="${isStart ? 'stroke: #10b981; stroke-width: 2.5;' : ''}"></rect>
           <text class="room-label" x="${r.x + r.w / 2}" y="${r.y + r.h / 2 - 4}">${escapeHtml(r.label)}</text>
           <text class="room-sub-label" x="${r.x + r.w / 2}" y="${r.y + r.h / 2 + 12}">${escapeHtml(r.sub)}</text>

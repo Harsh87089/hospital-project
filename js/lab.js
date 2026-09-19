@@ -71,13 +71,13 @@ function renderLabReportAuthPrompt(uhid) {
       </div>
 
       <div style="margin-bottom: 1.25rem;">
-        <button type="button" class="btn btn-primary" onclick="verifyLabReportOTP()" style="padding: 0.65rem 1.85rem; font-weight: 700;">
+        <button type="button" class="btn btn-primary" data-action="verify-lab-report-otp" style="padding: 0.65rem 1.85rem; font-weight: 700;">
           Verify &amp; Unlock Report ➔
         </button>
       </div>
 
       <div style="background: #ecfdf5; border: 1px dashed #059669; border-radius: var(--radius-sm); padding: 0.65rem; font-size: 0.78rem; color: #065f46;">
-        💡 <strong>Demo Mode:</strong> Click <button type="button" onclick="document.getElementById('report-otp-input').value='123456'; verifyLabReportOTP();" style="background: none; border: none; color: #047857; text-decoration: underline; font-weight: 700; cursor: pointer;">Auto-Fill OTP (123456)</button> to view demo pathology sheet.
+        💡 <strong>Demo Mode:</strong> Click <button type="button" data-action="autofill-lab-otp" style="background: none; border: none; color: #047857; text-decoration: underline; font-weight: 700; cursor: pointer;">Auto-Fill OTP (123456)</button> to view demo pathology sheet.
       </div>
     </div>
   `;

@@ -218,7 +218,7 @@ const TeleConsultEngine = {
           <div class="rx-med-name">${idx + 1}. ${escapeHtml(item.name)}</div>
           <div class="rx-med-dose">${escapeHtml(item.dosage)} &bull; Duration: ${escapeHtml(item.duration)}</div>
         </div>
-        <button type="button" class="rx-item-remove" onclick="TeleConsultEngine.removePrescription(${idx})" title="Remove item">&times;</button>
+        <button type="button" class="rx-item-remove" data-action="remove-prescription" data-idx="${idx}" title="Remove item">&times;</button>
       </div>
     `).join('');
   },
@@ -329,7 +329,7 @@ const TeleConsultEngine = {
         </div>
 
         <div class="no-print" style="margin-top: 30px; text-align: center;">
-          <button onclick="window.print()" style="background: #0d9488; color: white; border: none; padding: 10px 24px; font-size: 15px; font-weight: 700; border-radius: 6px; cursor: pointer;">
+          <button data-action="print-rx" style="background: #0d9488; color: white; border: none; padding: 10px 24px; font-size: 15px; font-weight: 700; border-radius: 6px; cursor: pointer;">
             🖨️ Print Prescription
           </button>
         </div>

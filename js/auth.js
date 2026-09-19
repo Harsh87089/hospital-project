@@ -170,16 +170,31 @@ const CarePulseAuth = {
     if (this.activeMethod === 'mobile') {
       const phoneInput = document.getElementById('auth-mobile-input');
       const nameInput = document.getElementById('auth-mobile-name');
-      const phone = phoneInput ? phoneInput.value.trim().replace(/\D/g, '') : '';
-      const name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Patient';
+      const rawPhone = phoneInput ? phoneInput.value.trim() : '';
+      let phone = rawPhone.replace(/\D/g, '');
+      if (phone.startsWith('91') && phone.length === 12) phone = phone.slice(2);
+      else if (phone.startsWith('0') && phone.length === 11) phone = phone.slice(1);
 
-      if (!phone || phone.length < 10) {
-        this.showError('Please enter a valid 10-digit mobile number.');
-        if (phoneInput) phoneInput.focus();
+      const rawName = nameInput ? nameInput.value.trim() : '';
+      if (rawName && !/^[A-Za-z\s.]{2,50}$/.test(rawName)) {
+        this.showError('Patient name must contain only letters, spaces, or dots (2-50 characters).');
+        if (nameInput) {
+          nameInput.classList.add('input-error');
+          nameInput.focus();
+        }
         return;
       }
-      this.targetContact = '+91 ' + phone.slice(-10);
-      this.userName = name;
+
+      if (!/^[6-9]\d{9}$/.test(phone)) {
+        this.showError('Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.');
+        if (phoneInput) {
+          phoneInput.classList.add('input-error');
+          phoneInput.focus();
+        }
+        return;
+      }
+      this.targetContact = '+91 ' + phone;
+      this.userName = rawName || 'Patient';
       this.otpMethod = 'mobile';
     } else {
       const emailInput = document.getElementById('auth-google-email');
@@ -187,9 +202,12 @@ const CarePulseAuth = {
       const email = emailInput ? emailInput.value.trim() : '';
       let name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : '';
 
-      if (!email || !email.includes('@') || !email.includes('.')) {
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         this.showError('Please enter or select a valid Google / Gmail address.');
-        if (emailInput) emailInput.focus();
+        if (emailInput) {
+          emailInput.classList.add('input-error');
+          emailInput.focus();
+        }
         return;
       }
       if (!name) {
@@ -242,7 +260,7 @@ const CarePulseAuth = {
             <span class="app-name">MESSAGES • Just Now</span>
             <span class="demo-simulated-tag" style="background: #fef08a; color: #854d0e; font-size: 0.68rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-left: 6px;">DEMO – no SMS/email was actually sent</span>
           </div>
-          <button class="simulated-close-btn" onclick="this.closest('.simulated-otp-banner').remove()">&times;</button>
+          <button type="button" class="simulated-close-btn" data-action="dismiss-simulated-banner">&times;</button>
         </div>
         <div class="simulated-banner-body">
           <div class="simulated-sender">CarePulse SMS Gateway &bull; <span>TD-CAREPL</span></div>
@@ -251,10 +269,10 @@ const CarePulseAuth = {
           </p>
         </div>
         <div class="simulated-banner-actions">
-          <button type="button" class="btn-autofill-otp" onclick="CarePulseAuth.autoFillOTP('${otp}')">
+          <button type="button" class="btn-autofill-otp" data-action="autofill-otp" data-otp="${otp}">
             📋 Auto-Fill OTP (${otp})
           </button>
-          <button type="button" class="btn-copy-otp" onclick="navigator.clipboard.writeText('${otp}'); showToast('OTP ${otp} copied!', 'success');">
+          <button type="button" class="btn-copy-otp" data-action="copy-otp" data-otp="${otp}">
             Copy Code
           </button>
         </div>
@@ -267,7 +285,7 @@ const CarePulseAuth = {
             <span class="app-name">GMAIL • Just Now</span>
             <span class="demo-simulated-tag" style="background: #fef08a; color: #854d0e; font-size: 0.68rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-left: 6px;">DEMO – no SMS/email was actually sent</span>
           </div>
-          <button class="simulated-close-btn" onclick="this.closest('.simulated-otp-banner').remove()">&times;</button>
+          <button type="button" class="simulated-close-btn" data-action="dismiss-simulated-banner">&times;</button>
         </div>
         <div class="simulated-banner-body">
           <div class="simulated-sender">CarePulse Security &bull; <span>security@carepulse.org</span></div>
@@ -276,10 +294,10 @@ const CarePulseAuth = {
           </p>
         </div>
         <div class="simulated-banner-actions">
-          <button type="button" class="btn-autofill-otp" onclick="CarePulseAuth.autoFillOTP('${otp}')">
+          <button type="button" class="btn-autofill-otp" data-action="autofill-otp" data-otp="${otp}">
             📋 Auto-Fill OTP (${otp})
           </button>
-          <button type="button" class="btn-copy-otp" onclick="navigator.clipboard.writeText('${otp}'); showToast('OTP ${otp} copied!', 'success');">
+          <button type="button" class="btn-copy-otp" data-action="copy-otp" data-otp="${otp}">
             Copy Code
           </button>
         </div>
@@ -374,8 +392,8 @@ const CarePulseAuth = {
 
   async verifyOTP() {
     const entered = this.getEnteredOTP();
-    if (entered.length < 6) {
-      this.showError('Please enter all 6 digits of the OTP.');
+    if (entered.length !== 6 || !/^\d{6}$/.test(entered)) {
+      this.showError('Please enter all 6 numeric digits of the OTP.');
       this.shakeCard();
       return;
     }

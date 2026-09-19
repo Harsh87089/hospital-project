@@ -749,7 +749,7 @@ function renderLiveOPDBoard() {
       <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem 1rem; background: white; border-radius: var(--radius-xl); border: 1px dashed var(--slate-300);">
         <p style="font-size: 1.15rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem;">No active consultation chambers match "${escapeHtml(state.queueSearch)}"</p>
         <p style="color: var(--slate-600); margin-bottom: 1rem; font-size: 0.88rem;">Try clearing your search query or switching to All Chambers.</p>
-        <button class="btn btn-outline btn-sm" onclick="filterQueueSpecialty('all'); const inp = document.getElementById('queue-search-input'); if (inp) inp.value = ''; handleQueueSearch('');">
+        <button class="btn btn-outline btn-sm" data-action="filter-queue-specialty" data-specialty="all">
           Reset Chamber Filters
         </button>
       </div>
@@ -831,7 +831,7 @@ function renderLiveOPDBoard() {
 
         <!-- Action Buttons -->
         <div class="queue-card-actions">
-          <button class="btn-book-from-queue" onclick="closeLiveQueueModal(); openBookingLayer('${doc.id}');" style="width: 100%; justify-content: center; font-weight: 700;" title="Book consultation appointment slot with this specialist">
+          <button class="btn-book-from-queue" data-action="queue-book-doc" data-id="${doc.id}" style="width: 100%; justify-content: center; font-weight: 700;" title="Book consultation appointment slot with this specialist">
             📅 Book Consultation Slot ➔
           </button>
         </div>
@@ -935,7 +935,7 @@ function renderDoctorCards() {
       <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; background: white; border-radius: var(--radius-xl); border: 1px dashed var(--slate-300);">
         <p style="font-size: 1.2rem; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem;">No specialists found matching "${escapeHtml(state.searchQuery)}"</p>
         <p style="color: var(--slate-600); margin-bottom: 1rem;">Search by consultant name (e.g. 'Dr. Gurpreet', 'Dr. Simranjit') or condition (e.g. 'heart', 'knee joint', 'pregnancy', 'skin').</p>
-        <button class="btn btn-outline" onclick="resetDoctorFilters()">Reset All Filters</button>
+        <button class="btn btn-outline" data-action="reset-doctor-filters">Reset All Filters</button>
       </div>
     `;
     return;
@@ -996,10 +996,10 @@ function renderDoctorCards() {
           </div>
 
           <div class="doctor-card-footer">
-            <button class="btn btn-outline btn-sm" onclick="openBookingLayer('${doc.id}')" title="Book In-Person OPD Appointment">
+            <button class="btn btn-outline btn-sm" data-action="open-booking-doc" data-id="${doc.id}" title="Book In-Person OPD Appointment">
               In-Person OPD
             </button>
-            <button class="btn btn-primary btn-sm" onclick="openTeleConsultModal('${doc.id}')" style="background: linear-gradient(135deg, #0d9488 0%, #0284c7 100%); border: none;" title="Start Instant Video Tele-Consultation">
+            <button class="btn btn-primary btn-sm" data-action="open-teleconsult-doc" data-id="${doc.id}" style="background: linear-gradient(135deg, #0d9488 0%, #0284c7 100%); border: none;" title="Start Instant Video Tele-Consultation">
               📹 Video Consult
             </button>
           </div>
@@ -1212,7 +1212,7 @@ function renderDateRibbon() {
       <div class="date-card-pill ${isActive ? 'active' : ''}" 
            data-date="${day.isoDate}" 
            data-full="${day.fullDateStr}"
-           onclick="selectDate('${day.isoDate}', '${day.fullDateStr}')">
+           data-action="select-date" data-date="${day.isoDate}" data-full="${day.fullDateStr}">
         <span class="date-pill-day">${day.label}</span>
         <span class="date-pill-num">${day.dayNum}</span>
         <span class="date-pill-month">${day.month}</span>
@@ -1293,7 +1293,7 @@ function renderSlots() {
 
       html += `
         <div class="slot-item ${statusClass} ${isSelected ? 'selected' : ''}" 
-             ${isSelectable ? `onclick="selectSlot('${slot.time}', '${slot.session}')"` : 'style="opacity: 0.45; cursor: not-allowed;"'}
+             ${isSelectable ? `data-action="select-slot" data-time="${slot.time}" data-session="${slot.session}"` : 'style="opacity: 0.45; cursor: not-allowed;"'}
              title="${slot.status === 'past' ? 'This slot time has already passed for today' : (slot.status === 'booked' ? 'Slot already reserved' : 'Click to select this slot')}">
           <span class="slot-time">${slot.time}</span>
           <span class="slot-status-tag">${isSelected ? '✓ Selected' : statusTagText}</span>
@@ -1992,16 +1992,61 @@ function generateUniqueTicketDetails(doc, patientData, targetDateIso) {
   };
 }
 
+function showBookingError(inputId, message) {
+  const inputEl = document.getElementById(inputId);
+  const errEl = document.getElementById(inputId + '-error');
+  if (inputEl) {
+    inputEl.classList.add('input-error');
+    inputEl.setAttribute('aria-invalid', 'true');
+    inputEl.setAttribute('aria-describedby', inputId + '-error');
+    inputEl.focus();
+    const onInput = () => {
+      inputEl.classList.remove('input-error');
+      inputEl.removeAttribute('aria-invalid');
+      if (errEl) {
+        errEl.textContent = '';
+        errEl.classList.remove('visible');
+      }
+      inputEl.removeEventListener('input', onInput);
+    };
+    inputEl.addEventListener('input', onInput);
+  }
+  if (errEl) {
+    errEl.textContent = message;
+    errEl.classList.add('visible');
+  }
+}
+
+function clearBookingErrors() {
+  ['layer-patient-name', 'layer-patient-age', 'layer-patient-phone', 'patient-name', 'patient-age', 'patient-phone'].forEach(id => {
+    const el = document.getElementById(id);
+    const err = document.getElementById(id + '-error');
+    if (el) {
+      el.classList.remove('input-error');
+      el.removeAttribute('aria-invalid');
+    }
+    if (err) {
+      err.textContent = '';
+      err.classList.remove('visible');
+    }
+  });
+}
+
 // --- Common Appointment Booking Processor ---
 function processBookingSubmission(patientData) {
+  clearBookingErrors();
+
   const name = (patientData.name || '').trim();
-  if (name.length < 2) {
-    showToast('Please provide a valid patient name (minimum 2 characters).', 'warning');
+  const nameRegex = /^[A-Za-z\s.]{2,50}$/;
+  if (!name || name.length < 2 || name.length > 50 || !nameRegex.test(name)) {
+    showBookingError('layer-patient-name', 'Please provide a valid patient name (letters and spaces only, 2-50 characters).');
+    showToast('Please enter a valid patient name (letters and spaces only, 2-50 characters).', 'warning');
     return false;
   }
 
   const age = parseInt(patientData.age, 10);
   if (isNaN(age) || age < 1 || age > 120) {
+    showBookingError('layer-patient-age', 'Please enter a valid patient age between 1 and 120 years.');
     showToast('Please enter a valid patient age between 1 and 120 years.', 'warning');
     return false;
   }
@@ -2014,7 +2059,17 @@ function processBookingSubmission(patientData) {
   }
 
   if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+    showBookingError('layer-patient-phone', 'Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.');
     showToast('Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.', 'warning');
+    return false;
+  }
+
+  const targetDateIso = state.selectedDate || getISTIsoDate();
+  const todayIso = getISTIsoDate();
+  const maxDate = new Date(getISTDate().getTime() + 30 * 86400000);
+  const maxDateIso = getISTIsoDate(maxDate);
+  if (targetDateIso < todayIso || targetDateIso > maxDateIso) {
+    showToast('Please select a consultation date within the allowed 30-day booking window.', 'warning');
     return false;
   }
 
@@ -2733,6 +2788,8 @@ window.openRescheduleModal = function (app) {
     if (dateEl) {
       dateEl.value = tmrwIso;
       dateEl.min = getISTIsoDate();
+      const maxDate = new Date(getISTDate().getTime() + 30 * 86400000);
+      dateEl.max = getISTIsoDate(maxDate);
       dateEl.onchange = function () {
         populateRescheduleSlots(app.doctorId, dateEl.value);
       };
@@ -2770,6 +2827,18 @@ window.confirmReschedule = function () {
   const slotInput = document.getElementById('reschedule-slot-select');
   const newDateIso = (dateInput && dateInput.value) ? dateInput.value : getISTIsoDate();
   const newSlot = (slotInput && slotInput.value) ? slotInput.value : '';
+
+  const todayIso = getISTIsoDate();
+  const maxDateIso = getISTIsoDate(new Date(getISTDate().getTime() + 30 * 86400000));
+  if (newDateIso < todayIso || newDateIso > maxDateIso) {
+    showToast('Please select a reschedule date within the allowed 30-day window.', 'warning');
+    const errEl = document.getElementById('reschedule-date-error');
+    if (errEl) {
+      errEl.textContent = 'Please choose a date between today and the next 30 days.';
+      errEl.classList.add('visible');
+    }
+    return;
+  }
 
   if (!newSlot || newSlot.includes('Off-Duty') || newSlot.includes('No open')) {
     showToast('Please select an available consultation slot.', 'warning');
@@ -3223,10 +3292,10 @@ function renderReceptionDashboard() {
         ` : ''}
 
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-          <button class="btn btn-primary btn-sm" onclick="callNextPatientToken('${doc.id}')" style="flex: 1; font-weight: 700;">
+          <button class="btn btn-primary btn-sm" data-action="call-next-patient" data-id="${doc.id}" style="flex: 1; font-weight: 700;">
             🔔 Call Next (#TK-${String(doc.currentServingToken + 1).padStart(2, '0')})
           </button>
-          <button class="btn btn-outline btn-sm" onclick="issueWalkinToken('${doc.id}')" style="font-size: 0.75rem;">
+          <button class="btn btn-outline btn-sm" data-action="issue-walkin-token" data-id="${doc.id}" style="font-size: 0.75rem;">
             ➕ Walk-In
           </button>
         </div>
@@ -3253,8 +3322,8 @@ function renderReceptionDashboard() {
           </td>
           <td>
             <div style="display: flex; gap: 0.25rem;">
-              <button class="btn-rx-add" onclick="markTokenCompleted('${escapeHtml(a.tokenId)}')" title="Mark consultation done">✓ Done</button>
-              <button class="btn-rx-add" onclick="markTokenNoShow('${escapeHtml(a.tokenId)}')" style="color: #b91c1c;" title="Mark patient absent">✗ No-Show</button>
+              <button class="btn-rx-add" data-action="mark-token-completed" data-id="${escapeHtml(a.tokenId)}" title="Mark consultation done">✓ Done</button>
+              <button class="btn-rx-add" data-action="mark-token-no-show" data-id="${escapeHtml(a.tokenId)}" style="color: #b91c1c;" title="Mark patient absent">✗ No-Show</button>
             </div>
           </td>
         </tr>
@@ -3464,14 +3533,14 @@ window.openMyBookingsModal = function () {
           </div>
           <div style="display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-end;">
             <div style="display: flex; gap: 0.35rem; align-items: center;">
-              <button class="btn btn-outline btn-sm" onclick="reopenTokenSlip('${safeTokenId}')" title="View token slip">
+              <button class="btn btn-outline btn-sm" data-action="reopen-token-slip" data-id="${safeTokenId}" title="View token slip">
                 View ↗
               </button>
-              <button class="btn btn-sm btn-download-ticket" style="padding: 0.3rem 0.65rem; font-size: 0.76rem;" onclick="downloadTicketById('${safeTokenId}', 'png')" title="Download E-Pass">
+              <button class="btn btn-sm btn-download-ticket" style="padding: 0.3rem 0.65rem; font-size: 0.76rem;" data-action="download-token" data-id="${safeTokenId}" title="Download E-Pass">
                 📥 Download
               </button>
             </div>
-            <button class="btn btn-sm" style="color: var(--accent-rose); background: transparent; border: none; font-size: 0.75rem; padding: 0.1rem 0.3rem;" onclick="cancelAppointment('${safeTokenId}')">
+            <button class="btn btn-sm" style="color: var(--accent-rose); background: transparent; border: none; font-size: 0.75rem; padding: 0.1rem 0.3rem;" data-action="cancel-appointment" data-id="${safeTokenId}">
               Cancel
             </button>
           </div>
@@ -4107,13 +4176,13 @@ function renderLabReportAuthPrompt(uhid) {
       </div>
 
       <div style="margin-bottom: 1.25rem;">
-        <button type="button" class="btn btn-primary" onclick="verifyLabReportOTP()" style="padding: 0.65rem 1.85rem; font-weight: 700;">
+        <button type="button" class="btn btn-primary" data-action="verify-lab-report-otp" style="padding: 0.65rem 1.85rem; font-weight: 700;">
           Verify &amp; Unlock Report ➔
         </button>
       </div>
 
       <div style="background: #ecfdf5; border: 1px dashed #059669; border-radius: var(--radius-sm); padding: 0.65rem; font-size: 0.78rem; color: #065f46;">
-        💡 <strong>Demo Mode:</strong> Click <button type="button" onclick="document.getElementById('report-otp-input').value='123456'; verifyLabReportOTP();" style="background: none; border: none; color: #047857; text-decoration: underline; font-weight: 700; cursor: pointer;">Auto-Fill OTP (123456)</button> to view demo pathology sheet.
+        💡 <strong>Demo Mode:</strong> Click <button type="button" data-action="autofill-lab-otp" style="background: none; border: none; color: #047857; text-decoration: underline; font-weight: 700; cursor: pointer;">Auto-Fill OTP (123456)</button> to view demo pathology sheet.
       </div>
     </div>
   `;
@@ -4557,7 +4626,7 @@ function appendChatMessage(htmlOrText, sender = 'bot') {
   msgDiv.className = `chat-msg ${sender}`;
   let finalHtml = htmlOrText;
   if (sender === 'bot') {
-    finalHtml += `<div><button type="button" class="btn-read-aloud" onclick="readAloudChatText(this)"><span>🔊 Listen</span></button></div>`;
+    finalHtml += `<div><button type="button" class="btn-read-aloud" data-action="read-aloud-chat"><span>🔊 Listen</span></button></div>`;
   }
   msgDiv.innerHTML = finalHtml;
   container.appendChild(msgDiv);
@@ -4582,10 +4651,10 @@ function botTriageProcess(userQuery) {
         <li>🦷 <strong>Dental Surgeons</strong> (Toothache, root canal & cleaning)</li>
       </ul>
       <div class="chat-action-cluster">
-        <button class="btn-bot-action primary" onclick="openBookingLayer(); closeChatWidget();">
+        <button class="btn-bot-action primary" data-action="chat-book-opd">
           ⚡ Open Doctor Booking Layer ↗
         </button>
-        <button class="btn-bot-action pharmacy" onclick="openPharmacyModal(); closeChatWidget();">
+        <button class="btn-bot-action pharmacy" data-action="chat-open-pharmacy">
           💊 Order OTC Medicines (24/7 Pharmacy) ↗
         </button>
       </div>
@@ -4612,7 +4681,7 @@ function botTriageProcess(userQuery) {
           <a href="tel:${DEMO_PHONE_RAW}" class="btn btn-primary btn-sm" style="background: #991b1b; text-decoration: none; font-weight: 800; padding: 0.5rem 0.85rem;">
             📞 Demo Desk: ${DEMO_PHONE}
           </a>
-          <button type="button" class="btn btn-outline btn-sm" onclick="openEmergencySOS(); closeChatWidget();" style="border-color: #dc2626; color: #dc2626; font-weight: 700;">
+          <button type="button" class="btn btn-outline btn-sm" data-action="chat-open-sos" style="border-color: #dc2626; color: #dc2626; font-weight: 700;">
             🚨 GPS Emergency Hub
           </button>
         </div>
@@ -4637,10 +4706,10 @@ function botTriageProcess(userQuery) {
         </ul>
       </div>
       <div class="chat-action-cluster">
-        <button class="btn-bot-action package" onclick="bookHealthPackage('pkg-exec'); closeChatWidget();">
+        <button class="btn-bot-action package" data-action="chat-book-package" data-package="pkg-exec">
           🛡️ Book Executive Full Body Checkup (₹2,499) ↗
         </button>
-        <button class="btn-bot-action primary" onclick="bookHealthPackage('pkg-basic'); closeChatWidget();">
+        <button class="btn-bot-action primary" data-action="chat-book-package" data-package="pkg-basic">
           🩸 Book Basic Wellness Screen (₹999) ↗
         </button>
       </div>
@@ -4684,19 +4753,19 @@ function botTriageProcess(userQuery) {
       <div style="font-size: 0.72rem; color: var(--slate-600);">${match.degree}</div>
       <div style="font-size: 0.75rem; font-weight: 700; color: #059669; margin-top: 0.2rem;">Consultation Fee: ${match.fee}</div>
 
-      <button class="btn-auto-book-slot" onclick="autoBookDoctorFromChat('${match.doctor}', '${match.condition}');">
+      <button class="btn-auto-book-slot" data-action="auto-book-from-chat" data-doctor="${match.doctor}" data-condition="${match.condition}">
         ⚡ 1-Click Auto-Book ${match.doctorName} (Next Available Slot)
       </button>
     </div>
 
     <div class="chat-action-cluster">
-      <button class="btn-bot-action primary" onclick="openBookingLayer('${match.doctor}'); closeChatWidget();">
+      <button class="btn-bot-action primary" data-action="chat-book-opd" data-doctor="${match.doctor}">
         📅 Option 1: Book Consultation with ${match.doctorName} ➔
       </button>
-      <button class="btn-bot-action pharmacy" onclick="openPharmacyModal(); closeChatWidget();">
+      <button class="btn-bot-action pharmacy" data-action="chat-open-pharmacy">
         💊 Option 2: Order Relief Kit (2-Hr Delivery) ↗
       </button>
-      <button class="btn-bot-action package" onclick="openLabReportModal(); closeChatWidget();">
+      <button class="btn-bot-action package" data-action="chat-open-lab">
         🔬 Option 3: Check Lab Reports & Diagnostic Tests ↗
       </button>
     </div>
@@ -4881,13 +4950,26 @@ const CarePulseAuth = {
       const phone = phoneInput ? phoneInput.value.trim().replace(/\D/g, '') : '';
       const name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Patient';
 
-      if (!phone || phone.length < 10) {
-        this.showError('Please enter a valid 10-digit mobile number.');
-        if (phoneInput) phoneInput.focus();
+      const rawName = nameInput ? nameInput.value.trim() : '';
+      if (rawName && !/^[A-Za-z\s.]{2,50}$/.test(rawName)) {
+        this.showError('Patient name must contain only letters, spaces, or dots (2-50 characters).');
+        if (nameInput) {
+          nameInput.classList.add('input-error');
+          nameInput.focus();
+        }
         return;
       }
-      this.targetContact = '+91 ' + phone.slice(-10);
-      this.userName = name;
+
+      if (!/^[6-9]\d{9}$/.test(phone)) {
+        this.showError('Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.');
+        if (phoneInput) {
+          phoneInput.classList.add('input-error');
+          phoneInput.focus();
+        }
+        return;
+      }
+      this.targetContact = '+91 ' + phone;
+      this.userName = rawName || 'Patient';
       this.otpMethod = 'mobile';
     } else {
       const emailInput = document.getElementById('auth-google-email');
@@ -4950,7 +5032,7 @@ const CarePulseAuth = {
             <span class="app-name">MESSAGES • Just Now</span>
             <span class="demo-simulated-tag" style="background: #fef08a; color: #854d0e; font-size: 0.68rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-left: 6px;">DEMO – no SMS/email was actually sent</span>
           </div>
-          <button class="simulated-close-btn" onclick="this.closest('.simulated-otp-banner').remove()">&times;</button>
+          <button class="simulated-close-btn" data-action="dismiss-simulated-banner">&times;</button>
         </div>
         <div class="simulated-banner-body">
           <div class="simulated-sender">CarePulse SMS Gateway &bull; <span>TD-CAREPL</span></div>
@@ -4959,10 +5041,10 @@ const CarePulseAuth = {
           </p>
         </div>
         <div class="simulated-banner-actions">
-          <button type="button" class="btn-autofill-otp" onclick="CarePulseAuth.autoFillOTP('${otp}')">
+          <button type="button" class="btn-autofill-otp" data-action="autofill-otp" data-otp="${otp}">
             📋 Auto-Fill OTP (${otp})
           </button>
-          <button type="button" class="btn-copy-otp" onclick="navigator.clipboard.writeText('${otp}'); showToast('OTP ${otp} copied!', 'success');">
+          <button type="button" class="btn-copy-otp" data-action="copy-otp" data-otp="${otp}">
             Copy Code
           </button>
         </div>
@@ -4975,7 +5057,7 @@ const CarePulseAuth = {
             <span class="app-name">GMAIL • Just Now</span>
             <span class="demo-simulated-tag" style="background: #fef08a; color: #854d0e; font-size: 0.68rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-left: 6px;">DEMO – no SMS/email was actually sent</span>
           </div>
-          <button class="simulated-close-btn" onclick="this.closest('.simulated-otp-banner').remove()">&times;</button>
+          <button class="simulated-close-btn" data-action="dismiss-simulated-banner">&times;</button>
         </div>
         <div class="simulated-banner-body">
           <div class="simulated-sender">CarePulse Security &bull; <span>security@carepulse.org</span></div>
@@ -4984,10 +5066,10 @@ const CarePulseAuth = {
           </p>
         </div>
         <div class="simulated-banner-actions">
-          <button type="button" class="btn-autofill-otp" onclick="CarePulseAuth.autoFillOTP('${otp}')">
+          <button type="button" class="btn-autofill-otp" data-action="autofill-otp" data-otp="${otp}">
             📋 Auto-Fill OTP (${otp})
           </button>
-          <button type="button" class="btn-copy-otp" onclick="navigator.clipboard.writeText('${otp}'); showToast('OTP ${otp} copied!', 'success');">
+          <button type="button" class="btn-copy-otp" data-action="copy-otp" data-otp="${otp}">
             Copy Code
           </button>
         </div>
@@ -5082,8 +5164,8 @@ const CarePulseAuth = {
 
   async verifyOTP() {
     const entered = this.getEnteredOTP();
-    if (entered.length < 6) {
-      this.showError('Please enter all 6 digits of the OTP.');
+    if (entered.length !== 6 || !/^\d{6}$/.test(entered)) {
+      this.showError('Please enter all 6 numeric digits of the OTP.');
       this.shakeCard();
       return;
     }
@@ -6929,9 +7011,18 @@ const DeliveryGateway = {
 window.DeliveryGateway = DeliveryGateway;
 
 window.openDeliveryGatewayModal = function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('dev') !== '1') {
+    showToast('Developer Gateway is restricted to dev mode. Append ?dev=1 to URL to access.', 'warning');
+    return;
+  }
   DeliveryGateway.populateForm();
-  const modal = document.getElementById('delivery-gateway-modal');
-  if (modal) modal.style.display = 'flex';
+  if (typeof openModal === 'function') {
+    openModal('delivery-gateway-modal');
+  } else {
+    const modal = document.getElementById('delivery-gateway-modal');
+    if (modal) modal.style.display = 'flex';
+  }
 };
 
 window.closeDeliveryGatewayModal = function () {
@@ -7588,7 +7679,7 @@ const TeleConsultEngine = {
           <div class="rx-med-name">${idx + 1}. ${escapeHtml(item.name)}</div>
           <div class="rx-med-dose">${escapeHtml(item.dosage)} &bull; Duration: ${escapeHtml(item.duration)}</div>
         </div>
-        <button type="button" class="rx-item-remove" onclick="TeleConsultEngine.removePrescription(${idx})" title="Remove item">&times;</button>
+        <button type="button" class="rx-item-remove" data-action="remove-prescription" data-idx="${idx}" title="Remove item">&times;</button>
       </div>
     `).join('');
   },
@@ -7699,7 +7790,7 @@ const TeleConsultEngine = {
         </div>
 
         <div class="no-print" style="margin-top: 30px; text-align: center;">
-          <button onclick="window.print()" style="background: #0d9488; color: white; border: none; padding: 10px 24px; font-size: 15px; font-weight: 700; border-radius: 6px; cursor: pointer;">
+          <button data-action="print-rx" style="background: #0d9488; color: white; border: none; padding: 10px 24px; font-size: 15px; font-weight: 700; border-radius: 6px; cursor: pointer;">
             🖨️ Print Prescription
           </button>
         </div>
@@ -7885,7 +7976,7 @@ const CampusWayfinderEngine = {
       const isTarget = r.id === this.destPoint;
       const isStart = r.id === this.startPoint;
       return `
-        <g class="room-group" onclick="CampusWayfinderEngine.onRoomClick('${r.id}')">
+        <g class="room-group" data-action="wayfinder-room-click" data-id="${r.id}">
           <rect class="room-rect ${isTarget ? 'active-target' : ''}" x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="8" style="${isStart ? 'stroke: #10b981; stroke-width: 2.5;' : ''}"></rect>
           <text class="room-label" x="${r.x + r.w / 2}" y="${r.y + r.h / 2 - 4}">${escapeHtml(r.label)}</text>
           <text class="room-sub-label" x="${r.x + r.w / 2}" y="${r.y + r.h / 2 + 12}">${escapeHtml(r.sub)}</text>
@@ -8616,6 +8707,115 @@ document.addEventListener('click', function (e) {
     case 'book-package':
       if (typeof window.closePackagesModal === 'function') window.closePackagesModal();
       if (typeof window.bookHealthPackage === 'function') window.bookHealthPackage(d.pkg);
+      break;
+    case 'clear-demo-data':
+      if (typeof window.clearAllDemoData === 'function') window.clearAllDemoData();
+      break;
+    case 'open-delivery-gateway':
+      if (typeof window.openDeliveryGatewayModal === 'function') window.openDeliveryGatewayModal();
+      break;
+    case 'select-date':
+      if (typeof window.selectDate === 'function') window.selectDate(d.date, d.full);
+      break;
+    case 'select-slot':
+      if (typeof window.selectSlot === 'function') window.selectSlot(d.time, d.session);
+      break;
+    case 'reopen-token-slip':
+      if (typeof window.reopenTokenSlip === 'function') window.reopenTokenSlip(d.id);
+      break;
+    case 'download-token':
+      if (typeof window.downloadTicketById === 'function') window.downloadTicketById(d.id, 'png');
+      break;
+    case 'cancel-appointment':
+      if (typeof window.cancelAppointment === 'function') window.cancelAppointment(d.id);
+      break;
+    case 'queue-book-doc':
+      if (typeof window.closeLiveQueueModal === 'function') window.closeLiveQueueModal();
+      if (typeof window.openBookingLayer === 'function') window.openBookingLayer(d.id);
+      break;
+    case 'reset-doctor-filters':
+      if (typeof window.resetDoctorFilters === 'function') window.resetDoctorFilters();
+      break;
+    case 'open-booking-doc':
+      if (typeof window.openBookingLayer === 'function') window.openBookingLayer(d.id);
+      break;
+    case 'open-teleconsult-doc':
+      if (typeof window.openTeleConsultModal === 'function') window.openTeleConsultModal(d.id);
+      break;
+    case 'call-next-patient':
+      if (typeof window.callNextPatientToken === 'function') window.callNextPatientToken(d.id);
+      break;
+    case 'issue-walkin-token':
+      if (typeof window.issueWalkinToken === 'function') window.issueWalkinToken(d.id);
+      break;
+    case 'mark-token-completed':
+      if (typeof window.markTokenCompleted === 'function') window.markTokenCompleted(d.id);
+      break;
+    case 'mark-token-no-show':
+      if (typeof window.markTokenNoShow === 'function') window.markTokenNoShow(d.id);
+      break;
+    case 'verify-lab-report-otp':
+      if (typeof window.verifyLabReportOTP === 'function') window.verifyLabReportOTP();
+      break;
+    case 'autofill-lab-otp':
+      {
+        const inp = document.getElementById('report-otp-input');
+        if (inp) inp.value = '123456';
+        if (typeof window.verifyLabReportOTP === 'function') window.verifyLabReportOTP();
+      }
+      break;
+    case 'remove-prescription':
+      if (window.TeleConsultEngine && typeof window.TeleConsultEngine.removePrescription === 'function') {
+        window.TeleConsultEngine.removePrescription(parseInt(d.idx, 10));
+      }
+      break;
+    case 'print-rx':
+      window.print();
+      break;
+    case 'wayfinder-room-click':
+      if (window.CampusWayfinderEngine && typeof window.CampusWayfinderEngine.onRoomClick === 'function') {
+        window.CampusWayfinderEngine.onRoomClick(d.id);
+      }
+      break;
+    case 'read-aloud-chat':
+      if (typeof window.readAloudChatText === 'function') window.readAloudChatText(target);
+      break;
+    case 'chat-book-opd':
+      if (typeof window.openBookingLayer === 'function') window.openBookingLayer(d.doctor || null);
+      if (typeof window.closeChatWidget === 'function') window.closeChatWidget();
+      break;
+    case 'chat-open-pharmacy':
+      if (typeof window.openPharmacyModal === 'function') window.openPharmacyModal();
+      if (typeof window.closeChatWidget === 'function') window.closeChatWidget();
+      break;
+    case 'chat-open-sos':
+      if (typeof window.openEmergencySOS === 'function') window.openEmergencySOS();
+      if (typeof window.closeChatWidget === 'function') window.closeChatWidget();
+      break;
+    case 'chat-book-package':
+      if (typeof window.bookHealthPackage === 'function') window.bookHealthPackage(d.package || 'pkg-basic');
+      if (typeof window.closeChatWidget === 'function') window.closeChatWidget();
+      break;
+    case 'auto-book-from-chat':
+      if (typeof window.autoBookDoctorFromChat === 'function') window.autoBookDoctorFromChat(d.doctor, d.condition);
+      break;
+    case 'chat-open-lab':
+      if (typeof window.openLabReportModal === 'function') window.openLabReportModal();
+      if (typeof window.closeChatWidget === 'function') window.closeChatWidget();
+      break;
+    case 'dismiss-simulated-banner':
+      target.closest('.simulated-otp-banner')?.remove();
+      break;
+    case 'autofill-otp':
+      if (window.CarePulseAuth && typeof window.CarePulseAuth.autoFillOTP === 'function') {
+        window.CarePulseAuth.autoFillOTP(d.otp);
+      }
+      break;
+    case 'copy-otp':
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(d.otp || '');
+        if (typeof window.showToast === 'function') window.showToast('OTP ' + d.otp + ' copied!', 'success');
+      }
       break;
     case 'toggle-medicine':
       if (typeof window.toggleMedicineSelection === 'function') window.toggleMedicineSelection(target, d.name, parseFloat(d.price));

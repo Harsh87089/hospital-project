@@ -40,7 +40,7 @@ function renderLiveOPDBoard() {
       <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem 1rem; background: white; border-radius: var(--radius-xl); border: 1px dashed var(--slate-300);">
         <p style="font-size: 1.15rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem;">No active consultation chambers match "${escapeHtml(state.queueSearch)}"</p>
         <p style="color: var(--slate-600); margin-bottom: 1rem; font-size: 0.88rem;">Try clearing your search query or switching to All Chambers.</p>
-        <button class="btn btn-outline btn-sm" onclick="filterQueueSpecialty('all'); const inp = document.getElementById('queue-search-input'); if (inp) inp.value = ''; handleQueueSearch('');">
+        <button class="btn btn-outline btn-sm" data-action="filter-queue-specialty" data-specialty="all">
           Reset Chamber Filters
         </button>
       </div>
@@ -122,7 +122,7 @@ function renderLiveOPDBoard() {
 
         <!-- Action Buttons -->
         <div class="queue-card-actions">
-          <button class="btn-book-from-queue" onclick="closeLiveQueueModal(); openBookingLayer('${doc.id}');" style="width: 100%; justify-content: center; font-weight: 700;" title="Book consultation appointment slot with this specialist">
+          <button class="btn-book-from-queue" data-action="queue-book-doc" data-id="${doc.id}" style="width: 100%; justify-content: center; font-weight: 700;" title="Book consultation appointment slot with this specialist">
             📅 Book Consultation Slot ➔
           </button>
         </div>
@@ -226,7 +226,7 @@ function renderDoctorCards() {
       <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; background: white; border-radius: var(--radius-xl); border: 1px dashed var(--slate-300);">
         <p style="font-size: 1.2rem; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem;">No specialists found matching "${escapeHtml(state.searchQuery)}"</p>
         <p style="color: var(--slate-600); margin-bottom: 1rem;">Search by consultant name (e.g. 'Dr. Gurpreet', 'Dr. Simranjit') or condition (e.g. 'heart', 'knee joint', 'pregnancy', 'skin').</p>
-        <button class="btn btn-outline" onclick="resetDoctorFilters()">Reset All Filters</button>
+        <button class="btn btn-outline" data-action="reset-doctor-filters">Reset All Filters</button>
       </div>
     `;
     return;
@@ -287,10 +287,10 @@ function renderDoctorCards() {
           </div>
 
           <div class="doctor-card-footer">
-            <button class="btn btn-outline btn-sm" onclick="openBookingLayer('${doc.id}')" title="Book In-Person OPD Appointment">
+            <button class="btn btn-outline btn-sm" data-action="open-booking-doc" data-id="${doc.id}" title="Book In-Person OPD Appointment">
               In-Person OPD
             </button>
-            <button class="btn btn-primary btn-sm" onclick="openTeleConsultModal('${doc.id}')" style="background: linear-gradient(135deg, #0d9488 0%, #0284c7 100%); border: none;" title="Start Instant Video Tele-Consultation">
+            <button class="btn btn-primary btn-sm" data-action="open-teleconsult-doc" data-id="${doc.id}" style="background: linear-gradient(135deg, #0d9488 0%, #0284c7 100%); border: none;" title="Start Instant Video Tele-Consultation">
               📹 Video Consult
             </button>
           </div>
@@ -599,10 +599,10 @@ function renderReceptionDashboard() {
         ` : ''}
 
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-          <button class="btn btn-primary btn-sm" onclick="callNextPatientToken('${doc.id}')" style="flex: 1; font-weight: 700;">
+          <button class="btn btn-primary btn-sm" data-action="call-next-patient" data-id="${doc.id}" style="flex: 1; font-weight: 700;">
             🔔 Call Next (#TK-${String(doc.currentServingToken + 1).padStart(2, '0')})
           </button>
-          <button class="btn btn-outline btn-sm" onclick="issueWalkinToken('${doc.id}')" style="font-size: 0.75rem;">
+          <button class="btn btn-outline btn-sm" data-action="issue-walkin-token" data-id="${doc.id}" style="font-size: 0.75rem;">
             ➕ Walk-In
           </button>
         </div>
@@ -629,8 +629,8 @@ function renderReceptionDashboard() {
           </td>
           <td>
             <div style="display: flex; gap: 0.25rem;">
-              <button class="btn-rx-add" onclick="markTokenCompleted('${escapeHtml(a.tokenId)}')" title="Mark consultation done">✓ Done</button>
-              <button class="btn-rx-add" onclick="markTokenNoShow('${escapeHtml(a.tokenId)}')" style="color: #b91c1c;" title="Mark patient absent">✗ No-Show</button>
+              <button class="btn-rx-add" data-action="mark-token-completed" data-id="${escapeHtml(a.tokenId)}" title="Mark consultation done">✓ Done</button>
+              <button class="btn-rx-add" data-action="mark-token-no-show" data-id="${escapeHtml(a.tokenId)}" style="color: #b91c1c;" title="Mark patient absent">✗ No-Show</button>
             </div>
           </td>
         </tr>

@@ -777,16 +777,61 @@ function generateUniqueTicketDetails(doc, patientData, targetDateIso) {
   };
 }
 
+function showBookingError(inputId, message) {
+  const inputEl = document.getElementById(inputId);
+  const errEl = document.getElementById(inputId + '-error');
+  if (inputEl) {
+    inputEl.classList.add('input-error');
+    inputEl.setAttribute('aria-invalid', 'true');
+    inputEl.setAttribute('aria-describedby', inputId + '-error');
+    inputEl.focus();
+    const onInput = () => {
+      inputEl.classList.remove('input-error');
+      inputEl.removeAttribute('aria-invalid');
+      if (errEl) {
+        errEl.textContent = '';
+        errEl.classList.remove('visible');
+      }
+      inputEl.removeEventListener('input', onInput);
+    };
+    inputEl.addEventListener('input', onInput);
+  }
+  if (errEl) {
+    errEl.textContent = message;
+    errEl.classList.add('visible');
+  }
+}
+
+function clearBookingErrors() {
+  ['layer-patient-name', 'layer-patient-age', 'layer-patient-phone', 'patient-name', 'patient-age', 'patient-phone'].forEach(id => {
+    const el = document.getElementById(id);
+    const err = document.getElementById(id + '-error');
+    if (el) {
+      el.classList.remove('input-error');
+      el.removeAttribute('aria-invalid');
+    }
+    if (err) {
+      err.textContent = '';
+      err.classList.remove('visible');
+    }
+  });
+}
+
 // --- Common Appointment Booking Processor ---
 function processBookingSubmission(patientData) {
+  clearBookingErrors();
+
   const name = (patientData.name || '').trim();
-  if (name.length < 2) {
-    showToast('Please provide a valid patient name (minimum 2 characters).', 'warning');
+  const nameRegex = /^[A-Za-z\s.]{2,50}$/;
+  if (!name || name.length < 2 || name.length > 50 || !nameRegex.test(name)) {
+    showBookingError('layer-patient-name', 'Please provide a valid patient name (letters and spaces only, 2-50 characters).');
+    showToast('Please enter a valid patient name (letters and spaces only, 2-50 characters).', 'warning');
     return false;
   }
 
   const age = parseInt(patientData.age, 10);
   if (isNaN(age) || age < 1 || age > 120) {
+    showBookingError('layer-patient-age', 'Please enter a valid patient age between 1 and 120 years.');
     showToast('Please enter a valid patient age between 1 and 120 years.', 'warning');
     return false;
   }
@@ -799,7 +844,17 @@ function processBookingSubmission(patientData) {
   }
 
   if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+    showBookingError('layer-patient-phone', 'Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.');
     showToast('Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.', 'warning');
+    return false;
+  }
+
+  const targetDateIso = state.selectedDate || getISTIsoDate();
+  const todayIso = getISTIsoDate();
+  const maxDate = new Date(getISTDate().getTime() + 30 * 86400000);
+  const maxDateIso = getISTIsoDate(maxDate);
+  if (targetDateIso < todayIso || targetDateIso > maxDateIso) {
+    showToast('Please select a consultation date within the allowed 30-day booking window.', 'warning');
     return false;
   }
 
@@ -902,5 +957,9 @@ export {
   getSlotsForDoctorAndDate,
   CarePulseQR,
   CarePulseBarcode,
-  generateUniqueTicketDetails
+  generateUniqueTicketDetails,
+  processBookingSubmission,
+  showBookingError,
+  clearBookingErrors
 };
+
