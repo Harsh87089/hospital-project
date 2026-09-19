@@ -2114,7 +2114,7 @@ function downloadTicket(app, format = 'png') {
   ctx.fillText('Govt. Regd. Healthcare Center • OPD & Clinical Diagnostic Unit', 96, 78);
   ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.fillStyle = '#ccfbf1';
-  ctx.fillText('GT Road, Near Sugar Mill Crossing, Phagwara, Punjab • 24/7 Helpline: 1800-555-0199', 96, 98);
+  ctx.fillText('GT Road, Near Sugar Mill Crossing, Phagwara, Punjab • 24/7 Helpline: 1800-180-2026', 96, 98);
 
   // Verified Badge (Top Right)
   ctx.fillStyle = '#10b981';
@@ -2258,8 +2258,8 @@ function downloadTicket(app, format = 'png') {
   ctx.fillStyle = '#475569';
   ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.fillText('• Please report at reception 15 minutes prior to scheduled time for vitals check.', 54, 936);
-  ctx.fillText('• Keep this digital ticket handy on your phone or in printed copy at the clinic.', 54, 958);
-  ctx.fillText('• Emergency Ambulance Line: +91 1800-555-0199 | GT Road, Phagwara, Punjab', 54, 980);
+  ctx.fillText('• Keep this digital ticket handy on your phone or in printed copy at the hospital.', 54, 958);
+  ctx.fillText('• Emergency Ambulance Line: 108 / 1800-180-2026 | GT Road, Phagwara, Punjab', 54, 980);
   ctx.fillText('• Official Portal: carepulse.hospital | Email: appointments@carepulse.hospital', 54, 1002);
 
   // Official Seal Graphic (Right side)
@@ -2427,7 +2427,7 @@ function downloadTicketPDF(app) {
         <div class="header">
           <h1>🏥 CarePulse Multi-Specialty Hospital</h1>
           <p>Official OPD Consultation Slip • GT Road, Phagwara, Punjab - 144401</p>
-          <p>24x7 Emergency Helpline: 1800-555-0199 | carepulse.hospital</p>
+          <p>24x7 Emergency Helpline: 1800-180-2026 / 108 | carepulse.hospital</p>
         </div>
         <div class="token-hero">
           <div class="token-lbl">Official Consultation Token Number</div>
@@ -2502,19 +2502,52 @@ window.downloadTicketById = function (tokenId, format = 'png') {
 };
 
 // ==========================================================================
-// TOKEN ACTIONS: RESCHEDULE, CANCEL, ADD TO CALENDAR
+// ==========================================================================
+// TOKEN ACTIONS: RESCHEDULE, CANCEL, ADD TO CALENDAR (In-Page Modal UI)
 // ==========================================================================
 
-window.rescheduleAppointment = function (tokenId) {
-  const app = (tokenId ? state.userAppointments.find(a => a.tokenId === tokenId) : null) || state.currentViewingToken || state.lastCreatedToken;
-  if (!app) {
-    showToast('No active appointment to reschedule.', 'warning');
-    return;
+window.openRescheduleModal = function (app) {
+  state.pendingActionAppointment = app;
+  const modal = document.getElementById('reschedule-dialog-modal');
+  if (modal) {
+    const docEl = document.getElementById('reschedule-doc-name');
+    const tokEl = document.getElementById('reschedule-token-val');
+    const dateEl = document.getElementById('reschedule-date-input');
+    if (docEl) docEl.textContent = app.doctorName;
+    if (tokEl) tokEl.textContent = `#${app.tokenId}`;
+    if (dateEl) {
+      const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+      dateEl.value = tomorrow;
+      dateEl.min = tomorrow;
+    }
+    modal.style.display = 'flex';
+  } else {
+    // Graceful in-app confirmation
+    const newDate = 'Tomorrow';
+    const newSlot = '11:30 AM';
+    app.date = newDate;
+    app.timeSlot = newSlot;
+    app.status = 'Rescheduled';
+    try {
+      localStorage.setItem('carepulse_appointments', JSON.stringify(state.userAppointments));
+    } catch (e) { }
+    showToast(`Token #${app.tokenId} rescheduled to ${newDate} (${newSlot})!`, 'success');
+    openTokenSlipModal(app);
   }
-  const newDate = prompt(`Reschedule Token #${app.tokenId} with ${app.doctorName}\n\nEnter new date (e.g. Tomorrow or DD-MM-YYYY):`, 'Tomorrow');
-  if (!newDate) return;
-  const newSlot = prompt('Enter preferred consultation slot (e.g. 11:30 AM, 05:30 PM):', '11:30 AM');
-  if (!newSlot) return;
+};
+
+window.closeRescheduleModal = function () {
+  const modal = document.getElementById('reschedule-dialog-modal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.confirmReschedule = function () {
+  const app = state.pendingActionAppointment || state.currentViewingToken || state.lastCreatedToken;
+  if (!app) return;
+  const dateInput = document.getElementById('reschedule-date-input');
+  const slotInput = document.getElementById('reschedule-slot-select');
+  const newDate = (dateInput && dateInput.value) ? dateInput.value : 'Tomorrow';
+  const newSlot = (slotInput && slotInput.value) ? slotInput.value : '11:30 AM';
 
   app.date = newDate;
   app.timeSlot = newSlot;
@@ -2527,17 +2560,48 @@ window.rescheduleAppointment = function (tokenId) {
 
   broadcastQueueUpdate('RESCHEDULE', { tokenId: app.tokenId, newDate, newSlot });
   showToast(`Token #${app.tokenId} rescheduled to ${newDate} at ${newSlot}!`, 'success');
+  closeRescheduleModal();
   openTokenSlipModal(app);
 };
 
-window.cancelAppointment = function (tokenId) {
+window.rescheduleAppointment = function (tokenId) {
   const app = (tokenId ? state.userAppointments.find(a => a.tokenId === tokenId) : null) || state.currentViewingToken || state.lastCreatedToken;
   if (!app) {
-    showToast('No active appointment to cancel.', 'warning');
+    showToast('No active appointment to reschedule.', 'warning');
     return;
   }
-  const reason = prompt(`Cancel Token #${app.tokenId}?\n\nPlease enter reason for cancellation:`, 'Personal emergency / Rescheduling later');
-  if (reason === null) return;
+  openRescheduleModal(app);
+};
+
+window.openCancelModal = function (app) {
+  state.pendingActionAppointment = app;
+  const modal = document.getElementById('cancel-dialog-modal');
+  if (modal) {
+    const docEl = document.getElementById('cancel-doc-name');
+    const tokEl = document.getElementById('cancel-token-val');
+    if (docEl) docEl.textContent = app.doctorName;
+    if (tokEl) tokEl.textContent = `#${app.tokenId}`;
+    modal.style.display = 'flex';
+  } else {
+    app.status = 'Cancelled';
+    try {
+      localStorage.setItem('carepulse_appointments', JSON.stringify(state.userAppointments));
+    } catch (e) { }
+    showToast(`Appointment #${app.tokenId} cancelled. Consultation slot has been freed.`, 'info');
+    openTokenSlipModal(app);
+  }
+};
+
+window.closeCancelModal = function () {
+  const modal = document.getElementById('cancel-dialog-modal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.confirmCancellation = function () {
+  const app = state.pendingActionAppointment || state.currentViewingToken || state.lastCreatedToken;
+  if (!app) return;
+  const reasonInput = document.getElementById('cancel-reason-select');
+  const reason = (reasonInput && reasonInput.value) ? reasonInput.value : 'Personal emergency / Rescheduling later';
 
   app.status = 'Cancelled';
   app.cancelReason = reason;
@@ -2554,7 +2618,17 @@ window.cancelAppointment = function (tokenId) {
 
   broadcastQueueUpdate('CANCEL', { tokenId: app.tokenId });
   showToast(`Appointment #${app.tokenId} cancelled. Consultation slot has been freed.`, 'info');
+  closeCancelModal();
   openTokenSlipModal(app);
+};
+
+window.cancelAppointment = function (tokenId) {
+  const app = (tokenId ? state.userAppointments.find(a => a.tokenId === tokenId) : null) || state.currentViewingToken || state.lastCreatedToken;
+  if (!app) {
+    showToast('No active appointment to cancel.', 'warning');
+    return;
+  }
+  openCancelModal(app);
 };
 
 window.addToCalendar = function (tokenId, mode = 'ics') {
@@ -2730,10 +2804,18 @@ window.markTokenNoShow = function (tokenId) {
 
 window.issueWalkinToken = function (doctorId) {
   const doc = DOCTORS.find(d => d.id === doctorId) || DOCTORS[0];
-  const patientName = prompt(`Issue Walk-in OPD Token for ${doc.name}\n\nEnter Patient Name:`, 'Walk-in Patient');
-  if (!patientName) return;
+  let patientName = 'Walk-in Patient';
+  let phone = '9814022737';
+  try {
+    const inputName = typeof window.prompt === 'function' ? window.prompt(`Issue Walk-in OPD Token for ${doc.name}\n\nEnter Patient Name:`, 'Walk-in Patient') : 'Walk-in Patient';
+    if (inputName === null) return; // User pressed Cancel
+    if (inputName && inputName.trim()) patientName = inputName.trim();
 
-  const phone = prompt('Enter Patient Phone Number:', '9876543210') || '9876543210';
+    const inputPhone = typeof window.prompt === 'function' ? window.prompt('Enter Patient Phone Number:', '9814022737') : '9814022737';
+    if (inputPhone && inputPhone.trim()) phone = inputPhone.trim();
+  } catch (e) {
+    // Fallback if browser blocks modal prompts
+  }
   const tokenNum = doc.totalTodayTokens + 1;
   doc.totalTodayTokens++;
 
@@ -3179,6 +3261,19 @@ function setupModalDismissals() {
   // Deep Link & Hash Routing handler
   window.handleHashRouting = function () {
     const hash = (window.location.hash || '').toLowerCase();
+    const searchParams = new URLSearchParams(window.location.search);
+    const docParam = searchParams.get('doctor') || (hash.includes('doctor=') ? hash.split('doctor=')[1].split('&')[0] : null);
+    const specParam = searchParams.get('specialty') || searchParams.get('dept') || (hash.includes('specialty=') ? hash.split('specialty=')[1].split('&')[0] : null);
+
+    if (docParam) {
+      setTimeout(() => openBookingLayer(docParam), 400);
+      return;
+    }
+    if (specParam) {
+      setTimeout(() => openDoctorsModal(specParam), 400);
+      return;
+    }
+
     if (!hash) return;
     if (hash === '#doctors' || hash === '#doctors-section') openDoctorsModal();
     else if (hash === '#queue' || hash === '#live-board-section' || hash === '#live-queue') openLiveQueueModal();
@@ -3189,7 +3284,7 @@ function setupModalDismissals() {
     else if (hash === '#insurance' || hash === '#insurance-section') openInsuranceModal();
     else if (hash === '#reports' || hash === '#lab-reports') openLabReportModal();
     else if (hash === '#pharmacy') openPharmacyModal();
-    else if (hash === '#emergency') openEmergencyModal();
+    else if (hash === '#emergency') openEmergencySOS();
     else if (hash === '#calculator' || hash === '#bmi') openHealthCalculator();
     else if (hash === '#tokens' || hash === '#my-bookings') openMyBookingsModal();
   };
@@ -3199,7 +3294,7 @@ function setupModalDismissals() {
 }
 
 // ==========================================================================
-// Apollo-Grade Enterprise Healthcare Portal Modules
+// CarePulse Enterprise Healthcare Portal Modules
 // ==========================================================================
 
 function escapeHtml(str) {
@@ -3224,27 +3319,11 @@ const CLINIC_BRANCHES = {
   },
   ludhiana: {
     city: 'Ludhiana, Punjab',
-    name: 'CarePulse Healthcare Pavilion',
+    name: 'CarePulse Healthcare Pavilion (Ludhiana OPD Center)',
     address: 'Ferozepur Road, Near Mall Road Crossing, Ludhiana, Punjab - 141001',
-    phone: '+91 161 500 1234',
-    emergency: '1800-180-2026',
-    hours: '08:30 AM – 09:30 PM'
-  },
-  delhi: {
-    city: 'Delhi-NCR',
-    name: 'CarePulse South Extension Super-Specialty Clinic',
-    address: 'Ring Road, Block G, South Extension Part II, New Delhi - 110049',
-    phone: '+91 11 4567 8900',
-    emergency: '1800-555-0111',
-    hours: '08:00 AM – 09:00 PM'
-  },
-  bengaluru: {
-    city: 'Bengaluru',
-    name: 'CarePulse Koramangala Hub',
-    address: 'Sector 4, 80 Feet Road, Koramangala, Bengaluru - 560034',
-    phone: '+91 80 2345 6789',
-    emergency: '1800-555-0199',
-    hours: '08:30 AM – 09:30 PM'
+    phone: '+91 161 500 1234 / 1800-180-2026',
+    emergency: '1800-180-2026 / 108',
+    hours: '08:30 AM – 08:30 PM'
   }
 };
 
@@ -3274,8 +3353,8 @@ const HEALTH_PACKAGES = [
     name: 'Basic Vital Wellness Screen',
     testsCount: '32 Essential Tests',
     price: 999,
-    originalPrice: 2200,
-    discount: '55% OFF',
+    originalPrice: null,
+    discount: 'All-Inclusive',
     popular: false,
     desc: 'Comprehensive baseline screening for active adults & working professionals.',
     features: [
@@ -3291,8 +3370,8 @@ const HEALTH_PACKAGES = [
     name: 'Executive Full Body Health Check',
     testsCount: '64 Comprehensive Tests',
     price: 2499,
-    originalPrice: 5500,
-    discount: '54% OFF',
+    originalPrice: null,
+    discount: 'Popular Choice',
     popular: true,
     desc: 'Comprehensive multi-organ clinical screening evaluating Liver, Kidneys, Thyroid, Heart, and Vitamins.',
     features: [
@@ -3309,8 +3388,8 @@ const HEALTH_PACKAGES = [
     name: 'Senior Citizen Vital Care Package',
     testsCount: '58 Specialized Tests',
     price: 1899,
-    originalPrice: 4200,
-    discount: '55% OFF',
+    originalPrice: null,
+    discount: 'Geriatric Panel',
     popular: false,
     desc: 'Formulated for ages 55+ focusing on joint mobility, cardiac markers, and glycemic control.',
     features: [
@@ -3326,8 +3405,8 @@ const HEALTH_PACKAGES = [
     name: "Women's Advanced Health & Cancer Screen",
     testsCount: '48 Specialized Tests',
     price: 2199,
-    originalPrice: 4800,
-    discount: '54% OFF',
+    originalPrice: null,
+    discount: 'Women Care',
     popular: false,
     desc: 'Specialized hormone profile, thyroid, bone mineral screen, and cancer prevention markers.',
     features: [
@@ -4236,7 +4315,7 @@ function botTriageProcess(userQuery) {
 
     <div class="chat-action-cluster">
       <button class="btn-bot-action primary" onclick="openBookingLayer('${match.doctor}'); closeChatWidget();">
-        📅 Option 1: Book ${match.doctorName} (Open Layer) ↗
+        📅 Option 1: Book Consultation with ${match.doctorName} ➔
       </button>
       <button class="btn-bot-action pharmacy" onclick="openPharmacyModal(); closeChatWidget();">
         💊 Option 2: Order Relief Kit (2-Hr Delivery) ↗
@@ -4714,8 +4793,10 @@ const CarePulseAuth = {
     this.clearOTPInputs();
     this.clearError();
     this.goToStep('input');
-    this.lockPortal();
-    showToast(customMessage || 'You have logged out. Please sign in to continue.', 'info');
+    this.sessionUser = null;
+    this.closeModal();
+    this.updateProfileUI();
+    showToast(customMessage || 'You have signed out successfully.', 'info');
   },
 
   goToStep(step) {
@@ -5100,14 +5181,14 @@ const TRANSLATIONS = {
   en: {
     nav_home: 'Home Overview',
     nav_opd: 'OPD & Doctors',
-    nav_services: 'Clinical Services',
+    nav_services: 'Hospital Services',
     nav_patient: 'Patient Care',
     nav_tokens: 'My Tokens',
     nav_book: 'Book Doctor Slot',
     nav_emergency: 'Emergency SOS 108',
     sec_quick: 'Quick Healthcare Access',
-    sec_queue: 'Real-Time Clinic Token Display',
-    sec_doctors: 'Meet Our Clinic Doctors',
+    sec_queue: 'Real-Time OPD Token Display',
+    sec_doctors: 'Meet Our Hospital Specialists',
     sec_packages: 'Preventive Health Packages',
     sec_booking: 'Book Doctor Consultation & Token',
     sec_beds: 'Live Hospital Bed & ICU Capacity',
@@ -5119,18 +5200,32 @@ const TRANSLATIONS = {
     btn_share_wa: '📲 Share on WhatsApp',
     theme_dark: 'Dark Mode',
     theme_light: 'Light Mode',
-    sos_title: '🚨 Emergency Ambulance Dispatch',
+    sos_title: '🚨 Emergency Ambulance & Trauma Desk',
     sos_dispatched: 'Ambulance #PB-09-8821 Dispatched!',
     sos_eta: 'Estimated Arrival: 6 mins 45 secs',
     bed_triage: 'Emergency Triage Beds',
     bed_icu: 'ICU & Critical Care',
     bed_vent: 'Ventilator Units',
-    bed_o2: 'Oxygen Support Beds'
+    bed_o2: 'Oxygen Support Beds',
+    lbl_patient_name: 'Patient Full Name',
+    lbl_mobile: 'Mobile Number',
+    lbl_age: 'Age (Years)',
+    lbl_gender: 'Gender',
+    lbl_dept: 'Clinical Department',
+    lbl_slot: 'Preferred Consultation Slot',
+    lbl_symptoms: 'Symptoms / Health Concern',
+    lbl_fee: 'Consultation Fee (Pay at Hospital OPD Desk)',
+    btn_confirm: 'Confirm OPD Appointment & Generate Token',
+    btn_reschedule: 'Reschedule Slot',
+    btn_cancel: 'Cancel Appointment',
+    call_hospital: '📞 Call Hospital: 1800-180-2026',
+    call_108: '🚨 Call National Ambulance: 108',
+    wa_helpline: '💬 WhatsApp OPD Desk'
   },
   hi: {
     nav_home: 'होम अवलोकन',
     nav_opd: 'ओपीडी और डॉक्टर्स',
-    nav_services: 'चिकित्सा सेवाएं',
+    nav_services: 'अस्पताल सेवाएं',
     nav_patient: 'मरीज देखभाल',
     nav_tokens: 'मेरे टोकन',
     nav_book: 'डॉक्टर स्लॉट बुक करें',
@@ -5138,9 +5233,9 @@ const TRANSLATIONS = {
     sec_quick: 'त्वरित स्वास्थ्य सेवा',
     sec_queue: 'लाइव ओपीडी टोकन डिस्प्ले',
     sec_doctors: 'हमारे विशेषज्ञ डॉक्टर्स',
-    sec_packages: 'निवारक स्वास्थ्य पैकेज',
+    sec_packages: 'स्वास्थ्य जांच पैकेज',
     sec_booking: 'डॉक्टर परामर्श और टोकन बुक करें',
-    sec_beds: 'लाइव अस्पताल बेड और आईसीयू क्षमता',
+    sec_beds: 'लाइव अस्पताल बेड और आईसीयू स्थिति',
     sec_track: 'अपनी टोकन कतार ट्रैक करें',
     btn_sos: '🚨 आपातकालीन एसओएस',
     btn_calc: '🩺 स्वास्थ्य एवं बीएमआई कैलकुलेटर',
@@ -5149,25 +5244,39 @@ const TRANSLATIONS = {
     btn_share_wa: '📲 व्हाट्सएप पर शेयर करें',
     theme_dark: 'डार्क मोड',
     theme_light: 'लाइट मोड',
-    sos_title: '🚨 आपातकालीन एम्बुलेंस सेवा',
+    sos_title: '🚨 आपातकालीन एम्बुलेंस एवं ट्रॉमा डेस्क',
     sos_dispatched: 'एम्बुलेंस #PB-09-8821 रवाना!',
     sos_eta: 'अनुमानित आगमन: 6 मिनट 45 सेकंड',
     bed_triage: 'इमरजेंसी ट्राइएज बेड',
     bed_icu: 'आईसीयू क्रिटिकल केयर',
     bed_vent: 'वेंटिलेटर इकाइयां',
-    bed_o2: 'ऑक्सीजन सपोर्ट बेड'
+    bed_o2: 'ऑक्सीजन सपोर्ट बेड',
+    lbl_patient_name: 'मरीज का पूरा नाम',
+    lbl_mobile: 'मोबाइल नंबर',
+    lbl_age: 'उम्र (वर्ष)',
+    lbl_gender: 'लिंग',
+    lbl_dept: 'चिकित्सा विभाग',
+    lbl_slot: 'पसंदीदा परामर्श समय',
+    lbl_symptoms: 'लक्षण / समस्या',
+    lbl_fee: 'परामर्श शुल्क (अस्पताल ओपीडी में देय)',
+    btn_confirm: 'अपॉइंटमेंट पक्का करें व टोकन लें',
+    btn_reschedule: 'अपॉइंटमेंट रीशेड्यूल करें',
+    btn_cancel: 'अपॉइंटमेंट रद्द करें',
+    call_hospital: '📞 अस्पताल कॉल: 1800-180-2026',
+    call_108: '🚨 एम्बुलेंस डायल: 108',
+    wa_helpline: '💬 व्हाट्सएप ओपीडी हेल्प'
   },
   pa: {
     nav_home: 'ਮੁੱਖ ਪੰਨਾ',
     nav_opd: 'ਓਪੀਡੀ ਅਤੇ ਡਾਕਟਰ',
-    nav_services: 'ਕਲੀਨਿਕਲ ਸੇਵਾਵਾਂ',
+    nav_services: 'ਹਸਪਤਾਲ ਸੇਵਾਵਾਂ',
     nav_patient: 'ਮਰੀਜ਼ ਦੇਖਭਾਲ',
     nav_tokens: 'ਮੇਰੇ ਟੋਕਨ',
     nav_book: 'ਡਾਕਟਰ ਸਲਾਟ ਬੁੱਕ ਕਰੋ',
     nav_emergency: 'ਐਮਰਜੈਂਸੀ ਐਸਓਐਸ 108',
     sec_quick: 'ਤੁਰੰਤ ਸਿਹਤ ਸੇਵਾ',
     sec_queue: 'ਲਾਈਵ ਓਪੀਡੀ ਟੋਕਨ ਡਿਸਪਲੇਅ',
-    sec_doctors: 'ਸਾਡੇ ਮਾਹਰ ਡਾਕਟਰ',
+    sec_doctors: 'ਸਾਡੇ ਮਾਹਰ ਹਸਪਤਾਲ ਡਾਕਟਰ',
     sec_packages: 'ਸਿਹਤ ਜਾਂਚ ਪੈਕੇਜ',
     sec_booking: 'ਡਾਕਟਰ ਸਲਾਹ ਅਤੇ ਟੋਕਨ ਬੁੱਕ ਕਰੋ',
     sec_beds: 'ਲਾਈਵ ਹਸਪਤਾਲ ਬੈੱਡ ਅਤੇ ਆਈਸੀਯੂ ਸਥਿਤੀ',
@@ -5179,13 +5288,27 @@ const TRANSLATIONS = {
     btn_share_wa: '📲 ਵਟਸਐਪ ਤੇ ਸਾਂਝਾ ਕਰੋ',
     theme_dark: 'ਡਾਰਕ ਮੋਡ',
     theme_light: 'ਲਾਈਟ ਮੋਡ',
-    sos_title: '🚨 ਐਮਰਜੈਂਸੀ ਐਂਬੂਲੈਂਸ ਸੇਵਾ',
+    sos_title: '🚨 ਐਮਰਜੈਂਸੀ ਐਂਬੂਲੈਂਸ ਅਤੇ ਟਰਾਮਾ ਡੈਸਕ',
     sos_dispatched: 'ਐਂਬੂਲੈਂਸ #PB-09-8821 ਰਵਾਨਾ!',
     sos_eta: 'ਪਹੁੰਚਣ ਦਾ ਸਮਾਂ: 6 ਮਿੰਟ 45 ਸਕਿੰਟ',
     bed_triage: 'ਐਮਰਜੈਂਸੀ ਟ੍ਰਾਈਏਜ ਬੈੱਡ',
     bed_icu: 'ਆਈਸੀਯੂ ਗੰਭੀਰ ਦੇਖਭਾਲ',
     bed_vent: 'ਵੈਂਟੀਲੇਟਰ ਯੂਨਿਟ',
-    bed_o2: 'ਆਕਸੀਜਨ ਸਪੋਰਟ ਬੈੱਡ'
+    bed_o2: 'ਆਕਸੀਜਨ ਸਪੋਰਟ ਬੈੱਡ',
+    lbl_patient_name: 'ਮਰੀਜ਼ ਦਾ ਪੂਰਾ ਨਾਮ',
+    lbl_mobile: 'ਮੋਬਾਈਲ ਨੰਬਰ',
+    lbl_age: 'ਉਮਰ (ਸਾਲ)',
+    lbl_gender: 'ਲਿੰਗ',
+    lbl_dept: 'ਹਸਪਤਾਲ ਵਿਭਾਗ',
+    lbl_slot: 'ਮਸ਼ਵਰੇ ਦਾ ਸਮਾਂ',
+    lbl_symptoms: 'ਲੱਛਣ / ਸਮੱਸਿਆ',
+    lbl_fee: 'ਮਸ਼ਵਰਾ ਫੀਸ (ਹਸਪਤਾਲ ਓਪੀਡੀ ਵਿਖੇ ਭੁਗਤਾਨ)',
+    btn_confirm: 'ਮੁਲਾਕਾਤ ਪੱਕੀ ਕਰੋ ਅਤੇ ਟੋਕਨ ਪ੍ਰਾਪਤ ਕਰੋ',
+    btn_reschedule: 'ਸਲਾਟ ਦਾ ਸਮਾਂ ਬਦਲੋ',
+    btn_cancel: 'ਮੁਲਾਕਾਤ ਰੱਦ ਕਰੋ',
+    call_hospital: '📞 ਹਸਪਤਾਲ ਕਾਲ: 1800-180-2026',
+    call_108: '🚨 ਐਂਬੂਲੈਂਸ ਡਾਇਲ: 108',
+    wa_helpline: '💬 ਵਟਸਐਪ ਓਪੀਡੀ ਹੈਲਪ'
   }
 };
 
@@ -5201,6 +5324,7 @@ const LanguageEngine = {
     if (!TRANSLATIONS[lang]) lang = 'en';
     this.currentLang = lang;
     localStorage.setItem('carepulse_lang', lang);
+    document.documentElement.setAttribute('lang', lang);
 
     // Update active pill button
     const pills = document.querySelectorAll('.lang-pill-btn');
@@ -5212,8 +5336,17 @@ const LanguageEngine = {
     const elements = document.querySelectorAll('[data-i18n]');
     elements.forEach(el => {
       const key = el.getAttribute('data-i18n');
-      if (TRANSLATIONS[lang][key]) {
+      if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
         el.innerText = TRANSLATIONS[lang][key];
+      }
+    });
+
+    // Translate placeholders
+    const placeholders = document.querySelectorAll('[data-i18n-placeholder]');
+    placeholders.forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
+        el.setAttribute('placeholder', TRANSLATIONS[lang][key]);
       }
     });
   }
@@ -5952,8 +6085,8 @@ const SpotlightSearchEngine = {
       {
         type: 'Action',
         category: 'Quick Actions',
-        title: 'Book Doctor Consultation (Open Layer)',
-        sub: 'Launch fast reservation layer with live tokens',
+        title: 'Book Doctor Consultation',
+        sub: 'Instant doctor OPD reservation with live token confirmation',
         icon: '⚡',
         action: () => openBookingLayer()
       },

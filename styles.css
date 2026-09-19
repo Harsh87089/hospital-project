@@ -2576,7 +2576,7 @@ body.theme-dark .btn-next-sim,
 }
 
 /* ==========================================================================
-   Apollo-Grade Enterprise Enhancements: Quick Services, Packages, Lab Reports
+   CarePulse Enterprise Enhancements: Quick Services, Packages, Lab Reports
    ========================================================================== */
 
 /* Accreditation Banner */
@@ -2625,7 +2625,7 @@ body.theme-dark .btn-next-sim,
   color: #6ee7b7;
 }
 
-/* Quick Services Hub (Apollo 6-Tile Grid) */
+/* Quick Services Hub (Modular Grid) */
 .quick-services-section {
   padding: 2.5rem 0 3rem;
 }
@@ -2634,69 +2634,153 @@ body.theme-dark .btn-next-sim,
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1.25rem;
-  margin-top: 1.5rem;
 }
 
 .service-hub-tile {
   background: white;
   border: 1px solid var(--slate-200);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   padding: 1.5rem 1.25rem;
-  text-align: center;
   cursor: pointer;
-  transition: var(--transition-bounce);
-  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  transition: all var(--transition-normal);
   position: relative;
-  text-decoration: none;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 .service-hub-tile:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-xl);
-  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-light);
 }
 
 .service-hub-icon-wrapper {
-  width: 58px;
-  height: 58px;
-  border-radius: var(--radius-lg);
-  background: var(--primary-subtle);
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.75rem;
-  margin-bottom: 0.85rem;
-  transition: transform 0.3s ease;
-}
-
-.service-hub-tile:hover .service-hub-icon-wrapper {
-  transform: scale(1.1);
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: white;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .service-hub-title {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   font-weight: 800;
   color: var(--dark);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
+  line-height: 1.3;
 }
 
 .service-hub-sub {
-  font-size: 0.75rem;
-  color: var(--slate-600);
+  font-size: 0.8rem;
+  color: var(--slate-500);
   line-height: 1.4;
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
 }
 
 .service-hub-tag {
-  position: absolute;
-  top: 0.65rem;
-  right: 0.65rem;
-  font-size: 0.65rem;
-  font-weight: 800;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 0.85rem;
+  display: inline-block;
+}
+
+.service-hub-btn {
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: gap var(--transition-fast);
+}
+
+.service-hub-tile:hover .service-hub-btn {
+  gap: 0.5rem;
+}
+
+/* Tile Colors */
+.tile-blue .service-hub-icon-wrapper { background: #e0f2fe; color: #0284c7; }
+.tile-blue .service-hub-tag { background: #e0f2fe; color: #0369a1; }
+
+.tile-amber .service-hub-icon-wrapper { background: #fef3c7; color: #d97706; }
+.tile-amber .service-hub-tag { background: #fef3c7; color: #92400e; }
+
+.tile-rose .service-hub-icon-wrapper { background: #ffe4e6; color: #e11d48; }
+.tile-rose .service-hub-tag { background: #ffe4e6; color: #9f1239; }
+
+.tile-indigo .service-hub-icon-wrapper { background: #e0e7ff; color: #4f46e5; }
+.tile-indigo .service-hub-tag { background: #e0e7ff; color: #3730a3; }
+
+.tile-emerald .service-hub-icon-wrapper { background: #d1fae5; color: #059669; }
+.tile-emerald .service-hub-tag { background: #d1fae5; color: #065f46; }
+
+.tile-teal .service-hub-icon-wrapper { background: #ccfbf1; color: #0f766e; }
+.tile-teal .service-hub-tag { background: #ccfbf1; color: #115e59; }
+
+.tile-purple .service-hub-icon-wrapper { background: #ede9fe; color: #7c3aed; }
+.tile-purple .service-hub-tag { background: #ede9fe; color: #5b21b6; }
+
+.campus-pulse-bar {
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--slate-200);
+  padding: 1.25rem 1.5rem;
+  margin-top: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.campus-pulse-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 0.85rem;
+}
+
+.campus-pulse-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.campus-pulse-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  background: var(--slate-50);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--slate-200);
+  font-size: 0.825rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.campus-pulse-item:hover {
+  background: white;
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.campus-pulse-icon {
+  font-size: 1.15rem;
+}
+
+.campus-pulse-tag {
+  margin-left: auto;
+  font-size: 0.68rem;
+  font-weight: 700;
   padding: 0.15rem 0.45rem;
   border-radius: var(--radius-full);
   background: var(--accent-amber-light);
@@ -2704,7 +2788,7 @@ body.theme-dark .btn-next-sim,
   text-transform: uppercase;
 }
 
-/* Preventive Health Checkup Packages (Apollo ProHealth Style) */
+/* Preventive Health Checkup Packages (Comprehensive Style) */
 .health-packages-section {
   padding: 3.5rem 0 4.5rem;
   background: white;
@@ -9081,4 +9165,177 @@ body.theme-dark .campus-pulse-sub {
   background: #0f766e;
   border-color: #0f766e;
   color: #ffffff;
+}
+
+/* ==========================================================================
+   21. Dialog Modals: Interactive Reschedule & Cancel System
+   ========================================================================== */
+.dialog-modal-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: var(--shadow-2xl);
+  position: relative;
+  border: 1px solid var(--slate-200);
+  animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="dark"] .dialog-modal-card {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+.dialog-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--slate-100);
+}
+
+[data-theme="dark"] .dialog-modal-header {
+  border-color: #334155;
+}
+
+.dialog-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+}
+
+.dialog-icon.reschedule {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.dialog-icon.cancel {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.dialog-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin: 0;
+}
+
+[data-theme="dark"] .dialog-title {
+  color: white;
+}
+
+.dialog-sub {
+  font-size: 0.8rem;
+  color: var(--slate-500);
+}
+
+.dialog-token-pill {
+  background: var(--slate-50);
+  border: 1px dashed var(--slate-300);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--slate-700);
+}
+
+[data-theme="dark"] .dialog-token-pill {
+  background: #0f172a;
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.dialog-actions .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+/* Medical Disclaimers */
+.medical-disclaimer-notice {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.78rem;
+  color: #92400e;
+  line-height: 1.45;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+[data-theme="dark"] .medical-disclaimer-notice {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #fcd34d;
+}
+
+/* Hospital Footer Alias */
+.hospital-footer {
+  background: #0f172a;
+  color: var(--slate-400);
+  padding: 4rem 0 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Mobile Sticky Helpline Pill Bar (Over Bottom Dock) */
+.mobile-sticky-helpline-bar {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobile-sticky-helpline-bar {
+    display: flex;
+    position: fixed;
+    bottom: 64px;
+    left: 12px;
+    right: 12px;
+    z-index: 989;
+    gap: 0.5rem;
+    pointer-events: auto;
+  }
+
+  .mobile-helpline-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-helpline-btn.call {
+    background: #dc2626;
+    color: white;
+  }
+
+  .mobile-helpline-btn.wa {
+    background: #16a34a;
+    color: white;
+  }
+
+  .mobile-helpline-btn:active {
+    transform: scale(0.96);
+  }
 }

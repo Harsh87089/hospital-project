@@ -18,52 +18,96 @@
         content="Book instant doctor consultation appointments, view live OPD queue tokens, and download verified digital appointment slips." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://harsh87089.github.io/hospital-project/" />
-    <meta property="og:site_name" content="CarePulse Hospital" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&h=630&q=80" />
+    <meta property="og:site_name" content="CarePulse Multi-Specialty Hospital" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="canonical" href="https://harsh87089.github.io/hospital-project/" />
 
     <!-- Schema.org JSON-LD Structured Data for Google Search Rich Results -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Hospital",
-      "name": "CarePulse Super Speciality Hospital",
-      "url": "https://harsh87089.github.io/hospital-project/",
-      "description": "Premier healthcare hospital offering online OPD token booking, live doctor queue tracking, diagnostics, 9 clinical specialties, and 24x7 emergency medical trauma services.",
-      "telephone": "+91-1800-180-2026",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "GT Road, Near Sugar Mill Crossing, Model Town",
-        "addressLocality": "Phagwara",
-        "addressRegion": "Punjab",
-        "postalCode": "144401",
-        "addressCountry": "IN"
-      },
-      "openingHoursSpecification": [
-        {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-          "opens": "08:00",
-          "closes": "20:00"
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "Hospital",
+        "name": "CarePulse Multi-Specialty Hospital",
+        "url": "https://harsh87089.github.io/hospital-project/",
+        "description": "Premier healthcare hospital offering online OPD token booking, live doctor queue tracking, diagnostics, 9 clinical specialties, and 24x7 emergency medical trauma services on GT Road, Phagwara.",
+        "telephone": "+91-1800-180-2026",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "GT Road, Near Sugar Mill Crossing, Model Town",
+          "addressLocality": "Phagwara",
+          "addressRegion": "Punjab",
+          "postalCode": "144401",
+          "addressCountry": "IN"
         },
-        {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-          "opens": "00:00",
-          "closes": "23:59"
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            "opens": "08:00",
+            "closes": "20:30"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            "opens": "00:00",
+            "closes": "23:59"
+          }
+        ],
+        "medicalSpecialty": [
+          "GeneralPractice",
+          "Cardiovascular",
+          "Orthopedics",
+          "Pediatrics",
+          "Dermatology",
+          "Gynecologic",
+          "Otolaryngologic",
+          "Ophthalmic",
+          "Dentistry"
+        ]
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Physician",
+        "name": "Dr. Rajesh Sharma",
+        "medicalSpecialty": "GeneralPractice",
+        "jobTitle": "Senior Consultant Physician & Diabetologist",
+        "worksFor": {
+          "@type": "Hospital",
+          "name": "CarePulse Multi-Specialty Hospital"
+        },
+        "telephone": "+91-1800-180-2026",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "GT Road, Model Town",
+          "addressLocality": "Phagwara",
+          "addressRegion": "Punjab",
+          "postalCode": "144401",
+          "addressCountry": "IN"
         }
-      ],
-      "medicalSpecialty": [
-        "GeneralPractice",
-        "Cardiovascular",
-        "Orthopedics",
-        "Pediatrics",
-        "Dermatology",
-        "Gynecologic",
-        "Otolaryngologic",
-        "Ophthalmic",
-        "Dentistry"
-      ]
-    }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Physician",
+        "name": "Dr. Manpreet Singh",
+        "medicalSpecialty": "Cardiovascular",
+        "jobTitle": "Chief Interventional Cardiologist",
+        "worksFor": {
+          "@type": "Hospital",
+          "name": "CarePulse Multi-Specialty Hospital"
+        },
+        "telephone": "+91-1800-180-2026",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "GT Road, Model Town",
+          "addressLocality": "Phagwara",
+          "addressRegion": "Punjab",
+          "postalCode": "144401",
+          "addressCountry": "IN"
+        }
+      }
+    ]
     </script>
 
     <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
@@ -148,18 +192,11 @@
                                 class="required-star">*</span></label>
                         <div class="auth-input-wrapper">
                             <span class="phone-country-pill">🇮🇳 +91</span>
-                            <input type="tel" id="auth-mobile-input" class="auth-text-input" placeholder="98765 43210"
+                            <input type="tel" id="auth-mobile-input" class="auth-text-input" placeholder="Enter 10-digit mobile number"
                                 maxlength="10" inputmode="numeric" autocomplete="tel"
                                 onkeydown="if(event.key==='Enter') CarePulseAuth.sendOTP()" />
                         </div>
-                        <span class="auth-help-text">A unique 6-digit one-time passcode (OTP) will be sent via SMS to
-                            this number.</span>
-                        <div class="sms-mode-pill-bar" style="margin-top: 0.45rem;">
-                            <span class="gateway-status-badge demo"><span class="status-dot amber"></span> Gateway:
-                                <strong>Simulated SMS</strong></span>
-                            <button type="button" class="btn-sms-info-trigger" onclick="openDeliveryGatewayModal()">⚙️
-                                Delivery Settings</button>
-                        </div>
+                        <span class="auth-help-text">A unique 6-digit one-time passcode (OTP) will be sent via SMS for verification.</span>
                     </div>
 
                     <button type="button" class="btn-auth-primary" onclick="CarePulseAuth.sendOTP()">
@@ -169,44 +206,20 @@
 
                 <!-- Panel B: Google Sign-In -->
                 <div id="auth-panel-google" class="auth-tab-panel" style="display: none;">
-                    <p class="google-prompt-text">Sign in using your Google account. A security code will be sent to
-                        your Gmail for verification:</p>
-
-                    <div class="google-preset-container">
-                        <div class="preset-label">Quick Select Sample Account:</div>
-                        <div class="google-presets-grid">
-                            <button type="button" class="google-account-pill selected"
-                                data-email="rajesh.kumar@gmail.com"
-                                onclick="CarePulseAuth.selectGoogleAccount('rajesh.kumar@gmail.com', 'Rajesh Kumar')">
-                                <div class="google-pill-avatar" style="background: #ea4335;">R</div>
-                                <div class="google-pill-info">
-                                    <span class="pill-name">Rajesh Kumar</span>
-                                    <span class="pill-email">rajesh.kumar@gmail.com</span>
-                                </div>
-                            </button>
-                            <button type="button" class="google-account-pill" data-email="priya.sharma@gmail.com"
-                                onclick="CarePulseAuth.selectGoogleAccount('priya.sharma@gmail.com', 'Priya Sharma')">
-                                <div class="google-pill-avatar" style="background: #4285f4;">P</div>
-                                <div class="google-pill-info">
-                                    <span class="pill-name">Priya Sharma</span>
-                                    <span class="pill-email">priya.sharma@gmail.com</span>
-                                </div>
-                            </button>
-                        </div>
-                    </div>
+                    <p class="google-prompt-text">Sign in using your Google account. A security passcode will be sent to your Gmail for verification:</p>
 
                     <div class="auth-field-group" style="margin-top: 1rem;">
-                        <label for="auth-google-email">Or Type Your Gmail Address <span
+                        <label for="auth-google-email">Your Gmail Address <span
                                 class="required-star">*</span></label>
                         <div class="auth-input-wrapper">
                             <span class="input-prefix-icon">📧</span>
                             <input type="email" id="auth-google-email" class="auth-text-input"
-                                value="rajesh.kumar@gmail.com" placeholder="your.name@gmail.com"
+                                value="" placeholder="e.g. yourname@gmail.com"
                                 onkeydown="if(event.key==='Enter') CarePulseAuth.sendOTP()" />
                         </div>
                     </div>
 
-                    <input type="hidden" id="auth-google-name" value="Rajesh Kumar" />
+                    <input type="hidden" id="auth-google-name" value="" />
 
                     <button type="button" class="btn-auth-primary btn-auth-google" onclick="CarePulseAuth.sendOTP()">
                         <svg width="18" height="18" viewBox="0 0 24 24">
@@ -219,14 +232,8 @@
                             <path fill="#EA4335"
                                 d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z" />
                         </svg>
-                        <span>Send Gmail Security Code &rarr;</span>
+                        <span>Send Gmail Verification Code &rarr;</span>
                     </button>
-                    <div class="sms-mode-pill-bar" style="margin-top: 0.85rem;">
-                        <span class="gateway-status-badge demo"><span class="status-dot amber"></span> Delivery:
-                            <strong>Simulated Gmail</strong></span>
-                        <button type="button" class="btn-sms-info-trigger" onclick="openDeliveryGatewayModal()">⚙️
-                            Delivery Settings</button>
-                    </div>
                 </div>
 
                 <!-- Trust Footer -->
@@ -419,7 +426,7 @@
                     </div>
                     <ul class="sidebar-submenu">
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#doctors" class="sidebar-sub-link"
                                 onclick="openDoctorsModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">👨‍⚕️</span>
                                 <div class="sub-link-info">
@@ -429,7 +436,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#queue" class="sidebar-sub-link"
                                 onclick="openLiveQueueModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">⏱️</span>
                                 <div class="sub-link-info">
@@ -439,7 +446,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#booking" class="sidebar-sub-link"
                                 onclick="openBookingLayer(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">⚡</span>
                                 <div class="sub-link-info">
@@ -449,7 +456,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#teleconsult" class="sidebar-sub-link"
                                 onclick="openTeleConsultModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">📹</span>
                                 <div class="sub-link-info">
@@ -472,7 +479,7 @@
                     </div>
                     <ul class="sidebar-submenu">
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#packages" class="sidebar-sub-link"
                                 onclick="openPackagesModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">🛡️</span>
                                 <div class="sub-link-info">
@@ -482,7 +489,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#beds" class="sidebar-sub-link"
                                 onclick="openBedsModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">🛏️</span>
                                 <div class="sub-link-info">
@@ -492,7 +499,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#reports" class="sidebar-sub-link"
                                 onclick="openLabReportModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">📄</span>
                                 <div class="sub-link-info">
@@ -502,7 +509,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#pharmacy" class="sidebar-sub-link"
                                 onclick="openPharmacyModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">💊</span>
                                 <div class="sub-link-info">
@@ -512,7 +519,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#emergency" class="sidebar-sub-link"
                                 onclick="openEmergencyModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">🚨</span>
                                 <div class="sub-link-info">
@@ -522,7 +529,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#wayfinder" class="sidebar-sub-link"
                                 onclick="openWayfinderModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">🗺️</span>
                                 <div class="sub-link-info">
@@ -545,7 +552,7 @@
                     </div>
                     <ul class="sidebar-submenu">
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#abha" class="sidebar-sub-link"
                                 onclick="openHealthCardModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">🪪</span>
                                 <div class="sub-link-info">
@@ -555,7 +562,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#insurance" class="sidebar-sub-link"
                                 onclick="openInsuranceModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">🤝</span>
                                 <div class="sub-link-info">
@@ -565,7 +572,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#track" class="sidebar-sub-link"
                                 onclick="openTrackTokenModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">🧭</span>
                                 <div class="sub-link-info">
@@ -575,17 +582,17 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#guidelines" class="sidebar-sub-link"
                                 onclick="openGuidelinesModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">ℹ️</span>
                                 <div class="sub-link-info">
-                                    <span class="sub-title">Clinic Guidelines</span>
+                                    <span class="sub-title">Hospital Guidelines</span>
                                     <span class="sub-desc">Visitor &amp; appointment rules</span>
                                 </div>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="sidebar-sub-link"
+                            <a href="#my-bookings" class="sidebar-sub-link"
                                 onclick="openMyBookingsModal(); if(window.innerWidth < 1024) toggleLeftSidebar(true); return false;">
                                 <span class="sub-icon">🎫</span>
                                 <div class="sub-link-info">
@@ -801,10 +808,7 @@
                 <div class="trust-badge-pill">
                     <span class="trust-pill-icon" style="font-size: 1.1rem; color: #059669;">🛡️</span>
                     <div class="trust-text">
-                        <span>4.9/5 Rating</span> • Multi-Specialty Clinical Excellence on GT Road, Phagwara <span
-                            class="sample-data-tag"
-                            style="font-size: 0.7rem; color: var(--slate-500); background: rgba(0,0,0,0.06); padding: 0.15rem 0.4rem; border-radius: 4px; margin-left: 0.35rem;">(Sample
-                            Portal Metrics)</span>
+                        <span>Govt. Regd. Multi-Specialty Hospital</span> • 24/7 Casualty &amp; Modern OPD on GT Road, Phagwara
                     </div>
                 </div>
 
@@ -857,29 +861,28 @@
             </div>
         </section>
 
-        <!-- Accreditation Trust Bar (NABH / NABL / JCI / Ayushman Bharat) -->
+        <!-- Accreditation & Standards Trust Bar -->
         <section class="accreditation-bar">
             <div class="container accreditation-container">
                 <div class="accred-item">
-                    <span class="accred-badge emerald">NABH ACCREDITED</span>
-                    <span>National Quality Healthcare Standard</span>
+                    <span class="accred-badge emerald">PUNJAB CEA REGD.</span>
+                    <span>Clinical Establishments Act Standards</span>
                 </div>
                 <div class="accred-item">
-                    <span class="accred-badge">NABL LABS</span>
-                    <span>ISO 15189 Certified Precision Diagnostics</span>
+                    <span class="accred-badge">ISO 9001:2015</span>
+                    <span>Certified Quality Healthcare &amp; Diagnostics</span>
                 </div>
                 <div class="accred-item">
-                    <span class="accred-badge gold">JCI GOLD PROTOCOL</span>
-                    <span>International Patient Safety Protocol</span>
+                    <span class="accred-badge gold">PMC PHYSICIANS</span>
+                    <span>Punjab Medical Council Registered Specialists</span>
                 </div>
                 <div class="accred-item">
                     <span class="accred-badge emerald">AB-PMJAY &amp; CGHS</span>
-                    <span>100% Cashless Govt. Healthcare Empanelled</span>
+                    <span>Cashless Govt. Healthcare Empanelled</span>
                 </div>
             </div>
-            <div style="font-size: 0.7rem; color: var(--slate-500); text-align: center; margin-top: 0.4rem;">
-                *Institutional accreditations and patient satisfaction scores are presented as demonstration benchmarks
-                for portal review.
+            <div style="font-size: 0.72rem; color: var(--slate-500); text-align: center; margin-top: 0.4rem;">
+                Official OPD token booking &amp; emergency admission portal for CarePulse Hospital, GT Road, Phagwara, Punjab.
             </div>
         </section>
 
@@ -901,7 +904,7 @@
                         <div class="service-hub-icon-wrapper" style="background: #e0f2fe; color: #0284c7;">🩺</div>
                         <h3 class="service-hub-title">Book Doctor Slot</h3>
                         <p class="service-hub-sub">Reserve confirmed consultation slots with live OPD queue tokens</p>
-                        <span class="service-hub-tag" style="background: #e0f2fe; color: #0369a1;">Fast Layer</span>
+                        <span class="service-hub-tag" style="background: #e0f2fe; color: #0369a1;">Instant OPD Slot</span>
                         <span class="service-hub-btn">Book Slot ➔</span>
                     </div>
 
@@ -939,7 +942,7 @@
                         <div class="service-hub-icon-wrapper" style="background: #d1fae5; color: #059669;">🛡️</div>
                         <h3 class="service-hub-title">Health Checkups</h3>
                         <p class="service-hub-sub">ProHealth packages from ₹999 with home sample pickup</p>
-                        <span class="service-hub-tag" style="background: #d1fae5; color: #065f46;">Up to 55% Off</span>
+                        <span class="service-hub-tag" style="background: #d1fae5; color: #065f46;">Free Home Sample</span>
                         <span class="service-hub-btn">View Packages ➔</span>
                     </div>
 
@@ -990,10 +993,10 @@
                         <span class="service-hub-btn">Calculate ➔</span>
                     </div>
 
-                    <!-- Tile 11: Clinic Guidelines -->
+                    <!-- Tile 11: Hospital Guidelines -->
                     <div class="service-hub-tile tile-amber" onclick="openGuidelinesModal()">
                         <div class="service-hub-icon-wrapper" style="background: #fef3c7; color: #d97706;">ℹ️</div>
-                        <h3 class="service-hub-title">Clinic Guidelines</h3>
+                        <h3 class="service-hub-title">Hospital Guidelines</h3>
                         <p class="service-hub-sub">Visiting timings, reporting rules &amp; consultation instructions</p>
                         <span class="service-hub-tag" style="background: #fef3c7; color: #92400e;">Visitor Info</span>
                         <span class="service-hub-btn">Read Rules ➔</span>
@@ -1474,12 +1477,12 @@
                     <div class="service-layer-title-wrap">
                         <span class="layer-badge" style="background: #fef3c7; color: #b45309;">LIVE OPD QUEUE
                             MONITOR</span>
-                        <h2 id="modal-title-live-queue">Real-Time Clinic Token Display</h2>
+                        <h2 id="modal-title-live-queue">Real-Time OPD Token Display</h2>
                         <p>Live consultation queue and token tracking across all specialist chambers in Phagwara</p>
                     </div>
                 </div>
                 <div class="service-layer-header-actions">
-                    <button class="btn btn-outline btn-sm" onclick="playClinicChime()" title="Play Clinic Audio Chime">
+                    <button class="btn btn-outline btn-sm" onclick="playClinicChime()" title="Play Hospital Audio Chime">
                         🔔 Test Chime
                     </button>
                     <button type="button" class="btn-pa-toggle" id="btn-live-pa-toggle" onclick="PublicAddressEngine.toggleMute()" title="Toggle Audible Voice PA Callouts">
@@ -1722,7 +1725,7 @@
                     <div class="service-layer-title-wrap">
                         <span class="layer-badge" style="background: #e0f2fe; color: #0369a1;">QUALIFIED MEDICAL
                             SPECIALISTS</span>
-                        <h2 id="modal-title-doctors">Meet Our Clinic Doctors</h2>
+                        <h2 id="modal-title-doctors">Meet Our Hospital Specialists</h2>
                         <p>Consult our experienced Indian physicians, pediatricians, dermatologists, and dental surgeons
                         </p>
                     </div>
@@ -1809,8 +1812,7 @@
                         </div>
                         <div class="package-pricing">
                             <span class="current-price">₹999</span>
-                            <span class="old-price">₹2,200</span>
-                            <span class="discount-tag">55% OFF</span>
+                            <span class="package-tag" style="background: #e0f2fe; color: #0369a1; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px;">All-Inclusive • 32 Tests</span>
                         </div>
                         <ul class="package-features">
                             <li><span class="icon">✓</span> Complete Hemogram (CBC - 24 params)</li>
@@ -1835,8 +1837,7 @@
                         </div>
                         <div class="package-pricing">
                             <span class="current-price">₹2,499</span>
-                            <span class="old-price">₹5,500</span>
-                            <span class="discount-tag">54% OFF</span>
+                            <span class="package-tag" style="background: #ccfbf1; color: #0f766e; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px;">All-Inclusive • 64 Tests</span>
                         </div>
                         <ul class="package-features">
                             <li><span class="icon">✓</span> Liver Function Panel (LFT - 11 params)</li>
@@ -1861,8 +1862,7 @@
                         </div>
                         <div class="package-pricing">
                             <span class="current-price">₹1,899</span>
-                            <span class="old-price">₹4,200</span>
-                            <span class="discount-tag">55% OFF</span>
+                            <span class="package-tag" style="background: #fef3c7; color: #92400e; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px;">Senior Care • 58 Tests</span>
                         </div>
                         <ul class="package-features">
                             <li><span class="icon">✓</span> HbA1c (3-Month Glycated Glucose Average)</li>
@@ -1887,8 +1887,7 @@
                         </div>
                         <div class="package-pricing">
                             <span class="current-price">₹2,199</span>
-                            <span class="old-price">₹4,800</span>
-                            <span class="discount-tag">54% OFF</span>
+                            <span class="package-tag" style="background: #ede9fe; color: #6d28d9; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px;">Women Care • 48 Tests</span>
                         </div>
                         <ul class="package-features">
                             <li><span class="icon">✓</span> Thyroid &amp; Iron Deficiency Panel (Ferritin)</li>
@@ -2017,7 +2016,7 @@
                 <div class="service-layer-header-left">
                     <div class="service-layer-icon" style="background: #f1f5f9; color: #475569;">ℹ️</div>
                     <div class="service-layer-title-wrap">
-                        <span class="layer-badge">CLINIC POLICY &amp; TIPS</span>
+                        <span class="layer-badge">HOSPITAL POLICY &amp; TIPS</span>
                         <h2 id="modal-title-guidelines">Patient Guidelines &amp; Walk-In Policy</h2>
                         <p>Helpful instructions to ensure your consultation visit is swift, smooth, and comfortable</p>
                     </div>
@@ -2227,7 +2226,7 @@
                                         style="margin-top: 0.2rem;" />
                                     <span>I consent to CarePulse collecting and processing my health details for
                                         clinical OPD token generation and consultation in compliance with the
-                                        <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong>. <a href="#"
+                                        <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong>. <a href="#privacy"
                                             onclick="openPrivacyModal(); return false;"
                                             style="color: var(--primary-dark); text-decoration: underline;">Read DPDP
                                             Policy</a></span>
@@ -2396,6 +2395,68 @@
 
             <div style="margin-top: 1.5rem; text-align: right;">
                 <button class="btn btn-outline btn-sm" onclick="closeMyBookingsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reschedule Appointment Dialog Modal -->
+    <div class="modal-backdrop" id="reschedule-dialog-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="reschedule-title">
+        <div class="reschedule-card">
+            <button class="modal-close-btn" onclick="closeRescheduleModal()" aria-label="Close modal">×</button>
+            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.75rem;">
+                <span style="font-size: 1.5rem;">📅</span>
+                <div>
+                    <h3 id="reschedule-title" style="font-size: 1.25rem; margin: 0; color: var(--dark);">Reschedule Appointment</h3>
+                    <span id="reschedule-token-badge" style="font-size: 0.75rem; color: var(--primary); font-weight: 700;"></span>
+                </div>
+            </div>
+            <p id="reschedule-doctor-info" style="font-size: 0.85rem; color: var(--slate-600); margin-bottom: 1rem;">
+                Select your preferred new consultation date and time slot:
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+                <div>
+                    <label for="reschedule-date-input" style="font-size: 0.8rem; font-weight: 600; color: var(--dark); display: block; margin-bottom: 0.3rem;">Preferred New Date</label>
+                    <input type="date" id="reschedule-date-input" class="form-control" />
+                </div>
+                <div>
+                    <label for="reschedule-slot-select" style="font-size: 0.8rem; font-weight: 600; color: var(--dark); display: block; margin-bottom: 0.3rem;">Preferred Time Slot</label>
+                    <select id="reschedule-slot-select" class="form-control">
+                        <option value="10:00 AM">Morning — 10:00 AM</option>
+                        <option value="11:30 AM">Morning — 11:30 AM</option>
+                        <option value="02:00 PM">Afternoon — 02:00 PM</option>
+                        <option value="04:00 PM">Evening — 04:00 PM</option>
+                        <option value="06:00 PM">Evening — 06:00 PM</option>
+                    </select>
+                </div>
+            </div>
+            <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; justify-content: flex-end;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="closeRescheduleModal()">Keep Existing</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="confirmReschedule()">Confirm New Slot</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Appointment Confirmation Modal -->
+    <div class="modal-backdrop" id="cancel-dialog-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="cancel-title">
+        <div class="cancel-card">
+            <button class="modal-close-btn" onclick="closeCancelModal()" aria-label="Close modal">×</button>
+            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.75rem;">
+                <span style="font-size: 1.5rem;">⚠️</span>
+                <div>
+                    <h3 id="cancel-title" style="font-size: 1.25rem; margin: 0; color: #dc2626;">Cancel Appointment</h3>
+                    <span id="cancel-token-badge" style="font-size: 0.75rem; color: var(--slate-500); font-weight: 600;"></span>
+                </div>
+            </div>
+            <p id="cancel-doctor-info" style="font-size: 0.85rem; color: var(--slate-600); margin-bottom: 1rem;">
+                Are you sure you want to cancel this appointment? This action cannot be undone.
+            </p>
+            <div>
+                <label for="cancel-reason-input" style="font-size: 0.8rem; font-weight: 600; color: var(--dark); display: block; margin-bottom: 0.3rem;">Reason for cancellation (optional)</label>
+                <input type="text" id="cancel-reason-input" class="form-control" placeholder="e.g. Schedule conflict, feeling better" />
+            </div>
+            <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; justify-content: flex-end;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="closeCancelModal()">Don't Cancel</button>
+                <button type="button" class="btn btn-danger btn-sm" style="background: #dc2626; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer;" onclick="confirmCancellation()">Confirm Cancellation</button>
             </div>
         </div>
     </div>
@@ -2832,6 +2893,10 @@
                 and recommended specialist care.
             </p>
 
+            <div class="medical-disclaimer-notice">
+                ⚠️ <strong>Clinical Disclaimer:</strong> This calculator provides general informational estimates based on standard anthropometric formulas. It is not a formal medical diagnosis or personalized treatment plan. Please consult a qualified CarePulse physician for clinical evaluation.
+            </div>
+
             <div class="calc-inputs-grid">
                 <div>
                     <label
@@ -3208,21 +3273,21 @@
                 <div class="footer-col">
                     <h4>Specialties</h4>
                     <ul class="footer-links">
-                        <li><a href="#" onclick="openDoctorsModal('general'); return false;">General Medicine</a></li>
-                        <li><a href="#" onclick="openDoctorsModal('cardiology'); return false;">Cardiology &amp;
+                        <li><a href="#doctors?specialty=general" onclick="openDoctorsModal('general'); return false;">General Medicine</a></li>
+                        <li><a href="#doctors?specialty=cardiology" onclick="openDoctorsModal('cardiology'); return false;">Cardiology &amp;
                                 Heart</a></li>
-                        <li><a href="#" onclick="openDoctorsModal('orthopedics'); return false;">Orthopedics &amp;
+                        <li><a href="#doctors?specialty=orthopedics" onclick="openDoctorsModal('orthopedics'); return false;">Orthopedics &amp;
                                 Joints</a></li>
-                        <li><a href="#" onclick="openDoctorsModal('gynecology'); return false;">Obstetrics &amp;
+                        <li><a href="#doctors?specialty=gynecology" onclick="openDoctorsModal('gynecology'); return false;">Obstetrics &amp;
                                 Gynecology</a></li>
-                        <li><a href="#" onclick="openDoctorsModal('ent'); return false;">ENT (Ear Nose Throat)</a></li>
-                        <li><a href="#" onclick="openDoctorsModal('ophthalmology'); return false;">Ophthalmology &amp;
+                        <li><a href="#doctors?specialty=ent" onclick="openDoctorsModal('ent'); return false;">ENT (Ear Nose Throat)</a></li>
+                        <li><a href="#doctors?specialty=ophthalmology" onclick="openDoctorsModal('ophthalmology'); return false;">Ophthalmology &amp;
                                 Eye</a></li>
-                        <li><a href="#" onclick="openDoctorsModal('pediatrician'); return false;">Pediatrics &amp; Child
+                        <li><a href="#doctors?specialty=pediatrician" onclick="openDoctorsModal('pediatrician'); return false;">Pediatrics &amp; Child
                                 Care</a></li>
-                        <li><a href="#" onclick="openDoctorsModal('dermatologist'); return false;">Dermatology &amp;
+                        <li><a href="#doctors?specialty=dermatologist" onclick="openDoctorsModal('dermatologist'); return false;">Dermatology &amp;
                                 Skin</a></li>
-                        <li><a href="#" onclick="openDoctorsModal('dentist'); return false;">Dental &amp;
+                        <li><a href="#doctors?specialty=dentist" onclick="openDoctorsModal('dentist'); return false;">Dental &amp;
                                 Maxillofacial</a></li>
                     </ul>
                 </div>
@@ -3230,16 +3295,16 @@
                 <div class="footer-col">
                     <h4>Patient Services</h4>
                     <ul class="footer-links">
-                        <li><a href="#" onclick="openBookingLayer(); return false;">Book OPD Appointment</a></li>
-                        <li><a href="#" onclick="openPackagesModal(); return false;">CarePulse ProHealth Checkups</a>
+                        <li><a href="#booking" onclick="openBookingLayer(); return false;">Book OPD Appointment</a></li>
+                        <li><a href="#packages" onclick="openPackagesModal(); return false;">CarePulse ProHealth Checkups</a>
                         </li>
-                        <li><a href="#" onclick="openLabReportModal(); return false;">Diagnostic Lab Reports (UHID)</a>
+                        <li><a href="#reports" onclick="openLabReportModal(); return false;">Diagnostic Lab Reports (UHID)</a>
                         </li>
-                        <li><a href="#" onclick="openPharmacyModal(); return false;">24/7 Doorstep Pharmacy</a></li>
-                        <li><a href="#" onclick="openInsuranceModal(); return false;">Cashless Insurance &amp; TPA
+                        <li><a href="#pharmacy" onclick="openPharmacyModal(); return false;">24/7 Doorstep Pharmacy</a></li>
+                        <li><a href="#insurance" onclick="openInsuranceModal(); return false;">Cashless Insurance &amp; TPA
                                 Desk</a></li>
-                        <li><a href="#" onclick="openMyBookingsModal(); return false;">My Active Token Slips</a></li>
-                        <li><a href="#" onclick="openReceptionDesk(); return false;">Staff Reception Desk 🔑</a></li>
+                        <li><a href="#my-bookings" onclick="openMyBookingsModal(); return false;">My Active Token Slips</a></li>
+                        <li><a href="#reception" onclick="openReceptionDesk(); return false;">Staff Reception Desk 🔑</a></li>
                     </ul>
                 </div>
 
@@ -3259,11 +3324,11 @@
                 <p style="margin: 0;">© 2026 CarePulse Super Speciality Hospital, Phagwara, Punjab. Demonstration
                     preview portal. All Rights Reserved.</p>
                 <div style="display: flex; gap: 1rem; font-size: 0.8rem;">
-                    <a href="#"
+                    <a href="#privacy"
                         onclick="document.getElementById('privacy-modal').classList.add('active'); return false;"
                         style="color: var(--slate-400); text-decoration: underline;">DPDP Privacy Policy</a>
                     <span style="color: var(--slate-600);">&bull;</span>
-                    <a href="#" onclick="document.getElementById('terms-modal').classList.add('active'); return false;"
+                    <a href="#terms" onclick="document.getElementById('terms-modal').classList.add('active'); return false;"
                         style="color: var(--slate-400); text-decoration: underline;">Terms &amp; Patient Charter</a>
                 </div>
             </div>
@@ -3296,7 +3361,7 @@
             <span class="dock-icon">🏠</span>
             <span>Home</span>
         </a>
-        <a href="#" class="dock-item" id="dock-item-doctors" onclick="openDoctorsModal(); return false;">
+        <a href="#doctors" class="dock-item" id="dock-item-doctors" onclick="openDoctorsModal(); return false;">
             <span class="dock-icon">👨‍⚕️</span>
             <span>Doctors</span>
         </a>
@@ -3305,7 +3370,7 @@
             <span class="dock-icon">⚡</span>
             <span>Book Slot</span>
         </button>
-        <a href="#" class="dock-item" id="dock-item-queue" onclick="openLiveQueueModal(); return false;">
+        <a href="#queue" class="dock-item" id="dock-item-queue" onclick="openLiveQueueModal(); return false;">
             <span class="dock-icon">⏱️</span>
             <span class="dock-pulse-dot"></span>
             <span>Live Queue</span>
@@ -3937,6 +4002,16 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Mobile Sticky Emergency / 1-Tap Booking Helpline Bar -->
+    <div class="mobile-sticky-helpline-bar" aria-label="Mobile Emergency and Booking Quick Actions">
+        <a href="tel:18001802026" class="mobile-helpline-btn call" aria-label="Call Hospital 24/7 Helpline">
+            <span>📞</span> 1800-180-2026
+        </a>
+        <a href="https://wa.me/919814022737?text=Hello%20CarePulse%20Hospital,%20I%20would%20like%20to%20book%20an%20appointment" target="_blank" rel="noopener noreferrer" class="mobile-helpline-btn wa" aria-label="Chat on WhatsApp">
+            <span>💬</span> WhatsApp OPD
+        </a>
     </div>
 
     <!-- Invisible reCAPTCHA container for Firebase Phone Auth -->
