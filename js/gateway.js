@@ -14,8 +14,38 @@ const DeliveryGateway = {
     firebaseProjectId: ''
   },
 
+  loadDevSDKs() {
+    if (typeof window === 'undefined') return;
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('dev') !== '1') return;
+    if (this._sdksLoaded) return;
+    this._sdksLoaded = true;
+
+    if (!window.emailjs) {
+      const s1 = document.createElement('script');
+      s1.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+      s1.crossOrigin = 'anonymous';
+      s1.onload = () => this.initEmailJS();
+      document.head.appendChild(s1);
+    }
+    if (!window.firebase) {
+      const s2 = document.createElement('script');
+      s2.src = 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js';
+      s2.crossOrigin = 'anonymous';
+      s2.onload = () => {
+        const s3 = document.createElement('script');
+        s3.src = 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js';
+        s3.crossOrigin = 'anonymous';
+        s3.onload = () => this.initFirebase();
+        document.head.appendChild(s3);
+      };
+      document.head.appendChild(s2);
+    }
+  },
+
   init() {
     this.loadConfig();
+    this.loadDevSDKs();
     this.initEmailJS();
     this.initFirebase();
     this.updateUIBadge();

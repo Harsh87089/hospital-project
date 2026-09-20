@@ -6946,11 +6946,13 @@ html.font-scale-xl {
   z-index: 2;
 }
 
-[data-demo="sample-doc"] {
+[data-demo="sample-doc"],
+[data-demo*="sample-doc"] {
   position: relative;
 }
 
-[data-demo="sample-doc"]::before {
+[data-demo="sample-doc"]::before,
+[data-demo*="sample-doc"]::before {
   content: "SAMPLE - NOT A REAL PRESCRIPTION OR MEDICAL RECORD";
   display: block;
   margin-bottom: 0.5rem;
@@ -6970,6 +6972,24 @@ html.font-scale-xl {
   [data-demo]::after {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+  }
+
+  [data-demo="stamp"],
+  [data-demo*="stamp"] {
+    position: relative;
+  }
+
+  [data-demo="stamp"]::after,
+  [data-demo*="stamp"]::after {
+    content: "DEMO - NOT A REAL APPOINTMENT OR REPORT";
+    position: absolute;
+    inset: 40% 0 auto;
+    text-align: center;
+    font: 800 1.6rem system-ui, sans-serif;
+    color: rgba(220, 38, 38, 0.18);
+    transform: rotate(-18deg);
+    pointer-events: none;
+    z-index: 999;
   }
 }
 

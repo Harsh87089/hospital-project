@@ -581,8 +581,7 @@ const CarePulseQR = (function () {
     renderToSvg(text, size = 72) {
       const qr = this.generate(text);
       if (!qr) {
-        const enc = encodeURIComponent(text);
-        return `<img src="https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${enc}" width="${size}" height="${size}" alt="Token QR" style="display:block; border-radius:4px; background:#ffffff;" />`;
+        return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="background:#ffffff; border-radius:4px; display:block;"><rect width="${size}" height="${size}" fill="#f8fafc"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-size="9" font-family="sans-serif" font-weight="700" fill="#0f766e">CAREPULSE</text></svg>`;
       }
       const count = qr.getModuleCount();
       const margin = 1;

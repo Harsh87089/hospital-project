@@ -52,14 +52,14 @@ const TeleConsultEngine = {
     const user = window.CarePulseAuth ? CarePulseAuth.sessionUser : null;
     const patientNameEl = document.getElementById('rx-tele-patient-name') || document.getElementById('rx-patient-name');
     if (patientNameEl) {
-      patientNameEl.innerText = (user && user.name) ? `${user.name} (Verified)` : 'Self (Verified Patient)';
+      patientNameEl.innerText = (user && user.name) ? `${user.name} (Demo)` : 'Self (Demo Patient)';
     }
 
     // Date
     const dateStamp = document.getElementById('rx-date-stamp');
     if (dateStamp) {
       const today = new Date();
-      dateStamp.innerText = today.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      dateStamp.innerText = today.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
     }
 
     // Render medicines list

@@ -20,10 +20,10 @@ CarePulse is a modern, high-performance, client-side healthcare web portal proto
   * **Native Canvas 2D Pass Rendering**: Digital appointment E-Passes and QR/barcode tokens are generated entirely client-side using the browser's native **HTML5 Canvas 2D API** (`document.createElement('canvas')`) with `window.print()` — eliminating third-party PDF or rasterization libraries like jsPDF or html2canvas.
   * **Native SVGs & Typography**: All iconography is rendered via lightweight inline SVG paths and system emojis (no heavy icon font stylesheets).
 * **External Integration Endpoints (Allowlisted via CSP)**:
-  * **EmailJS SDK**: Client-side demo notification dispatching (`https://cdn.jsdelivr.net`, `https://api.emailjs.com`).
-  * **Firebase Compat SDK**: Optional cloud authentication/state demonstration (`https://www.gstatic.com`, `https://identitytoolkit.googleapis.com`).
+  * **EmailJS SDK**: Gated client-side notification dispatching loaded dynamically in dev mode (`?dev=1`) via `https://cdn.jsdelivr.net`, `https://api.emailjs.com`.
+  * **Firebase Compat SDK**: Optional authentication/state demonstration loaded dynamically in dev mode (`?dev=1`) via `https://www.gstatic.com`, `https://identitytoolkit.googleapis.com`.
   * **Unsplash CDN**: Hospital environment and staff sample photography (`https://images.unsplash.com`).
-  * **QRServer API**: Optional fallback QR code endpoint (`https://api.qrserver.com`); primary QR codes are generated directly in-memory via client-side Canvas. All QR payloads consist strictly of opaque tracking and appointment reference IDs (`?track=...&ref=...`) with zero personal health information (PHI).
+  * **In-Memory Client-Side QR Engine**: Digital passes and OPD tokens generate pure vector SVG QR codes directly in browser memory without any external network fallback service. Zero token data or patient info ever leaves the browser.
 
 ---
 
@@ -34,7 +34,7 @@ CarePulse deploys security headers configured via [`vercel.json`](vercel.json):
 * **Strict Script Execution Policy**: The `script-src` directive strictly permits only `'self'` and explicitly trusted CDNs (`https://cdn.jsdelivr.net`, `https://www.gstatic.com`). It strictly disallows `'unsafe-inline'` and `'unsafe-eval'`. All inline HTML event handlers (`onclick=...`) have been migrated to decoupled `data-action` listeners.
 * **Style Policy**: `style-src` permits `'self'`, Google Fonts, and `'unsafe-inline'` to support dynamic CSSOM DOM style manipulation (e.g. modal visibility toggles, dynamic theme transitions, progress bars).
 * **Network & Image Domain Lockdown**:
-  * `img-src`: Strictly confined to `'self'`, `data:`, `blob:`, `https://images.unsplash.com`, and `https://api.qrserver.com`.
+  * `img-src`: Strictly confined to `'self'`, `data:`, `blob:`, and `https://images.unsplash.com`.
   * `connect-src`: Strictly pinned to `'self'`, `https://api.emailjs.com`, `https://identitytoolkit.googleapis.com`, `https://securetoken.googleapis.com`, and `https://*.firebaseio.com`.
 * **Defensive Headers**: Includes `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`, and `Permissions-Policy: camera=(self), microphone=(self), geolocation=()`.
 * **Privacy Controls (DPDP Act 2023)**: User consent checkbox on booking and a dedicated one-click user data purge function (`clearAllDemoData()`) that purges all tracked local storage keys.
