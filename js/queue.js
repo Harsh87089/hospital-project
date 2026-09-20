@@ -300,7 +300,7 @@ function renderDoctorCards() {
           </div>
 
           <div class="doc-reg-pill" style="margin: 0.35rem 0 0.65rem; font-size: 0.72rem; color: #0369a1; background: #e0f2fe; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; font-weight: 600;">
-            🛡️ Reg: ${doc.regNo || 'PMC Certified Specialist'}
+            🛡️ Faculty: ${doc.regNo || 'CarePulse Clinical Faculty'}
           </div>
 
           <div class="doc-info-grid">

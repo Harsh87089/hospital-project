@@ -59,7 +59,7 @@ const DOCTORS = [
     specialty: 'General Physician',
     specialtyKey: 'general',
     qualifications: 'MBBS, MD (General Medicine - Premier Institute of Medical Sciences)',
-    regNo: 'PMC-38214 (Punjab Medical Council)',
+    regNo: 'Faculty ID: CP-MED-101 (Demo Profile)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon - Sat',
     experience: '16 Years Exp',
@@ -83,7 +83,7 @@ const DOCTORS = [
     specialty: 'General Physician',
     specialtyKey: 'general',
     qualifications: 'MBBS, DNB (Family & Internal Medicine - Apex Medical College)',
-    regNo: 'PMC-41908 (Punjab Medical Council)',
+    regNo: 'Faculty ID: CP-MED-102 (Demo Profile)',
     languages: 'English, Hindi, Malayalam',
     days: 'Mon - Sat',
     experience: '11 Years Exp',
@@ -133,7 +133,7 @@ const DOCTORS = [
     specialty: 'Cardiologist',
     specialtyKey: 'cardiology',
     qualifications: 'MBBS, MD (Medicine), DM (Cardiology - National Postgraduate Medical Institute)',
-    regNo: 'PMC-38291 (Punjab Medical Council)',
+    regNo: 'CP-MED-38291 (Demo Profile)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon - Sat',
     experience: '19 Years Exp',
@@ -157,7 +157,7 @@ const DOCTORS = [
     specialty: 'Cardiologist',
     specialtyKey: 'cardiology',
     qualifications: 'MBBS, MD, DNB (Cardiology - Metro Heart & Vascular Institute)',
-    regNo: 'PMC-44120 (Punjab Medical Council)',
+    regNo: 'CP-MED-44120 (Demo Profile)',
     languages: 'English, Hindi, Punjabi',
     days: 'Tue - Sun',
     experience: '12 Years Exp',
@@ -183,7 +183,7 @@ const DOCTORS = [
     specialty: 'Orthopedic Surgeon',
     specialtyKey: 'orthopedics',
     qualifications: 'MBBS, MS (Orthopedics - Regional Medical College), MCh Ortho (UK)',
-    regNo: 'PMC-41209 (Punjab Medical Council)',
+    regNo: 'CP-MED-41209 (Demo Profile)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon - Sat',
     experience: '17 Years Exp',
@@ -207,7 +207,7 @@ const DOCTORS = [
     specialty: 'Orthopedic Surgeon',
     specialtyKey: 'orthopedics',
     qualifications: 'MBBS, D.Ortho, DNB (Orthopedics - Apex Orthopedic Institute)',
-    regNo: 'PMC-48190 (Punjab Medical Council)',
+    regNo: 'CP-MED-48190 (Demo Profile)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon, Wed, Fri, Sat',
     experience: '11 Years Exp',
@@ -233,7 +233,7 @@ const DOCTORS = [
     specialty: 'Gynecologist & Obstetrician',
     specialtyKey: 'gynecology',
     qualifications: 'MBBS, MS (Obstetrics & Gynaecology - Government Medical College), Fellowship Infertility',
-    regNo: 'PMC-45812 (Punjab Medical Council)',
+    regNo: 'CP-MED-45812 (Demo Profile)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon - Sat',
     experience: '15 Years Exp',
@@ -257,7 +257,7 @@ const DOCTORS = [
     specialty: 'Gynecologist & Obstetrician',
     specialtyKey: 'gynecology',
     qualifications: 'MBBS, DGO, DNB (Obstetrics & Gynecology - Postgraduate Medical Institute)',
-    regNo: 'PMC-52190 (Punjab Medical Council)',
+    regNo: 'CP-MED-52190 (Demo Profile)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon - Fri',
     experience: '10 Years Exp',
@@ -283,7 +283,7 @@ const DOCTORS = [
     specialty: 'ENT Specialist',
     specialtyKey: 'ent',
     qualifications: 'MBBS, MS (ENT / Otorhinolaryngology - State Medical College)',
-    regNo: 'PMC-39145 (Punjab Medical Council)',
+    regNo: 'CP-MED-39145 (Demo Profile)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon - Sat',
     experience: '14 Years Exp',
@@ -309,7 +309,7 @@ const DOCTORS = [
     specialty: 'Eye Specialist',
     specialtyKey: 'ophthalmology',
     qualifications: 'MBBS, MS (Ophthalmology - National Eye Centre)',
-    regNo: 'PMC-54911 (Punjab Medical Council)',
+    regNo: 'CP-MED-54911 (Demo Profile)',
     languages: 'English, Hindi, Punjabi',
     days: 'Mon - Sat',
     experience: '12 Years Exp',
@@ -335,7 +335,7 @@ const DOCTORS = [
     specialty: 'Pediatrician',
     specialtyKey: 'pediatrician',
     qualifications: 'MBBS, MD (Pediatrics & Neonatology - Metro Institute of Child Health)',
-    regNo: 'PMC-47819 (Punjab Medical Council)',
+    regNo: 'CP-MED-47819 (Demo Profile)',
     languages: 'English, Hindi, Bengali',
     days: 'Mon - Sat',
     experience: '12 Years Exp',
@@ -359,7 +359,7 @@ const DOCTORS = [
     specialty: 'Pediatrician',
     specialtyKey: 'pediatrician',
     qualifications: 'MBBS, DCH (Child Health & Immunization - National Postgraduate Institute)',
-    regNo: 'PMC-50931 (Punjab Medical Council)',
+    regNo: 'CP-MED-50931 (Demo Profile)',
     languages: 'English, Hindi, Marathi',
     days: 'Mon - Fri',
     experience: '9 Years Exp',
@@ -385,7 +385,7 @@ const DOCTORS = [
     specialty: 'Dermatologist',
     specialtyKey: 'dermatologist',
     qualifications: 'MBBS, MD (Dermatology, Venereology & Leprosy - Premier Institute of Dermatology)',
-    regNo: 'PMC-46201 (Punjab Medical Council)',
+    regNo: 'CP-MED-46201 (Demo Profile)',
     languages: 'English, Hindi, Tamil',
     days: 'Mon - Sat',
     experience: '10 Years Exp',
@@ -409,7 +409,7 @@ const DOCTORS = [
     specialty: 'Dermatologist',
     specialtyKey: 'dermatologist',
     qualifications: 'MBBS, DDVL (Aesthetic Dermatology & Trichology - State Medical College)',
-    regNo: 'PMC-49112 (Punjab Medical Council)',
+    regNo: 'CP-MED-49112 (Demo Profile)',
     languages: 'English, Hindi, Punjabi',
     days: 'Tue - Sun',
     experience: '8 Years Exp',
@@ -969,7 +969,7 @@ function renderDoctorCards() {
           </div>
 
           <div class="doc-reg-pill" style="margin: 0.35rem 0 0.65rem; font-size: 0.72rem; color: #0369a1; background: #e0f2fe; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; font-weight: 600;">
-            🛡️ Reg: ${doc.regNo || 'PMC Certified Specialist'}
+            🛡️ Faculty: ${doc.regNo || 'CarePulse Clinical Faculty'}
           </div>
 
           <div class="doc-info-grid">
@@ -3615,6 +3615,16 @@ window.openModal = function (modalId, triggerElement) {
   const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
   if (!modal) return;
 
+  if (modalId === 'delivery-gateway-modal' || (modal && modal.id === 'delivery-gateway-modal')) {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('dev') !== '1') {
+      if (typeof window.showToast === 'function') {
+        window.showToast('Developer Gateway is restricted to dev mode. Append ?dev=1 to URL to access.', 'warning');
+      }
+      return;
+    }
+  }
+
   activeModalOpener = triggerElement || document.activeElement;
   currentActiveModal = modal;
 
@@ -5720,7 +5730,7 @@ window.toggleTheme = () => ThemeEngine.toggle();
 const TRANSLATIONS = {
   "en": {
     "brand_name": "CarePulse",
-    "brand_tagline": "Super Specialty Hospital & Research Institute",
+    "brand_tagline": "Multi-Specialty Hospital & Research Institute",
     "nav_home": "Home Overview",
     "nav_opd": "OPD & Doctors",
     "nav_services": "Hospital Services",
@@ -5783,7 +5793,7 @@ const TRANSLATIONS = {
     "tile_wayfinder_title": "Campus GPS Wayfinder",
     "tile_wayfinder_desc": "Interactive hospital indoor map & directions",
     "tile_insurance_title": "Insurance & TPA",
-    "tile_insurance_desc": "Cashless claims & insurance empanelment desk",
+    "tile_insurance_desc": "Cashless claims & insurance assistance desk",
     "tile_sos_title": "Emergency Trauma SOS",
     "tile_sos_desc": "24x7 ambulance dispatch & casualty helpline",
     "sec_packages_title": "Preventive Health Checkup Packages",
@@ -6271,10 +6281,13 @@ const BedsCapacityEngine = {
 
   bloodReserves: [
     { group: 'O+', units: 18, status: 'Good' },
+    { group: 'O-', units: 4, status: 'Rare Stock' },
     { group: 'A+', units: 12, status: 'Adequate' },
+    { group: 'A-', units: 3, status: 'Critical' },
     { group: 'B+', units: 24, status: 'Surplus' },
+    { group: 'B-', units: 5, status: 'Rare Stock' },
     { group: 'AB+', units: 8, status: 'Adequate' },
-    { group: 'O-', units: 4, status: 'Rare Stock' }
+    { group: 'AB-', units: 2, status: 'Critical' }
   ],
 
   activeBay: 1,
@@ -7972,7 +7985,7 @@ const TeleConsultEngine = {
 
   prescriptions: [
     { name: 'Tab. Paracetamol 650 mg', dosage: '1-0-1 (After Food)', duration: '3 Days' },
-    { name: 'Cap. Amoxicillin 500 mg', dosage: '1-0-1 (After Food)', duration: '5 Days' },
+    { name: 'Tab. Vitamin C 500 mg', dosage: '1-0-0 (After Food)', duration: '5 Days' },
     { name: 'Syp. Grilinctus 10 ml', dosage: '0-0-1 (At Bedtime)', duration: '5 Days' }
   ],
 
@@ -7998,12 +8011,12 @@ const TeleConsultEngine = {
     const rxSigName = document.getElementById('rx-sig-name');
 
     if (badgeName) badgeName.innerText = doc.name;
-    if (badgeSpec) badgeSpec.innerText = `${doc.specialty} • ${doc.regNo || 'PMC Verified'}`;
+    if (badgeSpec) badgeSpec.innerText = `${doc.specialty} • ${doc.regNo || 'Demo Faculty'}`;
     if (screenName) screenName.innerText = doc.name;
     if (screenDesc) screenDesc.innerText = `${doc.qualifications} • Live Tele-Consultation`;
     if (docAvatar && doc.avatar) docAvatar.src = doc.avatar;
     if (rxDocName) rxDocName.innerText = doc.name;
-    if (rxDocReg) rxDocReg.innerText = `${doc.qualifications} • ${doc.regNo || 'PMC-38214'}`;
+    if (rxDocReg) rxDocReg.innerText = `${doc.qualifications} • ${doc.regNo || 'CP-MED-38214'}`;
     if (rxSigName) rxSigName.innerText = doc.name;
 
     // Patient info
@@ -8245,7 +8258,7 @@ const TeleConsultEngine = {
           <div class="doc-info">
             <h3>${escapeHtml(doc.name)}</h3>
             <p style="margin: 2px 0; font-size: 13px; font-weight: 600;">${escapeHtml(doc.specialty)}</p>
-            <p style="margin: 0; font-size: 12px; color: #64748b;">${escapeHtml(doc.regNo || 'PMC-38214')}</p>
+            <p style="margin: 0; font-size: 12px; color: #64748b;">${escapeHtml(doc.regNo || 'CP-MED-38214')}</p>
           </div>
         </div>
 
@@ -8276,13 +8289,13 @@ const TeleConsultEngine = {
 
         <div class="footer">
           <div style="font-size: 12px; color: #64748b;">
-            <p style="margin: 0;">🔒 Digitally generated and cryptographically verified.</p>
-            <p style="margin: 2px 0 0;">Valid for dispensing at any licensed Indian pharmacy (DLT/D&amp;C Act).</p>
+            <p style="margin: 0;">🔒 Simulated Demo Prescription Pad - Portfolio prototype simulation.</p>
+            <p style="margin: 2px 0 0;">Not a real medical prescription or valid for dispensing.</p>
           </div>
           <div class="signature">
             <div class="sig-line">${escapeHtml(doc.name)}</div>
             <div style="font-size: 12px; font-weight: 700; color: #0f172a;">${escapeHtml(doc.name)}</div>
-            <div style="font-size: 11px; color: #64748b;">Reg No: ${escapeHtml(doc.regNo || 'PMC-38214')}</div>
+            <div style="font-size: 11px; color: #64748b;">Reg No: ${escapeHtml(doc.regNo || 'CP-MED-38214')}</div>
           </div>
         </div>
 
@@ -8308,7 +8321,7 @@ const TeleConsultEngine = {
   sharePrescriptionWhatsApp() {
     const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
     const medList = this.prescriptions.map((m, i) => `${i + 1}. ${m.name} (${m.dosage} x ${m.duration})`).join('%0A');
-    const text = `*CarePulse Hospital Tele-Consultation Prescription (Demo)*%0A*Doctor:* ${doc.name} (${doc.specialty})%0A*Reg No:* ${doc.regNo || 'PMC-38214'}%0A*Date:* ${new Date().toLocaleDateString('en-GB')}%0A%0A*Rx Medicines:*%0A${medList}%0A%0A*Demo Helpline:* ${DEMO_PHONE}%0A*Address:* GT Road, Phagwara, Punjab`;
+    const text = `*CarePulse Hospital Tele-Consultation Prescription (Demo)*%0A*Doctor:* ${doc.name} (${doc.specialty})%0A*Reg No:* ${doc.regNo || 'CP-MED-38214'}%0A*Date:* ${new Date().toLocaleDateString('en-GB')}%0A%0A*Rx Medicines:*%0A${medList}%0A%0A*Demo Helpline:* ${DEMO_PHONE}%0A*Address:* GT Road, Phagwara, Punjab`;
     window.open(`https://wa.me/?text=${text}`, '_blank');
   },
 
@@ -8646,7 +8659,7 @@ const DigitalHealthCardEngine = {
       allergies: 'Penicillin, Sulfa',
       condition: 'Hypertension',
       phone: DEMO_WHATSAPP_DISPLAY,
-      img: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80'
+      initials: 'RK'
     },
     mother: {
       name: 'Smt. Gurpreet Kaur',
@@ -8656,7 +8669,7 @@ const DigitalHealthCardEngine = {
       allergies: 'Aspirin (Severe)',
       condition: 'Type 2 Diabetes, Arthritis',
       phone: DEMO_WHATSAPP_DISPLAY,
-      img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80'
+      initials: 'GK'
     },
     child: {
       name: 'Master Aarav Kumar',
@@ -8666,7 +8679,7 @@ const DigitalHealthCardEngine = {
       allergies: 'Peanuts (Mild)',
       condition: 'None (Healthy Child)',
       phone: DEMO_WHATSAPP_DISPLAY,
-      img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'
+      initials: 'AK'
     }
   },
 
@@ -8712,7 +8725,13 @@ const DigitalHealthCardEngine = {
       phoneEl.innerText = p.phone;
       phoneEl.href = `tel:${p.phone.replace(/\s+/g, '')}`;
     }
-    if (imgEl) imgEl.src = p.img;
+    if (imgEl) {
+      if (imgEl.tagName === 'IMG') {
+        imgEl.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect width="80" height="80" rx="16" fill="%230f766e"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="28" font-weight="bold" fill="%23ffffff">${escapeHtml(p.initials || 'PT')}</text></svg>`;
+      } else {
+        imgEl.innerText = p.initials || 'PT';
+      }
+    }
 
     if (qrContainer) {
       qrContainer.innerHTML = this.generateQRCodeSVG(p.abha);
@@ -8786,7 +8805,7 @@ const DigitalHealthCardEngine = {
               <h3 style="margin: 0; font-size: 18px;">🏥 CarePulse Smart Health Pass</h3>
               <p style="margin: 2px 0 0; font-size: 11px; color: #a7f3d0;">GT Road, Phagwara, Punjab • Demo Helpline: ${DEMO_PHONE}</p>
             </div>
-            <div style="font-size: 10px; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 99px; font-weight: 700;">ABHA LINKED</div>
+            <div style="font-size: 10px; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 99px; font-weight: 700;">ABHA DEMO FORMAT</div>
           </div>
           <div class="grid">
             <div>

@@ -4,7 +4,7 @@ import { showToast } from './utils.js';
 const TRANSLATIONS = {
   "en": {
     "brand_name": "CarePulse",
-    "brand_tagline": "Super Specialty Hospital & Research Institute",
+    "brand_tagline": "Multi-Specialty Hospital & Research Institute",
     "nav_home": "Home Overview",
     "nav_opd": "OPD & Doctors",
     "nav_services": "Hospital Services",
@@ -67,7 +67,7 @@ const TRANSLATIONS = {
     "tile_wayfinder_title": "Campus GPS Wayfinder",
     "tile_wayfinder_desc": "Interactive hospital indoor map & directions",
     "tile_insurance_title": "Insurance & TPA",
-    "tile_insurance_desc": "Cashless claims & insurance empanelment desk",
+    "tile_insurance_desc": "Cashless claims & insurance assistance desk",
     "tile_sos_title": "Emergency Trauma SOS",
     "tile_sos_desc": "24x7 ambulance dispatch & casualty helpline",
     "sec_packages_title": "Preventive Health Checkup Packages",

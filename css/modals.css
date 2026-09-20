@@ -3469,6 +3469,18 @@ body.theme-dark .campus-pulse-sub {
   object-fit: cover;
 }
 
+.pass-avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0d9488, #047857);
+  color: #ffffff;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  user-select: none;
+}
+
 .pass-patient-meta {
   display: flex;
   flex-direction: column;

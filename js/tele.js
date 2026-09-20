@@ -14,7 +14,7 @@ const TeleConsultEngine = {
 
   prescriptions: [
     { name: 'Tab. Paracetamol 650 mg', dosage: '1-0-1 (After Food)', duration: '3 Days' },
-    { name: 'Cap. Amoxicillin 500 mg', dosage: '1-0-1 (After Food)', duration: '5 Days' },
+    { name: 'Tab. Vitamin C 500 mg', dosage: '1-0-0 (After Food)', duration: '5 Days' },
     { name: 'Syp. Grilinctus 10 ml', dosage: '0-0-1 (At Bedtime)', duration: '5 Days' }
   ],
 
@@ -40,12 +40,12 @@ const TeleConsultEngine = {
     const rxSigName = document.getElementById('rx-sig-name');
 
     if (badgeName) badgeName.innerText = doc.name;
-    if (badgeSpec) badgeSpec.innerText = `${doc.specialty} • ${doc.regNo || 'PMC Verified'}`;
+    if (badgeSpec) badgeSpec.innerText = `${doc.specialty} • ${doc.regNo || 'Demo Faculty'}`;
     if (screenName) screenName.innerText = doc.name;
     if (screenDesc) screenDesc.innerText = `${doc.qualifications} • Live Tele-Consultation`;
     if (docAvatar && doc.avatar) docAvatar.src = doc.avatar;
     if (rxDocName) rxDocName.innerText = doc.name;
-    if (rxDocReg) rxDocReg.innerText = `${doc.qualifications} • ${doc.regNo || 'PMC-38214'}`;
+    if (rxDocReg) rxDocReg.innerText = `${doc.qualifications} • ${doc.regNo || 'Faculty ID: CP-MED-101'}`;
     if (rxSigName) rxSigName.innerText = doc.name;
 
     // Patient info
@@ -287,7 +287,7 @@ const TeleConsultEngine = {
           <div class="doc-info">
             <h3>${escapeHtml(doc.name)}</h3>
             <p style="margin: 2px 0; font-size: 13px; font-weight: 600;">${escapeHtml(doc.specialty)}</p>
-            <p style="margin: 0; font-size: 12px; color: #64748b;">${escapeHtml(doc.regNo || 'PMC-38214')}</p>
+            <p style="margin: 0; font-size: 12px; color: #64748b;">${escapeHtml(doc.regNo || 'Faculty ID: CP-MED-101')}</p>
           </div>
         </div>
 
@@ -318,13 +318,13 @@ const TeleConsultEngine = {
 
         <div class="footer">
           <div style="font-size: 12px; color: #64748b;">
-            <p style="margin: 0;">🔒 Digitally generated and cryptographically verified.</p>
-            <p style="margin: 2px 0 0;">Valid for dispensing at any licensed Indian pharmacy (DLT/D&amp;C Act).</p>
+            <p style="margin: 0;">🔒 Simulated Demo Prescription Pad - Portfolio prototype simulation.</p>
+            <p style="margin: 2px 0 0;">Not a real medical prescription or valid for dispensing.</p>
           </div>
           <div class="signature">
             <div class="sig-line">${escapeHtml(doc.name)}</div>
             <div style="font-size: 12px; font-weight: 700; color: #0f172a;">${escapeHtml(doc.name)}</div>
-            <div style="font-size: 11px; color: #64748b;">Reg No: ${escapeHtml(doc.regNo || 'PMC-38214')}</div>
+            <div style="font-size: 11px; color: #64748b;">Faculty ID: ${escapeHtml(doc.regNo || 'CP-MED-101')}</div>
           </div>
         </div>
 
@@ -350,7 +350,7 @@ const TeleConsultEngine = {
   sharePrescriptionWhatsApp() {
     const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
     const medList = this.prescriptions.map((m, i) => `${i + 1}. ${m.name} (${m.dosage} x ${m.duration})`).join('%0A');
-    const text = `*CarePulse Hospital Tele-Consultation Prescription (Demo)*%0A*Doctor:* ${doc.name} (${doc.specialty})%0A*Reg No:* ${doc.regNo || 'PMC-38214'}%0A*Date:* ${new Date().toLocaleDateString('en-GB')}%0A%0A*Rx Medicines:*%0A${medList}%0A%0A*Demo Helpline:* ${DEMO_PHONE}%0A*Address:* GT Road, Phagwara, Punjab`;
+    const text = `*CarePulse Hospital Tele-Consultation Prescription (Demo)*%0A*Doctor:* ${doc.name} (${doc.specialty})%0A*Faculty ID:* ${doc.regNo || 'CP-MED-101'}%0A*Date:* ${new Date().toLocaleDateString('en-GB')}%0A%0A*Rx Medicines:*%0A${medList}%0A%0A*Demo Helpline:* ${DEMO_PHONE}%0A*Address:* GT Road, Phagwara, Punjab`;
     window.open(`https://wa.me/?text=${text}`, '_blank');
   },
 

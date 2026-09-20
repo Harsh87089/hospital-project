@@ -14,7 +14,7 @@ const DigitalHealthCardEngine = {
       allergies: 'Penicillin, Sulfa',
       condition: 'Hypertension',
       phone: DEMO_WHATSAPP_DISPLAY,
-      img: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80'
+      initials: 'RK'
     },
     mother: {
       name: 'Smt. Gurpreet Kaur',
@@ -24,7 +24,7 @@ const DigitalHealthCardEngine = {
       allergies: 'Aspirin (Severe)',
       condition: 'Type 2 Diabetes, Arthritis',
       phone: DEMO_WHATSAPP_DISPLAY,
-      img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80'
+      initials: 'GK'
     },
     child: {
       name: 'Master Aarav Kumar',
@@ -34,7 +34,7 @@ const DigitalHealthCardEngine = {
       allergies: 'Peanuts (Mild)',
       condition: 'None (Healthy Child)',
       phone: DEMO_WHATSAPP_DISPLAY,
-      img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'
+      initials: 'AK'
     }
   },
 
@@ -80,7 +80,13 @@ const DigitalHealthCardEngine = {
       phoneEl.innerText = p.phone;
       phoneEl.href = `tel:${p.phone.replace(/\s+/g, '')}`;
     }
-    if (imgEl) imgEl.src = p.img;
+    if (imgEl) {
+      if (imgEl.tagName === 'IMG') {
+        imgEl.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect width="80" height="80" rx="16" fill="%230f766e"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="28" font-weight="bold" fill="%23ffffff">${escapeHtml(p.initials || 'PT')}</text></svg>`;
+      } else {
+        imgEl.innerText = p.initials || 'PT';
+      }
+    }
 
     if (qrContainer) {
       qrContainer.innerHTML = this.generateQRCodeSVG(p.abha);
@@ -154,7 +160,7 @@ const DigitalHealthCardEngine = {
               <h3 style="margin: 0; font-size: 18px;">🏥 CarePulse Smart Health Pass</h3>
               <p style="margin: 2px 0 0; font-size: 11px; color: #a7f3d0;">GT Road, Phagwara, Punjab • Demo Helpline: ${DEMO_PHONE}</p>
             </div>
-            <div style="font-size: 10px; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 99px; font-weight: 700;">ABHA LINKED</div>
+            <div style="font-size: 10px; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 99px; font-weight: 700;">ABHA DEMO FORMAT</div>
           </div>
           <div class="grid">
             <div>

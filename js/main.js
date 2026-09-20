@@ -144,6 +144,16 @@ window.openModal = function (modalId, triggerElement) {
   const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
   if (!modal) return;
 
+  if (modalId === 'delivery-gateway-modal' || (modal && modal.id === 'delivery-gateway-modal')) {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('dev') !== '1') {
+      if (typeof window.showToast === 'function') {
+        window.showToast('Developer Gateway is restricted to dev mode. Append ?dev=1 to URL to access.', 'warning');
+      }
+      return;
+    }
+  }
+
   activeModalOpener = triggerElement || document.activeElement;
   currentActiveModal = modal;
 
@@ -614,10 +624,13 @@ const BedsCapacityEngine = {
 
   bloodReserves: [
     { group: 'O+', units: 18, status: 'Good' },
+    { group: 'O-', units: 4, status: 'Rare Stock' },
     { group: 'A+', units: 12, status: 'Adequate' },
+    { group: 'A-', units: 3, status: 'Critical' },
     { group: 'B+', units: 24, status: 'Surplus' },
+    { group: 'B-', units: 5, status: 'Rare Stock' },
     { group: 'AB+', units: 8, status: 'Adequate' },
-    { group: 'O-', units: 4, status: 'Rare Stock' }
+    { group: 'AB-', units: 2, status: 'Critical' }
   ],
 
   activeBay: 1,

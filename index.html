@@ -251,7 +251,7 @@
                 <!-- Trust Footer -->
                 <div class="auth-trust-footer">
                     <div class="trust-item"><span>🔒</span> Local Browser Storage Only</div>
-                    <div class="trust-item"><span>🛡️</span> DPDP Act 2023 Compliant Demo</div>
+                    <div class="trust-item"><span>🛡️</span> DPDP Act 2023 Aligned Demo</div>
                     <div class="trust-item"><span>⚡</span> Simulated Verification (No SMS Sent)</div>
                 </div>
             </div>
@@ -283,7 +283,7 @@
                         onkeydown="CarePulseAuth.handleDigitKey(this, 2, event)" />
                     <input type="text" id="otp-digit-3" aria-label="OTP Digit 3" class="otp-digit-box" maxlength="1" inputmode="numeric"
                         oninput="CarePulseAuth.handleDigitInput(this, 3, event)"
-                        onkeydown="CarePulseAuth.handleDigitKey(this, 3, event)" />
+                        onkeydown="CarePulseAuth.handleDigitKey(this, 2, event)" />
                     <input type="text" id="otp-digit-4" aria-label="OTP Digit 4" class="otp-digit-box" maxlength="1" inputmode="numeric"
                         oninput="CarePulseAuth.handleDigitInput(this, 4, event)"
                         onkeydown="CarePulseAuth.handleDigitKey(this, 4, event)" />
@@ -309,7 +309,7 @@
                 </button>
 
                 <div class="u-box-margin-top-5">
-                    <span>🔒 Encrypted Patient Verification (Simulated Demo Concept)</span>
+                    <span>🔒 Client-Side Local Verification (Simulated Demo Concept)</span>
                 </div>
             </div>
 
@@ -401,7 +401,7 @@
                 <div class="sidebar-user-contact user-display-contact">Authorized Patient</div>
                 <div class="sidebar-user-meta">
                     <span class="status-dot-active"></span>
-                    <span class="user-auth-badge">Verified Session</span>
+                    <span class="user-auth-badge">Simulated Session</span>
                     <span class="user-uhid-badge user-display-uhid">CP-98214</span>
                 </div>
             </div>
@@ -1049,7 +1049,7 @@
                             <div class="campus-pulse-item-info">
                                 <span class="campus-pulse-label">🛏️ Hospital Beds &amp; ICU</span>
                                 <span class="campus-pulse-value">6 Triage &bull; 4 ICU Open</span>
-                                <span class="campus-pulse-sub">Ventilators Ready &bull; Blood Bank A+ B+ O+</span>
+                                <span class="campus-pulse-sub">Ventilators Ready &bull; Blood Bank 8 Groups Monitored</span>
                             </div>
                             <button class="campus-pulse-action-btn" type="button">Check Beds ➔</button>
                         </div>
@@ -1197,7 +1197,7 @@
 
                 <div class="u-flex-box-47">
                     <div class="u-modal-w-800px">
-                        🏛️ <strong>Government Scheme Empanelment &amp; Insurance (Simulated Demo):</strong> Standard CGHS, ECHS, and
+                        🏛️ <strong>Government Scheme &amp; Insurance Support (Simulated Demo):</strong> Standard CGHS, ECHS, and
                         Ayushman Bharat (AB-PMJAY) approved cashless tariff guidelines (Demo Preview).
                         Contact our Cashless TPA Desk on Counter 3 for instant pre-authorization.
                     </div>
@@ -2179,7 +2179,7 @@
                 <div class="token-slip-header">
                     <div class="u-flex-box-134">
                         <span class="u-icon-decorative" aria-hidden="true">🏥</span>
-                        <h3 id="modal-title-token">CarePulse Super Speciality Hospital</h3>
+                        <h3 id="modal-title-token">CarePulse Multi-Specialty Hospital</h3>
                     </div>
                     <p>Official OPD Token Slip • GT Road, Near Sugar Mill Crossing, Phagwara, Punjab - 144401</p>
                 </div>
@@ -3065,14 +3065,14 @@
                 <div>
                     <h3 id="modal-title-privacy" class="u-box-font-size-222">Digital Health Data Privacy Policy
                     </h3>
-                    <span class="u-box-font-size-254">COMPLIANT WITH DIGITAL PERSONAL
+                    <span class="u-box-font-size-254">DESIGNED IN ALIGNMENT WITH DIGITAL PERSONAL
                         DATA PROTECTION (DPDP) ACT, 2023 (INDIA)</span>
                 </div>
             </div>
 
             <div class="u-box-font-size-255">
                 <h4 class="u-box-color-256">1. Prototype Demonstration Architecture (Client-Side Only)</h4>
-                <p>CarePulse is a demonstration prototype application. In compliance with the <strong>Digital Personal Data Protection (DPDP) Act, 2023 (India)</strong>, no personal data, health data, or appointment bookings are sent or saved to any external database or backend server. All information stays exclusively inside your browser.</p>
+                <p>CarePulse is a demonstration prototype application. In alignment with the principles of the <strong>Digital Personal Data Protection (DPDP) Act, 2023 (India)</strong>, no personal data, health data, or appointment bookings are sent or saved to any external database or backend server. All information stays exclusively inside your browser.</p>
 
                 <h4 class="u-box-color-256">2. Exact LocalStorage Keys Stored on this Device</h4>
                 <p>In accordance with the DPDP Act 2023 data transparency requirements, the following keys are stored in your browser's HTML5 <code>localStorage</code> / <code>sessionStorage</code>:</p>
@@ -3088,6 +3088,7 @@
                 <h4 class="u-box-color-256">3. Third-Party Network Resources &amp; Services Disclosure</h4>
                 <p>To deliver an authentic modern healthcare UX, this demonstration portal interfaces with the following external network resources:</p>
                 <ul style="margin: 0.5rem 0 0.75rem 1.25rem; font-size: 0.84rem; line-height: 1.5;">
+                    <li><strong>Google Fonts (<code>fonts.googleapis.com</code> &amp; <code>fonts.gstatic.com</code>)</strong>: Loads web typography stylesheets and font binaries (Inter, Outfit, Plus Jakarta Sans) for accessible cross-device rendering. No health data or personal identifiers are sent to Google Fonts.</li>
                     <li><strong>Unsplash (<code>images.unsplash.com</code>)</strong>: Serves medical staff portraits, department facilities, and hospital campus imagery. No user health data or identifiers are transmitted.</li>
                     <li><strong>Google Maps Embed (<code>maps.google.com / google.com</code>)</strong>: Displays the physical campus map on GT Road, Phagwara.</li>
                     <li><strong>QR Code Fallback Service (<code>api.qrserver.com</code>)</strong>: Digital passes generate SVG QR codes client-side by default. In legacy browser fallback scenarios, an image request is made containing <em>strictly an opaque token identifier and ticket reference</em> (e.g. <code>#TK-8821</code>); absolutely zero patient names, phone numbers, or health details are transmitted.</li>
@@ -3128,7 +3129,7 @@
                 <div>
                     <h3 id="modal-title-terms" class="u-box-font-size-222">Patient Rights Charter &amp; Terms
                     </h3>
-                    <span class="u-box-font-size-43">CarePulse Super Speciality Hospital,
+                    <span class="u-box-font-size-43">CarePulse Multi-Specialty Hospital,
                         Phagwara</span>
                 </div>
             </div>
@@ -3174,7 +3175,7 @@
                             </svg>
                         </div>
                         <div class="logo-text">
-                            <h2 class="u-box-color-258">CarePulse Super Speciality Hospital</h2>
+                            <h2 class="u-box-color-258">CarePulse Multi-Specialty Hospital</h2>
                             <span class="u-color-var-slate-400">Multi-Speciality Healthcare &amp; OPD Centre</span>
                         </div>
                     </div>
@@ -3405,7 +3406,7 @@
                     <span class="pulse-dot"></span>
                     <div>
                         <strong id="tele-doc-badge-name">Dr. Rajesh Sharma</strong>
-                        <span id="tele-doc-badge-spec"class="u-box-display-279">General Medicine &bull; Reg: Demo-PMC-38214 (Sample)</span>
+                        <span id="tele-doc-badge-spec"class="u-box-display-279">General Medicine &bull; Faculty ID: CP-MED-101 (Sample Profile)</span>
                     </div>
                 </div>
 
@@ -3441,7 +3442,7 @@
                     </div>
                     <div class="u-box-text-align-281">
                         <h4 id="tele-doc-screen-name"class="u-box-margin-282">Dr. Rajesh Sharma</h4>
-                        <p id="tele-doc-screen-desc"class="u-box-margin-283">Live Consultation Active &bull; Audio Encrypted</p>
+                        <p id="tele-doc-screen-desc"class="u-box-margin-283">Live Consultation Active &bull; Simulated Media Session</p>
                     </div>
                 </div>
 
@@ -3470,7 +3471,7 @@
             </div>
 
             <!-- Right Column: Live Digital Prescription Pad (Rx) -->
-            <div class="tele-rx-panel" id="tele-rx-panel">
+            <div class="tele-rx-panel" id="tele-rx-panel" data-demo="sample-doc">
                 <!-- Hospital Letterhead -->
                 <div class="rx-pad-header">
                     <div class="rx-hospital-brand">
@@ -3479,7 +3480,7 @@
                     </div>
                     <div class="rx-doc-meta">
                         <div class="rx-doc-name" id="rx-header-doc-name">Dr. Rajesh Sharma</div>
-                        <div class="rx-doc-reg" id="rx-header-doc-reg">MBBS, MD &bull; Reg: Demo-PMC-38214 (Sample Profile)</div>
+                        <div class="rx-doc-reg" id="rx-header-doc-reg">MBBS, MD &bull; Faculty ID: CP-MED-101 (Sample Profile)</div>
                     </div>
                 </div>
 
@@ -3510,11 +3511,11 @@
                     <div class="rx-add-strip">
                         <select id="rx-quick-select" class="rx-quick-select" aria-label="Select Medicine to Add">
                             <option value="Tab. Paracetamol 650 mg|1-0-1 (After Food)|3 Days">Tab. Paracetamol 650 mg (Fever/Pain)</option>
-                            <option value="Cap. Amoxicillin 500 mg|1-0-1 (After Food)|5 Days">Cap. Amoxicillin 500 mg (Antibiotic)</option>
+                            <option value="Tab. Vitamin C 500 mg|1-0-0 (After Food)|5 Days">Tab. Vitamin C 500 mg (Immunity)</option>
                             <option value="Syp. Grilinctus 10 ml|0-0-1 (At Bedtime)|5 Days">Syp. Grilinctus 10 ml (Cough Syrup)</option>
                             <option value="Tab. Pantoprazole 40 mg|1-0-0 (Empty Stomach)|7 Days">Tab. Pantoprazole 40 mg (Antacid)</option>
                             <option value="Tab. Cetirizine 10 mg|0-0-1 (At Bedtime)|3 Days">Tab. Cetirizine 10 mg (Anti-allergic)</option>
-                            <option value="Tab. Azithromycin 500 mg|1-0-0 (1 hour before food)|3 Days">Tab. Azithromycin 500 mg</option>
+                            <option value="Tab. Zincovit|0-1-0 (After Lunch)|10 Days">Tab. Zincovit (Multivitamin / Zinc)</option>
                             <option value="ORS Electral Sachet|1 Sachet in 1L Water|As needed">ORS Electral Oral Rehydration</option>
                         </select>
                         <button type="button" class="btn btn-outline btn-sm u-font-size-0-74rem" data-action="tele-add-medicine">
@@ -3526,7 +3527,7 @@
                 <!-- Doctor Digital Signature Block -->
                 <div class="rx-signature-block">
                     <div class="rx-hospital-seal">
-                        <div>🔒 <strong>Digitally Signed &amp; Encrypted</strong></div>
+                        <div>🔒 <strong>Simulated Digital Signature (Demo)</strong></div>
                         <div>CarePulse Telehealth Portal &bull; Demo Simulation</div>
                     </div>
                     <div class="rx-digital-signature">
@@ -3729,13 +3730,13 @@
                         <span class="u-box-font-size-296">Phagwara &bull; Ludhiana Campus</span>
                     </div>
                     <div class="pass-badge-abha">
-                        ABHA Empanelled
+                        ABHA Demo Format
                     </div>
                 </div>
 
                 <div class="pass-main-grid">
                     <div class="pass-avatar-wrap">
-                        <img id="pass-avatar-img" class="pass-avatar-img" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80" alt="Patient Photo" width="80" height="80" loading="lazy" decoding="async" />
+                        <div id="pass-avatar-img" class="pass-avatar-img pass-avatar-initials" aria-label="Patient Initials Avatar">RK</div>
                     </div>
                     <div class="pass-patient-meta">
                         <div class="pass-patient-name" id="pass-name">Rajesh Kumar</div>
