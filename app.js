@@ -2081,7 +2081,6 @@ function processBookingSubmission(patientData) {
   const doc = DOCTORS.find(d => d.id === state.selectedDoctorId) || DOCTORS[0];
 
   // Generate completely distinct ticket details every time
-  const targetDateIso = state.selectedDate || getISTIsoDate();
   const details = generateUniqueTicketDetails(doc, patientData, targetDateIso);
   const reportingNote = `Please report 15 mins prior (${state.selectedSlot})`;
 
@@ -3709,7 +3708,6 @@ function setupModalDismissals() {
       }
     }
   });
-}
 
   // Deep Link & Hash Routing handler
   window.handleHashRouting = function () {
