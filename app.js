@@ -2495,7 +2495,17 @@ function downloadTicket(app, format = 'png') {
   ctx.fillText(`• Emergency Ambulance: 108 / 112 | Demo Line: ${DEMO_PHONE}`, 54, 980);
   ctx.fillText('• Demonstration Prototype – Not an active commercial clinic | Real emergencies dial 108 / 112', 54, 1002);
 
-  // Official Seal Graphic (Right side)
+  // Diagonal Watermark Stamp across the generated image
+  ctx.save();
+  ctx.translate(400, 590);
+  ctx.rotate(-18 * Math.PI / 180);
+  ctx.font = '800 34px system-ui, -apple-system, sans-serif';
+  ctx.fillStyle = 'rgba(220, 38, 38, 0.18)';
+  ctx.textAlign = 'center';
+  ctx.fillText('DEMO - NOT A REAL APPOINTMENT OR REPORT', 0, 0);
+  ctx.restore();
+
+  // Demo Seal Graphic (Right side)
   ctx.save();
   ctx.translate(685, 963);
   ctx.strokeStyle = '#0d9488';
@@ -2513,9 +2523,9 @@ function downloadTicket(app, format = 'png') {
   ctx.textAlign = 'center';
   ctx.fillText('CAREPULSE HEALTH', 0, -18);
   ctx.font = 'bold 9px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-  ctx.fillText('★ VERIFIED ★', 0, -3);
+  ctx.fillText('★ DEMO PASS ★', 0, -3);
   ctx.font = 'bold 7.5px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-  ctx.fillText('OFFICIAL PASS', 0, 12);
+  ctx.fillText('SIMULATED PASS', 0, 12);
   ctx.fillText('2026', 0, 22);
   ctx.restore();
   ctx.textAlign = 'left';
@@ -2524,7 +2534,7 @@ function downloadTicket(app, format = 'png') {
   ctx.fillStyle = '#64748b';
   ctx.font = '11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('This is an authentic computer-generated OPD appointment pass with cryptographic verification.', 400, 1038);
+  ctx.fillText('Demonstration Prototype: Simulated computer-generated OPD appointment pass for UI testing.', 400, 1038);
   ctx.textAlign = 'left';
 
   // 9. Trigger File Download
@@ -2575,12 +2585,24 @@ function downloadTicketPDF(app) {
           margin: 0;
         }
         .slip-print-card {
+          position: relative;
           max-width: 600px;
           margin: 0 auto;
           border: 2px solid #0f766e;
           border-radius: 16px;
           overflow: hidden;
           box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        .slip-print-card::after {
+          content: "DEMO - NOT A REAL APPOINTMENT OR REPORT";
+          position: absolute;
+          inset: 40% 0 auto;
+          text-align: center;
+          font: 800 22px system-ui, sans-serif;
+          color: rgba(220, 38, 38, 0.18);
+          transform: rotate(-18deg);
+          pointer-events: none;
+          z-index: 999;
         }
         .header {
           background: linear-gradient(135deg, #042f2e, #0f766e);
@@ -2678,7 +2700,7 @@ function downloadTicketPDF(app) {
           ⚠️ DEMO PROTOTYPE &bull; NOT A VALID MEDICAL OR HOSPITAL ADMISSION PASS
         </div>
         <div class="token-hero">
-          <div class="token-lbl">Official Consultation Token Number</div>
+          <div class="token-lbl">Consultation Token Number (Demo)</div>
           <div class="token-id">#${escapeHtml(app.tokenId)}</div>
           <div class="token-time">Scheduled: ${escapeHtml(app.date)} • ${escapeHtml(app.timeSlot)}</div>
         </div>
@@ -8210,11 +8232,11 @@ const TeleConsultEngine = {
   downloadPrescriptionPDF() {
     const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
     const user = window.CarePulseAuth ? CarePulseAuth.sessionUser : null;
-    const patientName = (user && user.name) ? user.name : 'Verified Patient';
+    const patientName = (user && user.name) ? user.name : 'Self (Demo Patient)';
 
     const printWin = window.open('', '_blank', 'width=800,height=900');
     if (!printWin) {
-      alert('Please allow popups to download/print the official prescription.');
+      alert('Please allow popups to download/print the demo prescription.');
       return;
     }
 
@@ -8232,7 +8254,18 @@ const TeleConsultEngine = {
       <head>
         <title>Prescription - CarePulse Hospital - ${patientName}</title>
         <style>
-          body { font-family: system-ui, -apple-system, sans-serif; padding: 30px; color: #0f172a; line-height: 1.5; }
+          body { font-family: system-ui, -apple-system, sans-serif; padding: 30px; color: #0f172a; line-height: 1.5; position: relative; }
+          body::after {
+            content: "DEMO - NOT A REAL APPOINTMENT OR REPORT";
+            position: fixed;
+            inset: 40% 0 auto;
+            text-align: center;
+            font: 800 24px system-ui, sans-serif;
+            color: rgba(220, 38, 38, 0.18);
+            transform: rotate(-18deg);
+            pointer-events: none;
+            z-index: 999;
+          }
           .header { border-bottom: 3px solid #0d9488; padding-bottom: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; }
           .brand h1 { margin: 0; color: #0f172a; font-size: 24px; }
           .brand p { margin: 4px 0 0; color: #475569; font-size: 13px; }
@@ -8257,13 +8290,13 @@ const TeleConsultEngine = {
           <div class="doc-info">
             <h3>${escapeHtml(doc.name)}</h3>
             <p style="margin: 2px 0; font-size: 13px; font-weight: 600;">${escapeHtml(doc.specialty)}</p>
-            <p style="margin: 0; font-size: 12px; color: #64748b;">${escapeHtml(doc.regNo || 'CP-MED-38214')}</p>
+            <p style="margin: 0; font-size: 12px; color: #64748b;">${escapeHtml(doc.regNo || 'Faculty ID: CP-MED-101')}</p>
           </div>
         </div>
 
         <div class="patient-box">
           <div><strong>Patient Name:</strong> ${escapeHtml(patientName)}</div>
-          <div><strong>Date:</strong> ${new Date().toLocaleDateString('en-GB')}</div>
+          <div><strong>Date:</strong> ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
           <div><strong>Consultation:</strong> Virtual Video Tele-Consult</div>
           <div><strong>Token Ref:</strong> #TK-TELE-${Math.floor(1000 + Math.random() * 9000)}</div>
         </div>
@@ -8788,7 +8821,18 @@ const DigitalHealthCardEngine = {
         <title>CarePulse Smart Health Pass - ${escapeHtml(p.name)}</title>
         <style>
           body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; margin: 0; background: #f8fafc; }
-          .card { max-width: 480px; margin: 0 auto; background: linear-gradient(135deg, #022c22, #0f766e); color: white; border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+          .card { position: relative; overflow: hidden; max-width: 480px; margin: 0 auto; background: linear-gradient(135deg, #022c22, #0f766e); color: white; border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+          .card::after {
+            content: "DEMO - NOT A REAL APPOINTMENT OR REPORT";
+            position: absolute;
+            inset: 40% 0 auto;
+            text-align: center;
+            font: 800 18px system-ui, sans-serif;
+            color: rgba(220, 38, 38, 0.22);
+            transform: rotate(-18deg);
+            pointer-events: none;
+            z-index: 99;
+          }
           .top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 12px; margin-bottom: 16px; }
           .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
           .meta-item { margin-bottom: 8px; font-size: 13px; }
@@ -8817,7 +8861,7 @@ const DigitalHealthCardEngine = {
             </div>
             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: white; padding: 10px; border-radius: 12px;">
               ${this.generateQRCodeSVG(p.abha)}
-              <span style="color: #042f2e; font-size: 9px; font-weight: 800; margin-top: 6px;">VERIFIED ID</span>
+              <span style="color: #042f2e; font-size: 9px; font-weight: 800; margin-top: 6px; letter-spacing: 0.5px;">DEMO QR</span>
             </div>
           </div>
         </div>

@@ -322,7 +322,17 @@ function downloadTicket(app, format = 'png') {
   ctx.fillText(`• Emergency Ambulance: 108 / 112 | Demo Line: ${DEMO_PHONE}`, 54, 980);
   ctx.fillText('• Demonstration Prototype – Not an active commercial clinic | Real emergencies dial 108 / 112', 54, 1002);
 
-  // Official Seal Graphic (Right side)
+  // Diagonal Watermark Stamp across the generated image
+  ctx.save();
+  ctx.translate(400, 590);
+  ctx.rotate(-18 * Math.PI / 180);
+  ctx.font = '800 34px system-ui, -apple-system, sans-serif';
+  ctx.fillStyle = 'rgba(220, 38, 38, 0.18)';
+  ctx.textAlign = 'center';
+  ctx.fillText('DEMO - NOT A REAL APPOINTMENT OR REPORT', 0, 0);
+  ctx.restore();
+
+  // Demo Seal Graphic (Right side)
   ctx.save();
   ctx.translate(685, 963);
   ctx.strokeStyle = '#0d9488';
@@ -340,9 +350,9 @@ function downloadTicket(app, format = 'png') {
   ctx.textAlign = 'center';
   ctx.fillText('CAREPULSE HEALTH', 0, -18);
   ctx.font = 'bold 9px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-  ctx.fillText('★ VERIFIED ★', 0, -3);
+  ctx.fillText('★ DEMO PASS ★', 0, -3);
   ctx.font = 'bold 7.5px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-  ctx.fillText('OFFICIAL PASS', 0, 12);
+  ctx.fillText('SIMULATED PASS', 0, 12);
   ctx.fillText('2026', 0, 22);
   ctx.restore();
   ctx.textAlign = 'left';
@@ -351,7 +361,7 @@ function downloadTicket(app, format = 'png') {
   ctx.fillStyle = '#64748b';
   ctx.font = '11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('This is an authentic computer-generated OPD appointment pass with cryptographic verification.', 400, 1038);
+  ctx.fillText('Demonstration Prototype: Simulated computer-generated OPD appointment pass for UI testing.', 400, 1038);
   ctx.textAlign = 'left';
 
   // 9. Trigger File Download
@@ -402,12 +412,24 @@ function downloadTicketPDF(app) {
           margin: 0;
         }
         .slip-print-card {
+          position: relative;
           max-width: 600px;
           margin: 0 auto;
           border: 2px solid #0f766e;
           border-radius: 16px;
           overflow: hidden;
           box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        .slip-print-card::after {
+          content: "DEMO - NOT A REAL APPOINTMENT OR REPORT";
+          position: absolute;
+          inset: 40% 0 auto;
+          text-align: center;
+          font: 800 22px system-ui, sans-serif;
+          color: rgba(220, 38, 38, 0.18);
+          transform: rotate(-18deg);
+          pointer-events: none;
+          z-index: 999;
         }
         .header {
           background: linear-gradient(135deg, #042f2e, #0f766e);
@@ -505,7 +527,7 @@ function downloadTicketPDF(app) {
           ⚠️ DEMO PROTOTYPE &bull; NOT A VALID MEDICAL OR HOSPITAL ADMISSION PASS
         </div>
         <div class="token-hero">
-          <div class="token-lbl">Official Consultation Token Number</div>
+          <div class="token-lbl">Consultation Token Number (Demo)</div>
           <div class="token-id">#${escapeHtml(app.tokenId)}</div>
           <div class="token-time">Scheduled: ${escapeHtml(app.date)} • ${escapeHtml(app.timeSlot)}</div>
         </div>

@@ -144,7 +144,18 @@ const DigitalHealthCardEngine = {
         <title>CarePulse Smart Health Pass - ${escapeHtml(p.name)}</title>
         <style>
           body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; margin: 0; background: #f8fafc; }
-          .card { max-width: 480px; margin: 0 auto; background: linear-gradient(135deg, #022c22, #0f766e); color: white; border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+          .card { position: relative; overflow: hidden; max-width: 480px; margin: 0 auto; background: linear-gradient(135deg, #022c22, #0f766e); color: white; border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+          .card::after {
+            content: "DEMO - NOT A REAL APPOINTMENT OR REPORT";
+            position: absolute;
+            inset: 40% 0 auto;
+            text-align: center;
+            font: 800 18px system-ui, sans-serif;
+            color: rgba(220, 38, 38, 0.22);
+            transform: rotate(-18deg);
+            pointer-events: none;
+            z-index: 99;
+          }
           .top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 12px; margin-bottom: 16px; }
           .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
           .meta-item { margin-bottom: 8px; font-size: 13px; }
@@ -173,7 +184,7 @@ const DigitalHealthCardEngine = {
             </div>
             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: white; padding: 10px; border-radius: 12px;">
               ${this.generateQRCodeSVG(p.abha)}
-              <span style="color: #042f2e; font-size: 9px; font-weight: 800; margin-top: 6px;">VERIFIED ID</span>
+              <span style="color: #042f2e; font-size: 9px; font-weight: 800; margin-top: 6px; letter-spacing: 0.5px;">DEMO QR</span>
             </div>
           </div>
         </div>

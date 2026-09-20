@@ -6926,11 +6926,11 @@ html.font-scale-xl {
  * demo-labels.css - make simulated data visibly simulated.
  */
 
-[data-demo="simulated"] {
+[data-demo~="simulated"] {
   position: relative;
 }
 
-[data-demo="simulated"]::after {
+[data-demo~="simulated"]::after {
   content: "SIMULATED DATA";
   position: absolute;
   top: 0.5rem;
@@ -6946,14 +6946,12 @@ html.font-scale-xl {
   z-index: 2;
 }
 
-[data-demo="sample-doc"],
-[data-demo*="sample-doc"] {
+[data-demo~="sample-doc"] {
   position: relative;
 }
 
-[data-demo="sample-doc"]::before,
-[data-demo*="sample-doc"]::before {
-  content: "SAMPLE - NOT A REAL PRESCRIPTION OR MEDICAL RECORD";
+[data-demo~="sample-doc"]::before {
+  content: "SAMPLE DOCUMENT - DEMO ONLY, NOT REAL";
   display: block;
   margin-bottom: 0.5rem;
   padding: 0.3rem 0.6rem;
@@ -6974,13 +6972,11 @@ html.font-scale-xl {
     print-color-adjust: exact;
   }
 
-  [data-demo="stamp"],
-  [data-demo*="stamp"] {
+  [data-demo~="stamp"] {
     position: relative;
   }
 
-  [data-demo="stamp"]::after,
-  [data-demo*="stamp"]::after {
+  [data-demo~="stamp"]::after {
     content: "DEMO - NOT A REAL APPOINTMENT OR REPORT";
     position: absolute;
     inset: 40% 0 auto;

@@ -581,7 +581,7 @@ const CarePulseQR = (function () {
     renderToSvg(text, size = 72) {
       const qr = this.generate(text);
       if (!qr) {
-        return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="background:#ffffff; border-radius:4px; display:block;"><rect width="${size}" height="${size}" fill="#f8fafc"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-size="9" font-family="sans-serif" font-weight="700" fill="#0f766e">CAREPULSE</text></svg>`;
+        return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:6px; display:block;"><rect x="10%" y="10%" width="80%" height="80%" rx="4" fill="#f1f5f9"/><text x="50%" y="44%" dominant-baseline="middle" text-anchor="middle" font-size="14" fill="#64748b">📱</text><text x="50%" y="74%" dominant-baseline="middle" text-anchor="middle" font-size="8" font-family="system-ui, sans-serif" font-weight="800" fill="#0f766e" letter-spacing="0.5">DEMO QR</text></svg>`;
       }
       const count = qr.getModuleCount();
       const margin = 1;

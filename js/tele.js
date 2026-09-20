@@ -240,11 +240,11 @@ const TeleConsultEngine = {
   downloadPrescriptionPDF() {
     const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
     const user = window.CarePulseAuth ? CarePulseAuth.sessionUser : null;
-    const patientName = (user && user.name) ? user.name : 'Verified Patient';
+    const patientName = (user && user.name) ? user.name : 'Self (Demo Patient)';
 
     const printWin = window.open('', '_blank', 'width=800,height=900');
     if (!printWin) {
-      alert('Please allow popups to download/print the official prescription.');
+      alert('Please allow popups to download/print the demo prescription.');
       return;
     }
 
@@ -262,7 +262,18 @@ const TeleConsultEngine = {
       <head>
         <title>Prescription - CarePulse Hospital - ${patientName}</title>
         <style>
-          body { font-family: system-ui, -apple-system, sans-serif; padding: 30px; color: #0f172a; line-height: 1.5; }
+          body { font-family: system-ui, -apple-system, sans-serif; padding: 30px; color: #0f172a; line-height: 1.5; position: relative; }
+          body::after {
+            content: "DEMO - NOT A REAL APPOINTMENT OR REPORT";
+            position: fixed;
+            inset: 40% 0 auto;
+            text-align: center;
+            font: 800 24px system-ui, sans-serif;
+            color: rgba(220, 38, 38, 0.18);
+            transform: rotate(-18deg);
+            pointer-events: none;
+            z-index: 999;
+          }
           .header { border-bottom: 3px solid #0d9488; padding-bottom: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; }
           .brand h1 { margin: 0; color: #0f172a; font-size: 24px; }
           .brand p { margin: 4px 0 0; color: #475569; font-size: 13px; }
@@ -293,7 +304,7 @@ const TeleConsultEngine = {
 
         <div class="patient-box">
           <div><strong>Patient Name:</strong> ${escapeHtml(patientName)}</div>
-          <div><strong>Date:</strong> ${new Date().toLocaleDateString('en-GB')}</div>
+          <div><strong>Date:</strong> ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
           <div><strong>Consultation:</strong> Virtual Video Tele-Consult</div>
           <div><strong>Token Ref:</strong> #TK-TELE-${Math.floor(1000 + Math.random() * 9000)}</div>
         </div>
