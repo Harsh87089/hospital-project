@@ -303,8 +303,8 @@ const CampusWayfinderEngine = {
 };
 
 window.CampusWayfinderEngine = CampusWayfinderEngine;
-window.openWayfinderModal = function (dest) { CampusWayfinderEngine.open(dest); };
-window.closeWayfinderModal = function () { CampusWayfinderEngine.close(); };
+const openWayfinderModal = window.openWayfinderModal = function (dest) { CampusWayfinderEngine.open(dest); };
+const closeWayfinderModal = window.closeWayfinderModal = function () { CampusWayfinderEngine.close(); };
 
 // ==========================================================================
 // 22. DigitalHealthCardEngine (ABHA & Emergency Medical ID Pass)

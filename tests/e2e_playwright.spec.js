@@ -17,82 +17,87 @@ test.describe('CarePulse Hospital Real-Browser E2E Flows', () => {
   });
 
   test('Flow 1: Appointment Booking Flow & Digital E-Pass Generation', async ({ page }) => {
-    // Navigate to appointment section
-    const bookBtn = page.locator('#nav-book-btn, [data-action="book-appointment"]').first();
-    if (await bookBtn.isVisible()) {
-      await bookBtn.click();
+    // Open real booking layer modal
+    const bookBtn = page.locator('#btn-hero-book, [data-action="open-booking-layer"]').first();
+    await expect(bookBtn).toBeVisible();
+    await bookBtn.click();
+
+    const layerModal = page.locator('#booking-layer-modal');
+    await expect(layerModal).toHaveClass(/active/);
+
+    // If slots are off-duty (e.g. Sunday), pick the next available date pill
+    let slot = page.locator('#layer-slots-container [data-action="select-slot"]').first();
+    if (!await slot.isVisible()) {
+      const datePills = page.locator('.date-card-pill');
+      const count = await datePills.count();
+      for (let i = 0; i < count; i++) {
+        await datePills.nth(i).click();
+        slot = page.locator('#layer-slots-container [data-action="select-slot"]').first();
+        if (await slot.isVisible()) break;
+      }
     }
+    await slot.click();
 
-    // Select specialty & doctor
-    const specialtySelect = page.locator('#specialtySelect, select[name="specialty"]').first();
-    if (await specialtySelect.isVisible()) {
-      await specialtySelect.selectOption({ index: 1 });
-    }
-
-    // Fill patient details
-    const nameInput = page.locator('#patientName, input[name="patientName"]').first();
-    const phoneInput = page.locator('#patientPhone, input[name="patientPhone"]').first();
-
-    await nameInput.fill('Harsh Bhakar');
-    await phoneInput.fill('9814022737');
+    // Fill patient details with clean dummy data
+    await page.locator('#layer-patient-name').fill('Gurpreet Singh');
+    await page.locator('#layer-patient-age').fill('32');
+    await page.locator('#layer-patient-phone').fill('9876543210');
+    await page.locator('#layer-dpdp-consent').check();
 
     // Submit appointment
-    const submitBtn = page.locator('#submitBookingBtn, button[type="submit"]').first();
-    await submitBtn.click();
+    await page.locator('#layer-booking-form').dispatchEvent('submit');
 
-    // Verify confirmation modal or token badge
-    const confirmationModal = page.locator('#bookingConfirmModal, .booking-success-modal, #tokenPassModal').first();
-    await expect(confirmationModal).toBeVisible({ timeout: 5000 });
+    // Verify token modal opens
+    const tokenModal = page.locator('#token-modal');
+    await expect(tokenModal).toHaveClass(/active/, { timeout: 5000 });
 
     // Verify token generation format
-    const tokenBadge = page.locator('#generatedTokenId, .token-id-text').first();
-    if (await tokenBadge.isVisible()) {
-      const text = await tokenBadge.textContent();
-      expect(text).toMatch(/#?TK-\d+/);
-    }
+    const slipCard = page.locator('#token-slip-card');
+    await expect(slipCard).toContainText(/TK-\d+/);
   });
 
   test('Flow 2: Emergency SOS Disclaimer & Focus Trapping', async ({ page }) => {
     // Trigger SOS button
-    const sosTrigger = page.locator('#sosTriggerBtn, [data-action="open-sos"]').first();
+    const sosTrigger = page.locator('[data-action="open-emergency-modal"]').first();
     await expect(sosTrigger).toBeVisible();
     await sosTrigger.click();
 
-    // Verify SOS Modal visibility
-    const sosModal = page.locator('#sosModal');
-    await expect(sosModal).toBeVisible();
+    // Verify Emergency Modal visibility
+    const emergModal = page.locator('#emergency-modal');
+    await expect(emergModal).toHaveClass(/active/);
 
     // Verify WCAG 2.2 AA ARIA attributes
-    await expect(sosModal).toHaveAttribute('role', 'dialog');
-    await expect(sosModal).toHaveAttribute('aria-modal', 'true');
+    await expect(emergModal).toHaveAttribute('role', 'dialog');
+    await expect(emergModal).toHaveAttribute('aria-modal', 'true');
 
-    // Verify emergency disclaimer text exists
-    const disclaimer = page.locator('#sosModal .emergency-disclaimer, #sosModal');
-    await expect(disclaimer).toContainText(/Emergency|Ambulance|Immediate/i);
+    // Verify emergency disclaimer text exists (108 / 112 guidance)
+    await expect(emergModal).toContainText(/DEMO DISCLAIMER/);
+    await expect(emergModal).toContainText(/108/);
+    await expect(emergModal).toContainText(/112/);
 
     // Close modal
-    const closeBtn = page.locator('#sosModal .close-modal-btn, #sosModal [data-action="close-modal"]').first();
+    const closeBtn = page.locator('#emergency-modal [data-action="close-emergency-modal"]').first();
     await closeBtn.click();
-    await expect(sosModal).toBeHidden();
+    await expect(emergModal).not.toHaveClass(/active/);
   });
 
   test('Flow 3: Tri-lingual Dynamic Language Switcher (EN -> HI -> PA)', async ({ page }) => {
+    // Switch to Punjabi
+    const paPill = page.locator('.lang-pill-btn[data-lang="pa"]').first();
+    await paPill.click();
+    const sosTitlePa = page.locator('#modal-title-emergency');
+    await expect(sosTitlePa).toHaveText(/[\u0A00-\u0A7F]/);
+
     // Switch to Hindi
-    const langSelect = page.locator('#langSelect, [data-action="switch-lang"]');
-    if (await langSelect.isVisible()) {
-      await langSelect.selectOption('hi');
-      // Assert Hindi text rendered on key elements
-      const bookTab = page.locator('[data-i18n="nav_book"]').first();
-      await expect(bookTab).toHaveText(/अपॉइंटमेंट/);
+    const hiPill = page.locator('.lang-pill-btn[data-lang="hi"]').first();
+    await hiPill.click();
+    const sosTitleHi = page.locator('#modal-title-emergency');
+    await expect(sosTitleHi).toHaveText(/[\u0900-\u097F]/);
 
-      // Switch to Punjabi
-      await langSelect.selectOption('pa');
-      await expect(bookTab).toHaveText(/ਮੁਲਾਕਾਤ|ਬੁੱਕ/);
-
-      // Restore to English
-      await langSelect.selectOption('en');
-      await expect(bookTab).toHaveText(/Book Appointment/i);
-    }
+    // Restore to English
+    const enPill = page.locator('.lang-pill-btn[data-lang="en"]').first();
+    await enPill.click();
+    await expect(sosTitleHi).toContainText(/Emergency|Casualty/);
   });
 
 });

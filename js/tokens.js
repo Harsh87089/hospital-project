@@ -2,7 +2,7 @@
 import { DEMO_WHATSAPP, DOCTORS, state } from './config.js';
 import { escapeHtml, showToast, getSlotsForDoctorAndDate, CarePulseQR, CarePulseBarcode } from './utils.js';
 
-window.openTrackTokenModal = function (presetTokenId = null) {
+const openTrackTokenModal = window.openTrackTokenModal = function (presetTokenId = null) {
   const modal = document.getElementById('track-token-modal');
   if (!modal) return;
   modal.classList.add('active');
@@ -16,7 +16,7 @@ window.openTrackTokenModal = function (presetTokenId = null) {
   }
 };
 
-window.closeTrackTokenModal = function () {
+const closeTrackTokenModal = window.closeTrackTokenModal = function () {
   const modal = document.getElementById('track-token-modal');
   if (modal) modal.classList.remove('active');
   document.body.style.overflow = '';
@@ -71,13 +71,13 @@ function openTokenSlipModal(app) {
   document.body.style.overflow = 'hidden';
 }
 
-window.closeTokenModal = function () {
+const closeTokenModal = window.closeTokenModal = function () {
   const modal = document.getElementById('token-modal');
   if (modal) modal.classList.remove('active');
   document.body.style.overflow = '';
 };
 
-window.printTokenSlip = function () {
+const printTokenSlip = window.printTokenSlip = function () {
   const app = state.currentViewingToken || state.lastCreatedToken;
   if (app) {
     downloadTicketPDF(app);
@@ -86,7 +86,7 @@ window.printTokenSlip = function () {
   }
 };
 
-window.trackGeneratedTokenNow = function () {
+const trackGeneratedTokenNow = window.trackGeneratedTokenNow = function () {
   const active = state.currentViewingToken || state.lastCreatedToken;
   if (!active) return;
   closeTokenModal();
@@ -558,7 +558,7 @@ function downloadTicketPDF(app) {
 }
 
 // Global download functions for buttons
-window.downloadCurrentTokenTicket = function (format = 'png') {
+const downloadCurrentTokenTicket = window.downloadCurrentTokenTicket = function (format = 'png') {
   const app = state.currentViewingToken || state.lastCreatedToken;
   if (!app) {
     showToast('No active appointment to download.', 'warning');
@@ -567,7 +567,7 @@ window.downloadCurrentTokenTicket = function (format = 'png') {
   downloadTicket(app, format);
 };
 
-window.downloadTicketById = function (tokenId, format = 'png') {
+const downloadTicketById = window.downloadTicketById = function (tokenId, format = 'png') {
   const app = state.userAppointments.find(a => a.tokenId === tokenId);
   if (!app) {
     showToast(`Appointment #${tokenId} not found.`, 'warning');
@@ -600,7 +600,7 @@ function populateRescheduleSlots(doctorId, isoDate) {
   slotEl.innerHTML = available.map(s => `<option value="${s.time}">${s.session}: ${s.time}</option>`).join('');
 }
 
-window.openRescheduleModal = function (app) {
+const openRescheduleModal = window.openRescheduleModal = function (app) {
   state.pendingActionAppointment = app;
   const modal = document.getElementById('reschedule-dialog-modal');
   if (modal) {
@@ -642,12 +642,12 @@ window.openRescheduleModal = function (app) {
   }
 };
 
-window.closeRescheduleModal = function () {
+const closeRescheduleModal = window.closeRescheduleModal = function () {
   const modal = document.getElementById('reschedule-dialog-modal');
   if (modal) modal.style.display = 'none';
 };
 
-window.confirmReschedule = function () {
+const confirmReschedule = window.confirmReschedule = function () {
   const app = state.pendingActionAppointment || state.currentViewingToken || state.lastCreatedToken;
   if (!app) return;
   const dateInput = document.getElementById('reschedule-date-input');
@@ -710,7 +710,7 @@ window.confirmReschedule = function () {
   openTokenSlipModal(app);
 };
 
-window.rescheduleAppointment = function (tokenId) {
+const rescheduleAppointment = window.rescheduleAppointment = function (tokenId) {
   const app = (tokenId ? state.userAppointments.find(a => a.tokenId === tokenId) : null) || state.currentViewingToken || state.lastCreatedToken;
   if (!app) {
     showToast('No active appointment to reschedule.', 'warning');
@@ -719,7 +719,7 @@ window.rescheduleAppointment = function (tokenId) {
   openRescheduleModal(app);
 };
 
-window.openCancelModal = function (app) {
+const openCancelModal = window.openCancelModal = function (app) {
   state.pendingActionAppointment = app;
   const modal = document.getElementById('cancel-dialog-modal');
   if (modal) {
@@ -745,12 +745,12 @@ window.openCancelModal = function (app) {
   }
 };
 
-window.closeCancelModal = function () {
+const closeCancelModal = window.closeCancelModal = function () {
   const modal = document.getElementById('cancel-dialog-modal');
   if (modal) modal.style.display = 'none';
 };
 
-window.confirmCancellation = function () {
+const confirmCancellation = window.confirmCancellation = function () {
   const app = state.pendingActionAppointment || state.currentViewingToken || state.lastCreatedToken;
   if (!app) return;
   const reasonInput = document.getElementById('cancel-reason-select');
@@ -778,7 +778,7 @@ window.confirmCancellation = function () {
   openTokenSlipModal(app);
 };
 
-window.cancelAppointment = function (tokenId) {
+const cancelAppointment = window.cancelAppointment = function (tokenId) {
   const app = (tokenId ? state.userAppointments.find(a => a.tokenId === tokenId) : null) || state.currentViewingToken || state.lastCreatedToken;
   if (!app) {
     showToast('No active appointment to cancel.', 'warning');
@@ -787,7 +787,7 @@ window.cancelAppointment = function (tokenId) {
   openCancelModal(app);
 };
 
-window.addToCalendar = function (tokenId, mode = 'ics') {
+const addToCalendar = window.addToCalendar = function (tokenId, mode = 'ics') {
   const app = (tokenId ? state.userAppointments.find(a => a.tokenId === tokenId) : null) || state.currentViewingToken || state.lastCreatedToken;
   if (!app) {
     showToast('No appointment found to add to calendar.', 'warning');
@@ -1029,7 +1029,7 @@ function renderMyBookingsBadge() {
   }
 }
 
-window.openMyBookingsModal = function () {
+const openMyBookingsModal = window.openMyBookingsModal = function () {
   const modal = document.getElementById('my-bookings-modal');
   const list = document.getElementById('my-bookings-list-content');
   if (!modal || !list) return;
@@ -1083,13 +1083,13 @@ window.openMyBookingsModal = function () {
   document.body.style.overflow = 'hidden';
 };
 
-window.closeMyBookingsModal = function () {
+const closeMyBookingsModal = window.closeMyBookingsModal = function () {
   const modal = document.getElementById('my-bookings-modal');
   if (modal) modal.classList.remove('active');
   document.body.style.overflow = '';
 };
 
-window.reopenTokenSlip = function (tokenId) {
+const reopenTokenSlip = window.reopenTokenSlip = function (tokenId) {
   closeMyBookingsModal();
   const app = state.userAppointments.find(a => a.tokenId === tokenId);
   if (app) {

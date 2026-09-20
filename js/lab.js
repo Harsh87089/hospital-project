@@ -2,7 +2,7 @@
 import { SAMPLE_LAB_REPORTS, verifiedReportUHIDs } from './config.js';
 import { showToast, escapeHtml } from './utils.js';
 
-window.openLabReportModal = function (presetUhid = 'UHID-98214') {
+const openLabReportModal = window.openLabReportModal = function (presetUhid = 'UHID-98214') {
   const modal = document.getElementById('lab-report-modal');
   if (!modal) return;
 
@@ -19,7 +19,7 @@ window.openLabReportModal = function (presetUhid = 'UHID-98214') {
   }
 };
 
-window.closeLabReportModal = function () {
+const closeLabReportModal = window.closeLabReportModal = function () {
   const modal = document.getElementById('lab-report-modal');
   if (modal) {
     modal.classList.remove('active');
@@ -27,7 +27,7 @@ window.closeLabReportModal = function () {
   }
 };
 
-window.searchLabReport = function () {
+const searchLabReport = window.searchLabReport = function () {
   const inputEl = document.getElementById('report-uhid-input');
   const uhid = (inputEl ? inputEl.value : '').trim().toUpperCase();
   if (!uhid) {
@@ -83,7 +83,7 @@ function renderLabReportAuthPrompt(uhid) {
   `;
 }
 
-window.verifyLabReportOTP = function () {
+const verifyLabReportOTP = window.verifyLabReportOTP = function () {
   const input = document.getElementById('report-otp-input');
   const code = input ? input.value.trim() : '';
 
@@ -192,7 +192,7 @@ function renderLabReportSheet(uhid) {
   `;
 }
 
-window.downloadLabReportPDF = function () {
+const downloadLabReportPDF = window.downloadLabReportPDF = function () {
   window.print();
 };
 

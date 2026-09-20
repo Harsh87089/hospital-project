@@ -314,15 +314,15 @@ const SpotlightSearchEngine = {
 };
 
 window.SpotlightSearchEngine = SpotlightSearchEngine;
-window.openSpotlightSearch = () => SpotlightSearchEngine.open();
-window.closeSpotlightSearch = () => SpotlightSearchEngine.close();
+const openSpotlightSearch = window.openSpotlightSearch = () => SpotlightSearchEngine.open();
+const closeSpotlightSearch = window.closeSpotlightSearch = () => SpotlightSearchEngine.close();
 
 // ==========================================================================
 // 12. Persistent Active Token Floating Mini-Tracker
 // ==========================================================================
 
 
-window.setActiveDock = function (tabName) {
+const setActiveDock = window.setActiveDock = function (tabName) {
   document.querySelectorAll('.dock-item').forEach(item => item.classList.remove('active'));
   const el = document.getElementById(`dock-item-${tabName}`);
   if (el) el.classList.add('active');

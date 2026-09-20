@@ -13,15 +13,17 @@ CarePulse is a modern, high-performance, client-side healthcare web portal proto
 
 ## 2. Technical Architecture & Dependencies
 
-* **Frontend Architecture**: Pure Vanilla JavaScript (Modern ES2022 Modules via `js/main.js` with an automated fallback bundle in `app.js`).
+* **Frontend Architecture**: Pure Vanilla JavaScript (Modern ES2022 Modules via 19 modular files in `js/` with an automated fallback bundle in `app.js`).
 * **Design & Styling**: Modular Vanilla CSS3 design system organized across `css/base.css`, `css/components.css`, `css/modals.css`, `css/themes.css`, and `css/fonts.css`.
-* **Framework Dependencies**: **Zero framework dependencies** (no React, Angular, Vue, or TailwindCSS overhead).
-* **Third-Party CDN Utilities**:
-  * **FontAwesome**: UI iconography.
-  * **html2canvas & jsPDF**: Client-side digital appointment pass canvas rendering and PDF generation.
-  * **EmailJS**: Client-side notification dispatching (optional demo integration).
-  * **Firebase Compat SDK**: Optional cloud authentication/state sync.
-  * **QRServer API**: QR code generation for digital OPD passes (`https://api.qrserver.com`).
+* **Zero Framework & Heavy Runtime Dependencies**:
+  * **No Frontend Frameworks**: Zero React, Angular, Vue, or TailwindCSS.
+  * **Native Canvas 2D Pass Rendering**: Digital appointment E-Passes and QR/barcode tokens are generated entirely client-side using the browser's native **HTML5 Canvas 2D API** (`document.createElement('canvas')`) with `window.print()` — eliminating third-party PDF or rasterization libraries like jsPDF or html2canvas.
+  * **Native SVGs & Typography**: All iconography is rendered via lightweight inline SVG paths and system emojis (no heavy icon font stylesheets).
+* **External Integration Endpoints (Allowlisted via CSP)**:
+  * **EmailJS SDK**: Client-side demo notification dispatching (`https://cdn.jsdelivr.net`, `https://api.emailjs.com`).
+  * **Firebase Compat SDK**: Optional cloud authentication/state demonstration (`https://www.gstatic.com`, `https://identitytoolkit.googleapis.com`).
+  * **Unsplash CDN**: Hospital environment and staff sample photography (`https://images.unsplash.com`).
+  * **QRServer API**: Optional fallback QR code endpoint (`https://api.qrserver.com`); primary QR codes are generated directly in-memory via client-side Canvas. All QR payloads consist strictly of opaque tracking and appointment reference IDs (`?track=...&ref=...`) with zero personal health information (PHI).
 
 ---
 
@@ -53,10 +55,11 @@ The platform implements core WCAG 2.2 AA accessibility foundations:
 ## 5. Offline Progressive Web App (PWA)
 
 * **Web App Manifest**: Full PWA manifest at [`manifest.json`](manifest.json) configured with standalone display, theme colors, and icons.
-* **Service Worker Engine**: Offline asset caching engine at [`sw.js`](sw.js) declaring **39 precached assets**:
-  * Root path (`./`) and HTML shells (`index.html`, `hospital.html`).
-  * 5 CSS stylesheets and 6 local WOFF2 font files (Noto Sans Devanagari & Gurmukhi).
-  * 18 ES JavaScript modules, `app.js` bundle, and PWA icons.
+* **Service Worker Engine**: Offline asset caching engine at [`sw.js`](sw.js) declaring **39 precached assets** for instantaneous offline availability:
+  * HTML shells (`./index.html`, `./hospital.html`) and manifests (`./manifest.json`, `./styles.css`).
+  * 5 CSS stylesheets and 6 essential offline font files (Noto Sans Devanagari & Gurmukhi 400/600/700w).
+  * 18 core ES JavaScript modules, `app.js` fallback bundle, and vector/raster PWA icons.
+  * (Additional non-blocking fonts and modules are cached dynamically on first use).
 
 ---
 
@@ -73,14 +76,14 @@ python -m http.server 3000
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-> **Important**: The CLI endpoint validation suite tests live HTTP 200 responses on port 3000. Launching the local server is a prerequisite for live endpoint checks. If the server is offline, the CLI suite will display a notice and test all disk/DOM checks without hanging.
+> **Important**: The CLI deep validation suite automatically spins up a background HTTP server thread if port 3000 is not already running, making the test suite completely self-contained and automated.
 
 ---
 
 ### Running the Test Suites
 
-#### 1. Unit & Functional Test Suite (25 Tests)
-Validates core configuration, sanitization, DPDP compliance, CSP configuration, and appointment booking logic:
+#### 1. Unit & Functional Test Suite (26 Tests)
+Validates core configuration, sanitization, DPDP compliance, CSP configuration, V8 syntax parsing, and appointment booking logic:
 ```bash
 python -m unittest discover -s tests
 ```

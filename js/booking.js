@@ -2,7 +2,7 @@
 import { DOCTORS, HEALTH_PACKAGES, state } from './config.js';
 import { escapeHtml, showToast, getUpcomingDays, getSlotsForDoctorAndDate } from './utils.js';
 
-window.openBookingLayer = function (doctorId) {
+const openBookingLayer = window.openBookingLayer = function (doctorId) {
   if (doctorId) {
     state.selectedDoctorId = doctorId;
   }
@@ -30,7 +30,7 @@ window.openBookingLayer = function (doctorId) {
   }
 };
 
-window.closeBookingLayer = function () {
+const closeBookingLayer = window.closeBookingLayer = function () {
   const layerModal = document.getElementById('booking-layer-modal');
   if (layerModal) {
     layerModal.classList.remove('active');
@@ -73,7 +73,7 @@ function renderDateRibbon() {
   });
 }
 
-window.selectDate = function (isoDate, fullDateStr) {
+const selectDate = window.selectDate = function (isoDate, fullDateStr) {
   state.selectedDate = isoDate;
   state.selectedSlot = ''; // reset slot on date change
 
@@ -159,7 +159,7 @@ function renderSlots() {
   updateSummaryBox();
 }
 
-window.selectSlot = function (time, session) {
+const selectSlot = window.selectSlot = function (time, session) {
   const slotsData = getSlotsForDoctorAndDate(state.selectedDoctorId, state.selectedDate);
   const allSlots = [...(slotsData.morning || []), ...(slotsData.afternoon || []), ...(slotsData.evening || [])];
   const target = allSlots.find(s => s.time === time);
@@ -313,11 +313,11 @@ function setupBookingForms() {
 // --- Digital Token Slip Modal Handler ---
 
 
-window.bookHealthPackage = function (pkgId) {
+const bookHealthPackage = window.bookHealthPackage = function (pkgId) {
   openPackageBookingModal(pkgId);
 };
 
-window.openPackageBookingModal = function (pkgId) {
+const openPackageBookingModal = window.openPackageBookingModal = function (pkgId) {
   const pkg = HEALTH_PACKAGES.find(p => p.id === pkgId) || HEALTH_PACKAGES[1];
   activePackageBooking = pkg;
 
@@ -344,7 +344,7 @@ window.openPackageBookingModal = function (pkgId) {
   document.body.style.overflow = 'hidden';
 };
 
-window.closePackageBookingModal = function () {
+const closePackageBookingModal = window.closePackageBookingModal = function () {
   const modal = document.getElementById('package-booking-modal');
   if (modal) {
     modal.classList.remove('active');
@@ -384,7 +384,7 @@ window.closeTermsModal = function () {
   }
 };
 
-window.submitPackageBookingForm = function (e) {
+const submitPackageBookingForm = window.submitPackageBookingForm = function (e) {
   if (e) e.preventDefault();
   const pkg = activePackageBooking || HEALTH_PACKAGES[1];
 

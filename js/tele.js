@@ -363,8 +363,8 @@ const TeleConsultEngine = {
 };
 
 window.TeleConsultEngine = TeleConsultEngine;
-window.openTeleConsultModal = function (docId) { TeleConsultEngine.open(docId); };
-window.closeTeleConsultModal = function () { TeleConsultEngine.close(); };
+const openTeleConsultModal = window.openTeleConsultModal = function (docId) { TeleConsultEngine.open(docId); };
+const closeTeleConsultModal = window.closeTeleConsultModal = function () { TeleConsultEngine.close(); };
 
 // ==========================================================================
 // 21. CampusWayfinderEngine (Indoor GPS & Multi-Floor Navigation)

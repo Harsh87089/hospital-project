@@ -2,7 +2,7 @@
 import { DEMO_PHONE, DEMO_WHATSAPP } from './config.js';
 import { showToast } from './utils.js';
 
-window.openEmergencyModal = function () {
+const openEmergencyModal = window.openEmergencyModal = function () {
   const modal = document.getElementById('emergency-modal');
   if (modal) {
     modal.classList.add('active');
@@ -10,7 +10,7 @@ window.openEmergencyModal = function () {
   }
 };
 
-window.closeEmergencyModal = function () {
+const closeEmergencyModal = window.closeEmergencyModal = function () {
   const modal = document.getElementById('emergency-modal');
   if (modal) {
     modal.classList.remove('active');
@@ -153,8 +153,8 @@ const EmergencySOSEngine = {
 };
 
 window.EmergencySOSEngine = EmergencySOSEngine;
-window.triggerEmergencySOS = () => EmergencySOSEngine.openEmergencyHub();
-window.closeEmergencySOS = () => EmergencySOSEngine.cancelSOS();
+const triggerEmergencySOS = window.triggerEmergencySOS = () => EmergencySOSEngine.openEmergencyHub();
+const closeEmergencySOS = window.closeEmergencySOS = () => EmergencySOSEngine.cancelSOS();
 
 // --- 5. Clinical Health Risk & BMI / Vitals Calculator ---
 

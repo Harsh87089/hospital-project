@@ -3,7 +3,7 @@ import { showToast, escapeHtml } from './utils.js';
 
 let selectedMedicines = [];
 
-window.openPharmacyModal = function () {
+const openPharmacyModal = window.openPharmacyModal = function () {
   const modal = document.getElementById('pharmacy-modal');
   if (modal) {
     modal.classList.add('active');
@@ -11,7 +11,7 @@ window.openPharmacyModal = function () {
   }
 };
 
-window.closePharmacyModal = function () {
+const closePharmacyModal = window.closePharmacyModal = function () {
   const modal = document.getElementById('pharmacy-modal');
   if (modal) {
     modal.classList.remove('active');
@@ -19,7 +19,7 @@ window.closePharmacyModal = function () {
   }
 };
 
-window.toggleMedicineSelection = function (btn, name, price) {
+const toggleMedicineSelection = window.toggleMedicineSelection = function (btn, name, price) {
   const idx = selectedMedicines.findIndex(m => m.name === name);
   if (idx > -1) {
     selectedMedicines.splice(idx, 1);
@@ -49,7 +49,7 @@ function updatePharmacyCartDisplay() {
   }
 }
 
-window.handlePrescriptionUpload = function (event) {
+const handlePrescriptionUpload = window.handlePrescriptionUpload = function (event) {
   const file = event.target.files && event.target.files[0];
   const preview = document.getElementById('rx-filename-display');
   if (file && preview) {
@@ -59,7 +59,7 @@ window.handlePrescriptionUpload = function (event) {
   }
 };
 
-window.submitPharmacyOrder = function (e) {
+const submitPharmacyOrder = window.submitPharmacyOrder = function (e) {
   if (e) e.preventDefault();
   const name = document.getElementById('rx-patient-name').value;
   const phone = document.getElementById('rx-patient-phone').value;

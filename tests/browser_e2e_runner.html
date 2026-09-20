@@ -3,191 +3,198 @@
 <head>
   <meta charset="UTF-8">
   <title>CarePulse Real Browser In-DOM E2E Test Runner</title>
-  <link rel="stylesheet" href="../styles.css">
-  <link rel="stylesheet" href="../css/base.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/modals.css">
-  <link rel="stylesheet" href="../css/themes.css">
+  <style>
+    body { font-family: monospace; padding: 16px; background: #0f172a; color: #f8fafc; margin: 0; }
+    #test-runner-banner { background: #1e293b; padding: 14px 20px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 16px; }
+    .pass { color: #4ade80; }
+    .fail { color: #f87171; }
+    iframe { width: 100%; height: 700px; border: 2px solid #334155; border-radius: 8px; background: white; }
+  </style>
 </head>
 <body>
-  <div id="test-runner-banner" style="background: #0f172a; color: white; padding: 1rem; border-bottom: 2px solid #38bdf8;">
-    <h1 style="margin: 0 0 0.5rem 0; font-size: 1.25rem;">CarePulse Real-Browser E2E Execution Engine</h1>
-    <div id="browser-test-summary" data-status="RUNNING" data-passes="0" data-fails="0">Running in-browser tests...</div>
-    <div id="status-log" style="margin-top: 0.5rem; font-family: monospace;"></div>
+  <div id="test-runner-banner">
+    <h1 style="margin: 0 0 8px 0; font-size: 1.15rem; color: #38bdf8;">CarePulse Real-Browser In-DOM E2E Test Engine</h1>
+    <div id="browser-test-summary" data-status="RUNNING" data-passes="0" data-fails="0">Running in-browser tests against served index.html...</div>
+    <div id="status-log" style="margin-top: 10px; font-size: 0.85rem; line-height: 1.6;"></div>
   </div>
 
-  <!-- Test Fixture DOM Elements Required for Real In-Browser Flow Execution -->
-  <div id="app-fixture">
-    <!-- SOS Emergency Modal -->
-    <div class="modal-backdrop" id="emergency-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-emergency">
-      <div class="modal-container">
-        <button class="modal-close-btn" data-action="close-emergency-modal">×</button>
-        <h3 id="modal-title-emergency" data-i18n="sos_title">Emergency &amp; Trauma Casualty Desk</h3>
-        <div class="demo-disclaimer-box">
-          <div>⚠️ DEMO DISCLAIMER • NO REAL AMBULANCE DISPATCH</div>
-          <div>In an actual medical emergency, immediately dial <strong>108</strong> or <strong>112</strong>.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Booking Layer Modal -->
-    <div class="modal-backdrop" id="booking-layer-modal" role="dialog" aria-modal="true" aria-labelledby="layer-modal-title">
-      <div class="modal-container">
-        <h3 id="layer-modal-title">Schedule OPD Consultation</h3>
-        <div id="layer-doctor-banner"></div>
-        <div id="layer-date-ribbon"></div>
-        <div id="layer-slots-grid">
-          <button type="button" class="slot-pill active" data-slot="10:00 AM">10:00 AM</button>
-        </div>
-        <form id="layer-booking-form">
-          <input type="text" id="layer-patient-name" required />
-          <input type="tel" id="layer-patient-phone" required />
-          <input type="checkbox" id="layer-dpdp-consent" required checked />
-          <button type="submit" id="layer-submit-btn">Confirm Booking</button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Digital Token Pass Modal -->
-    <div class="modal-backdrop" id="token-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-token">
-      <div class="modal-container">
-        <h3 id="modal-title-token">Digital Consultation Pass</h3>
-        <div id="token-slip-card">
-          <span class="token-id-badge" id="token-display-id">#TK-8821</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Synchronous Bundle Loading for Headless DOM Dump -->
-  <script src="../app.js"></script>
+  <!-- Real Application Loaded in Iframe (Zero Hand-Written Fixtures) -->
+  <iframe id="app-frame" src="../index.html"></iframe>
 
   <script>
-    (function () {
-      const logEl = document.getElementById('status-log');
-      const summaryEl = document.getElementById('browser-test-summary');
+    const logEl = document.getElementById('status-log');
+    const summaryEl = document.getElementById('browser-test-summary');
+    const iframe = document.getElementById('app-frame');
 
-      let passes = 0;
-      let fails = 0;
-      const results = [];
+    let passes = 0;
+    let fails = 0;
+    const results = [];
 
-      function log(msg, isPass) {
-        if (isPass) {
-          passes++;
-          results.push('[PASS] ' + msg);
-        } else {
-          fails++;
-          results.push('[FAIL] ' + msg);
-        }
-        logEl.innerHTML = results.map(function (r) {
-          return '<div style="color: ' + (r.indexOf('[PASS]') === 0 ? '#4ade80' : '#f87171') + '">' + r + '</div>';
-        }).join('');
-        summaryEl.setAttribute('data-passes', passes);
-        summaryEl.setAttribute('data-fails', fails);
-        summaryEl.setAttribute('data-status', fails === 0 ? 'PASSED' : 'FAILED');
+    function log(msg, isPass = true) {
+      if (isPass) {
+        passes++;
+        results.push(`[PASS] ${msg}`);
+      } else {
+        fails++;
+        results.push(`[FAIL] ${msg}`);
       }
+      logEl.innerHTML = results.map(r => `<div class="${r.startsWith('[PASS]') ? 'pass' : 'fail'}">${r}</div>`).join('');
+      summaryEl.setAttribute('data-passes', passes);
+      summaryEl.setAttribute('data-fails', fails);
+      summaryEl.setAttribute('data-status', fails === 0 ? 'PASSED' : 'FAILED');
+    }
 
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+    iframe.onload = async () => {
       try {
-        // ---------------------------------------------------------------------
-        // Flow 1: Emergency SOS Disclaimer & Modal ARIA Test
-        // ---------------------------------------------------------------------
-        if (typeof window.openEmergencyModal === 'function') {
-          window.openEmergencyModal();
-        } else {
-          const m = document.getElementById('emergency-modal');
-          if (m) m.classList.add('active');
-        }
+        const appWindow = iframe.contentWindow;
+        const appDoc = iframe.contentDocument || appWindow.document;
 
-        const emergModal = document.getElementById('emergency-modal');
+        // Allow application scripts and components to complete initial boot
+        await sleep(500);
+
+        // ---------------------------------------------------------------------
+        // Flow 1: Real Emergency SOS Modal & Disclaimer Test
+        // ---------------------------------------------------------------------
+        const tile = appDoc.querySelector('.service-hub-tile[data-action="open-emergency-modal"]');
+        if (tile) {
+          tile.click();
+        } else if (typeof appWindow.openEmergencyModal === 'function') {
+          appWindow.openEmergencyModal();
+        }
+        await sleep(250);
+
+        const emergModal = appDoc.getElementById('emergency-modal');
         const isModalActive = emergModal && emergModal.classList.contains('active');
         const hasDialogRole = emergModal && emergModal.getAttribute('role') === 'dialog';
         const hasAriaModal = emergModal && emergModal.getAttribute('aria-modal') === 'true';
-        const disclaimerText = emergModal ? (emergModal.innerText || emergModal.textContent) : '';
-        const hasDisclaimer = disclaimerText.indexOf('DEMO DISCLAIMER') !== -1 && (disclaimerText.indexOf('108') !== -1 || disclaimerText.indexOf('112') !== -1);
+        const modalText = emergModal ? (emergModal.innerText || emergModal.textContent) : '';
+        const hasDisclaimer = modalText.includes('DEMO DISCLAIMER') && modalText.includes('108') && modalText.includes('112');
 
-        log("Emergency SOS modal opens with .active class in browser DOM", isModalActive);
-        log("Emergency SOS modal enforces role='dialog' & aria-modal='true'", hasDialogRole && hasAriaModal);
-        log("Emergency SOS modal displays prominent demo disclaimer (108/112 warning)", hasDisclaimer);
+        log("Real Emergency SOS modal opens on trigger click with .active class", isModalActive);
+        log("Real Emergency SOS modal enforces role='dialog' and aria-modal='true'", hasDialogRole && hasAriaModal);
+        log("Real Emergency SOS modal renders prominent demo disclaimer (108/112 warning)", hasDisclaimer);
 
-        if (typeof window.closeEmergencyModal === 'function') {
-          window.closeEmergencyModal();
-        } else if (emergModal) {
-          emergModal.classList.remove('active');
-        }
+        // Dismiss modal using real close button
+        const closeBtn = emergModal ? emergModal.querySelector('[data-action="close-emergency-modal"], .modal-close-btn') : null;
+        if (closeBtn) closeBtn.click();
+        await sleep(150);
         const isClosed = emergModal && !emergModal.classList.contains('active');
-        log("Emergency SOS modal dismisses cleanly on close request", isClosed);
+        log("Real Emergency SOS modal dismisses cleanly on close button click", isClosed);
 
         // ---------------------------------------------------------------------
-        // Flow 2: Multi-Lingual Dynamic Language Switcher (EN -> HI -> PA)
+        // Flow 2: Real Multi-Lingual Dynamic Language Switcher (Unicode Verifications)
         // ---------------------------------------------------------------------
-        if (window.LanguageEngine && typeof window.LanguageEngine.setLanguage === 'function') {
-          window.LanguageEngine.setLanguage('hi', false);
-          const isHindiActive = window.LanguageEngine.currentLang === 'hi';
-          const hindiTitle = document.querySelector('[data-i18n="sos_title"]');
-          const isHindiRendered = hindiTitle && (hindiTitle.textContent.indexOf('आपातकालीन') !== -1 || hindiTitle.textContent.indexOf('Emergency') !== -1);
-          log("LanguageEngine dynamic DOM translation to Hindi (hi)", isHindiActive && isHindiRendered);
-
-          window.LanguageEngine.setLanguage('pa', false);
-          const isPunjabiActive = window.LanguageEngine.currentLang === 'pa';
-          log("LanguageEngine dynamic DOM translation to Punjabi (pa)", isPunjabiActive);
-
-          window.LanguageEngine.setLanguage('en', false);
-          const isEnRestored = window.LanguageEngine.currentLang === 'en';
-          log("LanguageEngine dynamic DOM restoration to English (en)", isEnRestored);
+        const paPill = appDoc.querySelector('.lang-pill-btn[data-lang="pa"]');
+        if (paPill) {
+          paPill.click();
+          await sleep(250);
+          // Assert genuine Gurmukhi Unicode block characters [\u0A00-\u0A7F] in rendered DOM
+          const navOrTitleText = appDoc.querySelector('[data-i18n="sos_title"], [data-i18n="nav_book"], [data-i18n="hero_btn_book"]').textContent;
+          const hasGurmukhi = /[\u0A00-\u0A7F]/.test(navOrTitleText);
+          log(`LanguageEngine renders genuine Gurmukhi script on Punjabi switch: "${navOrTitleText.trim()}"`, hasGurmukhi);
         } else {
-          log("LanguageEngine dynamic language switching API active on window", typeof window.LanguageEngine !== 'undefined');
+          log("Punjabi language switch pill found in DOM", false);
+        }
+
+        const hiPill = appDoc.querySelector('.lang-pill-btn[data-lang="hi"]');
+        if (hiPill) {
+          hiPill.click();
+          await sleep(250);
+          // Assert genuine Devanagari Unicode block characters [\u0900-\u097F] in rendered DOM
+          const navOrTitleTextHi = appDoc.querySelector('[data-i18n="sos_title"], [data-i18n="nav_book"], [data-i18n="hero_btn_book"]').textContent;
+          const hasDevanagari = /[\u0900-\u097F]/.test(navOrTitleTextHi);
+          log(`LanguageEngine renders genuine Devanagari script on Hindi switch: "${navOrTitleTextHi.trim()}"`, hasDevanagari);
+        } else {
+          log("Hindi language switch pill found in DOM", false);
+        }
+
+        const enPill = appDoc.querySelector('.lang-pill-btn[data-lang="en"]');
+        if (enPill) {
+          enPill.click();
+          await sleep(200);
+          const enText = appDoc.querySelector('[data-i18n="sos_title"]').textContent;
+          const isEnRestored = enText.includes('Emergency') || enText.includes('Trauma');
+          log("LanguageEngine restores Latin/English text on English switch", isEnRestored);
+        } else {
+          log("English language switch pill found in DOM", false);
         }
 
         // ---------------------------------------------------------------------
-        // Flow 3: Live Appointment Booking & Token Slip Generation Flow
+        // Flow 3: Real Appointment Booking Submission & App-Generated Token
         // ---------------------------------------------------------------------
-        if (typeof window.openBookingLayer === 'function') {
-          window.openBookingLayer('dr-sharma');
-        } else {
-          const bModal = document.getElementById('booking-layer-modal');
-          if (bModal) bModal.classList.add('active');
+        // Clear previous storage entries
+        appWindow.localStorage.removeItem('carepulse_appointments');
+        appWindow.localStorage.removeItem('carepulse_active_token');
+
+        // Trigger real booking layer modal
+        const bookBtn = appDoc.querySelector('#btn-hero-book, [data-action="book-appointment"], [data-i18n="hero_btn_book"]');
+        if (bookBtn) {
+          bookBtn.click();
+        } else if (typeof appWindow.openBookingLayer === 'function') {
+          appWindow.openBookingLayer('dr-sharma');
         }
+        await sleep(250);
 
-        const bookingModal = document.getElementById('booking-layer-modal');
-        const isBookingLayerOpen = bookingModal && bookingModal.classList.contains('active');
-        log("Booking Layer modal opened via openBookingLayer('dr-sharma')", isBookingLayerOpen);
+        const bookingLayerModal = appDoc.getElementById('booking-layer-modal');
+        const isBookingLayerOpen = bookingLayerModal && bookingLayerModal.classList.contains('active');
+        log("Real booking layer modal opened via trigger click", isBookingLayerOpen);
 
-        const nameInput = document.getElementById('layer-patient-name');
-        const phoneInput = document.getElementById('layer-patient-phone');
-        const dpdpConsent = document.getElementById('layer-dpdp-consent');
+        // Select an active slot (if current day is Sunday/off-duty, advance to next date pill)
+        let slot = appDoc.querySelector('[data-action="select-slot"]');
+        if (!slot) {
+          const datePills = appDoc.querySelectorAll('.date-card-pill');
+          for (const pill of datePills) {
+            pill.click();
+            await sleep(100);
+            slot = appDoc.querySelector('[data-action="select-slot"]');
+            if (slot) break;
+          }
+        }
+        if (slot) slot.click();
+        await sleep(150);
+
+        // Populate real form fields with obviously fake/dummy data
+        const nameInput = appDoc.getElementById('layer-patient-name');
+        const ageInput = appDoc.getElementById('layer-patient-age');
+        const phoneInput = appDoc.getElementById('layer-patient-phone');
+        const dpdpConsent = appDoc.getElementById('layer-dpdp-consent');
 
         if (nameInput) nameInput.value = "Gurpreet Singh";
-        if (phoneInput) phoneInput.value = "9814022737";
+        if (ageInput) ageInput.value = "32";
+        if (phoneInput) phoneInput.value = "9876543210"; // Generic dummy phone
         if (dpdpConsent) dpdpConsent.checked = true;
 
-        const tokenObj = {
-          id: "TK-9021",
-          doctor: "Dr. Rajesh Sharma",
-          patient: "Gurpreet Singh",
-          phone: "9814022737",
-          time: "10:00 AM",
-          date: new Date().toISOString()
-        };
-        localStorage.setItem('carepulse_active_token', JSON.stringify(tokenObj));
-        localStorage.setItem('carepulse_appointments', JSON.stringify([tokenObj]));
+        // Submit real booking form
+        const bookingForm = appDoc.getElementById('layer-booking-form');
+        if (bookingForm) {
+          bookingForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        }
+        await sleep(400);
 
-        const tokenModal = document.getElementById('token-modal');
-        if (tokenModal) tokenModal.classList.add('active');
+        // Inspect localStorage written by the application itself
+        const storedAppointments = JSON.parse(appWindow.localStorage.getItem('carepulse_appointments') || '[]');
+        const appWroteToken = storedAppointments.length > 0 && storedAppointments[0].tokenId && storedAppointments[0].tokenId.startsWith('TK-');
+        const correctPatientDetails = storedAppointments.length > 0 && storedAppointments[0].patientName === 'Gurpreet Singh' && storedAppointments[0].patientPhone === '9876543210';
 
-        const activeToken = localStorage.getItem('carepulse_active_token');
-        const appointments = JSON.parse(localStorage.getItem('carepulse_appointments') || '[]');
-        const hasToken = !!activeToken && appointments.length > 0;
-        const isTokenModalActive = tokenModal && tokenModal.classList.contains('active');
+        log("Real application code processed booking and stored verified token in localStorage", appWroteToken && correctPatientDetails);
 
-        log("Appointment booking generated verified token in browser storage", hasToken);
-        log("Digital E-Pass Token Slip modal rendered on successful booking", isTokenModalActive);
+        // Verify real digital token pass modal opened
+        const tokenModal = appDoc.getElementById('token-modal');
+        const isTokenModalVisible = tokenModal && (tokenModal.classList.contains('active') || tokenModal.style.display !== 'none');
+        const slipText = appDoc.getElementById('token-slip-card') ? appDoc.getElementById('token-slip-card').innerText : '';
+        const slipContainsToken = slipText.includes('TK-') || slipText.includes('CarePulse');
 
-        summaryEl.innerHTML = '<h2 style="margin: 0; color: ' + (fails === 0 ? '#4ade80' : '#f87171') + '">E2E EXECUTION COMPLETE: ' + passes + ' PASSED, ' + fails + ' FAILED</h2>';
+        log("Real Digital Token E-Pass modal opened with generated token slip", isTokenModalVisible && slipContainsToken);
+
+        // Finalize summary banner
+        summaryEl.innerHTML = `<h2 class="${fails === 0 ? 'pass' : 'fail'}" style="margin:0;">REAL-DOM E2E COMPLETE: ${passes} PASSED, ${fails} FAILED</h2>`;
       } catch (err) {
-        log('Browser execution error: ' + err.message, false);
-        summaryEl.innerHTML = '<h2 style="color: #f87171">E2E ERROR: ' + err.message + '</h2>';
+        log(`Unhandled error during real DOM E2E run: ${err.message}`, false);
+        summaryEl.innerHTML = `<h2 class="fail" style="margin:0;">E2E ERROR: ${err.message}</h2>`;
       }
-    })();
+    };
   </script>
 </body>
 </html>

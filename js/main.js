@@ -272,7 +272,6 @@ function setupModalDismissals() {
 
   window.addEventListener('hashchange', window.handleHashRouting);
   setTimeout(window.handleHashRouting, 300);
-}
 
 // ==========================================================================
 // CarePulse Enterprise Healthcare Portal Modules

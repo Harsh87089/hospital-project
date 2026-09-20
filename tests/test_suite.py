@@ -188,5 +188,83 @@ class TestCarePulsePlatform(unittest.TestCase):
         tree = ET.parse('sitemap.xml')
         self.assertIn('urlset', tree.getroot().tag)
 
+    # -------------------------------------------------------------
+    # 7. JavaScript Engine & Syntax Integrity (Reviewer Request)
+    # -------------------------------------------------------------
+    def test_20_javascript_v8_syntax_and_imports(self):
+        """All 19 ES modules and app.js must have valid syntax and resolvable exports without runtime errors."""
+        js_files = [f for f in os.listdir('js') if f.endswith('.js')]
+        self.assertEqual(len(js_files), 19, f"Expected exactly 19 ES module files in js/, found {len(js_files)}")
+
+        # Verify all exported identifiers have corresponding lexical declarations
+        for fname in sorted(js_files):
+            fpath = os.path.join('js', fname)
+            with open(fpath, 'r', encoding='utf-8') as f:
+                content = f.read()
+            m = re.search(r'export\s*\{([^}]+)\}', content)
+            if not m:
+                continue
+            exports = [e.strip().split(' as ')[0].strip() for e in m.group(1).split(',') if e.strip()]
+            for exp in exports:
+                decl_pattern = rf'(?:function|const|let|var|class)\s+{re.escape(exp)}\b'
+                self.assertTrue(
+                    re.search(decl_pattern, content),
+                    f"Exported identifier '{exp}' in js/{fname} lacks a lexical declaration in module scope!"
+                )
+
+        # Dynamic V8 parse and runtime test using Google Chrome headless
+        chrome_paths = [
+            r'C:\Program Files\Google\Chrome\Application\chrome.exe',
+            r'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'
+        ]
+        chrome = next((p for p in chrome_paths if os.path.exists(p)), None)
+        if chrome:
+            import subprocess
+            harness_html = """<!DOCTYPE html><html><body><div id="v8-status">TESTING</div>
+            <script>
+              window.v8Errors = [];
+              window.onerror = function(msg, src, line) {
+                window.v8Errors.push('SCRIPT_ERR in ' + src + ':' + line + ': ' + msg);
+              };
+            </script>
+            <script src="/app.js"></script>
+            <script type="module">
+              const modules = [
+                'auth.js', 'booking.js', 'calculators.js', 'config.js', 'gateway.js',
+                'healthcard.js', 'i18n.js', 'lab.js', 'pharmacy.js', 'queue.js',
+                'search.js', 'sos.js', 'tele.js', 'theme.js', 'tokens.js',
+                'utils.js', 'voice.js', 'wayfinder.js', 'main.js'
+              ];
+              for (const mod of modules) {
+                try {
+                  await import('/js/' + mod);
+                } catch (e) {
+                  window.v8Errors.push(mod + ': ' + e.message);
+                }
+              }
+              document.getElementById('v8-status').innerText = window.v8Errors.length === 0 ? 'V8_ALL_OK' : window.v8Errors.join(' | ');
+            </script></body></html>"""
+
+            harness_path = os.path.join('tests', 'temp_v8_test.html')
+            with open(harness_path, 'w', encoding='utf-8') as f:
+                f.write(harness_html)
+
+            try:
+                cmd = [
+                    chrome,
+                    '--headless=new',
+                    '--disable-gpu',
+                    '--virtual-time-budget=3000',
+                    '--dump-dom',
+                    'http://localhost:3000/tests/temp_v8_test.html'
+                ]
+                res = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8', errors='replace')
+                m_v8 = re.search(r'id="v8-status"[^>]*>([^<]+)<', res.stdout)
+                v8_status = m_v8.group(1).strip() if m_v8 else None
+                self.assertEqual(v8_status, 'V8_ALL_OK', f"V8 JavaScript parsing error encountered: {res.stdout}")
+            finally:
+                if os.path.exists(harness_path):
+                    os.remove(harness_path)
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

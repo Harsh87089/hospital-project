@@ -23,8 +23,8 @@ class TestCarePulseEndToEndFlows(unittest.TestCase):
     # -------------------------------------------------------------
     def test_booking_validation_rules(self):
         """Simulate input validation checks for appointment booking."""
-        valid_phones = ['9814022737', '9876543210', '7000000000', '8888888888']
-        invalid_phones = ['1234567890', '5814022737', '981402273', '98140227377', 'abcdefghij']
+        valid_phones = ['9876543210', '9999999999', '7000000000', '8888888888']
+        invalid_phones = ['1234567890', '5999999999', '999999999', '99999999999', 'abcdefghij']
 
         phone_regex = re.compile(r'^[6-9]\d{9}$')
         for p in valid_phones:
@@ -54,7 +54,7 @@ class TestCarePulseEndToEndFlows(unittest.TestCase):
         initial_appointment = {
             "id": "TK-8821",
             "patientName": "Gurpreet Singh",
-            "patientPhone": "9814022737",
+            "patientPhone": "9876543210",
             "doctorName": "Dr. Gurpreet Singh",
             "date": "2026-09-21",
             "slot": "10:00 AM",

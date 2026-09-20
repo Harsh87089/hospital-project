@@ -152,7 +152,7 @@ function renderLiveOPDBoard() {
 }
 
 // Global Filter & Search handlers for Live Queue
-window.filterQueueSpecialty = function (specialty) {
+const filterQueueSpecialty = window.filterQueueSpecialty = function (specialty) {
   state.queueSpecialty = specialty;
   document.querySelectorAll('.queue-chip').forEach(chip => {
     chip.classList.toggle('active', chip.dataset.queueSpecialty === specialty);
@@ -160,12 +160,12 @@ window.filterQueueSpecialty = function (specialty) {
   renderLiveOPDBoard();
 };
 
-window.handleQueueSearch = function (query) {
+const handleQueueSearch = window.handleQueueSearch = function (query) {
   state.queueSearch = query;
   renderLiveOPDBoard();
 };
 
-window.toggleQueueAutoSim = function () {
+const toggleQueueAutoSim = window.toggleQueueAutoSim = function () {
   const btn = document.getElementById('btn-queue-auto-sim');
   if (state.queueAutoSimInterval) {
     clearInterval(state.queueAutoSimInterval);
@@ -201,7 +201,7 @@ window.toggleQueueAutoSim = function () {
 };
 
 // Staff simulation to advance queue
-window.simulateNextToken = function (docId) {
+const simulateNextToken = window.simulateNextToken = function (docId) {
   const doc = DOCTORS.find(d => d.id === docId);
   if (!doc) return;
 
@@ -340,7 +340,7 @@ function renderDoctorCards() {
   }).join('');
 }
 
-window.resetDoctorFilters = function () {
+const resetDoctorFilters = window.resetDoctorFilters = function () {
   state.activeSpecialty = 'all';
   state.searchQuery = '';
   const searchInput = document.getElementById('doctor-search-input');
@@ -354,7 +354,7 @@ window.resetDoctorFilters = function () {
 
 
 
-window.openLiveQueueModal = function () {
+const openLiveQueueModal = window.openLiveQueueModal = function () {
   const modal = document.getElementById('live-queue-modal');
   if (!modal) return;
   modal.classList.add('active');
@@ -365,7 +365,7 @@ window.openLiveQueueModal = function () {
   }, 120);
 };
 
-window.closeLiveQueueModal = function () {
+const closeLiveQueueModal = window.closeLiveQueueModal = function () {
   const modal = document.getElementById('live-queue-modal');
   if (modal) modal.classList.remove('active');
   document.body.style.overflow = '';
@@ -449,7 +449,7 @@ function requireStaffAuth() {
   return true;
 }
 
-window.openReceptionDesk = function () {
+const openReceptionDesk = window.openReceptionDesk = function () {
   const isAuth = sessionStorage.getItem('carepulse_staff_auth');
   if (!isAuth) {
     const pin = typeof window.prompt === 'function' ? window.prompt(`🔒 CarePulse Staff Console [Simulated Demo Role]\n\nEnter Staff Security PIN (Demo PIN: ${DEMO_STAFF_PIN}):`) : null;
@@ -467,13 +467,13 @@ window.openReceptionDesk = function () {
   renderReceptionDashboard();
 };
 
-window.logoutReceptionStaff = function () {
+const logoutReceptionStaff = window.logoutReceptionStaff = function () {
   sessionStorage.removeItem('carepulse_staff_auth');
   window.closeReceptionDesk();
   showToast('Staff console session locked.', 'info');
 };
 
-window.closeReceptionDesk = function () {
+const closeReceptionDesk = window.closeReceptionDesk = function () {
   const modal = document.getElementById('reception-modal');
   if (modal) {
     modal.classList.remove('active');
@@ -481,7 +481,7 @@ window.closeReceptionDesk = function () {
   }
 };
 
-window.callNextPatientToken = function (doctorId) {
+const callNextPatientToken = window.callNextPatientToken = function (doctorId) {
   if (!requireStaffAuth()) return;
   const doc = DOCTORS.find(d => d.id === doctorId);
   if (!doc) return;
@@ -521,7 +521,7 @@ window.callNextPatientToken = function (doctorId) {
   broadcastQueueUpdate('CALL_NEXT', { doctorId, servingToken: doc.currentServingToken });
 };
 
-window.markTokenCompleted = function (tokenId) {
+const markTokenCompleted = window.markTokenCompleted = function (tokenId) {
   if (!requireStaffAuth()) return;
   const app = state.userAppointments.find(a => a.tokenId === tokenId);
   if (app) {
@@ -534,7 +534,7 @@ window.markTokenCompleted = function (tokenId) {
   }
 };
 
-window.markTokenNoShow = function (tokenId) {
+const markTokenNoShow = window.markTokenNoShow = function (tokenId) {
   if (!requireStaffAuth()) return;
   const app = state.userAppointments.find(a => a.tokenId === tokenId);
   if (app) {
@@ -547,7 +547,7 @@ window.markTokenNoShow = function (tokenId) {
   }
 };
 
-window.issueWalkinToken = function (doctorId) {
+const issueWalkinToken = window.issueWalkinToken = function (doctorId) {
   if (!requireStaffAuth()) return;
   const doc = DOCTORS.find(d => d.id === doctorId) || DOCTORS[0];
   let patientName = 'Walk-in Patient';
@@ -593,7 +593,7 @@ window.issueWalkinToken = function (doctorId) {
   broadcastQueueUpdate('WALKIN_ISSUED', { doctorId, token: newApp });
 };
 
-window.setDoctorStatus = function (doctorId, status) {
+const setDoctorStatus = window.setDoctorStatus = function (doctorId, status) {
   const doc = DOCTORS.find(d => d.id === doctorId);
   if (!doc) return;
   doc.status = status;

@@ -52,7 +52,7 @@ const ThemeEngine = {
 };
 
 window.ThemeEngine = ThemeEngine;
-window.toggleTheme = () => ThemeEngine.toggle();
+const toggleTheme = window.toggleTheme = () => ThemeEngine.toggle();
 
 // --- 2. Multi-Language Engine ---
 
@@ -94,7 +94,7 @@ const PaletteEngine = {
 };
 
 window.PaletteEngine = PaletteEngine;
-window.setPaletteTheme = (val) => PaletteEngine.setPalette(val);
+const setPaletteTheme = window.setPaletteTheme = (val) => PaletteEngine.setPalette(val);
 
 // ==========================================================================
 // 9. Senior Accessibility Font Scaling Toolbar
@@ -130,7 +130,7 @@ const FontScaleEngine = {
 };
 
 window.FontScaleEngine = FontScaleEngine;
-window.setFontScale = (scale) => FontScaleEngine.setScale(scale);
+const setFontScale = window.setFontScale = (scale) => FontScaleEngine.setScale(scale);
 
 // ==========================================================================
 // 10. Sticky Horizontal Category Chips Scroller & ScrollSpy

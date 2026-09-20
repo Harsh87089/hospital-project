@@ -8589,7 +8589,7 @@ const DigitalHealthCardEngine = {
     self: {
       name: 'Rajesh Kumar',
       demographics: 'Male • 42 Yrs • UHID: #CP-84920',
-      abha: 'ABHA: 91-4820-9182-3918',
+      abha: 'ABHA: 00-0000-0000-0001 (Demo Sample)',
       blood: 'O+ Positive',
       allergies: 'Penicillin, Sulfa',
       condition: 'Hypertension',
@@ -8599,7 +8599,7 @@ const DigitalHealthCardEngine = {
     mother: {
       name: 'Smt. Gurpreet Kaur',
       demographics: 'Female • 68 Yrs • UHID: #CP-84921',
-      abha: 'ABHA: 91-4820-9182-4412',
+      abha: 'ABHA: 00-0000-0000-0002 (Demo Sample)',
       blood: 'B+ Positive',
       allergies: 'Aspirin (Severe)',
       condition: 'Type 2 Diabetes, Arthritis',
@@ -8609,7 +8609,7 @@ const DigitalHealthCardEngine = {
     child: {
       name: 'Master Aarav Kumar',
       demographics: 'Male • 9 Yrs • UHID: #CP-84922',
-      abha: 'ABHA: 91-4820-9182-8823',
+      abha: 'ABHA: 00-0000-0000-0003 (Demo Sample)',
       blood: 'O+ Positive',
       allergies: 'Peanuts (Mild)',
       condition: 'None (Healthy Child)',

@@ -89,9 +89,9 @@ const HealthCalculatorEngine = {
 };
 
 window.HealthCalculatorEngine = HealthCalculatorEngine;
-window.openHealthCalculator = () => HealthCalculatorEngine.open();
-window.closeHealthCalculator = () => HealthCalculatorEngine.close();
-window.calculateHealthRisk = () => HealthCalculatorEngine.calculate();
+const openHealthCalculator = window.openHealthCalculator = () => HealthCalculatorEngine.open();
+const closeHealthCalculator = window.closeHealthCalculator = () => HealthCalculatorEngine.close();
+const calculateHealthRisk = window.calculateHealthRisk = () => HealthCalculatorEngine.calculate();
 
 // --- 6. 1-Click Auto-Booking from AI Symptom Chatbot ---
 

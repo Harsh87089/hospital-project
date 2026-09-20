@@ -91,10 +91,12 @@ def main():
         fails = re.findall(r'\[FAIL\] (.*?)(?:<|$)', dom_output)
 
         for p in passes:
-            print(f"  [PASS] {p.strip()}")
+            safe_p = p.strip().encode('ascii', 'replace').decode('ascii')
+            print(f"  [PASS] {safe_p}")
 
         for f in fails:
-            print(f"  [FAIL] {f.strip()}")
+            safe_f = f.strip().encode('ascii', 'replace').decode('ascii')
+            print(f"  [FAIL] {safe_f}")
 
         status_match = re.search(r'data-status="([^"]+)"', dom_output)
         status = status_match.group(1) if status_match else "UNKNOWN"

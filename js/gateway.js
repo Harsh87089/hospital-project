@@ -225,7 +225,7 @@ const DeliveryGateway = {
 
 window.DeliveryGateway = DeliveryGateway;
 
-window.openDeliveryGatewayModal = function () {
+const openDeliveryGatewayModal = window.openDeliveryGatewayModal = function () {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('dev') !== '1') {
     showToast('Developer Gateway is restricted to dev mode. Append ?dev=1 to URL to access.', 'warning');
@@ -240,7 +240,7 @@ window.openDeliveryGatewayModal = function () {
   }
 };
 
-window.closeDeliveryGatewayModal = function () {
+const closeDeliveryGatewayModal = window.closeDeliveryGatewayModal = function () {
   if (typeof closeModal === 'function') {
     closeModal('delivery-gateway-modal');
   } else {
@@ -250,8 +250,8 @@ window.closeDeliveryGatewayModal = function () {
 };
 
 // Backwards compatibility alias
-window.openSMSGatewayInfoModal = window.openDeliveryGatewayModal;
-window.closeSMSGatewayInfoModal = window.closeDeliveryGatewayModal;
+const openSMSGatewayInfoModal = window.openSMSGatewayInfoModal = window.openDeliveryGatewayModal;
+const closeSMSGatewayInfoModal = window.closeSMSGatewayInfoModal = window.closeDeliveryGatewayModal;
 
 /* ==========================================================================
    19. COMPETITION WINNING ENGINES:

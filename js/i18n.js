@@ -554,7 +554,7 @@ const LanguageEngine = {
 
 window.TRANSLATIONS = TRANSLATIONS;
 window.LanguageEngine = LanguageEngine;
-window.setLanguage = (lang) => LanguageEngine.setLanguage(lang, true);
+const setLanguage = window.setLanguage = (lang) => LanguageEngine.setLanguage(lang, true);
 window.t = t;
 
 export {

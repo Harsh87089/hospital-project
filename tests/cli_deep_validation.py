@@ -69,14 +69,31 @@ class ComprehensiveValidator:
         except Exception:
             server_online = False
 
+        spawned_server = None
         if not server_online:
-            self.warnings += 1
-            print("  [NOTICE] Local test server on port 3000 is not currently active.")
-            print("           Prerequisite: Run 'python -m http.server 3000' in project root.")
-            print("           Skipped 35 live network socket checks to avoid execution timeouts.")
-            return
+            print("  [INFO] Local server not active on port 3000. Spawning automated background server thread...")
+            import functools
+            from http.server import HTTPServer, SimpleHTTPRequestHandler
+            import threading
 
-        endpoints = [
+            class QuietHandler(SimpleHTTPRequestHandler):
+                def log_message(self, format, *args):
+                    pass
+
+            handler = functools.partial(QuietHandler, directory=ROOT_DIR)
+            try:
+                spawned_server = HTTPServer(('127.0.0.1', 3000), handler)
+                t = threading.Thread(target=spawned_server.serve_forever, daemon=True)
+                t.start()
+                server_online = True
+                print("  [PASS] Background HTTP server thread active on port 3000.")
+            except Exception as ex:
+                self.warnings += 1
+                print(f"  [WARNING] Unable to launch automated background server: {ex}")
+                return
+
+        try:
+            endpoints = [
             "/index.html",
             "/hospital.html",
             "/manifest.json",
@@ -113,15 +130,19 @@ class ComprehensiveValidator:
             "/js/gateway.js",
             "/js/main.js"
         ]
-        for ep in endpoints:
-            url = f"{BASE_URL}{ep}"
-            try:
-                req = urllib.request.Request(url, headers={'User-Agent': 'CLI-Validator'})
-                with urllib.request.urlopen(req, timeout=2) as resp:
-                    code = resp.getcode()
-                    self.assert_check(f"HTTP GET {ep} -> {code}", code == 200, f"Expected 200, got {code}")
-            except Exception as e:
-                self.assert_check(f"HTTP GET {ep}", False, str(e))
+            for ep in endpoints:
+                url = f"{BASE_URL}{ep}"
+                try:
+                    req = urllib.request.Request(url, headers={'User-Agent': 'CLI-Validator'})
+                    with urllib.request.urlopen(req, timeout=2) as resp:
+                        code = resp.getcode()
+                        self.assert_check(f"HTTP GET {ep} -> {code}", code == 200, f"Expected 200, got {code}")
+                except Exception as e:
+                    self.assert_check(f"HTTP GET {ep}", False, str(e))
+        finally:
+            if spawned_server:
+                spawned_server.shutdown()
+                print("  [INFO] Background HTTP server thread shut down cleanly.")
 
     def test_asset_references_on_disk(self):
         print("\n--- 2. Static Asset References in HTML Exist on Disk ---")
@@ -271,8 +292,8 @@ class ComprehensiveValidator:
     def test_input_validation_regexes(self):
         print("\n--- 9. Form Input Validation Regexes ---")
         phone_re = re.compile(r'^[6-9]\d{9}$')
-        self.assert_check("Phone regex matches valid 10-digit Indian numbers", bool(phone_re.match("9814022737")))
-        self.assert_check("Phone regex rejects 9-digit number", not bool(phone_re.match("981402273")))
+        self.assert_check("Phone regex matches valid 10-digit Indian numbers", bool(phone_re.match("9876543210")))
+        self.assert_check("Phone regex rejects 9-digit number", not bool(phone_re.match("987654321")))
         self.assert_check("Phone regex rejects numbers starting with 1-5", not bool(phone_re.match("1234567890")))
 
         name_re = re.compile(r'^[A-Za-z\s.]{2,50}$')
