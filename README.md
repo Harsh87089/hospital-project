@@ -104,7 +104,7 @@ python tests/test_browser_e2e.py
 For CI/CD environments running Playwright:
 ```bash
 # Optional: if Playwright is installed
-npx playwright test tests/e2e_playwright.spec.js
+npx playwright test
 ```
 
 ---
