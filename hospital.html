@@ -4,23 +4,21 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CarePulse Multi-Specialty Hospital | Online OPD Doctor Appointment & Live Token Booking</title>
-    <meta name="description"
-        content="CarePulse Multi-Specialty Hospital - Book doctor consultation appointments and live OPD queue tokens online. Highly qualified General Physicians, Pediatricians, Dermatologists, and Dental Surgeons in Phagwara, Punjab. Instant downloadable E-Pass tickets." />
-    <meta name="keywords"
-        content="CarePulse Hospital, book doctor appointment online, OPD token slip, Phagwara hospital, live queue tracking, download doctor ticket, pediatrician, general physician, dermatologist, emergency ambulance" />
-    <meta name="author" content="CarePulse Healthcare" />
-    <meta name="robots" content="index, follow" />
+    <title>CarePulse | Hospital Portal Demo - OPD Booking &amp; Live Token Queue (UX Prototype)</title>
+    <meta name="description" content="CarePulse is a fictional hospital portal built as a portfolio UX prototype: OPD appointment booking, live token queue and e-pass generation. Not a real hospital - no real bookings, care or ambulance dispatch." />
+    <meta name="robots" content="noindex, nofollow" />
 
-    <!-- OpenGraph & Social Meta Tags for Google & Social Sharing -->
-    <meta property="og:title" content="CarePulse Multi-Specialty Hospital - Doctor Appointments & OPD Tokens" />
-    <meta property="og:description"
-        content="Book instant doctor consultation appointments, view live OPD queue tokens, and download verified digital appointment slips." />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="CarePulse (Demo Prototype)" />
+    <meta property="og:title" content="CarePulse - Hospital Portal Demo (UX Prototype)" />
+    <meta property="og:description" content="Fictional hospital portal: OPD booking, live token queue and digital e-pass. A portfolio demo, not a real facility." />
     <meta property="og:url" content="https://hospital-project-tawny.vercel.app/" />
-    <meta property="og:image" content="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&h=630&q=80" />
-    <meta property="og:site_name" content="CarePulse Multi-Specialty Hospital" />
+
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CarePulse - Hospital Portal Demo (UX Prototype)" />
+    <meta name="twitter:description" content="Fictional hospital portal: OPD booking, live token queue and digital e-pass. A portfolio demo." />
+
+    <link rel="canonical" href="https://hospital-project-tawny.vercel.app/" />
     <!-- PWA & Mobile Web App Meta Tags -->
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#0d9488" media="(prefers-color-scheme: light)" />
@@ -1020,7 +1018,7 @@
                 </div>
 
                 <!-- Live Hospital Campus Pulse Bar -->
-                <div class="campus-pulse-bar">
+                <div class="campus-pulse-bar" data-demo="simulated">
                     <div class="campus-pulse-header">
                         <div class="campus-pulse-header-title">
                             <span class="pulse-dot"></span>
@@ -1419,7 +1417,7 @@
     <!-- 1. Real-Time Digital OPD Token Board Modal Layer -->
     <div class="service-layer-modal" id="live-queue-modal" role="dialog" aria-modal="true"
         aria-labelledby="modal-title-live-queue">
-        <div class="service-layer-container">
+        <div class="service-layer-container" data-demo="simulated">
             <div class="service-layer-header">
                 <div class="service-layer-header-left">
                     <div class="service-layer-icon u-badge-fef3c7-d97706">⏱️</div>
@@ -1552,7 +1550,7 @@
 
     <!-- 2. Live Hospital Bed & ICU Capacity Modal Layer -->
     <div class="service-layer-modal" id="beds-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-beds">
-        <div class="service-layer-container">
+        <div class="service-layer-container" data-demo="simulated">
             <div class="service-layer-header">
                 <div class="service-layer-header-left">
                     <div class="service-layer-icon u-badge-d1fae5-059669">🛏️</div>
@@ -2177,7 +2175,7 @@
         <div class="modal-container">
             <button class="modal-close-btn" data-action="close-token-modal" aria-label="Close modal">×</button>
 
-            <div class="token-slip-card" id="token-slip-card">
+            <div class="token-slip-card" id="token-slip-card" data-demo="sample-doc">
                 <div class="token-slip-header">
                     <div class="u-flex-box-134">
                         <span class="u-icon-decorative" aria-hidden="true">🏥</span>
@@ -2490,7 +2488,7 @@
             </div>
 
             <!-- Report Sheet Render Target -->
-            <div id="lab-report-output">
+            <div id="lab-report-output" data-demo="sample-doc">
                 <!-- Dynamically populated by app.js -->
             </div>
 
@@ -2520,7 +2518,7 @@
             </div>
 
             <!-- Prescription Upload Dropzone -->
-            <button type="button" class="prescription-dropzone" data-action="trigger-rx-upload">
+            <button type="button" class="prescription-dropzone" data-action="trigger-rx-upload" data-demo="sample-doc">
                 <input type="file" id="rx-file-input" aria-label="Upload prescription file (PDF, JPG, PNG)"class="u-display-none" accept="image/*,.pdf"
                     onchange="handlePrescriptionUpload(event)" />
                 <div class="rx-icon">📋</div>
@@ -2840,6 +2838,12 @@
                     </label>
                     <input type="number" id="calc-bp" aria-label="Systolic blood pressure in mmHg" class="form-control" placeholder="e.g. 120" value="120" />
                 </div>
+                <div>
+                    <label class="u-box-font-size-224">
+                        Diastolic BP (mmHg)
+                    </label>
+                    <input type="number" id="calc-bp-diastolic" aria-label="Diastolic blood pressure in mmHg" class="form-control" placeholder="e.g. 80" value="80" />
+                </div>
             </div>
 
             <button type="button" class="btn btn-primary u-box-width-225" data-action="calculate-health-risk">
@@ -2863,9 +2867,9 @@
                 </div>
                 <div class="u-flex-box-228">
                     <span>Underweight (&lt;18.5)</span>
-                    <span>Normal (18.5-24.9)</span>
-                    <span>Overweight (25-29.9)</span>
-                    <span>Obese (&ge;30)</span>
+                    <span>Normal (18.5-22.9)</span>
+                    <span>Overweight (23-24.9)</span>
+                    <span>Obese (&ge;25)</span>
                 </div>
 
                 <div class="u-grid-box-229">
@@ -3714,7 +3718,7 @@
             </div>
 
             <!-- Holographic Smart Health Pass -->
-            <div class="smart-health-pass" id="smart-health-pass-card">
+            <div class="smart-health-pass" id="smart-health-pass-card" data-demo="sample-doc">
                 <div class="pass-shimmer-sheen"></div>
                 
                 <div class="pass-top-row">
