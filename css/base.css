@@ -194,14 +194,37 @@ h6 {
 .clinic-emergency-contact {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  color: #fef08a;
+  gap: 0.85rem;
   font-weight: 600;
-  text-decoration: none;
 }
 
-.clinic-emergency-contact:hover {
+.emergency-link {
+  color: #fef08a;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.emergency-link:hover {
   text-decoration: underline;
+  color: #ffffff;
+}
+
+.demo-link {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9em;
+}
+
+.demo-link:hover {
+  text-decoration: underline;
+  color: #ffffff;
 }
 
 /* Navigation */

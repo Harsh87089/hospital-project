@@ -643,10 +643,13 @@
                 <span class="pulse-dot red-pulse"></span>
                 <strong>24/7 Emergency Helpline</strong>
             </div>
-            <a href="tel:18000000000" class="emergency-footer-phone" data-action="open-emergency-modal">
-                📞 1800-000-0000 / 108
+            <a href="tel:108" class="emergency-link emergency-footer-phone" style="margin-bottom: 0.35rem; color: #b91c1c;">
+                🚨 Ambulance: 108
             </a>
-            <div class="emergency-footer-sub">Immediate Trauma &amp; Ambulance</div>
+            <a href="tel:18000000000" class="demo-link emergency-footer-phone" data-action="open-emergency-modal" style="font-size: 0.8rem; font-weight: 600; color: #991b1b;">
+                📞 Demo helpline (placeholder): 1800-000-0000
+            </a>
+            <div class="emergency-footer-sub" style="margin-top: 0.35rem;">Immediate Trauma &amp; Ambulance</div>
         </div>
 
         <div class="u-padding-0-1rem-0-5rem">
@@ -754,10 +757,10 @@
     <div class="branch-location-text">
         <span>📍 CarePulse Multi-Specialty Hospital • Phagwara, Punjab</span>
     </div>
-    <a href="tel:18000000000" class="clinic-emergency-contact branch-emergency-text"
-        data-action="open-emergency-modal">
-        <span>🚨 Emergency: 108 / Demo: 1800-000-0000</span>
-    </a>
+    <div class="clinic-emergency-contact branch-emergency-text">
+        <a href="tel:108" class="emergency-link">🚨 Ambulance: 108</a>
+        <a href="tel:18000000000" class="demo-link" data-action="open-emergency-modal">📞 Demo helpline (placeholder): 1800-000-0000</a>
+    </div>
     </aside>
 
     <!-- Sticky Horizontal Category Chips Scroller -->
@@ -1402,7 +1405,7 @@
                         <p class="u-box-margin-top-84">
                             This demo is designed in alignment with the principles of India's DPDP Act, 2023. Patient
                             UHID records and pathology lab results require OTP authentication before viewing, and
-                            demo history stays exclusively inside your browser with zero third-party tracking.
+                            demo history stays exclusively inside your browser with no analytics or advertising trackers.
                         </p>
                     </details>
                 </div>
@@ -2308,7 +2311,7 @@
                 <h3 id="modal-title-my-bookings" class="u-font-size-1-35rem" data-i18n="modal_bookings_title">My Active Token Bookings</h3>
             </div>
             <div class="demo-data-notice-banner">
-                🔒 <strong>Privacy Notice (DPDP Act 2023):</strong> Demo data stays only in this browser and is never transmitted to any external server.
+                🔒 <strong>Privacy Notice (DPDP Act 2023):</strong> CarePulse has no backend and stores nothing on any server; the only exceptions are the browser-level services listed in §3.
             </div>
             <p class="u-box-font-size-143">
                 Tokens booked on this device. Click on any item to view or reprint your digital token slip.
@@ -3070,7 +3073,7 @@
 
             <div class="u-box-font-size-255">
                 <h4 class="u-box-color-256">1. Prototype Demonstration Architecture (Client-Side Only)</h4>
-                <p>CarePulse is a demonstration prototype application. In alignment with the principles of the <strong>Digital Personal Data Protection (DPDP) Act, 2023 (India)</strong>, no personal data, health data, or appointment bookings are sent or saved to any external database or backend server. All information stays exclusively inside your browser.</p>
+                <p>CarePulse is a demonstration prototype application. In alignment with the principles of the <strong>Digital Personal Data Protection (DPDP) Act, 2023 (India)</strong>, CarePulse has no backend and stores nothing on any server; the only exceptions are the browser-level services listed in §3. All information stays exclusively inside your browser.</p>
 
                 <h4 class="u-box-color-256">2. Exact LocalStorage Keys Stored on this Device</h4>
                 <p>In accordance with the DPDP Act 2023 data transparency requirements, the following keys are stored in your browser's HTML5 <code>localStorage</code> / <code>sessionStorage</code>:</p>
@@ -3084,17 +3087,19 @@
                 </ul>
 
                 <h4 class="u-box-color-256">3. Third-Party Network Resources &amp; Services Disclosure</h4>
-                <p>To deliver an authentic modern healthcare UX, this demonstration portal interfaces with the following external network resources:</p>
+                <p>To deliver an authentic modern healthcare UX, this demonstration portal interfaces with the following external network resources and browser APIs:</p>
                 <ul style="margin: 0.5rem 0 0.75rem 1.25rem; font-size: 0.84rem; line-height: 1.5;">
                     <li><strong>Google Fonts (<code>fonts.googleapis.com</code> &amp; <code>fonts.gstatic.com</code>)</strong>: Loads web typography stylesheets and font binaries (Inter, Outfit, Plus Jakarta Sans) for accessible cross-device rendering. No health data or personal identifiers are sent to Google Fonts.</li>
                     <li><strong>Unsplash (<code>images.unsplash.com</code>)</strong>: Serves medical staff portraits, department facilities, and hospital campus imagery. No user health data or identifiers are transmitted.</li>
                     <li><strong>Google Maps Embed (<code>maps.google.com / google.com</code>)</strong>: Displays the physical campus map on GT Road, Phagwara.</li>
                     <li><strong>In-Memory Client-Side QR Engine</strong>: Digital OPD tokens and health passes generate vector SVG QR codes directly in browser memory without any external network fallback service. Zero patient names, phone numbers, or token details are transmitted over the network.</li>
                     <li><strong>EmailJS &amp; Firebase Compat (Developer Mode Only)</strong>: Optional cloud notification and authentication scripts are strictly gated and load dynamically only when testing in developer preview mode with <code>?dev=1</code> in the URL. For standard visitors, neither script is loaded or executed.</li>
+                    <li><strong>Microphone and speech recognition (Voice AI)</strong>: Voice commands use your browser's built-in speech recognition and start only after you tap the microphone and grant permission. In some browsers (for example Chrome), recognition is performed by the browser vendor's cloud service, so audio may leave your device. CarePulse does not record or store audio. You can use typed search instead.</li>
+                    <li><strong>Location (Emergency &amp; Ambulance Hub)</strong>: When you open the Emergency Hub, the page asks your browser for your location to display coordinates you can copy or share. Coordinates are held in memory only and not stored. If you tap "Share Location on WhatsApp", the coordinates are sent to WhatsApp at your request.</li>
                 </ul>
 
                 <h4 class="u-box-color-256">4. Zero Third-Party Monetization or Data Brokering</h4>
-                <p>Your demo information is never sold, licensed, profiled, or transmitted to any third-party marketing network or data brokers. All verification codes and token slips are simulated entirely on the client side.</p>
+                <p>CarePulse has no backend and stores nothing on any server; the only exceptions are the browser-level services listed in §3. Your demo information is never sold, licensed, profiled, or transmitted to any third-party marketing network or data brokers. All verification codes and token slips are simulated entirely on the client side.</p>
 
                 <h4 class="u-box-color-256">5. DPDP Act 2023 Right to Correction and Complete Erasure</h4>
                 <p>Under Section 12 of the DPDP Act 2023, you have the right to erase all digital personal data. You can exercise this right instantly with 1-click by clicking the button below, which wipes all <code>carepulse_*</code> storage entries immediately:</p>
@@ -3284,9 +3289,9 @@
             <span class="dock-icon" aria-hidden="true">🔍</span>
             <span data-i18n="dock_track">Track</span>
         </button>
-        <a href="tel:18000000000" class="dock-item dock-item-call" aria-label="Call Hospital Demo Helpline">
+        <a href="tel:108" class="dock-item dock-item-call" aria-label="Call ambulance 108">
             <span class="dock-icon" aria-hidden="true">📞</span>
-            <span data-i18n="dock_call">Call</span>
+            <span data-i18n="dock_call">Call 108</span>
         </a>
     </nav>
 

@@ -167,6 +167,41 @@ class NoOverclaimsTest(unittest.TestCase):
             "hospital.html drifted from index.html",
         )
 
+    def test_demo_number_never_labelled_as_emergency(self):
+        """Ensure 18000000000 is always explicitly labelled as demo/placeholder
+        and never labelled with real emergency numbers (108/112)."""
+        link_pattern = re.compile(r'<a\b[^>]*href=["\']tel:([^"\']+)["\'][^>]*>(.*?)</a>', re.S | re.I)
+        for p in repo_text_files():
+            text = scannable_text(p)
+            for num, label in link_pattern.findall(text):
+                clean_label = re.sub(r"<[^>]+>", "", label).strip()
+                if num == "18000000000":
+                    self.assertTrue(
+                        bool(re.search(r"demo|placeholder", clean_label, re.I)),
+                        f"{p.relative_to(ROOT)}: unlabelled demo tel link: {clean_label!r}",
+                    )
+                    self.assertFalse(
+                        bool(re.search(r"\b(108|112)\b", clean_label)),
+                        f"{p.relative_to(ROOT)}: demo number labelled as 108/112: {clean_label!r}",
+                    )
+
+    def test_i18n_key_parity(self):
+        """Ensure full key parity across English, Hindi, and Punjabi dictionaries."""
+        i18n_file = ROOT / "js" / "i18n.js"
+        if not i18n_file.exists():
+            return
+        content = i18n_file.read_text(encoding="utf-8")
+        en_text = content[content.find('"en":'):content.find('"hi":')]
+        hi_text = content[content.find('"hi":'):content.find('"pa":')]
+        pa_text = content[content.find('"pa":'):content.find('function isDevMode')]
+
+        en_keys = set(re.findall(r'"([a-zA-Z0-9_-]+)"\s*:', en_text)) - {"en", "hi", "pa"}
+        hi_keys = set(re.findall(r'"([a-zA-Z0-9_-]+)"\s*:', hi_text)) - {"en", "hi", "pa"}
+        pa_keys = set(re.findall(r'"([a-zA-Z0-9_-]+)"\s*:', pa_text)) - {"en", "hi", "pa"}
+
+        self.assertEqual(en_keys, hi_keys, f"i18n key mismatch between en and hi: {en_keys ^ hi_keys}")
+        self.assertEqual(en_keys, pa_keys, f"i18n key mismatch between en and pa: {en_keys ^ pa_keys}")
+
 
 if __name__ == "__main__":
     unittest.main()
