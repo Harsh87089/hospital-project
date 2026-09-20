@@ -202,6 +202,24 @@ class NoOverclaimsTest(unittest.TestCase):
         self.assertEqual(en_keys, hi_keys, f"i18n key mismatch between en and hi: {en_keys ^ hi_keys}")
         self.assertEqual(en_keys, pa_keys, f"i18n key mismatch between en and pa: {en_keys ^ pa_keys}")
 
+    def test_dev_gateway_markup_not_in_public_html(self):
+        """Dev gateway instructions/links must not leak into public HTML."""
+        dev_only = (
+            "Real OTP Delivery Gateway Manager",
+            "dashboard.emailjs.com",
+            "console.firebase.google.com"
+        )
+        for name in ("index.html", "hospital.html"):
+            html = (ROOT / name).read_text(encoding="utf-8")
+            for needle in dev_only:
+                self.assertNotIn(needle, html, f"{name} leaks dev-only text: {needle}")
+
+    def test_dev_gateway_module_exists_and_not_precached(self):
+        """dev-gateway.js must exist on disk with the modal markup, but must not be precached."""
+        js = (ROOT / "js" / "dev-gateway.js").read_text(encoding="utf-8")
+        self.assertIn("Real OTP Delivery Gateway Manager", js)
+        self.assertNotIn("dev-gateway.js", (ROOT / "sw.js").read_text(encoding="utf-8"))
+
 
 if __name__ == "__main__":
     unittest.main()

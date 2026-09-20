@@ -7330,8 +7330,34 @@ const DeliveryGateway = {
     firebaseProjectId: ''
   },
 
+  loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = (err) => {
+        console.warn(`Failed to load ${src}:`, err);
+        resolve();
+      };
+      document.head.appendChild(s);
+    });
+  },
+
+  async loadDevTools() {
+    if (typeof window === 'undefined') return;
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('dev') !== '1') return;
+    if (this._devToolsLoaded) return;
+    this._devToolsLoaded = true;
+
+    if (!document.getElementById('delivery-gateway-modal')) {
+      await this.loadScript('js/dev-gateway.js');
+    }
+  },
+
   init() {
     this.loadConfig();
+    this.loadDevTools();
     this.initEmailJS();
     this.initFirebase();
     this.updateUIBadge();
@@ -7541,11 +7567,14 @@ const DeliveryGateway = {
 
 window.DeliveryGateway = DeliveryGateway;
 
-window.openDeliveryGatewayModal = function () {
+window.openDeliveryGatewayModal = async function () {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('dev') !== '1') {
     showToast('Developer Gateway is restricted to dev mode. Append ?dev=1 to URL to access.', 'warning');
     return;
+  }
+  if (!document.getElementById('delivery-gateway-modal')) {
+    await DeliveryGateway.loadDevTools();
   }
   DeliveryGateway.populateForm();
   if (typeof openModal === 'function') {
