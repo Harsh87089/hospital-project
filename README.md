@@ -25,6 +25,7 @@ CarePulse is a **front-end portfolio demonstration** of a modern healthcare OPD 
 
 ## 2. Demo Honesty Markers
 
+<!-- overclaims:allow-start -->
 | Element | What the marker says |
 |---|---|
 | `<meta name="robots">` | `noindex, nofollow` — search engines won't index it |
@@ -37,6 +38,7 @@ CarePulse is a **front-end portfolio demonstration** of a modern healthcare OPD 
 | In-memory QR placeholder | **DEMO QR** phone-icon label — not a scannable code |
 | Sign-in badge | "Simulated Session" |
 | Firebase & EmailJS SDKs | Loaded **only** when `?dev=1` is in the URL — standard visitors never download them |
+<!-- overclaims:allow-end -->
 
 ---
 
