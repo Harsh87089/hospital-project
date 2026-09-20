@@ -1,114 +1,181 @@
-# CarePulse Multi-Specialty Hospital & Research Institute
+# CarePulse — Fictional Hospital Demo Portal
 
-> **Demonstration Web Portal Prototype & Live OPD Queue Management System**  
-> Flagship Campus: GT Road, Near Sugar Mill Crossing, Model Town, Phagwara, Punjab - 144401.
+> ⚠️ **This is a fictional demo project. It is not a real hospital, clinic, or medical service.**
+> **No real patient data is collected. All records, tokens, and documents are simulated.**
 
----
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-blue?logo=vercel)](https://hospital-project-tawny.vercel.app/)
+[![Tests](https://img.shields.io/badge/Tests-31%20passed-brightgreen)](#6-local-setup--testing-guide)
 
-## 1. Project Overview
-
-CarePulse is a modern, high-performance, client-side healthcare web portal prototype. It provides interactive patient appointment scheduling, real-time simulated OPD queue token generation, downloadable digital E-Passes, 24/7 emergency trauma guidance, trilingual localization (English, Hindi, Punjabi), and DPDP Act 2023 privacy controls.
-
----
-
-## 2. Technical Architecture & Dependencies
-
-* **Frontend Architecture**: Pure Vanilla JavaScript (Modern ES2022 Modules via 19 modular files in `js/` with an automated fallback bundle in `app.js`).
-* **Design & Styling**: Modular Vanilla CSS3 design system organized across `css/base.css`, `css/components.css`, `css/modals.css`, `css/themes.css`, and `css/fonts.css`.
-* **Zero Framework & Heavy Runtime Dependencies**:
-  * **No Frontend Frameworks**: Zero React, Angular, Vue, or TailwindCSS.
-  * **Native Canvas 2D Pass Rendering**: Digital appointment E-Passes and QR/barcode tokens are generated entirely client-side using the browser's native **HTML5 Canvas 2D API** (`document.createElement('canvas')`) with `window.print()` — eliminating third-party PDF or rasterization libraries like jsPDF or html2canvas.
-  * **Native SVGs & Typography**: All iconography is rendered via lightweight inline SVG paths and system emojis (no heavy icon font stylesheets).
-* **External Integration Endpoints (Allowlisted via CSP)**:
-  * **EmailJS SDK**: Gated client-side notification dispatching loaded dynamically in dev mode (`?dev=1`) via `https://cdn.jsdelivr.net`, `https://api.emailjs.com`.
-  * **Firebase Compat SDK**: Optional authentication/state demonstration loaded dynamically in dev mode (`?dev=1`) via `https://www.gstatic.com`, `https://identitytoolkit.googleapis.com`.
-  * **Unsplash CDN**: Hospital environment and staff sample photography (`https://images.unsplash.com`).
-  * **In-Memory Client-Side QR Engine**: Digital passes and OPD tokens generate pure vector SVG QR codes directly in browser memory without any external network fallback service. Zero token data or patient info ever leaves the browser.
+![CarePulse demo portal — OPD booking, queue tracker, and smart health pass with DEMO watermarks](icons/readme-hero.jpg)
 
 ---
 
-## 3. Security Architecture & Content Security Policy (CSP)
+## 1. What This Is
 
-CarePulse deploys security headers configured via [`vercel.json`](vercel.json):
+CarePulse is a **front-end portfolio demonstration** of a modern healthcare OPD portal built to showcase:
 
-* **Strict Script Execution Policy**: The `script-src` directive strictly permits only `'self'` and explicitly trusted CDNs (`https://cdn.jsdelivr.net`, `https://www.gstatic.com`). It strictly disallows `'unsafe-inline'` and `'unsafe-eval'`. All inline HTML event handlers (`onclick=...`) have been migrated to decoupled `data-action` listeners.
-* **Style Policy**: `style-src` permits `'self'`, Google Fonts, and `'unsafe-inline'` to support dynamic CSSOM DOM style manipulation (e.g. modal visibility toggles, dynamic theme transitions, progress bars).
-* **Network & Image Domain Lockdown**:
-  * `img-src`: Strictly confined to `'self'`, `data:`, `blob:`, and `https://images.unsplash.com`.
-  * `connect-src`: Strictly pinned to `'self'`, `https://api.emailjs.com`, `https://identitytoolkit.googleapis.com`, `https://securetoken.googleapis.com`, and `https://*.firebaseio.com`.
-* **Defensive Headers**: Includes `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`, and `Permissions-Policy: camera=(self), microphone=(self), geolocation=()`.
-* **Privacy Controls (DPDP Act 2023)**: User consent checkbox on booking and a dedicated one-click user data purge function (`clearAllDemoData()`) that purges all tracked local storage keys.
+- Realistic healthcare UX patterns: appointment booking, simulated OPD queue tracking, tele-consult Rx, Smart Health Pass
+- **Strict demo honesty** — every document carries a "SAMPLE DOCUMENT – DEMO ONLY" watermark; downloaded PNGs/PDFs have a baked-in diagonal watermark; all live-looking data is labelled "SIMULATED DATA"
+- A production-quality security posture: strict CSP with no `unsafe-inline` scripts, `noindex`, no external SDK leakage to standard visitors
+- Progressive Web App (PWA) with offline support and trilingual UI (English · हिन्दी · ਪੰਜਾਬੀ)
 
----
-
-## 4. Accessibility Statement (WCAG 2.2 AA Foundation)
-
-The platform implements core WCAG 2.2 AA accessibility foundations:
-* **Modal Dialog Semantics**: All 28 modals enforce `role="dialog"`, `aria-modal="true"`, and `aria-labelledby`.
-* **Keyboard Navigation**: Automated keyboard focus trapping (cycling `Tab` / `Shift+Tab`) inside open modal dialogs, with global `Escape` key dismissal.
-* **Touch Targets**: Minimum 44×44px interactive touch targets across mobile bottom dock navigation and buttons.
-* **Motion Sensitivity**: `@media (prefers-reduced-motion: reduce)` rules disable decorative keyframe animations and transforms for users with vestibular sensitivity.
-* *Note on Compliance*: Automated tests verify structural ARIA markup, keyboard listeners, and CSS media queries. Full WCAG 2.2 AA certification additionally requires independent manual assistive technology (screen-reader) verification.
+> **Nothing in this project should be read as medical advice, diagnosis, or official healthcare information.**
 
 ---
 
-## 5. Offline Progressive Web App (PWA)
+## 2. Demo Honesty Markers
 
-* **Web App Manifest**: Full PWA manifest at [`manifest.json`](manifest.json) configured with standalone display, theme colors, and icons.
-* **Service Worker Engine**: Offline asset caching engine at [`sw.js`](sw.js) declaring **39 precached assets** for instantaneous offline availability:
-  * HTML shells (`./index.html`, `./hospital.html`) and manifests (`./manifest.json`, `./styles.css`).
-  * 5 CSS stylesheets and 6 essential offline font files (Noto Sans Devanagari & Gurmukhi 400/600/700w).
-  * 18 core ES JavaScript modules, `app.js` fallback bundle, and vector/raster PWA icons.
-  * (Additional non-blocking fonts and modules are cached dynamically on first use).
+| Element | What the marker says |
+|---|---|
+| `<meta name="robots">` | `noindex, nofollow` — search engines won't index it |
+| Meta description | Explicitly says "Demonstration … prototype" |
+| Every sample document (`#token-slip-card`, `#lab-report-output`, `#tele-rx-panel`, `#smart-health-pass-card`) | `data-demo="sample-doc stamp"` — red print watermark on screen and in downloaded files |
+| ICU telemetry panel, Live 24/7 tile | Amber **SIMULATED DATA** chip inline |
+| Registration / trust badges | Labelled `Demo Concept` / `Demo-PMC-38214 (Sample Profile)` |
+| Downloaded PNG tokens | Diagonal `DEMO – NOT A REAL APPOINTMENT` text drawn directly into the canvas before export |
+| PDF/print Rx & passes | Same diagonal watermark injected into the print window's body |
+| In-memory QR placeholder | **DEMO QR** phone-icon label — not a scannable code |
+| Sign-in badge | "Simulated Session" |
+| Firebase & EmailJS SDKs | Loaded **only** when `?dev=1` is in the URL — standard visitors never download them |
+
+---
+
+## 3. Technical Architecture
+
+| Layer | Technology |
+|---|---|
+| Markup | Vanilla HTML5 — semantic, ARIA-complete, 28 accessible dialog modals |
+| Styling | Vanilla CSS3 — 5 modular files (`base`, `components`, `modals`, `themes`, `fonts`) |
+| Logic | 19 ES2022 modules (`js/`) + `app.js` fallback bundle |
+| Pass rendering | Native HTML5 Canvas 2D — no jsPDF, html2canvas, or icon fonts |
+| QR codes | 100% in-memory vector SVG — zero network calls, zero PHI leaves the browser |
+| CSP | **Single HTTP header** (no `<meta>` duplication): `script-src 'self' cdn.jsdelivr.net gstatic.com` — no `unsafe-inline`, no `unsafe-eval` |
+| Hosting | Vercel (edge CDN, automatic HTTPS) |
+
+### External Integration Endpoints (Allowlisted via CSP)
+
+* **EmailJS SDK** (`cdn.jsdelivr.net`, `api.emailjs.com`) — dev mode only (`?dev=1`)
+* **Firebase Compat SDK** (`www.gstatic.com`, `identitytoolkit.googleapis.com`) — dev mode only (`?dev=1`)
+* **Unsplash CDN** (`images.unsplash.com`) — sample photography only
+
+---
+
+## 4. Security Headers (via `vercel.json`)
+
+```
+Content-Security-Policy   script-src 'self' + trusted CDNs only; no unsafe-inline
+X-Content-Type-Options    nosniff
+X-Frame-Options           SAMEORIGIN
+Referrer-Policy           strict-origin-when-cross-origin
+Permissions-Policy        camera=(self), microphone=(self), geolocation=()
+```
+
+All inline `onclick=...` handlers have been migrated to decoupled `data-action` listeners.
+
+---
+
+## 5. Accessibility (WCAG 2.2 AA Foundation)
+
+* **28 modals** each have `role="dialog"`, `aria-modal="true"`, and `aria-labelledby`
+* Keyboard focus trapping inside open dialogs; `Escape` dismissal
+* `@media (prefers-reduced-motion: reduce)` disables decorative animations
+* 44×44 px minimum touch targets on mobile dock
+
+*Automated tests verify structural ARIA markup and CSS media queries. Full WCAG 2.2 AA certification additionally requires independent screen-reader verification.*
 
 ---
 
 ## 6. Local Setup & Testing Guide
 
-### Prerequisites
-* Python 3.10+ (standard library only; no pip dependencies required for tests).
-* Google Chrome or Microsoft Edge (installed in default location for real-browser E2E testing).
+**Prerequisites:** Python 3.10+ and Google Chrome / Edge (for browser E2E tests).
 
-### Running Locally
-To launch the local HTTP server, run in the project root:
 ```bash
+# Serve locally
 python -m http.server 3000
+# → open http://localhost:3000
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-> **Important**: The CLI deep validation suite automatically spins up a background HTTP server thread if port 3000 is not already running, making the test suite completely self-contained and automated.
-
----
 
 ### Running the Test Suites
 
-#### 1. Unit & Functional Test Suite (26 Tests)
-Validates core configuration, sanitization, DPDP compliance, CSP configuration, V8 syntax parsing, and appointment booking logic:
 ```bash
+# 1. Full unit + functional + V8 syntax suite (31 tests)
 python -m unittest discover -s tests
-```
 
-#### 2. Deep CLI Verification Suite (104 Checks)
-Tests live HTTP endpoints, asset references on disk, service worker precaching, DOM ID uniqueness, trilingual key completeness, and HTML mirror parity:
-```bash
+# 2. No-overclaims regression guard (5 tests — banned phrases, noindex, data-demo markers)
+python -m unittest tests.test_no_overclaims -v
+
+# 3. Deep CLI validation (104 checks — HTML, CSS, JS, CSP, mirrors, i18n)
 python tests/cli_deep_validation.py
-```
 
-#### 3. Real-Browser End-to-End Test Suite (Headless Chrome / Edge)
-Launches real headless Google Chrome or Microsoft Edge to execute actual in-browser user flows (Emergency SOS disclaimer modal, language switching, and appointment booking):
-```bash
+# 4. Real-browser E2E (headless Chrome/Edge)
 python tests/test_browser_e2e.py
+
+# 5. Playwright spec (if Playwright is installed)
+npx playwright test
 ```
 
-#### 4. Playwright Specification
-For CI/CD environments running Playwright:
-```bash
-# Optional: if Playwright is installed
-npx playwright test
+**All 31 unit tests and 104 CLI checks pass with 0 failures.**
+
+---
+
+## 7. Project Structure
+
+```
+hospital-project/
+├── index.html              # Main entry (SHA-256 identical mirror of hospital.html)
+├── hospital.html           # Alternate entry — byte-for-byte identical
+├── app.js                  # Fallback ES module bundle
+├── css/
+│   ├── base.css            # Design tokens & resets
+│   ├── components.css      # UI components + demo-doc print watermark (word-match [data-demo~=...])
+│   ├── modals.css          # 28 dialog modals
+│   ├── themes.css          # Dark / light / high-contrast themes
+│   └── fonts.css           # Self-hosted WOFF2 font declarations
+├── js/                     # 19 ES2022 modules
+│   ├── gateway.js          # Dev-only SDK loader (EmailJS + Firebase, gated on ?dev=1)
+│   ├── tokens.js           # OPD token slip + canvas watermark on PNG download
+│   ├── healthcard.js       # Smart Health Pass (print watermark + DEMO QR label)
+│   ├── tele.js             # Tele-consult Rx + print-window watermark
+│   ├── utils.js            # In-memory SVG QR generator (DEMO QR label, no network fallback)
+│   └── ...                 # booking, queue, lab, pharmacy, i18n, auth, calculators, ...
+├── fonts/                  # 12 self-hosted WOFF2 files (Noto Devanagari + Gurmukhi)
+├── tests/
+│   ├── test_suite.py               # 26-test unit + V8 syntax suite
+│   ├── test_no_overclaims.py       # 5-test overclaims regression guard
+│   ├── cli_deep_validation.py      # 104-check deep CLI suite
+│   ├── test_browser_e2e.py         # Headless Chrome/Edge E2E runner
+│   └── e2e_real_page.spec.js       # Playwright spec
+├── vercel.json             # Routing + security headers (single CSP source of truth)
+├── manifest.json           # PWA manifest
+└── sw.js                   # Service worker (39 precached assets)
 ```
 
 ---
 
-## 7. Mirror Parity Architecture
+## 8. Offline PWA
 
-The project maintains two synchronized entry points: [`index.html`](index.html) and [`hospital.html`](hospital.html). Both files are bit-for-bit SHA-256 identical, verified automatically in every test run.
+The Service Worker precaches 39 assets — both HTML shells, all 5 CSS files, 6 offline font files, 18 JS modules, and `app.js` — so the portal is fully usable offline after first visit.
+
+---
+
+## 9. Privacy & Data
+
+All patient data is simulated, client-side only, and stored in `localStorage`. No data is sent to any server during normal use.
+
+* ABHA numbers: `00-0000-0000-0001 (Demo Sample)` — obviously fake
+* Phone numbers: `9000000000` — generic dummy
+* `clearAllDemoData()` — one-click purge exposed in the browser console
+* DPDP Act 2023: Consent checkbox on booking; demo designed in alignment with its principles
+* QR payload: only opaque `?track=...&ref=...` identifiers — **zero personal health data**
+
+---
+
+## 10. Mirror Parity Architecture
+
+Both entry points [`index.html`](index.html) and [`hospital.html`](hospital.html) are bit-for-bit SHA-256 identical, verified automatically in every test run.
+
+---
+
+## License
+
+This repository is a **portfolio demonstration project**. It is not affiliated with any real healthcare institution.

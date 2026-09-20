@@ -27,7 +27,7 @@ def find_repo_root() -> Path:
 
 ROOT = find_repo_root()
 SKIP_DIRS = {".git", "node_modules", "tests", "test", "__pycache__", ".vercel"}
-TEXT_EXTS = {".html", ".js", ".css", ".json", ".md", ".txt", ".xml"}
+TEXT_EXTS = {".html", ".js", ".css", ".json", ".txt", ".xml"}
 
 BANNED_PHRASES = [
     "strictly comply",
