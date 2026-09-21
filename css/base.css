@@ -430,4 +430,57 @@ a.btn,
   }
 }
 
+/* Sidebar Emergency & Demo Links with High-Contrast Dark Mode & Palette Support */
+.sidebar-footer-emergency .emergency-link {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #b91c1c;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.15s ease, opacity 0.15s ease;
+}
 
+.sidebar-footer-emergency .emergency-link:hover,
+.sidebar-footer-emergency .emergency-link:focus-visible {
+  color: #991b1b;
+  text-decoration: underline;
+}
+
+.sidebar-footer-emergency .demo-link {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #991b1b;
+  text-decoration: none;
+  transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+.sidebar-footer-emergency .demo-link:hover,
+.sidebar-footer-emergency .demo-link:focus-visible {
+  color: #7f1d1d;
+  text-decoration: underline;
+}
+
+body.dark .sidebar-footer-emergency .emergency-link,
+[data-theme="dark"] .sidebar-footer-emergency .emergency-link {
+  color: #f87171;
+}
+
+body.dark .sidebar-footer-emergency .emergency-link:hover,
+body.dark .sidebar-footer-emergency .emergency-link:focus-visible,
+[data-theme="dark"] .sidebar-footer-emergency .emergency-link:hover,
+[data-theme="dark"] .sidebar-footer-emergency .emergency-link:focus-visible {
+  color: #fca5a5;
+}
+
+body.dark .sidebar-footer-emergency .demo-link,
+[data-theme="dark"] .sidebar-footer-emergency .demo-link {
+  color: #fca5a5;
+}
+
+body.dark .sidebar-footer-emergency .demo-link:hover,
+body.dark .sidebar-footer-emergency .demo-link:focus-visible,
+[data-theme="dark"] .sidebar-footer-emergency .demo-link:hover,
+[data-theme="dark"] .sidebar-footer-emergency .demo-link:focus-visible {
+  color: #fecaca;
+}

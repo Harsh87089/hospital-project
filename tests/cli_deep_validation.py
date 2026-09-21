@@ -98,7 +98,7 @@ class ComprehensiveValidator:
             "/hospital.html",
             "/manifest.json",
             "/sw.js",
-            "/sitemap.xml",
+            "/icons/readme-hero.jpg",
             "/robots.txt",
             "/favicon.ico",
             "/favicon.svg",

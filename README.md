@@ -4,7 +4,8 @@
 > **No real patient data is collected. All records, tokens, and documents are simulated.**
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-blue?logo=vercel)](https://hospital-project-tawny.vercel.app/)
-[![Tests](https://img.shields.io/badge/Tests-31%20passed-brightgreen)](#6-local-setup--testing-guide)
+[![Tests](https://img.shields.io/badge/Tests-36%20passed-brightgreen)](#6-local-setup--testing-guide)
+[![CI](https://github.com/Harsh87089/hospital-project/actions/workflows/ci.yml/badge.svg)](https://github.com/Harsh87089/hospital-project/actions)
 
 ![CarePulse demo portal — OPD booking, queue tracker, and smart health pass with DEMO watermarks](icons/readme-hero.jpg)
 
@@ -179,5 +180,5 @@ Both entry points [`index.html`](index.html) and [`hospital.html`](hospital.html
 ---
 
 ## License
-
-This repository is a **portfolio demonstration project**. It is not affiliated with any real healthcare institution.
+ 
+MIT License — see [LICENSE](LICENSE) for details. This repository is a **portfolio demonstration project**. It is not affiliated with any real healthcare institution.

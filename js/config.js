@@ -620,7 +620,7 @@ let activePackageBooking = null;
 const SAMPLE_LAB_REPORTS = {
   'UHID-98214': {
     uhid: 'UHID-98214',
-    patientName: 'Mr. Rajesh Verma',
+    patientName: 'Mr. Rajesh Kumar (Demo Patient)',
     registeredMobile: '+91 98765-43210',
     ageGender: '42 Y / Male',
     refDoctor: 'Dr. Rajesh Sharma, MD',

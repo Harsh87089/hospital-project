@@ -1,5 +1,2 @@
 User-agent: *
 Allow: /
-
-# Direct Google & Search Engine crawlers to sitemap
-Sitemap: https://hospital-project-tawny.vercel.app/sitemap.xml

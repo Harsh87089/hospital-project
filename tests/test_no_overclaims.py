@@ -55,6 +55,9 @@ BANNED_PHRASES = [
     "Digitally Signed & Encrypted",
     "Compliant Demo",
     "ABHA Empanelled",
+    "adheres strictly",
+    "Qualified Medical Specialists",
+    "Life support desk",
 ]
 
 DEMO_MARKED_IDS = [

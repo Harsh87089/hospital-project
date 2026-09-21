@@ -178,6 +178,10 @@ window.closeModal = function (modalId) {
   const modal = typeof modalId === 'string' ? document.getElementById(modalId) : (modalId || currentActiveModal);
   if (!modal) return;
 
+  if (modal.id === 'tele-consult-modal' && window.TeleConsultEngine) {
+    window.TeleConsultEngine.close();
+  }
+
   modal.classList.remove('active');
   modal.setAttribute('aria-hidden', 'true');
 
@@ -1045,7 +1049,14 @@ document.addEventListener('click', function (e) {
       if (typeof window.closeBookingLayer === 'function') window.closeBookingLayer();
       break;
     case 'open-emergency-modal':
+      e.preventDefault();
       if (typeof window.openEmergencyModal === 'function') window.openEmergencyModal();
+      break;
+    case 'load-campus-map':
+      const mapContainer = document.getElementById('map-container');
+      if (mapContainer) {
+        mapContainer.innerHTML = '<iframe title="CarePulse Hospital Phagwara Location" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13642.534829143615!2d75.760000!3d31.220000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391a830b58e2397d%3A0x6b8296a2f8d3881c!2sPhagwara%2C%20Punjab!5e0!3m2!1sen!2sin!4v1700000000000" width="100%" height="100%" class="u-border-0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
+      }
       break;
     case 'close-emergency-modal':
       if (typeof window.closeEmergencyModal === 'function') window.closeEmergencyModal();

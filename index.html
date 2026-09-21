@@ -13,10 +13,16 @@
     <meta property="og:title" content="CarePulse - Hospital Portal Demo (UX Prototype)" />
     <meta property="og:description" content="Fictional hospital portal: OPD booking, live token queue and digital e-pass. A portfolio demo, not a real facility." />
     <meta property="og:url" content="https://hospital-project-tawny.vercel.app/" />
+    <meta property="og:image" content="https://hospital-project-tawny.vercel.app/icons/readme-hero.jpg" />
+    <meta property="og:image:alt" content="CarePulse Hospital Demo Portal Preview" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="CarePulse - Hospital Portal Demo (UX Prototype)" />
     <meta name="twitter:description" content="Fictional hospital portal: OPD booking, live token queue and digital e-pass. A portfolio demo." />
+    <meta name="twitter:image" content="https://hospital-project-tawny.vercel.app/icons/readme-hero.jpg" />
+    <meta name="twitter:image:alt" content="CarePulse Hospital Demo Portal Preview" />
 
     <link rel="canonical" href="https://hospital-project-tawny.vercel.app/" />
     <!-- PWA & Mobile Web App Meta Tags -->
@@ -533,7 +539,7 @@
                                 <span class="u-icon-decorative" aria-hidden="true">🚨</span>
                                 <div class="sub-link-info">
                                     <span class="sub-title">Trauma &amp; Ambulance</span>
-                                    <span class="sub-desc">24/7 Life support desk</span>
+                                    <span class="sub-desc">Simulated emergency desk</span>
                                 </div>
                             </a>
                         </li>
@@ -643,10 +649,10 @@
                 <span class="pulse-dot red-pulse"></span>
                 <strong>24/7 Emergency Helpline</strong>
             </div>
-            <a href="tel:108" class="emergency-link emergency-footer-phone" style="margin-bottom: 0.35rem; color: #b91c1c;">
+            <a href="tel:108" class="emergency-link emergency-footer-phone">
                 🚨 Ambulance: 108
             </a>
-            <a href="tel:18000000000" class="demo-link emergency-footer-phone" data-action="open-emergency-modal" style="font-size: 0.8rem; font-weight: 600; color: #991b1b;">
+            <a href="tel:18000000000" class="demo-link emergency-footer-phone" data-action="open-emergency-modal">
                 📞 Demo helpline (placeholder): 1800-000-0000
             </a>
             <div class="emergency-footer-sub" style="margin-top: 0.35rem;">Immediate Trauma &amp; Ambulance</div>
@@ -1081,7 +1087,7 @@
                     <h2 class="u-box-font-size-36">Standard OPD &amp; Diagnostic
                         Tariff Schedule</h2>
                     <p class="u-box-color-37">
-                        CarePulse adheres strictly to 100% upfront pricing transparency. No unexpected admission
+                        CarePulse demonstrates 100% upfront pricing transparency in this prototype. No unexpected admission
                         charges, hidden file opening fees, or diagnostic surcharges.
                     </p>
                 </div>
@@ -1300,12 +1306,13 @@
 
                     <!-- Interactive Campus Map & Access Points -->
                     <div class="u-flex-box-72">
-                        <div class="u-card-box-73">
-                            <iframe title="CarePulse Hospital Phagwara Location"
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13642.534829143615!2d75.760000!3d31.220000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391a830b58e2397d%3A0x6b8296a2f8d3881c!2sPhagwara%2C%20Punjab!5e0!3m2!1sen!2sin!4v1700000000000"
-                                width="100%" height="100%"class="u-border-0" allowfullscreen="" loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade">
-                            </iframe>
+                        <div class="u-card-box-73" id="map-container" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--slate-100); text-align: center; padding: 1.5rem; border-radius: 12px; min-height: 280px;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📍</div>
+                            <strong style="color: var(--slate-800); margin-bottom: 0.25rem;">CarePulse Hospital Campus Map</strong>
+                            <p style="font-size: 0.85rem; color: var(--slate-500); max-width: 320px; margin-bottom: 1rem;">Click below to load the interactive Google Maps embed of GT Road, Phagwara.</p>
+                            <button type="button" class="btn btn-primary btn-sm" id="btn-load-map" data-action="load-campus-map">
+                                🗺️ Load Interactive Map
+                            </button>
                         </div>
 
                         <div class="u-grid-box-75">
@@ -1426,10 +1433,10 @@
                 <div class="service-layer-header-left">
                     <div class="service-layer-icon u-badge-fef3c7-d97706">⏱️</div>
                     <div class="service-layer-title-wrap">
-                        <span class="layer-badge u-badge-fef3c7-b45309">LIVE OPD QUEUE
+                        <span class="layer-badge u-badge-fef3c7-b45309">SIMULATED OPD QUEUE
                             MONITOR</span>
-                        <h2 id="modal-title-live-queue" data-i18n="sec_queue">Real-Time OPD Token Display</h2>
-                        <p>Live consultation queue and token tracking across all specialist chambers in Phagwara</p>
+                        <h2 id="modal-title-live-queue" data-i18n="sec_queue">OPD Token Display (Simulated)</h2>
+                        <p>Simulated consultation queue and token tracking across all specialist chambers in Phagwara</p>
                     </div>
                 </div>
                 <div class="service-layer-header-actions">
@@ -1559,11 +1566,11 @@
                 <div class="service-layer-header-left">
                     <div class="service-layer-icon u-badge-d1fae5-059669">🛏️</div>
                     <div class="service-layer-title-wrap">
-                        <span class="layer-badge u-badge-d1fae5-065f46">CIVIC TRANSPARENCY
+                        <span class="layer-badge u-badge-d1fae5-065f46">SIMULATED BED &amp; ICU
                             DASHBOARD</span>
-                        <h2 id="modal-title-beds" data-i18n="sec_beds">Live Hospital Bed &amp; ICU Capacity</h2>
-                        <p>Transparent real-time occupancy monitoring for Emergency Triage, Critical ICU, Ventilators
-                            &amp; Blood Bank</p>
+                        <h2 id="modal-title-beds" data-i18n="sec_beds">Hospital Bed &amp; ICU Capacity (Simulated)</h2>
+                        <p>Simulated occupancy monitoring for Emergency Triage, Critical ICU, Ventilators
+                            &amp; Blood Bank (Demo)</p>
                     </div>
                 </div>
                 <button class="modal-close-btn" data-action="close-beds-modal" aria-label="Close Bed Status">×</button>
@@ -1667,8 +1674,8 @@
                 <div class="service-layer-header-left">
                     <div class="service-layer-icon u-badge-e0f2fe-0284c7">👨‍⚕️</div>
                     <div class="service-layer-title-wrap">
-                        <span class="layer-badge u-badge-e0f2fe-0369a1">QUALIFIED MEDICAL
-                            SPECIALISTS</span>
+                        <span class="layer-badge u-badge-e0f2fe-0369a1">SAMPLE SPECIALIST
+                            PROFILES</span>
                         <h2 id="modal-title-doctors" data-i18n="sec_doctors">Meet Our Hospital Specialists</h2>
                         <p>Consult our experienced Indian physicians, pediatricians, dermatologists, and dental surgeons
                         </p>
@@ -2206,7 +2213,7 @@
                     <tbody>
                         <tr>
                             <td class="label">Patient Name</td>
-                            <td class="val" id="slip-patient-name">Ramesh Kumar</td>
+                            <td class="val" id="slip-patient-name">Rajesh Kumar (Demo Patient)</td>
                         </tr>
                         <tr>
                             <td class="label">Age / Gender / Place</td>
@@ -2483,7 +2490,7 @@
 
             <div class="u-flex-box-182">
                 <span>Quick Demos:</span>
-                <button class="btn-rx-add" data-action="open-lab-report-modal" data-uhid="UHID-98214">UHID-98214 (Mr. Rajesh Verma -
+                <button class="btn-rx-add" data-action="open-lab-report-modal" data-uhid="UHID-98214">UHID-98214 (Mr. Rajesh Kumar -
                     Normal CBC & Lipid)</button>
                 <button class="btn-rx-add" data-action="open-lab-report-modal" data-uhid="UHID-44021">UHID-44021 (Mrs. Sunita Rao -
                     Diabetic & Vit D Screen)</button>
@@ -2597,7 +2604,7 @@
                     <div class="form-group">
                         <label class="form-label" for="rx-patient-name">Recipient Name <span
                                 class="req">*</span></label>
-                        <input type="text" id="rx-patient-name" class="form-control" placeholder="e.g. Ramesh Kumar"
+                        <input type="text" id="rx-patient-name" class="form-control" placeholder="e.g. Rajesh Kumar"
                             required />
                     </div>
                     <div class="form-group">
@@ -2857,7 +2864,7 @@
                 <div class="calc-result-hero">
                     <div>
                         <span class="u-box-font-size-226">Calculated
-                            BMI</span>
+                            BMI (Asia-Pacific Consensus)</span>
                         <div class="calc-score-number" id="calc-bmi-val">23.0</div>
                     </div>
                     <span class="calc-category-badge" id="calc-category-badge">Overweight (at risk)</span>
@@ -2872,6 +2879,9 @@
                     <span>Normal (18.5-22.9)</span>
                     <span>Overweight (23-24.9)</span>
                     <span>Obese (&ge;25)</span>
+                </div>
+                <div style="font-size: 0.72rem; color: var(--slate-500); margin-top: 4px; text-align: center;">
+                    *WHO Asia-Pacific / Indian consensus cut-offs applied for Asian populations
                 </div>
 
                 <div class="u-grid-box-229">
@@ -3073,7 +3083,7 @@
 
             <div class="u-box-font-size-255">
                 <h4 class="u-box-color-256">1. Prototype Demonstration Architecture (Client-Side Only)</h4>
-                <p>CarePulse is a demonstration prototype application. In alignment with the principles of the <strong>Digital Personal Data Protection (DPDP) Act, 2023 (India)</strong>, CarePulse has no backend and stores nothing on any server; the only exceptions are the browser-level services listed in §3. All information stays exclusively inside your browser.</p>
+                <p>CarePulse is a demonstration prototype application. In alignment with the principles of the <strong>Digital Personal Data Protection (DPDP) Act, 2023 (India)</strong>, CarePulse operates without any backend server. All appointment bookings, simulated patient records, and user preferences are stored exclusively in your browser's local storage and are never uploaded to any hospital or cloud database. Network transmissions are strictly limited to the external assets and browser capabilities disclosed in §3.</p>
 
                 <h4 class="u-box-color-256">2. Exact LocalStorage Keys Stored on this Device</h4>
                 <p>In accordance with the DPDP Act 2023 data transparency requirements, the following keys are stored in your browser's HTML5 <code>localStorage</code> / <code>sessionStorage</code>:</p>
@@ -3089,17 +3099,18 @@
                 <h4 class="u-box-color-256">3. Third-Party Network Resources &amp; Services Disclosure</h4>
                 <p>To deliver an authentic modern healthcare UX, this demonstration portal interfaces with the following external network resources and browser APIs:</p>
                 <ul style="margin: 0.5rem 0 0.75rem 1.25rem; font-size: 0.84rem; line-height: 1.5;">
-                    <li><strong>Google Fonts (<code>fonts.googleapis.com</code> &amp; <code>fonts.gstatic.com</code>)</strong>: Loads web typography stylesheets and font binaries (Inter, Outfit, Plus Jakarta Sans) for accessible cross-device rendering. No health data or personal identifiers are sent to Google Fonts.</li>
+                    <li><strong>Google Fonts (<code>fonts.googleapis.com</code> &amp; <code>fonts.gstatic.com</code>)</strong>: Loads web typography stylesheets and font binaries (Inter, Outfit, Plus Jakarta Sans) for accessible cross-device rendering. Indic scripts (Noto Sans Devanagari &amp; Gurmukhi) are self-hosted locally. No health data or personal identifiers are sent to Google Fonts.</li>
                     <li><strong>Unsplash (<code>images.unsplash.com</code>)</strong>: Serves medical staff portraits, department facilities, and hospital campus imagery. No user health data or identifiers are transmitted.</li>
-                    <li><strong>Google Maps Embed (<code>maps.google.com / google.com</code>)</strong>: Displays the physical campus map on GT Road, Phagwara.</li>
+                    <li><strong>Google Maps Embed (<code>maps.google.com / google.com</code>)</strong>: The campus map iframe loads on-demand only after you explicitly click "Load Interactive Map". Zero network requests are made to Google Maps during initial page load.</li>
                     <li><strong>In-Memory Client-Side QR Engine</strong>: Digital OPD tokens and health passes generate vector SVG QR codes directly in browser memory without any external network fallback service. Zero patient names, phone numbers, or token details are transmitted over the network.</li>
                     <li><strong>EmailJS &amp; Firebase Compat (Developer Mode Only)</strong>: Optional cloud notification and authentication scripts are strictly gated and load dynamically only when testing in developer preview mode with <code>?dev=1</code> in the URL. For standard visitors, neither script is loaded or executed.</li>
-                    <li><strong>Microphone and speech recognition (Voice AI)</strong>: Voice commands use your browser's built-in speech recognition and start only after you tap the microphone and grant permission. In some browsers (for example Chrome), recognition is performed by the browser vendor's cloud service, so audio may leave your device. CarePulse does not record or store audio. You can use typed search instead.</li>
-                    <li><strong>Location (Emergency &amp; Ambulance Hub)</strong>: When you open the Emergency Hub, the page asks your browser for your location to display coordinates you can copy or share. Coordinates are held in memory only and not stored. If you tap "Share Location on WhatsApp", the coordinates are sent to WhatsApp at your request.</li>
+                    <li><strong>Camera and Microphone (Virtual Tele-Consultation Preview)</strong>: When you launch the virtual tele-consultation module, the page requests camera and microphone access via <code>navigator.mediaDevices.getUserMedia</code> to render an in-browser local video preview. Video and audio streams are processed entirely on your device and are never recorded, transmitted, or uploaded to any server. All media tracks are immediately stopped when the consultation session is closed, dismissed, or when navigating away.</li>
+                    <li><strong>Microphone and speech recognition (Voice AI)</strong>: Voice commands use your browser's built-in Web Speech API and start only after you tap the microphone and grant permission. In browsers where recognition is performed by cloud services (such as Google Chrome), audio is processed according to the browser vendor's privacy policy. CarePulse itself does not record, intercept, or store audio. You can also use typed search without granting microphone permission.</li>
+                    <li><strong>Location (Emergency &amp; Ambulance Hub)</strong>: When you open the Emergency Hub, the page asks your browser for your geolocation to display coordinates you can copy or share. Coordinates are held in browser memory only and never stored or uploaded. If you tap "Share Location on WhatsApp", the coordinates are sent to WhatsApp at your explicit request.</li>
                 </ul>
 
                 <h4 class="u-box-color-256">4. Zero Third-Party Monetization or Data Brokering</h4>
-                <p>CarePulse has no backend and stores nothing on any server; the only exceptions are the browser-level services listed in §3. Your demo information is never sold, licensed, profiled, or transmitted to any third-party marketing network or data brokers. All verification codes and token slips are simulated entirely on the client side.</p>
+                <p>CarePulse has no backend infrastructure and does not collect or store your personal data on any server. Your demo information is never sold, licensed, profiled, or shared with advertising networks or data brokers. All verification codes, token slips, and consultation records are simulated entirely on the client side.</p>
 
                 <h4 class="u-box-color-256">5. DPDP Act 2023 Right to Correction and Complete Erasure</h4>
                 <p>Under Section 12 of the DPDP Act 2023, you have the right to erase all digital personal data. You can exercise this right instantly with 1-click by clicking the button below, which wipes all <code>carepulse_*</code> storage entries immediately:</p>
@@ -3239,7 +3250,7 @@
                     <p class="branch-phone-text">📞 Reception (Demo): 1800-000-0000 / +91-0000-000000</p>
                     <p class="branch-emergency-text">🚨 Emergency: 108 / 112 (National Lines) • Demo Helpline: 1800-000-0000</p>
                     <p>💬 WhatsApp Helpline: +91 00000-DEMO</p>
-                    <p>📧 demo@carepulsephagwara.org</p>
+                    <p>📧 demo@example.org</p>
                 </div>
             </div>
 
@@ -3277,19 +3288,19 @@
          Sticky Bottom Quick-Action Dock (Mobile & Desktop App Dock)
          ========================================================================== -->
     <nav class="bottom-quick-dock" id="bottom-quick-dock" aria-label="Quick App Actions">
-        <button type="button" class="dock-item dock-item-book active" data-action="open-booking-layer" aria-label="Book OPD Appointment">
+        <button type="button" class="dock-item dock-item-book active" data-action="open-booking-layer">
             <span class="dock-icon" aria-hidden="true">📅</span>
             <span data-i18n="dock_book">Book</span>
         </button>
-        <button type="button" class="dock-item dock-item-emergency" data-action="open-emergency-sos" aria-label="Emergency SOS 108">
+        <button type="button" class="dock-item dock-item-emergency" data-action="open-emergency-sos">
             <span class="dock-icon" aria-hidden="true">🚨</span>
             <span data-i18n="dock_emergency">Emergency</span>
         </button>
-        <button type="button" class="dock-item dock-item-track" data-action="open-track-token-modal" aria-label="Track Your Token">
+        <button type="button" class="dock-item dock-item-track" data-action="open-track-token-modal">
             <span class="dock-icon" aria-hidden="true">🔍</span>
             <span data-i18n="dock_track">Track</span>
         </button>
-        <a href="tel:108" class="dock-item dock-item-call" aria-label="Call ambulance 108">
+        <a href="tel:108" class="dock-item dock-item-call">
             <span class="dock-icon" aria-hidden="true">📞</span>
             <span data-i18n="dock_call">Call 108</span>
         </a>
@@ -3329,8 +3340,8 @@
     <div id="pa-announcement-banner" class="pa-announcement-banner" role="status" aria-live="polite">
         <span class="u-icon-decorative" aria-hidden="true">📢</span>
         <div>
-            <div id="pa-announcement-text" class="pa-announcement-text">Now Serving Token TK-15 &bull; Room 101</div>
-            <div id="pa-announcement-sub" class="pa-announcement-sub">CarePulse Public Address &bull; Dr. Rajesh Sharma</div>
+            <div id="pa-announcement-text" class="pa-announcement-text"><span class="simulated-data-chip" style="font-size:0.65rem; padding: 2px 6px; margin-right:6px;">SIMULATED</span> Now Serving Token TK-15 &bull; Room 101</div>
+            <div id="pa-announcement-sub" class="pa-announcement-sub">CarePulse Public Address (Demo Simulation) &bull; Dr. Rajesh Sharma</div>
         </div>
     </div>
 
@@ -3515,7 +3526,7 @@
                         <select id="rx-quick-select" class="rx-quick-select" aria-label="Select Medicine to Add">
                             <option value="Tab. Paracetamol 650 mg|1-0-1 (After Food)|3 Days">Tab. Paracetamol 650 mg (Fever/Pain)</option>
                             <option value="Tab. Vitamin C 500 mg|1-0-0 (After Food)|5 Days">Tab. Vitamin C 500 mg (Immunity)</option>
-                            <option value="Syp. Grilinctus 10 ml|0-0-1 (At Bedtime)|5 Days">Syp. Grilinctus 10 ml (Cough Syrup)</option>
+                            <option value="Syp. Cough Formulation 10 ml (Generic Sample)|0-0-1 (At Bedtime)|5 Days">Syp. Cough Formulation 10 ml (Generic Sample)</option>
                             <option value="Tab. Pantoprazole 40 mg|1-0-0 (Empty Stomach)|7 Days">Tab. Pantoprazole 40 mg (Antacid)</option>
                             <option value="Tab. Cetirizine 10 mg|0-0-1 (At Bedtime)|3 Days">Tab. Cetirizine 10 mg (Anti-allergic)</option>
                             <option value="Tab. Zincovit|0-1-0 (After Lunch)|10 Days">Tab. Zincovit (Multivitamin / Zinc)</option>

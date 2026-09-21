@@ -15,7 +15,7 @@ const TeleConsultEngine = {
   prescriptions: [
     { name: 'Tab. Paracetamol 650 mg', dosage: '1-0-1 (After Food)', duration: '3 Days' },
     { name: 'Tab. Vitamin C 500 mg', dosage: '1-0-0 (After Food)', duration: '5 Days' },
-    { name: 'Syp. Grilinctus 10 ml', dosage: '0-0-1 (At Bedtime)', duration: '5 Days' }
+    { name: 'Syp. Cough Formulation 10 ml (Generic Sample)', dosage: '0-0-1 (At Bedtime)', duration: '5 Days' }
   ],
 
   open(doctorId = null) {
@@ -376,6 +376,18 @@ const TeleConsultEngine = {
 window.TeleConsultEngine = TeleConsultEngine;
 const openTeleConsultModal = window.openTeleConsultModal = function (docId) { TeleConsultEngine.open(docId); };
 const closeTeleConsultModal = window.closeTeleConsultModal = function () { TeleConsultEngine.close(); };
+
+// Ensure media tracks are terminated on page unload or visibility change
+window.addEventListener('beforeunload', () => {
+  if (TeleConsultEngine.mediaStream) {
+    TeleConsultEngine.stopCameraStream();
+  }
+});
+window.addEventListener('pagehide', () => {
+  if (TeleConsultEngine.mediaStream) {
+    TeleConsultEngine.stopCameraStream();
+  }
+});
 
 // ==========================================================================
 // 21. CampusWayfinderEngine (Indoor GPS & Multi-Floor Navigation)

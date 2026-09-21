@@ -181,12 +181,15 @@ class TestCarePulsePlatform(unittest.TestCase):
         self.assertIn("./index.html", sw)
         self.assertIn("./styles.css", sw)
 
-    def test_19_sitemap_and_robots(self):
-        """sitemap.xml and robots.txt must be valid."""
-        self.assertTrue(os.path.exists('sitemap.xml'))
+    def test_19_robots_and_preview_image(self):
+        """robots.txt must allow crawling and social preview images must exist with head meta tags."""
         self.assertTrue(os.path.exists('robots.txt'))
-        tree = ET.parse('sitemap.xml')
-        self.assertIn('urlset', tree.getroot().tag)
+        with open('robots.txt', 'r', encoding='utf-8') as f:
+            robots_txt = f.read()
+        self.assertNotIn("Disallow: /", robots_txt)
+        self.assertTrue(os.path.exists('icons/readme-hero.jpg'))
+        self.assertIn('property="og:image"', self.html)
+        self.assertIn('name="twitter:image"', self.html)
 
     # -------------------------------------------------------------
     # 7. JavaScript Engine & Syntax Integrity (Reviewer Request)
