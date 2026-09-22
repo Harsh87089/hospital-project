@@ -484,3 +484,17 @@ body.dark .sidebar-footer-emergency .demo-link:focus-visible,
 [data-theme="dark"] .sidebar-footer-emergency .demo-link:focus-visible {
   color: #fecaca;
 }
+
+/* ==========================================================================
+   Smooth Location Jump Offset for Sticky Header & Category Chips
+   ========================================================================== */
+section[id],
+.service-hub-tile[id],
+.quick-services-section,
+.rate-card-section,
+.campus-section,
+.faq-section,
+main[id] {
+  scroll-margin-top: 110px;
+}
+

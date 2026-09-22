@@ -52,7 +52,11 @@
         const appDoc = iframe.contentDocument || appWindow.document;
 
         // Allow application scripts and components to complete initial boot
-        await sleep(500);
+        for (let i = 0; i < 40; i++) {
+          if (appWindow.openEmergencyModal && appWindow.LanguageEngine && appWindow.openBookingLayer) break;
+          await sleep(100);
+        }
+        await sleep(300);
 
         // ---------------------------------------------------------------------
         // Flow 1: Real Emergency SOS Modal & Disclaimer Test

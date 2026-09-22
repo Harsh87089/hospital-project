@@ -5473,21 +5473,17 @@ window.toggleSidebarCollapse = function (forceState) {
 
   if (isMobile) {
     // Mobile Off-Canvas Drawer Behavior
-    if (typeof forceState === 'boolean') {
-      if (forceState) {
-        sidebar?.classList.remove('open');
-        backdrop?.classList.remove('active');
-        document.body.classList.remove('sidebar-open');
-      } else {
-        sidebar?.classList.add('open');
-        backdrop?.classList.add('active');
-        document.body.classList.add('sidebar-open');
-      }
+    const isCurrentlyOpen = sidebar?.classList.contains('open');
+    const shouldOpen = typeof forceState === 'boolean' ? !forceState : !isCurrentlyOpen;
+
+    if (shouldOpen) {
+      sidebar?.classList.add('open');
+      backdrop?.classList.add('active');
+      document.body.classList.add('sidebar-open');
     } else {
-      const isOpen = sidebar?.classList.contains('open');
-      sidebar?.classList.toggle('open', !isOpen);
-      backdrop?.classList.toggle('active', !isOpen);
-      document.body.classList.toggle('sidebar-open', !isOpen);
+      sidebar?.classList.remove('open');
+      backdrop?.classList.remove('active');
+      document.body.classList.remove('sidebar-open');
     }
   } else {
     // Desktop Full Sidebar Collapse Behavior
@@ -6963,14 +6959,25 @@ const CategoryScrollSpy = {
     const chips = scroller.querySelectorAll('.category-chip');
     if (!chips.length) return;
 
-    // Smooth click handler
+    // Smooth click handler with visual feedback pulse
     chips.forEach(chip => {
       chip.addEventListener('click', (e) => {
-        const targetId = chip.getAttribute('data-target');
+        const targetId = chip.getAttribute('data-target') || (chip.getAttribute('href') ? chip.getAttribute('href').replace(/^#/, '').split('?')[0] : null);
+        if (!targetId) return;
+
         const targetEl = document.getElementById(targetId);
         if (targetEl) {
-          e.preventDefault();
+          if (chip.tagName === 'A' || !chip.getAttribute('data-action')) {
+            e.preventDefault();
+          }
           targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          // Trigger target pulse highlight
+          targetEl.classList.remove('highlight-target');
+          void targetEl.offsetWidth; // force DOM reflow
+          targetEl.classList.add('highlight-target');
+          setTimeout(() => targetEl.classList.remove('highlight-target'), 1500);
+
           chips.forEach(c => c.classList.remove('active'));
           chip.classList.add('active');
         }
@@ -6978,27 +6985,34 @@ const CategoryScrollSpy = {
     });
 
     // ScrollSpy observer
-    const sectionIds = Array.from(chips).map(c => c.getAttribute('data-target')).filter(Boolean);
+    const sectionIds = Array.from(chips)
+      .map(c => c.getAttribute('data-target') || (c.getAttribute('href') ? c.getAttribute('href').replace(/^#/, '').split('?')[0] : null))
+      .filter(Boolean);
+
+    const uniqueIds = Array.from(new Set(sectionIds));
+
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const id = entry.target.id;
             chips.forEach(chip => {
-              const isMatch = chip.getAttribute('data-target') === id;
-              chip.classList.toggle('active', isMatch);
+              const chipTarget = chip.getAttribute('data-target') || (chip.getAttribute('href') ? chip.getAttribute('href').replace(/^#/, '').split('?')[0] : null);
+              const isMatch = chipTarget === id;
               if (isMatch) {
+                chips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
                 chip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
               }
             });
           }
         });
       }, {
-        rootMargin: '-10% 0px -70% 0px',
-        threshold: 0
+        rootMargin: '-15% 0px -65% 0px',
+        threshold: 0.1
       });
 
-      sectionIds.forEach(id => {
+      uniqueIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) observer.observe(el);
       });
@@ -8923,6 +8937,36 @@ window.closeHealthCardModal = function () { DigitalHealthCardEngine.close(); };
 
 // --- Centralized Delegated Action Dispatcher ---
 document.addEventListener('click', function (e) {
+  // Handle in-page smooth location jump targets (anchors or data-targets)
+  const jumpAnchor = e.target.closest('a[href^="#"], [data-target]');
+  if (jumpAnchor) {
+    const rawHref = jumpAnchor.getAttribute('href');
+    const dataTarget = jumpAnchor.getAttribute('data-target');
+    const jumpTargetId = dataTarget || (rawHref && rawHref.startsWith('#') && rawHref !== '#' ? rawHref.slice(1).split('?')[0] : null);
+
+    if (jumpTargetId) {
+      const targetEl = document.getElementById(jumpTargetId);
+      if (targetEl) {
+        if (jumpAnchor.tagName === 'A' || !jumpAnchor.getAttribute('data-action')) {
+          e.preventDefault();
+        }
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        targetEl.classList.remove('highlight-target');
+        void targetEl.offsetWidth; // trigger reflow
+        targetEl.classList.add('highlight-target');
+        setTimeout(() => targetEl.classList.remove('highlight-target'), 1500);
+
+        // Auto-close mobile sidebar drawer when navigating
+        if (window.innerWidth < 1024 && (jumpAnchor.hasAttribute('data-close-sidebar') || jumpAnchor.closest('#carepulse-sidebar'))) {
+          if (typeof window.toggleLeftSidebar === 'function') {
+            window.toggleLeftSidebar(true);
+          }
+        }
+      }
+    }
+  }
+
   const target = e.target.closest('[data-action]');
   if (!target) return;
 

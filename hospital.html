@@ -178,6 +178,8 @@
                     <path d="m16 15-3-3 3-3" />
                 </svg>
             </button>
+            <button type="button" class="sidebar-close-btn" id="sidebar-close-btn" data-action="toggle-sidebar-collapse"
+                aria-label="Close Sidebar" title="Close Sidebar">&times;</button>
         </div>
 
         <!-- Authenticated User Profile Card -->
@@ -506,13 +508,13 @@
                 <path d="M9 3v18" />
                 <path d="m14 9 3 3-3 3" />
             </svg>
-            <span>Show Menu</span>
+            <span>☰ Show Sidebar</span>
             <kbd class="restore-kbd-hint">Ctrl+\</kbd>
         </button>
 
         <!-- Mobile Header Bar (Sticky on Screens < 1024px) -->
         <header class="mobile-header-bar">
-            <button class="mobile-nav-toggle-btn" id="sidebar-mobile-toggle" aria-label="Toggle Navigation Menu">
+            <button class="mobile-nav-toggle-btn" id="sidebar-mobile-toggle" data-action="toggle-sidebar-collapse" aria-label="Toggle Navigation Menu" title="Toggle Sidebar">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -578,7 +580,6 @@
                     <span class="pulse-dot"></span> Emergency &amp; OPD Open (24/7)
                 </div>
             </div>
-    </div>
     <div class="branch-location-text">
         <span>📍 CarePulse Multi-Specialty Hospital • Phagwara, Punjab</span>
     </div>
@@ -597,42 +598,42 @@
             <a href="#quick-services" class="category-chip" data-target="quick-services">
                 <span>⚡</span> <span data-i18n="chip_services">Services Hub</span>
             </a>
-            <button type="button" class="category-chip" data-action="open-booking-layer">
+            <a href="#booking" class="category-chip" data-target="booking" data-action="open-booking-layer">
                 <span>📅</span> <span data-i18n="chip_book">Book Appointment</span>
-            </button>
-            <button type="button" class="category-chip" data-action="open-live-queue-modal">
+            </a>
+            <a href="#queue" class="category-chip" data-target="queue" data-action="open-live-queue-modal">
                 <span>⏱️</span> <span data-i18n="chip_queue">Live OPD Queue</span>
-            </button>
-            <button type="button" class="category-chip" data-action="open-doctors-modal">
+            </a>
+            <a href="#doctors" class="category-chip" data-target="doctors" data-action="open-doctors-modal">
                 <span>👨‍⚕️</span> <span data-i18n="chip_specialists">Specialists</span>
-            </button>
-            <button type="button" class="category-chip u-box-border-color-16" data-action="open-teleconsult-modal">
+            </a>
+            <a href="#teleconsult" class="category-chip u-box-border-color-16" data-target="teleconsult" data-action="open-teleconsult-modal">
                 <span>📹</span> <span data-i18n="chip_tele">Virtual Tele-Consult</span>
-            </button>
-            <button type="button" class="category-chip" data-action="open-beds-modal">
+            </a>
+            <a href="#beds" class="category-chip" data-target="beds" data-action="open-beds-modal">
                 <span>🛏️</span> <span data-i18n="chip_beds">Bed &amp; ICU Status</span>
-            </button>
-            <button type="button" class="category-chip" data-action="open-packages-modal">
+            </a>
+            <a href="#packages" class="category-chip" data-target="packages" data-action="open-packages-modal">
                 <span>📦</span> <span data-i18n="chip_packages">Health Checkups</span>
-            </button>
-            <button type="button" class="category-chip" data-action="open-track-token-modal">
+            </a>
+            <a href="#track" class="category-chip" data-target="track" data-action="open-track-token-modal">
                 <span>🔍</span> <span data-i18n="chip_track">Track Token</span>
-            </button>
-            <button type="button" class="category-chip" data-action="open-insurance-modal">
+            </a>
+            <a href="#insurance" class="category-chip" data-target="insurance" data-action="open-insurance-modal">
                 <span>🛡️</span> <span data-i18n="chip_insurance">Insurance &amp; TPA</span>
-            </button>
-            <button type="button" class="category-chip" data-action="open-lab-report-modal">
+            </a>
+            <a href="#reports" class="category-chip" data-target="reports" data-action="open-lab-report-modal">
                 <span>📄</span> <span data-i18n="chip_lab">Lab Reports</span>
-            </button>
-            <button type="button" class="category-chip" data-action="open-wayfinder-modal">
+            </a>
+            <a href="#campus-section" class="category-chip" data-target="campus-section" data-action="open-wayfinder-modal">
                 <span>🗺️</span> <span data-i18n="chip_map">Hospital GPS Map</span>
-            </button>
-            <button type="button" class="category-chip" data-action="open-health-card-modal">
+            </a>
+            <a href="#guidelines" class="category-chip" data-target="guidelines" data-action="open-health-card-modal">
                 <span>🪪</span> <span data-i18n="chip_healthcard">ABHA Health Pass</span>
-            </button>
-            <button type="button" class="category-chip" data-action="open-pharmacy-modal">
+            </a>
+            <a href="#pharmacy" class="category-chip" data-target="pharmacy" data-action="open-pharmacy-modal">
                 <span>💊</span> <span data-i18n="chip_pharmacy">Pharmacy</span>
-            </button>
+            </a>
         </div>
     </nav>
 
@@ -733,7 +734,7 @@
 
                 <div class="services-hub-grid">
                     <!-- Tile 1: Book Doctor Appointment -->
-                    <button type="button" class="service-hub-tile tile-blue" data-action="open-booking-layer" aria-label="Book Doctor Appointment Slot">
+                    <div class="service-hub-tile tile-blue" id="booking" data-action="open-booking-layer" aria-label="Book Doctor Appointment Slot">
                         <div class="service-hub-icon-wrapper u-badge-e0f2fe-0284c7">🩺</div>
                         <h3 class="service-hub-title" data-i18n="btn_book_now">Book Doctor Slot</h3>
                         <p class="service-hub-sub" data-i18n="tile_book_desc">Reserve confirmed consultation slots with live OPD queue tokens</p>
@@ -742,7 +743,7 @@
                     </div>
 
                     <!-- Tile 2: Live OPD Queue Monitor -->
-                    <div class="service-hub-tile tile-amber" data-action="open-live-queue-modal" aria-label="View Live Queue Board">
+                    <div class="service-hub-tile tile-amber" id="queue" data-action="open-live-queue-modal" aria-label="View Live Queue Board">
                         <div class="service-hub-icon-wrapper u-badge-fef3c7-d97706">⏱️</div>
                         <h3 class="service-hub-title" data-i18n="sec_queue">Live Queue Status</h3>
                         <p class="service-hub-sub">Track active tokens, wait times &amp; doctor consultation rooms</p>
@@ -751,7 +752,7 @@
                     </div>
 
                     <!-- Tile 3: Meet Specialists -->
-                    <div class="service-hub-tile tile-blue" data-action="open-doctors-modal" aria-label="Meet 18 Hospital Specialists">
+                    <div class="service-hub-tile tile-blue" id="doctors" data-action="open-doctors-modal" aria-label="Meet 18 Hospital Specialists">
                         <div class="service-hub-icon-wrapper u-badge-e0f2fe-0369a1">👨‍⚕️</div>
                         <h3 class="service-hub-title" data-i18n="sec_doctors">Meet Specialists</h3>
                         <p class="service-hub-sub">Consult 18 senior physicians, cardiologists, pediatricians &amp;
@@ -761,7 +762,7 @@
                     </div>
 
                     <!-- Tile 4: Bed & ICU Status -->
-                    <div class="service-hub-tile tile-emerald" data-action="open-beds-modal" aria-label="Check Bed and ICU Status">
+                    <div class="service-hub-tile tile-emerald" id="beds" data-action="open-beds-modal" aria-label="Check Bed and ICU Status">
                         <div class="service-hub-icon-wrapper u-badge-d1fae5-059669">🛏️</div>
                         <h3 class="service-hub-title" data-i18n="sec_beds">Bed &amp; ICU Status</h3>
                         <p class="service-hub-sub">Real-time availability of triage beds, ventilators &amp; blood bank
@@ -772,7 +773,7 @@
                     </div>
 
                     <!-- Tile 5: Health Packages -->
-                    <div class="service-hub-tile tile-emerald" data-action="open-packages-modal" aria-label="View Health Checkup Packages">
+                    <div class="service-hub-tile tile-emerald" id="packages" data-action="open-packages-modal" aria-label="View Health Checkup Packages">
                         <div class="service-hub-icon-wrapper u-badge-d1fae5-059669">🛡️</div>
                         <h3 class="service-hub-title" data-i18n="sec_packages">Health Checkups</h3>
                         <p class="service-hub-sub">ProHealth packages from ₹999 with home sample pickup</p>
@@ -781,7 +782,7 @@
                     </div>
 
                     <!-- Tile 6: Track Token -->
-                    <div class="service-hub-tile tile-teal" data-action="open-track-token-modal" aria-label="Track Token Status">
+                    <div class="service-hub-tile tile-teal" id="track" data-action="open-track-token-modal" aria-label="Track Token Status">
                         <div class="service-hub-icon-wrapper u-badge-ccfbf1-0f766e">🧭</div>
                         <h3 class="service-hub-title" data-i18n="sec_track">Track Token Status</h3>
                         <p class="service-hub-sub">Enter your token ID to check live position &amp; estimated wait time
@@ -791,7 +792,7 @@
                     </div>
 
                     <!-- Tile 7: 24/7 Pharmacy -->
-                    <div class="service-hub-tile tile-purple" data-action="open-pharmacy-modal" aria-label="Order Medicines Online">
+                    <div class="service-hub-tile tile-purple" id="pharmacy" data-action="open-pharmacy-modal" aria-label="Order Medicines Online">
                         <div class="service-hub-icon-wrapper u-badge-ede9fe-7c3aed">💊</div>
                         <h3 class="service-hub-title" data-i18n="tile_pharmacy_title">Order Medicines</h3>
                         <p class="service-hub-sub">Upload prescription for 2-hour doorstep delivery</p>
@@ -800,7 +801,7 @@
                     </div>
 
                     <!-- Tile 8: Diagnostic Reports -->
-                    <div class="service-hub-tile tile-teal" data-action="open-lab-report-modal" data-uhid="UHID-98214" aria-label="Download Diagnostic Lab Reports">
+                    <div class="service-hub-tile tile-teal" id="reports" data-action="open-lab-report-modal" data-uhid="UHID-98214" aria-label="Download Diagnostic Lab Reports">
                         <div class="service-hub-icon-wrapper u-badge-ccfbf1-0f766e">📄</div>
                         <h3 class="service-hub-title" data-i18n="tile_lab_title">Lab Test Reports</h3>
                         <p class="service-hub-sub">Enter UHID to view &amp; print simulated diagnostic lab results</p>
@@ -809,7 +810,7 @@
                     </div>
 
                     <!-- Tile 9: Cashless Insurance & TPA -->
-                    <div class="service-hub-tile tile-purple" data-action="open-insurance-modal" aria-label="Cashless Insurance Desk">
+                    <div class="service-hub-tile tile-purple" id="insurance" data-action="open-insurance-modal" aria-label="Cashless Insurance Desk">
                         <div class="service-hub-icon-wrapper u-badge-ede9fe-7c3aed">🤝</div>
                         <h3 class="service-hub-title" data-i18n="tile_insurance_title">Cashless Insurance</h3>
                         <p class="service-hub-sub">8+ Insurance partners, Ayushman Bharat &amp; 15-min pre-auth</p>
@@ -818,7 +819,7 @@
                     </div>
 
                     <!-- Tile 10: Clinical Health & BMI Calculator -->
-                    <div class="service-hub-tile tile-blue" data-action="open-health-calculator" aria-label="Health Risk and BMI Calculator">
+                    <div class="service-hub-tile tile-blue" id="calc" data-action="open-health-calculator" aria-label="Health Risk and BMI Calculator">
                         <div class="service-hub-icon-wrapper u-badge-e0f2fe-0369a1">🩺</div>
                         <h3 class="service-hub-title" data-i18n="btn_calc">Health &amp; BMI Calculator</h3>
                         <p class="service-hub-sub">Check your BMI, blood pressure category &amp; clinical risk score</p>
@@ -828,7 +829,7 @@
                     </div>
 
                     <!-- Tile 11: Hospital Guidelines -->
-                    <div class="service-hub-tile tile-amber" data-action="open-guidelines-modal" aria-label="Hospital Guidelines and Visiting Rules">
+                    <div class="service-hub-tile tile-amber" id="guidelines" data-action="open-guidelines-modal" aria-label="Hospital Guidelines and Visiting Rules">
                         <div class="service-hub-icon-wrapper u-badge-fef3c7-d97706">ℹ️</div>
                         <h3 class="service-hub-title">Hospital Guidelines</h3>
                         <p class="service-hub-sub">Visiting timings, reporting rules &amp; consultation instructions</p>
@@ -837,7 +838,7 @@
                     </div>
 
                     <!-- Tile 12: Emergency & Ambulance 24/7 -->
-                    <div class="service-hub-tile tile-rose" data-action="open-emergency-modal" aria-label="Emergency 24/7 Casualty Desk">
+                    <div class="service-hub-tile tile-rose" id="emergency" data-action="open-emergency-modal" aria-label="Emergency 24/7 Casualty Desk">
                         <div class="service-hub-icon-wrapper u-badge-fee2e2-dc2626">🚨</div>
                         <h3 class="service-hub-title" data-i18n="nav_emergency">Emergency 24/7</h3>
                         <p class="service-hub-sub">Trauma triage, oxygen support &amp; direct ambulance hotline</p>
@@ -858,37 +859,37 @@
                         </div>
                     </div>
                     <div class="campus-pulse-grid">
-                        <button type="button" class="campus-pulse-item" data-action="open-live-queue-modal">
+                        <div class="campus-pulse-item" data-action="open-live-queue-modal">
                             <div class="campus-pulse-item-info">
                                 <span class="campus-pulse-label">⏱️ Live OPD Queue</span>
                                 <span class="campus-pulse-value">Token #TK-108 Active</span>
                                 <span class="campus-pulse-sub">Avg Wait: ~12 mins &bull; 4 Chambers</span>
                             </div>
-                            <button class="campus-pulse-action-btn" type="button">Open Board ➔</button>
+                            <span class="campus-pulse-action-btn">Open Board ➔</span>
                         </div>
-                        <button type="button" class="campus-pulse-item" data-action="open-doctors-modal">
+                        <div class="campus-pulse-item" data-action="open-doctors-modal">
                             <div class="campus-pulse-item-info">
                                 <span class="campus-pulse-label">👨‍⚕️ Specialists on Duty</span>
                                 <span class="campus-pulse-value">10 Senior Doctors</span>
                                 <span class="campus-pulse-sub">General, Pediatrics, Derma, Dental</span>
                             </div>
-                            <button class="campus-pulse-action-btn" type="button">Doctors ➔</button>
+                            <span class="campus-pulse-action-btn">Doctors ➔</span>
                         </div>
-                        <button type="button" class="campus-pulse-item" data-action="open-beds-modal">
+                        <div class="campus-pulse-item" data-action="open-beds-modal">
                             <div class="campus-pulse-item-info">
                                 <span class="campus-pulse-label">🛏️ Hospital Beds &amp; ICU</span>
                                 <span class="campus-pulse-value">6 Triage &bull; 4 ICU Open</span>
                                 <span class="campus-pulse-sub">Ventilators Ready &bull; Blood Bank 8 Groups Monitored</span>
                             </div>
-                            <button class="campus-pulse-action-btn" type="button">Check Beds ➔</button>
+                            <span class="campus-pulse-action-btn">Check Beds ➔</span>
                         </div>
-                        <button type="button" class="campus-pulse-item" data-action="open-booking-layer">
+                        <div class="campus-pulse-item" data-action="open-booking-layer">
                             <div class="campus-pulse-item-info">
                                 <span class="campus-pulse-label">⚡ Fast E-Pass Pass</span>
                                 <span class="campus-pulse-value">Instant Reservation</span>
                                 <span class="campus-pulse-sub">Skip waiting at registration desk</span>
                             </div>
-                            <button class="campus-pulse-action-btn" type="button">Book Slot ➔</button>
+                            <span class="campus-pulse-action-btn">Book Slot ➔</span>
                         </div>
                     </div>
                 </div>

@@ -252,6 +252,16 @@ class TestCarePulsePlatform(unittest.TestCase):
             with open(harness_path, 'w', encoding='utf-8') as f:
                 f.write(harness_html)
 
+            port = 8080
+            import urllib.request
+            for p in [8080, 3000]:
+                try:
+                    with urllib.request.urlopen(f'http://localhost:{p}/hospital.html', timeout=0.5):
+                        port = p
+                        break
+                except Exception:
+                    pass
+
             try:
                 cmd = [
                     chrome,
@@ -259,7 +269,7 @@ class TestCarePulsePlatform(unittest.TestCase):
                     '--disable-gpu',
                     '--virtual-time-budget=3000',
                     '--dump-dom',
-                    'http://localhost:3000/tests/temp_v8_test.html'
+                    f'http://localhost:{port}/tests/temp_v8_test.html'
                 ]
                 res = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8', errors='replace')
                 m_v8 = re.search(r'id="v8-status"[^>]*>([^<]+)<', res.stdout)
