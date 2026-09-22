@@ -83,8 +83,7 @@ const CarePulseAuth = {
   },
 
   lockPortal() {
-    // Only used when explicit sign-in is required
-    this.openModal();
+    // Demo login portal is removed; visitors browse freely
   },
 
   openModal(postAuthAction = null) {
@@ -93,8 +92,11 @@ const CarePulseAuth = {
     if (modal) {
       modal.style.display = 'flex';
       document.body.classList.add('auth-modal-open');
+      this.goToStep('input');
+    } else if (typeof postAuthAction === 'function') {
+      postAuthAction(this.sessionUser);
+      this.postAuthCallback = null;
     }
-    this.goToStep('input');
   },
 
   closeModal() {
@@ -108,11 +110,8 @@ const CarePulseAuth = {
   },
 
   requireAuth(callback) {
-    if (this.sessionUser) {
+    if (typeof callback === 'function') {
       callback(this.sessionUser);
-    } else {
-      showToast('Please verify your mobile number or sign in to proceed.', 'info');
-      this.openModal(callback);
     }
   },
 
@@ -589,28 +588,34 @@ const CarePulseAuth = {
   },
 
   updateProfileUI() {
-    if (!this.sessionUser) return;
+    const user = this.sessionUser || {
+      name: 'Patient Session',
+      contact: 'Authorized Patient',
+      uhid: 'CP-98214',
+      initials: 'PT',
+      method: 'simulated'
+    };
     const nameEls = document.querySelectorAll('.user-display-name');
-    nameEls.forEach(el => el.innerText = this.sessionUser.name);
+    nameEls.forEach(el => el.innerText = user.name);
 
     const contactEls = document.querySelectorAll('.user-display-contact');
-    contactEls.forEach(el => el.innerText = this.sessionUser.contact);
+    contactEls.forEach(el => el.innerText = user.contact);
 
     const uhidEls = document.querySelectorAll('.user-display-uhid');
-    uhidEls.forEach(el => el.innerText = this.sessionUser.uhid);
+    uhidEls.forEach(el => el.innerText = user.uhid);
 
     const avatarEls = document.querySelectorAll('.user-display-avatar');
     avatarEls.forEach(el => {
-      if (this.sessionUser.method === 'google') {
+      if (user.method === 'google') {
         el.innerHTML = `<span style="font-size: 1.1rem;">🌐</span>`;
       } else {
-        el.innerText = this.sessionUser.initials || 'PT';
+        el.innerText = user.initials || 'PT';
       }
     });
 
     const badgeEls = document.querySelectorAll('.user-auth-badge');
     badgeEls.forEach(el => {
-      el.innerText = this.sessionUser.method === 'google' ? 'Google Verified' : 'Mobile Verified';
+      el.innerText = user.method === 'google' ? 'Google Verified' : (user.method === 'mobile' ? 'Mobile Verified' : 'Simulated Session');
     });
   }
 };
