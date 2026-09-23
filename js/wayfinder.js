@@ -1,6 +1,6 @@
 // CarePulse Campus Indoor GPS & Interactive Wayfinder Engine
-import { DEMO_WHATSAPP } from './config.js';
-import { showToast } from './utils.js';
+import { DEMO_WHATSAPP, DEMO_PHONE } from './config.js';
+import { showToast, escapeHtml } from './utils.js';
 
 const CampusWayfinderEngine = {
   currentFloor: 'G',

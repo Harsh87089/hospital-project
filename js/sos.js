@@ -154,6 +154,7 @@ const EmergencySOSEngine = {
 
 window.EmergencySOSEngine = EmergencySOSEngine;
 const triggerEmergencySOS = window.triggerEmergencySOS = () => EmergencySOSEngine.openEmergencyHub();
+const openEmergencySOS = window.openEmergencySOS = () => EmergencySOSEngine.openEmergencyHub();
 const closeEmergencySOS = window.closeEmergencySOS = () => EmergencySOSEngine.cancelSOS();
 
 // --- 5. Clinical Health Risk & BMI / Vitals Calculator ---
@@ -164,5 +165,6 @@ export {
   closeEmergencyModal,
   EmergencySOSEngine,
   triggerEmergencySOS,
+  openEmergencySOS,
   closeEmergencySOS
 };

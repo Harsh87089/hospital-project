@@ -1,6 +1,9 @@
 // CarePulse Appointment Booking & Scheduling Engine
 import { DOCTORS, HEALTH_PACKAGES, state } from './config.js';
-import { escapeHtml, showToast, getUpcomingDays, getSlotsForDoctorAndDate } from './utils.js';
+import { escapeHtml, showToast, getUpcomingDays, getSlotsForDoctorAndDate, processBookingSubmission } from './utils.js';
+import { openTokenSlipModal, renderMyBookingsBadge } from './tokens.js';
+
+let activePackageBooking = null;
 
 const openBookingLayer = window.openBookingLayer = function (doctorId) {
   if (doctorId) {

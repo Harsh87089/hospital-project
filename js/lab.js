@@ -2,6 +2,8 @@
 import { SAMPLE_LAB_REPORTS, verifiedReportUHIDs } from './config.js';
 import { showToast, escapeHtml } from './utils.js';
 
+let pendingReportVerificationUHID = null;
+
 const openLabReportModal = window.openLabReportModal = function (presetUhid = 'UHID-98214') {
   const modal = document.getElementById('lab-report-modal');
   if (!modal) return;

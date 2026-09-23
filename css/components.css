@@ -2587,12 +2587,28 @@ body.theme-dark .btn-next-sim,
 /* ==========================================================================
    Sorted & Categorized Navigation Dropdowns
    ========================================================================== */
+.sidebar-dropdown-header:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
 
-.nav-dropdown:hover 
+.nav-dropdown {
+  position: relative;
+  display: inline-block;
+}
 
-.nav-dropdown:hover 
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown:focus-within .nav-dropdown-menu {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
 
-.nav-dropdown-item:hover 
+.nav-dropdown-item:hover {
+  background: var(--slate-100);
+  color: var(--primary);
+}
 
 /* ==========================================================================
    Dr. CarePulse Bot: Home Care Tips, Do's & Don'ts, and Multi-Action Buttons

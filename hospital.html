@@ -253,7 +253,7 @@
 
                 <!-- Category 1: OPD & Doctors Accordion -->
                 <li class="sidebar-nav-item sidebar-dropdown-group open">
-                    <div class="sidebar-dropdown-header" data-action="toggle-sidebar-dropdown">
+                    <div class="sidebar-dropdown-header" role="button" tabindex="0" aria-expanded="true" data-action="toggle-sidebar-dropdown">
                         <div class="dropdown-header-left">
                             <span class="u-icon-decorative" aria-hidden="true">🩺</span>
                             <span class="sidebar-link-text" data-i18n="nav_opd">OPD &amp; Doctors</span>
@@ -306,7 +306,7 @@
 
                 <!-- Category 2: Clinical Services Accordion -->
                 <li class="sidebar-nav-item sidebar-dropdown-group">
-                    <div class="sidebar-dropdown-header" data-action="toggle-sidebar-dropdown">
+                    <div class="sidebar-dropdown-header" role="button" tabindex="0" aria-expanded="false" data-action="toggle-sidebar-dropdown">
                         <div class="dropdown-header-left">
                             <span class="u-icon-decorative" aria-hidden="true">🧪</span>
                             <span class="sidebar-link-text">Clinical Services</span>
@@ -379,7 +379,7 @@
 
                 <!-- Category 3: Patient Care Accordion -->
                 <li class="sidebar-nav-item sidebar-dropdown-group">
-                    <div class="sidebar-dropdown-header" data-action="toggle-sidebar-dropdown">
+                    <div class="sidebar-dropdown-header" role="button" tabindex="0" aria-expanded="false" data-action="toggle-sidebar-dropdown">
                         <div class="dropdown-header-left">
                             <span class="u-icon-decorative" aria-hidden="true">📋</span>
                             <span class="sidebar-link-text" data-i18n="nav_patient">Patient Care</span>
@@ -3654,6 +3654,25 @@
 
     <!-- Main JavaScript Logic (ES Modules with Legacy Fallback Bundle) -->
     <script type="module" src="js/main.js"></script>
+    <script>
+      // Protocol fallback: When opened directly via local file:// protocol where modules are blocked by browser CORS, load app.js
+      if (window.location.protocol === 'file:') {
+        function checkAndLoadFallback() {
+          if (!window.CarePulseAuth && !document.querySelector('script[data-fallback="app-js"]')) {
+            var s = document.createElement('script');
+            s.src = 'app.js?v=2.2';
+            s.setAttribute('data-fallback', 'app-js');
+            document.body.appendChild(s);
+          }
+        }
+        if (document.readyState === 'loading') {
+          window.addEventListener('DOMContentLoaded', checkAndLoadFallback);
+        } else {
+          checkAndLoadFallback();
+        }
+        setTimeout(checkAndLoadFallback, 150);
+      }
+    </script>
     <script nomodule src="app.js?v=2.2"></script>
 
 

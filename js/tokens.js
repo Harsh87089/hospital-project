@@ -2,6 +2,8 @@
 import { DEMO_WHATSAPP, DOCTORS, state } from './config.js';
 import { escapeHtml, showToast, getSlotsForDoctorAndDate, CarePulseQR, CarePulseBarcode } from './utils.js';
 
+let activeTrackerToken = null;
+
 const openTrackTokenModal = window.openTrackTokenModal = function (presetTokenId = null) {
   const modal = document.getElementById('track-token-modal');
   if (!modal) return;

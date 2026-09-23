@@ -604,9 +604,16 @@ window.toggleSidebarDropdown = function (groupHeader) {
 
   const wasOpen = group.classList.contains('open');
   document.querySelectorAll('.sidebar-dropdown-group').forEach(g => {
-    if (g !== group) g.classList.remove('open');
+    if (g !== group) {
+      g.classList.remove('open');
+      const hdr = g.querySelector('.sidebar-dropdown-header');
+      if (hdr) hdr.setAttribute('aria-expanded', 'false');
+    }
   });
-  group.classList.toggle('open', !wasOpen);
+  const nowOpen = !wasOpen;
+  group.classList.toggle('open', nowOpen);
+  const curHdr = group.querySelector('.sidebar-dropdown-header');
+  if (curHdr) curHdr.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
 };
 
 // Expose CarePulseAuth to window
@@ -855,6 +862,8 @@ const BedsCapacityEngine = {
   }
 };
 
+window.BedsCapacityEngine = BedsCapacityEngine;
+
 window.clearAllDemoData = function () {
   const confirmed = window.confirm('Are you sure you want to permanently erase all demo data (appointments, active tokens, and session history) from this browser?');
   if (!confirmed) return;
@@ -920,7 +929,10 @@ window.clearAllDemoData = function () {
 };
 
 // Initial Bootstrapping
-document.addEventListener('DOMContentLoaded', () => {
+function bootCarePulse() {
+  if (window.__carepulse_booted) return;
+  window.__carepulse_booted = true;
+
   // Enforce authentication gate & load session
   CarePulseAuth.init();
 
@@ -1007,8 +1019,21 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       VoiceAIEngine.open();
     }
+    if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.closest && e.target.closest('.sidebar-dropdown-header')) {
+      e.preventDefault();
+      const header = e.target.closest('.sidebar-dropdown-header');
+      if (typeof window.toggleSidebarDropdown === 'function') {
+        window.toggleSidebarDropdown(header);
+      }
+    }
   });
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootCarePulse);
+} else {
+  bootCarePulse();
+}
 
 
 /* ==========================================================================

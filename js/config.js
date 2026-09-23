@@ -535,9 +535,13 @@ window.switchBranch = function (branchKey) {
   phoneEls.forEach(el => el.textContent = branch.phone);
 
   const emergEls = document.querySelectorAll('.branch-emergency-text');
-  emergEls.forEach(el => el.textContent = `🚨 Emergency: ${branch.emergency}`);
+  emergEls.forEach(el => {
+    el.innerHTML = `<a href="tel:108" class="emergency-link">🚨 Ambulance: 108</a> <a href="tel:18000000000" class="demo-link" data-action="open-emergency-modal">📞 Demo helpline (placeholder): ${branch.emergency}</a>`;
+  });
 
-  showToast(`Switched hospital branch to ${branch.city}!`, 'info');
+  if (typeof showToast === 'function') {
+    showToast(`Switched hospital branch to ${branch.city}!`, 'info');
+  }
 };
 
 // 2. CarePulse ProHealth Preventive Checkup Packages

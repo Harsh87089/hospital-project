@@ -3819,7 +3819,7 @@ window.switchBranch = function (branchKey) {
   phoneEls.forEach(el => el.textContent = branch.phone);
 
   const emergEls = document.querySelectorAll('.branch-emergency-text');
-  emergEls.forEach(el => el.textContent = `🚨 Emergency: ${branch.emergency}`);
+  emergEls.forEach(el => { el.innerHTML = `<a href="tel:108" class="emergency-link">🚨 Ambulance: 108</a> <a href="tel:18000000000" class="demo-link" data-action="open-emergency-modal">📞 Demo helpline (placeholder): ${branch.emergency}</a>`; });
 
   showToast(`Switched hospital branch to ${branch.city}!`, 'info');
 };
@@ -5525,9 +5525,16 @@ window.toggleSidebarDropdown = function (groupHeader) {
 
   const wasOpen = group.classList.contains('open');
   document.querySelectorAll('.sidebar-dropdown-group').forEach(g => {
-    if (g !== group) g.classList.remove('open');
+    if (g !== group) {
+      g.classList.remove('open');
+      const hdr = g.querySelector('.sidebar-dropdown-header');
+      if (hdr) hdr.setAttribute('aria-expanded', 'false');
+    }
   });
-  group.classList.toggle('open', !wasOpen);
+  const nowOpen = !wasOpen;
+  group.classList.toggle('open', nowOpen);
+  const curHdr = group.querySelector('.sidebar-dropdown-header');
+  if (curHdr) curHdr.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
 };
 
 // Expose CarePulseAuth to window
@@ -5598,7 +5605,10 @@ window.clearAllDemoData = function () {
 };
 
 // --- Initial Bootstrapping ---
-document.addEventListener('DOMContentLoaded', () => {
+function bootCarePulse() {
+  if (window.__carepulse_booted) return;
+  window.__carepulse_booted = true;
+
   // Enforce authentication gate & load session
   CarePulseAuth.init();
 
@@ -5685,8 +5695,17 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       VoiceAIEngine.open();
     }
+    if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.closest && e.target.closest('.sidebar-dropdown-header')) {
+      e.preventDefault();
+      const header = e.target.closest('.sidebar-dropdown-header');
+      if (typeof window.toggleSidebarDropdown === 'function') {
+        window.toggleSidebarDropdown(header);
+      }
+    }
   });
-});
+}
+window.bootCarePulse = bootCarePulse;
+
 
 
 /* ==========================================================================
@@ -9493,6 +9512,16 @@ if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
       });
   });
 }
+
+// Resilient Bootstrapping: Run immediately if DOM is ready, or listen to DOMContentLoaded
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootCarePulse);
+  } else {
+    bootCarePulse();
+  }
+}
+
 
 
 
