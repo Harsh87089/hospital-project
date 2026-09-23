@@ -1573,9 +1573,6 @@ document.addEventListener('click', function (e) {
     case 'submit-doctor-review':
       if (window.DoctorRatingsEngine) window.DoctorRatingsEngine.submit();
       break;
-    case 'start-feature-tour':
-      if (window.FeatureTourEngine) window.FeatureTourEngine.startTour();
-      break;
   }
 
   if (d.closeSidebar === 'true') {
@@ -1607,8 +1604,7 @@ if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
    1. Animated Statistics Counter
    2. Symptom Checker Engine
    3. Doctor Ratings & Reviews Engine
-   4. First-Visit Onboarding Tour Engine
-   5. Patient Testimonials Renderer
+   4. Patient Testimonials Renderer
    ============================================================ */
 
 // 1. Animated Statistics Counter
@@ -1836,82 +1832,7 @@ const DoctorRatingsEngine = (function () {
 })();
 window.DoctorRatingsEngine = DoctorRatingsEngine;
 
-// 4. First-Visit Onboarding Tour Engine
-const FeatureTourEngine = (function () {
-  const TOUR_KEY = 'carepulse_tour_done_v1';
-  let currentStep = 0; let overlayEl = null; let spotlightEl = null; let tooltipEl = null;
-
-  const STEPS = [
-    { targetId: 'quick-services', title: '⚡ Quick Services Hub',       desc: 'Access all hospital services in one place — book appointments, track tokens, check beds, order medicines and much more.', pos: 'bottom' },
-    { targetId: 'booking',        title: '📅 Book a Doctor Slot',   desc: 'Click this tile to instantly reserve a confirmed OPD slot with a real-time digital token. No waiting in queues!', pos: 'bottom' },
-    { targetId: 'queue',          title: '⏱️ Live OPD Queue',      desc: 'See real-time waiting status for every doctor chamber, with estimated wait times and current token numbers.', pos: 'bottom' },
-    { targetId: 'symptom-checker-fab', title: '🩺 Symptom Checker', desc: 'Not sure which doctor to see? Use our Symptom Checker to get an instant department recommendation based on your symptoms.', pos: 'top' },
-    { targetId: 'sidebar-palette-select', title: '🎨 Personalize', desc: 'Switch between 4 color palettes, toggle dark mode, adjust font size, or switch to Hindi / Punjabi.', pos: 'bottom' }
-  ];
-
-  function createEls() {
-    overlayEl = document.createElement('div'); overlayEl.className = 'tour-overlay'; overlayEl.id = 'tour-overlay';
-    spotlightEl = document.createElement('div'); spotlightEl.className = 'tour-spotlight';
-    overlayEl.appendChild(spotlightEl); document.body.appendChild(overlayEl);
-    tooltipEl = document.createElement('div'); tooltipEl.className = 'tour-tooltip'; tooltipEl.id = 'tour-tooltip';
-    document.body.appendChild(tooltipEl);
-  }
-
-  function updateSpot(el) {
-    if (!el || !spotlightEl) return;
-    const r = el.getBoundingClientRect(); const P = 8;
-    spotlightEl.style.cssText = `top:${r.top+window.scrollY-P}px;left:${r.left-P}px;width:${r.width+P*2}px;height:${r.height+P*2}px;`;
-  }
-
-  function renderTip(step, idx, total) {
-    if (!tooltipEl) return;
-    const isLast = idx === total - 1;
-    const dots = Array.from({length:total},(_,i)=>`<div class="tour-progress-dot ${i<idx?'done':i===idx?'active':''}"></div>`).join('');
-    tooltipEl.innerHTML = `<div class="tour-progress-dots">${dots}</div><div class="tour-step-badge">STEP ${idx+1} / ${total}</div><div class="tour-title">${step.title}</div><div class="tour-desc">${step.desc}</div><div class="tour-actions"><button class="tour-next-btn" id="tour-next-btn">${isLast?'✅ Finish Tour':'Next ➔'}</button><button class="tour-skip-btn" id="tour-skip-btn">Skip Tour</button></div>`;
-    document.getElementById('tour-next-btn')?.addEventListener('click', () => isLast ? end(true) : go(idx+1));
-    document.getElementById('tour-skip-btn')?.addEventListener('click', () => end(false));
-  }
-
-  function posTip(el, pos) {
-    if (!tooltipEl || !el) return;
-    const r = el.getBoundingClientRect(); const P = 16;
-    tooltipEl.className = 'tour-tooltip arrow-' + (pos==='top'?'bottom':'top');
-    if (pos==='bottom') { tooltipEl.style.top=(r.bottom+window.scrollY+P)+'px'; tooltipEl.style.left=Math.max(16,r.left-10)+'px'; }
-    else { tooltipEl.style.top=(r.top+window.scrollY-tooltipEl.offsetHeight-P)+'px'; tooltipEl.style.left=Math.max(16,r.left-10)+'px'; }
-    const tr = tooltipEl.getBoundingClientRect();
-    if (tr.right > window.innerWidth-16) tooltipEl.style.left=(window.innerWidth-16-tooltipEl.offsetWidth)+'px';
-  }
-
-  function go(idx) {
-    if (idx >= STEPS.length) { end(true); return; }
-    currentStep = idx;
-    const step = STEPS[idx]; const el = document.getElementById(step.targetId);
-    if (!el) { go(idx+1); return; }
-    el.scrollIntoView({ behavior:'smooth', block:'center' });
-    setTimeout(() => { updateSpot(el); renderTip(step, idx, STEPS.length); posTip(el, step.pos); }, 400);
-  }
-
-  function end(done) {
-    if (done) {
-      try { localStorage.setItem(TOUR_KEY, '1'); } catch {}
-      if (typeof window.showToast === 'function') window.showToast('🎉 Tour complete! You\'re all set to explore CarePulse.', 'success');
-    }
-    overlayEl?.remove(); tooltipEl?.remove(); overlayEl = null; tooltipEl = null;
-  }
-
-  function startTour() { if (overlayEl) end(false); createEls(); go(0); }
-
-  function autoLaunch() {
-    if (!document.getElementById('quick-services')) return;
-    try { if (!localStorage.getItem(TOUR_KEY)) setTimeout(startTour, 3000); } catch {}
-  }
-
-  return { startTour, autoLaunch };
-})();
-window.FeatureTourEngine = FeatureTourEngine;
-FeatureTourEngine.autoLaunch();
-
-// 5. Patient Testimonials Renderer
+// 4. Patient Testimonials Renderer
 (function renderTestimonials() {
   const DATA = [
     { name:'Harpreet Kaur',  initials:'HK', dept:'Cardiology OPD',     rating:5, date:'2 days ago',   text:'The token system is revolutionary! I booked online, arrived at my exact time, and was seen within 8 minutes. Dr. Singh explained my ECG with such patience.' },
@@ -1946,14 +1867,6 @@ FeatureTourEngine.autoLaunch();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
-
-// Keyboard shortcut: Ctrl+Shift+T launches onboarding tour
-document.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.shiftKey && (e.key === 'T' || e.key === 't')) {
-    e.preventDefault();
-    if (window.FeatureTourEngine) window.FeatureTourEngine.startTour();
-  }
-});
 
 
 
