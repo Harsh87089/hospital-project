@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://hospital-project-tawny.vercel.app/sitemap.xml

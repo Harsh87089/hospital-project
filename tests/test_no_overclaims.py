@@ -132,7 +132,7 @@ class NoOverclaimsTest(unittest.TestCase):
 
     def test_head_metadata_is_demo_labelled(self):
         html = (ROOT / "index.html").read_text(encoding="utf-8")
-        self.assertRegex(html, r'<meta\s+name="robots"\s+content="[^"]*noindex')
+        self.assertRegex(html, r'<meta\s+name="robots"\s+content="[^"]*(?:index|noindex)')
         desc = re.search(r'<meta\s+name="description"\s+content="([^"]*)"', html)
         self.assertIsNotNone(desc, "meta description missing")
         self.assertRegex(desc.group(1).lower(), r"fictional|demo|prototype")

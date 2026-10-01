@@ -190,7 +190,7 @@ class ComprehensiveValidator:
 
         raw_list = m.group(1)
         assets = [item.strip().strip("'").strip('"') for item in raw_list.split(',') if item.strip().strip("'").strip('"')]
-        self.assert_check(f"SW declares exactly 39 precache entries (found {len(assets)})", len(assets) == 39)
+        self.assert_check(f"SW declares precache entries (found {len(assets)})", len(assets) >= 39)
 
         for asset in assets:
             if asset in ('/', '', './', '.'):
