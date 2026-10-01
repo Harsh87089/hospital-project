@@ -11,6 +11,7 @@ const PRECACHE_ASSETS = [
   './css/components.css',
   './css/modals.css',
   './css/themes.css',
+  './css/mobile.css',
   './css/fonts.css',
   './fonts/notosansdevanagari-devanagari-w400.woff2',
   './fonts/notosansdevanagari-devanagari-w600.woff2',

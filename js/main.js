@@ -551,7 +551,11 @@ window.toggleSidebarCollapse = function (forceState) {
   const backdrop = document.getElementById('sidebar-backdrop');
 
   if (isMobile) {
-    // Mobile Off-Canvas Drawer Behavior
+    if (typeof window.toggleMobileServicesSheet === 'function') {
+      window.toggleMobileServicesSheet(forceState);
+      return;
+    }
+    // Mobile Off-Canvas Drawer Fallback
     const isCurrentlyOpen = sidebar?.classList.contains('open');
     const shouldOpen = typeof forceState === 'boolean' ? !forceState : !isCurrentlyOpen;
 
@@ -587,10 +591,70 @@ window.toggleSidebarCollapse = function (forceState) {
   }
 };
 
+// Dedicated Mobile Experience Helpers: Drawer & Categorized Tabs
+window.toggleMobileServicesSheet = function (forceState) {
+  const sheet = document.getElementById('mobile-services-sheet');
+  if (!sheet) return;
+  const isCurrentlyOpen = sheet.classList.contains('active');
+  const shouldOpen = typeof forceState === 'boolean' ? forceState : !isCurrentlyOpen;
+
+  if (shouldOpen) {
+    sheet.classList.add('active');
+    document.body.classList.add('sheet-open');
+    const input = document.getElementById('mobile-sheet-search');
+    if (input) {
+      input.value = '';
+      if (typeof window.filterMobileSheet === 'function') window.filterMobileSheet('');
+      setTimeout(() => input.focus(), 150);
+    }
+  } else {
+    sheet.classList.remove('active');
+    document.body.classList.remove('sheet-open');
+  }
+};
+
+window.switchMobileTab = function (tabId) {
+  const tabs = document.querySelectorAll('.mobile-segment-btn');
+  const contents = document.querySelectorAll('.mobile-tab-content');
+
+  tabs.forEach(btn => {
+    const isTarget = btn.getAttribute('data-tab') === tabId;
+    btn.classList.toggle('active', isTarget);
+    btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+  });
+
+  contents.forEach(panel => {
+    const isTarget = panel.id === `mobile-tab-${tabId}`;
+    panel.classList.toggle('active', isTarget);
+    panel.style.display = isTarget ? 'flex' : 'none';
+  });
+};
+
+window.filterMobileSheet = function (query) {
+  const q = (query || '').toLowerCase().trim();
+  const items = document.querySelectorAll('#mobile-sheet-list .sheet-item');
+  const groups = document.querySelectorAll('#mobile-sheet-list .sheet-group');
+
+  items.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    const matches = !q || text.includes(q);
+    item.style.display = matches ? 'flex' : 'none';
+  });
+
+  groups.forEach(group => {
+    const visibleChildren = group.querySelectorAll('.sheet-item:not([style*="display: none"])');
+    group.style.display = visibleChildren.length > 0 ? 'block' : 'none';
+  });
+};
+
 // Backwards compatibility alias for existing links
 window.toggleLeftSidebar = function (forceClose) {
   if (window.innerWidth < 1024) {
-    window.toggleSidebarCollapse(forceClose === true ? true : undefined);
+    if (typeof window.toggleMobileServicesSheet === 'function') {
+      window.toggleMobileServicesSheet(forceClose === true ? false : undefined);
+    } else {
+      window.toggleSidebarCollapse(forceClose === true ? true : undefined);
+    }
   } else if (forceClose === true) {
     // Nav links clicked on desktop keep desktop sidebar open
   } else {
@@ -1088,11 +1152,45 @@ document.addEventListener('click', function (e) {
   const action = target.getAttribute('data-action');
   const d = target.dataset;
 
+  // Auto-close mobile services sheet when any internal navigation item is clicked
+  if (target.closest('#mobile-services-sheet') && action !== 'toggle-mobile-services-sheet' && typeof window.toggleMobileServicesSheet === 'function') {
+    window.toggleMobileServicesSheet(false);
+  }
+
   if (target.tagName === 'A' && (target.getAttribute('href') === '#' || target.getAttribute('href')?.startsWith('javascript:'))) {
     e.preventDefault();
   }
 
   switch (action) {
+    case 'toggle-mobile-services-sheet':
+      if (typeof window.toggleMobileServicesSheet === 'function') window.toggleMobileServicesSheet();
+      break;
+    case 'switch-mobile-tab':
+      if (typeof window.switchMobileTab === 'function') window.switchMobileTab(d.tab || target.getAttribute('data-tab'));
+      break;
+    case 'open-symptom-checker':
+      const sc = document.getElementById('symptom-checker-modal');
+      if (sc) {
+        sc.classList.add('active');
+        document.body.classList.add('modal-open');
+      }
+      break;
+    case 'close-symptom-checker':
+      const scClose = document.getElementById('symptom-checker-modal');
+      if (scClose) {
+        scClose.classList.remove('active');
+        document.body.classList.remove('modal-open');
+      }
+      break;
+    case 'erase-demo-data':
+      if (typeof window.clearAllDemoData === 'function') {
+        if (confirm('Erase all stored demo appointments, tokens, and local cache?')) {
+          window.clearAllDemoData();
+          alert('Demo data erased.');
+          window.location.reload();
+        }
+      }
+      break;
     case 'open-booking-layer':
       if (typeof window.openBookingLayer === 'function') window.openBookingLayer(d.doctorId || null);
       break;
@@ -1892,6 +1990,24 @@ window.DoctorRatingsEngine = DoctorRatingsEngine;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
+
+// Mobile Services Sheet Instant Filter Listener
+document.addEventListener('input', (e) => {
+  if (e.target && e.target.id === 'mobile-sheet-search') {
+    if (typeof window.filterMobileSheet === 'function') {
+      window.filterMobileSheet(e.target.value);
+    }
+  }
+});
+
+// Mobile Branch Switcher Listener
+document.addEventListener('change', (e) => {
+  if (e.target && e.target.id === 'mobile-branch-select') {
+    if (typeof window.switchBranch === 'function') {
+      window.switchBranch(e.target.value);
+    }
+  }
+});
 
 
 
