@@ -1001,14 +1001,8 @@ function bootCarePulse() {
   CarePulseAuth.init();
 
   // Load stored appointments
-  try {
-    const saved = localStorage.getItem('carepulse_appointments');
-    if (saved) {
-      state.userAppointments = JSON.parse(saved);
-    }
-  } catch (e) {
-    state.userAppointments = [];
-  }
+  const v = Utils.readJSON('carepulse_appointments', []);
+  state.userAppointments = Array.isArray(v) ? v : [];
 
   renderLiveOPDBoard();
   renderDoctorCards();

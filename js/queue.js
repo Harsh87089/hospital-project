@@ -1,6 +1,6 @@
 // CarePulse Live OPD Queue & Reception Desk Engine
 import { DOCTORS, DEMO_STAFF_PIN, state } from './config.js';
-import { escapeHtml, showToast, playClinicChime } from './utils.js';
+import { escapeHtml, showToast, playClinicChime, readJSON } from './utils.js';
 
 function renderQueueSkeletons(count = 4) {
   const container = document.getElementById('live-queue-cards');
@@ -433,12 +433,8 @@ function handleRemoteQueueSync(data) {
 }
 
 function reloadAppointmentsFromStorage() {
-  try {
-    const stored = localStorage.getItem('carepulse_appointments');
-    if (stored) {
-      state.userAppointments = JSON.parse(stored);
-    }
-  } catch (e) { }
+  const v = readJSON('carepulse_appointments', []);
+  state.userAppointments = Array.isArray(v) ? v : [];
 }
 
 function requireStaffAuth() {
@@ -450,11 +446,18 @@ function requireStaffAuth() {
 }
 
 const openReceptionDesk = window.openReceptionDesk = function () {
-  const isAuth = sessionStorage.getItem('carepulse_staff_auth');
-  if (!isAuth) {
-    const pin = typeof window.prompt === 'function' ? window.prompt(`🔒 CarePulse Staff Console [Simulated Demo Role]\n\nEnter Staff Security PIN (Demo PIN: ${DEMO_STAFF_PIN}):`) : null;
+  if (!sessionStorage.getItem('carepulse_staff_auth')) {
+    const tries = +sessionStorage.getItem('carepulse_pin_tries') || 0;
+    if (tries >= 5) {
+      showToast('⛔ Too many attempts. Reload to retry (demo gate only)', 'error');
+      return;
+    }
+    const pin = typeof window.prompt === 'function' ? window.prompt(`🔒 Staff Console [Simulated Demo Role]\n\nDemo PIN: ${DEMO_STAFF_PIN}\n(UI gate only, not real authentication)`) : null;
     if (pin !== DEMO_STAFF_PIN) {
-      if (pin !== null) showToast('⛔ Access Denied: Invalid Staff Security PIN', 'error');
+      if (pin !== null) {
+        sessionStorage.setItem('carepulse_pin_tries', tries + 1);
+        showToast('⛔ Invalid PIN', 'error');
+      }
       return;
     }
     sessionStorage.setItem('carepulse_staff_auth', 'true');

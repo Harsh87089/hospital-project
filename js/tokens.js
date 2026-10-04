@@ -579,6 +579,8 @@ function downloadTicketPDF(app) {
     </html>
   `);
   printWindow.document.close();
+  printWindow.focus();
+  setTimeout(() => { try { printWindow.print(); } catch (e) {} }, 400);
 }
 
 // Global download functions for buttons

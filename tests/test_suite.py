@@ -279,5 +279,57 @@ class TestCarePulsePlatform(unittest.TestCase):
                 if os.path.exists(harness_path):
                     os.remove(harness_path)
 
+    # -------------------------------------------------------------
+    # 8. Reviewer Bug Fixes & Privacy Guard Integrity
+    # -------------------------------------------------------------
+    def test_21_tele_and_security_reviewer_fixes(self):
+        """TeleConsultEngine, appointment loader, and staff PIN gate must satisfy all reviewer criteria."""
+        with open('js/tele.js', 'r', encoding='utf-8') as f:
+            tele_js = f.read()
+        with open('app.js', 'r', encoding='utf-8') as f:
+            app_js = f.read()
+        with open('js/queue.js', 'r', encoding='utf-8') as f:
+            queue_js = f.read()
+
+        for code, label in [(tele_js, 'js/tele.js'), (app_js, 'app.js')]:
+            # 1. Session guarding & camera-only
+            self.assertIn('sessionId: 0', code, f"sessionId counter missing in {label}")
+            self.assertIn('{ video: true }', code, f"getUserMedia must request video: true only in {label}")
+            self.assertNotIn('{ video: true, audio: true }', code, f"Found legacy audio request in {label}")
+            
+            # 2. Controls reset
+            self.assertIn('resetControls()', code, f"resetControls missing in {label}")
+            self.assertIn('this.resetControls();', code, f"resetControls not called in open() in {label}")
+
+            # 3. Print button wired in prescription popup
+            self.assertIn('[data-action="print-rx"]', code, f"data-action='print-rx' selector missing in {label}")
+            self.assertIn('printWin.print()', code, f"printWin.print() listener missing in {label}")
+
+            # 4. Escaped patient name & stable token
+            self.assertIn('safeName', code, f"safeName missing in {label}")
+            self.assertIn('tokenRef', code, f"tokenRef missing in {label}")
+
+            # 5. WhatsApp share encoded
+            self.assertIn('encodeURIComponent', code, f"encodeURIComponent missing in {label}")
+
+            # 6. Duplicate check in medicine adder
+            self.assertIn('already on the prescription', code, f"Duplicate medicine check missing in {label}")
+
+            # 7. Visibility change stops camera
+            self.assertIn('visibilitychange', code, f"visibilitychange listener missing in {label}")
+
+        # 8. readJSON helper & safe appointment loading
+        self.assertIn('readJSON', app_js, "readJSON missing in app.js")
+        self.assertIn("readJSON('carepulse_appointments', [])", app_js, "readJSON not used for appointments in app.js")
+        self.assertIn("readJSON('carepulse_appointments', [])", queue_js, "readJSON not used for appointments in js/queue.js")
+
+        # 9. Staff PIN attempt limit
+        self.assertIn('carepulse_pin_tries', app_js, "PIN attempt limit missing in app.js")
+        self.assertIn('carepulse_pin_tries', queue_js, "PIN attempt limit missing in js/queue.js")
+
+        # 10. Privacy policy reflects camera only
+        self.assertIn('Camera (Virtual Tele-Consultation Preview - Camera Only, No Microphone Required)', self.html)
+        self.assertNotIn('Camera and Microphone (Virtual Tele-Consultation Preview)', self.html)
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

@@ -25,6 +25,13 @@ function getISTIsoDate(date = new Date()) {
   return `${y}-${m}-${d}`;
 }
 
+// Validated JSON reader helper with safe fallback
+function readJSON(key, fallback, storage = localStorage) {
+  try { return JSON.parse(storage.getItem(key)) ?? fallback; }
+  catch { return fallback; }
+}
+window.readJSON = readJSON;
+
 // Global reference for active tracker token
 
 
@@ -959,6 +966,7 @@ export {
   generateUniqueTicketDetails,
   processBookingSubmission,
   showBookingError,
-  clearBookingErrors
+  clearBookingErrors,
+  readJSON
 };
 

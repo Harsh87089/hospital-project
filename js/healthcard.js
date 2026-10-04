@@ -195,6 +195,8 @@ const DigitalHealthCardEngine = {
       </html>
     `);
     printWin.document.close();
+    printWin.focus();
+    setTimeout(() => { try { printWin.print(); } catch (e) {} }, 400);
   },
 
   addToWalletDemo() {

@@ -33,6 +33,13 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
+// Validated JSON reader helper with safe fallback
+function readJSON(key, fallback, storage = localStorage) {
+  try { return JSON.parse(storage.getItem(key)) ?? fallback; }
+  catch { return fallback; }
+}
+window.readJSON = readJSON;
+
 // Indian Standard Time (Asia/Kolkata = UTC+5:30) Date Utilities
 function getISTDate(date = new Date()) {
   const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
@@ -2750,6 +2757,8 @@ function downloadTicketPDF(app) {
     </html>
   `);
   printWindow.document.close();
+  printWindow.focus();
+  setTimeout(() => { try { printWindow.print(); } catch (e) {} }, 400);
 }
 
 // Global download functions for buttons
@@ -3103,12 +3112,8 @@ function handleRemoteQueueSync(data) {
 }
 
 function reloadAppointmentsFromStorage() {
-  try {
-    const stored = localStorage.getItem('carepulse_appointments');
-    if (stored) {
-      state.userAppointments = JSON.parse(stored);
-    }
-  } catch (e) { }
+  const v = readJSON('carepulse_appointments', []);
+  state.userAppointments = Array.isArray(v) ? v : [];
 }
 
 function requireStaffAuth() {
@@ -3120,11 +3125,18 @@ function requireStaffAuth() {
 }
 
 window.openReceptionDesk = function () {
-  const isAuth = sessionStorage.getItem('carepulse_staff_auth');
-  if (!isAuth) {
-    const pin = typeof window.prompt === 'function' ? window.prompt(`🔒 CarePulse Staff Console [Simulated Demo Role]\n\nEnter Staff Security PIN (Demo PIN: ${DEMO_STAFF_PIN}):`) : null;
+  if (!sessionStorage.getItem('carepulse_staff_auth')) {
+    const tries = +sessionStorage.getItem('carepulse_pin_tries') || 0;
+    if (tries >= 5) {
+      showToast('⛔ Too many attempts. Reload to retry (demo gate only)', 'error');
+      return;
+    }
+    const pin = typeof window.prompt === 'function' ? window.prompt(`🔒 Staff Console [Simulated Demo Role]\n\nDemo PIN: ${DEMO_STAFF_PIN}\n(UI gate only, not real authentication)`) : null;
     if (pin !== DEMO_STAFF_PIN) {
-      if (pin !== null) showToast('⛔ Access Denied: Invalid Staff Security PIN', 'error');
+      if (pin !== null) {
+        sessionStorage.setItem('carepulse_pin_tries', tries + 1);
+        showToast('⛔ Invalid PIN', 'error');
+      }
       return;
     }
     sessionStorage.setItem('carepulse_staff_auth', 'true');
@@ -5677,14 +5689,8 @@ function bootCarePulse() {
   CarePulseAuth.init();
 
   // Load stored appointments
-  try {
-    const saved = localStorage.getItem('carepulse_appointments');
-    if (saved) {
-      state.userAppointments = JSON.parse(saved);
-    }
-  } catch (e) {
-    state.userAppointments = [];
-  }
+  const v = readJSON('carepulse_appointments', []);
+  state.userAppointments = Array.isArray(v) ? v : [];
 
   renderLiveOPDBoard();
   renderDoctorCards();
@@ -8144,6 +8150,8 @@ const TeleConsultEngine = {
     { name: 'Tab. Vitamin C 500 mg', dosage: '1-0-0 (After Food)', duration: '5 Days' },
     { name: 'Syp. Cough Formulation 10 ml (Generic Sample)', dosage: '0-0-1 (At Bedtime)', duration: '5 Days' }
   ],
+  sessionId: 0,
+  tokenRef: null,
 
   open(doctorId = null) {
     if (doctorId) {
@@ -8172,7 +8180,7 @@ const TeleConsultEngine = {
     if (screenDesc) screenDesc.innerText = `${doc.qualifications} • Live Tele-Consultation`;
     if (docAvatar && doc.avatar) docAvatar.src = doc.avatar;
     if (rxDocName) rxDocName.innerText = doc.name;
-    if (rxDocReg) rxDocReg.innerText = `${doc.qualifications} • ${doc.regNo || 'CP-MED-38214'}`;
+    if (rxDocReg) rxDocReg.innerText = `${doc.qualifications} • ${doc.regNo || 'Faculty ID: CP-MED-101'}`;
     if (rxSigName) rxSigName.innerText = doc.name;
 
     // Patient info
@@ -8197,12 +8205,31 @@ const TeleConsultEngine = {
     document.body.style.overflow = 'hidden';
     this.startCallTimer();
     this.startVitalsSimulation();
+    this.resetControls();
     this.initCameraStream();
 
     showToast(`📹 Connected to Dr. ${doc.name.split(' ').pop()}'s Virtual Consultation Room`, 'success');
   },
 
+  resetControls() {
+    this.isMicMuted = false;
+    this.isCamOff = false;
+    const mic = document.getElementById('btn-tele-mic');
+    const cam = document.getElementById('btn-tele-cam');
+    if (mic) {
+      mic.innerHTML = '🎙️';
+      mic.classList.remove('off');
+      mic.title = 'Mute Microphone';
+    }
+    if (cam) {
+      cam.innerHTML = '📹';
+      cam.classList.remove('off');
+      cam.title = 'Turn Camera Off';
+    }
+  },
+
   close() {
+    this.sessionId++;
     this.stopCameraStream();
     this.stopCallTimer();
     const modal = document.getElementById('tele-consult-modal');
@@ -8213,28 +8240,36 @@ const TeleConsultEngine = {
   },
 
   initCameraStream() {
+    const sid = ++this.sessionId;
     const videoEl = document.getElementById('patient-webcam-video');
     const fallbackEl = document.getElementById('patient-webcam-fallback');
-
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then(stream => {
-          this.mediaStream = stream;
-          if (videoEl) {
-            videoEl.srcObject = stream;
-            videoEl.style.display = 'block';
-          }
-          if (fallbackEl) fallbackEl.style.display = 'none';
-        })
-        .catch(err => {
-          console.warn('Webcam permission denied or unavailable, using simulation:', err);
-          if (videoEl) videoEl.style.display = 'none';
-          if (fallbackEl) fallbackEl.style.display = 'flex';
-        });
-    } else {
+    const showFallback = () => {
       if (videoEl) videoEl.style.display = 'none';
       if (fallbackEl) fallbackEl.style.display = 'flex';
+    };
+
+    if (!navigator.mediaDevices?.getUserMedia) {
+      showFallback();
+      return;
     }
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        if (sid !== this.sessionId) {
+          stream.getTracks().forEach(t => t.stop());
+          return;
+        }
+        this.mediaStream = stream;
+        if (videoEl) {
+          videoEl.srcObject = stream;
+          videoEl.style.display = 'block';
+        }
+        if (fallbackEl) fallbackEl.style.display = 'none';
+      })
+      .catch(err => {
+        console.warn('Webcam unavailable, using simulation:', err);
+        showFallback();
+      });
   },
 
   stopCameraStream() {
@@ -8353,7 +8388,12 @@ const TeleConsultEngine = {
   addSelectedMedicine() {
     const select = document.getElementById('rx-quick-select');
     if (!select) return;
-    const [name, dosage, duration] = select.value.split('|');
+    const [name, dosage, duration] = (select.value || '').split('|');
+    if (!name || !dosage || !duration) return;
+    if (this.prescriptions.some(p => p.name === name)) {
+      showToast(`${name} is already on the prescription`, 'info');
+      return;
+    }
     this.prescriptions.push({ name, dosage, duration });
     this.renderPrescriptions();
     showToast(`Added ${name} to digital prescription`, 'success');
@@ -8368,6 +8408,8 @@ const TeleConsultEngine = {
     const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
     const user = window.CarePulseAuth ? CarePulseAuth.sessionUser : null;
     const patientName = (user && user.name) ? user.name : 'Self (Demo Patient)';
+    const safeName = escapeHtml(patientName);
+    this.tokenRef ??= `#TK-TELE-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const printWin = window.open('', '_blank', 'width=800,height=900');
     if (!printWin) {
@@ -8387,7 +8429,7 @@ const TeleConsultEngine = {
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Prescription - CarePulse Hospital - ${patientName}</title>
+        <title>Prescription - CarePulse Hospital - ${safeName}</title>
         <style>
           body { font-family: system-ui, -apple-system, sans-serif; padding: 30px; color: #0f172a; line-height: 1.5; position: relative; }
           body::after {
@@ -8430,10 +8472,10 @@ const TeleConsultEngine = {
         </div>
 
         <div class="patient-box">
-          <div><strong>Patient Name:</strong> ${escapeHtml(patientName)}</div>
+          <div><strong>Patient Name:</strong> ${safeName}</div>
           <div><strong>Date:</strong> ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
           <div><strong>Consultation:</strong> Virtual Video Tele-Consult</div>
-          <div><strong>Token Ref:</strong> #TK-TELE-${Math.floor(1000 + Math.random() * 9000)}</div>
+          <div><strong>Token Ref:</strong> ${this.tokenRef}</div>
         </div>
 
         <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 6px; padding: 10px 14px; margin-bottom: 20px; font-size: 13px;">
@@ -8462,7 +8504,7 @@ const TeleConsultEngine = {
           <div class="signature">
             <div class="sig-line">${escapeHtml(doc.name)}</div>
             <div style="font-size: 12px; font-weight: 700; color: #0f172a;">${escapeHtml(doc.name)}</div>
-            <div style="font-size: 11px; color: #64748b;">Reg No: ${escapeHtml(doc.regNo || 'CP-MED-38214')}</div>
+            <div style="font-size: 11px; color: #64748b;">Faculty ID: ${escapeHtml(doc.regNo || 'CP-MED-101')}</div>
           </div>
         </div>
 
@@ -8475,6 +8517,8 @@ const TeleConsultEngine = {
       </html>
     `);
     printWin.document.close();
+    printWin.document.querySelector('[data-action="print-rx"]')
+      ?.addEventListener('click', () => printWin.print());
   },
 
   orderPrescriptionPharmacy() {
@@ -8487,12 +8531,23 @@ const TeleConsultEngine = {
 
   sharePrescriptionWhatsApp() {
     const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
-    const medList = this.prescriptions.map((m, i) => `${i + 1}. ${m.name} (${m.dosage} x ${m.duration})`).join('%0A');
-    const text = `*CarePulse Hospital Tele-Consultation Prescription (Demo)*%0A*Doctor:* ${doc.name} (${doc.specialty})%0A*Reg No:* ${doc.regNo || 'CP-MED-38214'}%0A*Date:* ${new Date().toLocaleDateString('en-GB')}%0A%0A*Rx Medicines:*%0A${medList}%0A%0A*Demo Helpline:* ${DEMO_PHONE}%0A*Address:* GT Road, Phagwara, Punjab`;
-    window.open(`https://wa.me/?text=${text}`, '_blank');
+    const lines = [
+      '*CarePulse Hospital Tele-Consultation Prescription (Demo)*',
+      `*Doctor:* ${doc.name} (${doc.specialty})`,
+      `*Faculty ID:* ${doc.regNo || 'CP-MED-101'}`,
+      `*Date:* ${new Date().toLocaleDateString('en-GB')}`,
+      '',
+      '*Rx Medicines:*',
+      ...this.prescriptions.map((m, i) => `${i + 1}. ${m.name} (${m.dosage} x ${m.duration})`),
+      '',
+      `*Demo Helpline:* ${DEMO_PHONE}`,
+      '*Address:* GT Road, Phagwara, Punjab'
+    ];
+    window.open(`https://wa.me/?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener');
   },
 
   endConsultation() {
+    this.sessionId++;
     const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
     this.stopCameraStream();
     this.stopCallTimer();
@@ -8503,6 +8558,27 @@ const TeleConsultEngine = {
 window.TeleConsultEngine = TeleConsultEngine;
 window.openTeleConsultModal = function (docId) { TeleConsultEngine.open(docId); };
 window.closeTeleConsultModal = function () { TeleConsultEngine.close(); };
+
+// Ensure media tracks are terminated on page unload or visibility change
+window.addEventListener('beforeunload', () => {
+  if (TeleConsultEngine.mediaStream) {
+    TeleConsultEngine.stopCameraStream();
+  }
+});
+window.addEventListener('pagehide', () => {
+  if (TeleConsultEngine.mediaStream) {
+    TeleConsultEngine.stopCameraStream();
+  }
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && TeleConsultEngine.mediaStream) {
+    TeleConsultEngine.stopCameraStream();
+    const v = document.getElementById('patient-webcam-video');
+    const f = document.getElementById('patient-webcam-fallback');
+    if (v) v.style.display = 'none';
+    if (f) f.style.display = 'flex';
+  }
+});
 
 // ==========================================================================
 // 21. CampusWayfinderEngine (Indoor GPS & Multi-Floor Navigation)
@@ -9007,6 +9083,8 @@ const DigitalHealthCardEngine = {
       </html>
     `);
     printWin.document.close();
+    printWin.focus();
+    setTimeout(() => { try { printWin.print(); } catch (e) {} }, 400);
   },
 
   addToWalletDemo() {
