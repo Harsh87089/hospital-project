@@ -565,6 +565,11 @@
                         <option value="ludhiana">Ludhiana Satellite (OPD)</option>
                     </select>
                 </div>
+                <div class="mobile-auth-btn-wrap" style="margin-left:auto;">
+                    <button type="button" class="btn btn-outline btn-sm" id="btn-mobile-auth-action" data-action="open-auth-modal" style="font-size:0.75rem; padding: 4px 9px; border-radius: 8px;">
+                        <span>🔐 Sign In</span>
+                    </button>
+                </div>
             </div>
 
             <!-- 4. Mobile Spotlight Search Bar (Touch Trigger) -->
@@ -1222,6 +1227,9 @@
                 </button>
                 <button type="button" class="btn btn-outline btn-sm u-box-font-size-15" data-action="open-health-card-modal">
                     🪪 ABHA Pass
+                </button>
+                <button type="button" class="btn btn-outline btn-sm u-box-font-size-15" id="btn-desktop-auth-action" data-action="open-auth-modal" style="font-weight:600;">
+                    <span>🔐 Patient Sign In</span>
                 </button>
                 <div class="status-pill-live">
                     <span class="pulse-dot"></span> Emergency &amp; OPD Open (24/7)
@@ -4420,6 +4428,83 @@
                 </div>
                 <button type="button" class="btn btn-primary" style="width:100%;" id="submit-review-btn" data-action="submit-doctor-review">Submit Review (Demo)</button>
                 <div class="doctor-reviews-panel" id="doctor-reviews-panel"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CarePulse Firebase Patient Authentication Modal -->
+    <div class="service-layer-modal" id="auth-gate-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" style="display: none;">
+        <div class="service-layer-container" style="max-width: 460px;">
+            <div class="service-layer-header">
+                <div class="service-layer-header-left">
+                    <div class="service-layer-icon" style="background: linear-gradient(135deg, #0d9488, #0f766e); color: #fff;">🔐</div>
+                    <div class="service-layer-title-wrap">
+                        <span class="layer-badge" style="background: #ccfbf1; color: #0f766e;">PATIENT VERIFICATION</span>
+                        <h2 id="auth-modal-title">Sign In to CarePulse</h2>
+                        <p id="auth-modal-subtitle">Sign in to confirm your appointment &amp; track live tokens</p>
+                    </div>
+                </div>
+                <div class="service-layer-header-actions">
+                    <button type="button" class="modal-close-btn" data-action="close-auth-modal" aria-label="Close Authentication Dialog">&times;</button>
+                </div>
+            </div>
+            <div class="service-layer-body" style="padding: 1.5rem;">
+                <!-- Error Alert Box -->
+                <div id="auth-error-msg" style="display:none; margin-bottom: 1rem; padding: 0.75rem 1rem; background: #fee2e2; border: 1px solid #f87171; border-radius: 8px; color: #b91c1c; font-size: 0.875rem;"></div>
+
+                <!-- 1-Click Google Sign-In Button -->
+                <button type="button" class="btn" id="btn-google-signin" data-action="auth-google-signin" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.75rem; background: #ffffff; color: #1f2937; border: 1.5px solid #e5e7eb; border-radius: 12px; padding: 0.85rem 1rem; font-weight: 600; font-size: 0.95rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06); cursor: pointer; transition: all 0.2s ease;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                        <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                        <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 10.02 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                        <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                    </svg>
+                    <span>Continue with Google</span>
+                </button>
+
+                <div style="display: flex; align-items: center; margin: 1.25rem 0; gap: 0.75rem;">
+                    <div style="flex: 1; height: 1px; background: var(--slate-200, #e2e8f0);"></div>
+                    <span style="font-size: 0.8rem; color: var(--slate-400, #94a3b8); font-weight: 500; text-transform: uppercase;">or Mobile SMS</span>
+                    <div style="flex: 1; height: 1px; background: var(--slate-200, #e2e8f0);"></div>
+                </div>
+
+                <!-- Phone OTP Step -->
+                <div id="auth-phone-step">
+                    <div style="margin-bottom: 0.85rem;">
+                        <label for="auth-mobile-phone-input" style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--slate-700, #334155); margin-bottom: 0.35rem;">Mobile Number (+91)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <span style="display: flex; align-items: center; padding: 0 0.75rem; background: var(--slate-100, #f1f5f9); border: 1.5px solid var(--slate-200, #e2e8f0); border-radius: 8px; font-weight: 600; font-size: 0.9rem; color: var(--slate-600, #475569);">+91</span>
+                            <input type="tel" id="auth-mobile-phone-input" placeholder="Enter 10-digit number" maxlength="10" style="flex: 1; padding: 0.65rem 0.85rem; border: 1.5px solid var(--slate-200, #e2e8f0); border-radius: 8px; font-size: 0.95rem; font-family: inherit;">
+                        </div>
+                    </div>
+                    <div id="recaptcha-auth-container" style="margin-bottom: 0.75rem;"></div>
+                    <button type="button" class="btn btn-primary" id="btn-send-phone-otp" data-action="auth-send-phone-otp" style="width: 100%; justify-content: center; padding: 0.75rem;">
+                        <span>📱 Send Verification OTP</span>
+                    </button>
+                </div>
+
+                <!-- OTP Verification Step -->
+                <div id="auth-verify-step" style="display: none;">
+                    <p style="font-size: 0.85rem; color: var(--slate-600, #475569); margin-bottom: 0.75rem;">Enter the 6-digit OTP code sent to <strong id="auth-phone-target"></strong>:</p>
+                    <div style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1rem;">
+                        <input type="text" maxlength="6" id="auth-otp-input" placeholder="000000" style="width: 180px; text-align: center; letter-spacing: 0.5rem; font-size: 1.5rem; font-weight: 700; padding: 0.5rem; border: 2px solid var(--primary, #0d9488); border-radius: 8px;">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btn-confirm-phone-otp" data-action="auth-confirm-phone-otp" style="width: 100%; justify-content: center; padding: 0.75rem; margin-bottom: 0.5rem;">
+                        <span>Verify &amp; Continue</span>
+                    </button>
+                    <button type="button" class="btn btn-outline btn-sm" data-action="auth-back-to-phone" style="width: 100%; justify-content: center;">
+                        <span>&larr; Back to mobile number</span>
+                    </button>
+                </div>
+
+                <!-- Guest Checkout Option (Never traps emergency patient) -->
+                <div style="margin-top: 1.25rem; text-align: center; border-top: 1px dashed var(--slate-200, #e2e8f0); padding-top: 1rem;">
+                    <button type="button" class="btn btn-outline btn-sm" data-action="auth-continue-guest" style="font-size: 0.825rem; color: var(--slate-600, #475569);">
+                        <span>👤 Continue as Guest Patient</span>
+                    </button>
+                    <p style="font-size: 0.72rem; color: var(--slate-400, #94a3b8); margin-top: 0.35rem;">Guest tokens are saved locally in your current browser session.</p>
+                </div>
             </div>
         </div>
     </div>

@@ -1162,6 +1162,36 @@ document.addEventListener('click', function (e) {
   }
 
   switch (action) {
+    case 'open-auth-modal':
+      if (typeof CarePulseAuth !== 'undefined' && CarePulseAuth.sessionUser && CarePulseAuth.sessionUser.method !== 'guest') {
+        if (confirm(`Currently signed in as ${CarePulseAuth.sessionUser.name}. Do you want to sign out?`)) {
+          CarePulseAuth.logout();
+        }
+      } else if (typeof CarePulseAuth !== 'undefined') {
+        CarePulseAuth.openModal();
+      }
+      break;
+    case 'close-auth-modal':
+      if (typeof CarePulseAuth !== 'undefined') CarePulseAuth.closeModal();
+      break;
+    case 'auth-google-signin':
+      if (typeof CarePulseAuth !== 'undefined') CarePulseAuth.signInWithGoogle();
+      break;
+    case 'auth-send-phone-otp':
+      if (typeof CarePulseAuth !== 'undefined') CarePulseAuth.sendPhoneOTP();
+      break;
+    case 'auth-confirm-phone-otp':
+      if (typeof CarePulseAuth !== 'undefined') CarePulseAuth.confirmPhoneOTP();
+      break;
+    case 'auth-back-to-phone':
+      if (typeof CarePulseAuth !== 'undefined') CarePulseAuth.backToPhoneInput();
+      break;
+    case 'auth-continue-guest':
+      if (typeof CarePulseAuth !== 'undefined') CarePulseAuth.continueAsGuest();
+      break;
+    case 'user-logout':
+      if (typeof CarePulseAuth !== 'undefined') CarePulseAuth.logout();
+      break;
     case 'toggle-mobile-services-sheet':
       if (typeof window.toggleMobileServicesSheet === 'function') window.toggleMobileServicesSheet();
       break;

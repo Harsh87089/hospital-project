@@ -1,5 +1,5 @@
 // CarePulse Authentication Gate Engine
-import { DEMO_STAFF_PIN, state } from './config.js';
+import { DEMO_STAFF_PIN, state, FIREBASE_CONFIG } from './config.js';
 import { escapeHtml, showToast } from './utils.js';
 
 const CarePulseAuth = {
@@ -14,6 +14,7 @@ const CarePulseAuth = {
   sessionUser: null,
   inactivityTimer: null,
   INACTIVITY_TIMEOUT_MS: 15 * 60 * 1000, // 15 minutes session timeout
+  firebaseInitialized: false,
 
   init() {
     // Clear persistent localStorage to guarantee user is logged out whenever site is closed or removed
@@ -23,8 +24,263 @@ const CarePulseAuth = {
 
     this.checkStoredSession();
     this.setupInactivityWatchdog();
+    this.initFirebase();
     if (typeof DeliveryGateway !== 'undefined' && DeliveryGateway.init) {
       DeliveryGateway.init();
+    }
+  },
+
+  ensureFirebaseLoaded() {
+    return new Promise((resolve, reject) => {
+      if (window.firebase && window.firebase.auth) {
+        if (!firebase.apps || !firebase.apps.length) {
+          firebase.initializeApp(FIREBASE_CONFIG);
+        }
+        return resolve(window.firebase);
+      }
+      const s1 = document.createElement('script');
+      s1.src = 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js';
+      s1.crossOrigin = 'anonymous';
+      s1.onload = () => {
+        const s2 = document.createElement('script');
+        s2.src = 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js';
+        s2.crossOrigin = 'anonymous';
+        s2.onload = () => {
+          try {
+            if (!firebase.apps || !firebase.apps.length) {
+              firebase.initializeApp(FIREBASE_CONFIG);
+            }
+            resolve(window.firebase);
+          } catch (err) {
+            resolve(window.firebase);
+          }
+        };
+        s2.onerror = reject;
+        document.head.appendChild(s2);
+      };
+      s1.onerror = reject;
+      document.head.appendChild(s1);
+    });
+  },
+
+  async initFirebase() {
+    try {
+      await this.ensureFirebaseLoaded();
+      if (window.firebase && firebase.auth) {
+        this.firebaseInitialized = true;
+        firebase.auth().onAuthStateChanged((fbUser) => {
+          if (fbUser) {
+            this.handleFirebaseUser(fbUser);
+          }
+        });
+      }
+    } catch (e) {
+      console.warn('Firebase lazy-load deferred:', e);
+    }
+  },
+
+  handleFirebaseUser(fbUser) {
+    const displayName = fbUser.displayName || (fbUser.email ? fbUser.email.split('@')[0] : 'Patient');
+    const initials = displayName.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase() || 'PT';
+    this.sessionUser = {
+      name: displayName,
+      email: fbUser.email || '',
+      phone: fbUser.phoneNumber || '',
+      contact: fbUser.email || fbUser.phoneNumber || 'Verified Patient',
+      photoURL: fbUser.photoURL || '',
+      uid: fbUser.uid,
+      method: fbUser.phoneNumber ? 'mobile' : 'google',
+      initials: initials,
+      uhid: 'CP-' + (fbUser.uid ? fbUser.uid.slice(0, 5).toUpperCase() : Math.floor(10000 + Math.random() * 90000)),
+      loginTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      loginDate: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    };
+    try {
+      sessionStorage.setItem('carepulse_auth_user', JSON.stringify(this.sessionUser));
+    } catch (e) { }
+    this.updateProfileUI();
+    this.autoFillPatientForms();
+  },
+
+  autoFillPatientForms() {
+    if (!this.sessionUser) return;
+    const name = this.sessionUser.name;
+    const phone = this.sessionUser.phone ? this.sessionUser.phone.replace('+91', '').trim() : '';
+
+    const layerName = document.getElementById('layer-patient-name');
+    if (layerName && !layerName.value && name && name !== 'Patient' && name !== 'Guest Patient') {
+      layerName.value = name;
+    }
+    const inlineName = document.getElementById('patient-name');
+    if (inlineName && !inlineName.value && name && name !== 'Patient' && name !== 'Guest Patient') {
+      inlineName.value = name;
+    }
+
+    if (phone) {
+      const layerPhone = document.getElementById('layer-patient-phone');
+      if (layerPhone && !layerPhone.value) layerPhone.value = phone;
+      const inlinePhone = document.getElementById('patient-phone');
+      if (inlinePhone && !inlinePhone.value) inlinePhone.value = phone;
+    }
+  },
+
+  async signInWithGoogle() {
+    this.clearError();
+    const btn = document.getElementById('btn-google-signin');
+    const originalText = btn ? btn.innerHTML : '';
+    try {
+      if (btn) {
+        btn.innerHTML = '<span>⏳ Connecting to Google...</span>';
+        btn.disabled = true;
+      }
+      showToast('Opening secure Google Sign-In...', 'info');
+      await this.ensureFirebaseLoaded();
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.addScope('profile');
+      provider.addScope('email');
+      const result = await firebase.auth().signInWithPopup(provider);
+      const fbUser = result.user;
+      this.handleFirebaseUser(fbUser);
+      this.closeModal();
+      showToast(`Welcome to CarePulse Hospital, ${fbUser.displayName || 'Patient'}!`, 'success');
+      if (typeof this.postAuthCallback === 'function') {
+        const cb = this.postAuthCallback;
+        this.postAuthCallback = null;
+        try { cb(this.sessionUser); } catch (e) { console.error('Post-auth callback error:', e); }
+      }
+    } catch (err) {
+      console.error('Google Sign-In Error:', err);
+      if (btn) {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+      if (err.code === 'auth/popup-closed-by-user') {
+        this.showError('Google sign-in was closed before completing. Please try again.');
+      } else if (err.code === 'auth/unauthorized-domain') {
+        this.showError('Domain authorization pending: please add "hospital-project-tawny.vercel.app" in Firebase Console > Authentication > Settings > Authorized domains.');
+      } else {
+        this.showError(`Google Sign-In: ${err.message}`);
+      }
+    }
+  },
+
+  async sendPhoneOTP() {
+    this.clearError();
+    const phoneInput = document.getElementById('auth-mobile-phone-input');
+    const rawPhone = phoneInput ? phoneInput.value.trim() : '';
+    const phone = rawPhone.replace(/\D/g, '');
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      this.showError('Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.');
+      if (phoneInput) phoneInput.focus();
+      return;
+    }
+    const sendBtn = document.getElementById('btn-send-phone-otp');
+    const originalText = sendBtn ? sendBtn.innerHTML : '';
+    try {
+      if (sendBtn) {
+        sendBtn.innerHTML = '<span>⏳ Contacting SMS gateway...</span>';
+        sendBtn.disabled = true;
+      }
+      await this.ensureFirebaseLoaded();
+      if (!window.carepulseRecaptchaVerifier) {
+        window.carepulseRecaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-auth-container', {
+          size: 'invisible'
+        });
+      }
+      const formatted = '+91' + phone;
+      const confirmation = await firebase.auth().signInWithPhoneNumber(formatted, window.carepulseRecaptchaVerifier);
+      window.carepulseConfirmationResult = confirmation;
+      this.targetContact = formatted;
+      const targetEl = document.getElementById('auth-phone-target');
+      if (targetEl) targetEl.innerText = formatted;
+      const step1 = document.getElementById('auth-phone-step');
+      const step2 = document.getElementById('auth-verify-step');
+      if (step1) step1.style.display = 'none';
+      if (step2) step2.style.display = 'block';
+      showToast(`SMS OTP sent to ${formatted}!`, 'info');
+      const otpInput = document.getElementById('auth-otp-input');
+      if (otpInput) {
+        otpInput.value = '';
+        otpInput.focus();
+      }
+    } catch (err) {
+      console.error('Firebase Phone Auth Error:', err);
+      if (sendBtn) {
+        sendBtn.innerHTML = originalText;
+        sendBtn.disabled = false;
+      }
+      this.showError(`SMS Error: ${err.message}`);
+    }
+  },
+
+  async confirmPhoneOTP() {
+    this.clearError();
+    const otpInput = document.getElementById('auth-otp-input');
+    const code = otpInput ? otpInput.value.trim() : '';
+    if (!/^\d{6}$/.test(code)) {
+      this.showError('Please enter all 6 numeric digits of the OTP.');
+      if (otpInput) otpInput.focus();
+      return;
+    }
+    const confirmBtn = document.getElementById('btn-confirm-phone-otp');
+    const originalText = confirmBtn ? confirmBtn.innerHTML : '';
+    try {
+      if (confirmBtn) {
+        confirmBtn.innerHTML = '<span>⏳ Verifying OTP...</span>';
+        confirmBtn.disabled = true;
+      }
+      if (!window.carepulseConfirmationResult) {
+        throw new Error('No active verification session. Please request OTP again.');
+      }
+      const result = await window.carepulseConfirmationResult.confirm(code);
+      window.carepulseConfirmationResult = null;
+      const fbUser = result.user;
+      this.handleFirebaseUser(fbUser);
+      this.closeModal();
+      showToast('Phone verified successfully! Welcome to CarePulse.', 'success');
+      if (typeof this.postAuthCallback === 'function') {
+        const cb = this.postAuthCallback;
+        this.postAuthCallback = null;
+        try { cb(this.sessionUser); } catch (e) { console.error('Post-auth callback error:', e); }
+      }
+    } catch (err) {
+      console.error('OTP confirmation error:', err);
+      if (confirmBtn) {
+        confirmBtn.innerHTML = originalText;
+        confirmBtn.disabled = false;
+      }
+      this.showError(`Verification failed: ${err.message}`);
+    }
+  },
+
+  backToPhoneInput() {
+    this.clearError();
+    const step1 = document.getElementById('auth-phone-step');
+    const step2 = document.getElementById('auth-verify-step');
+    if (step1) step1.style.display = 'block';
+    if (step2) step2.style.display = 'none';
+  },
+
+  continueAsGuest() {
+    this.sessionUser = {
+      name: 'Guest Patient',
+      contact: 'Walk-in / Guest',
+      method: 'guest',
+      initials: 'GP',
+      uhid: 'CP-' + Math.floor(10000 + Math.random() * 90000),
+      loginTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      loginDate: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    };
+    try {
+      sessionStorage.setItem('carepulse_auth_user', JSON.stringify(this.sessionUser));
+    } catch (e) { }
+    this.closeModal();
+    this.updateProfileUI();
+    showToast('Continuing as Guest Patient for this booking.', 'info');
+    if (typeof this.postAuthCallback === 'function') {
+      const cb = this.postAuthCallback;
+      this.postAuthCallback = null;
+      try { cb(this.sessionUser); } catch (e) { console.error('Post-auth callback error:', e); }
     }
   },
 
@@ -43,7 +299,6 @@ const CarePulseAuth = {
     } catch (e) {
       console.warn('Session parsing error:', e);
     }
-    // Visitors browse freely without initial block!
     this.unlockPortal();
     this.updateProfileUI();
   },
@@ -88,11 +343,13 @@ const CarePulseAuth = {
 
   openModal(postAuthAction = null) {
     this.postAuthCallback = postAuthAction;
+    this.clearError();
+    this.backToPhoneInput();
     const modal = document.getElementById('auth-gate-modal');
     if (modal) {
       modal.style.display = 'flex';
-      document.body.classList.add('auth-modal-open');
-      this.goToStep('input');
+      modal.classList.add('active');
+      document.body.classList.add('modal-open');
     } else if (typeof postAuthAction === 'function') {
       postAuthAction(this.sessionUser);
       this.postAuthCallback = null;
@@ -103,15 +360,19 @@ const CarePulseAuth = {
     const modal = document.getElementById('auth-gate-modal');
     if (modal) {
       modal.style.display = 'none';
-      document.body.classList.remove('auth-modal-open');
+      modal.classList.remove('active');
+      document.body.classList.remove('modal-open');
     }
     document.body.classList.remove('auth-locked');
     this.postAuthCallback = null;
+    this.clearError();
   },
 
   requireAuth(callback) {
-    if (typeof callback === 'function') {
-      callback(this.sessionUser);
+    if (this.sessionUser) {
+      if (typeof callback === 'function') callback(this.sessionUser);
+    } else {
+      this.openModal(callback);
     }
   },
 
@@ -121,6 +382,7 @@ const CarePulseAuth = {
     const modal = document.getElementById('auth-gate-modal');
     if (modal) {
       modal.style.display = 'none';
+      modal.classList.remove('active');
     }
   },
 
@@ -588,35 +850,65 @@ const CarePulseAuth = {
   },
 
   updateProfileUI() {
-    const user = this.sessionUser || {
+    const user = this.sessionUser;
+
+    // Desktop navbar auth status button
+    const deskBtn = document.getElementById('btn-desktop-auth-action');
+    if (deskBtn) {
+      if (user && user.method !== 'guest') {
+        const shortName = escapeHtml(user.name.split(' ')[0]);
+        deskBtn.innerHTML = `<span>👤 ${shortName}</span> <span style="font-size:0.75rem; opacity:0.8; margin-left:4px;">(Sign Out)</span>`;
+        deskBtn.title = `Signed in as ${user.name} (${user.contact}). Click to sign out.`;
+      } else {
+        deskBtn.innerHTML = `<span>🔐 Patient Sign In</span>`;
+        deskBtn.title = 'Sign in with Google or Phone';
+      }
+    }
+
+    // Mobile navbar auth status button
+    const mobBtn = document.getElementById('btn-mobile-auth-action');
+    if (mobBtn) {
+      if (user && user.method !== 'guest') {
+        mobBtn.innerHTML = `<span>🚪 Sign Out</span>`;
+      } else {
+        mobBtn.innerHTML = `<span>🔐 Sign In</span>`;
+      }
+    }
+
+    const defaultUser = user || {
       name: 'Patient Session',
       contact: 'Authorized Patient',
       uhid: 'CP-98214',
       initials: 'PT',
       method: 'simulated'
     };
+
     const nameEls = document.querySelectorAll('.user-display-name');
-    nameEls.forEach(el => el.innerText = user.name);
+    nameEls.forEach(el => el.innerText = user ? user.name : 'Welcome, Patient');
 
     const contactEls = document.querySelectorAll('.user-display-contact');
-    contactEls.forEach(el => el.innerText = user.contact);
+    contactEls.forEach(el => el.innerText = defaultUser.contact);
 
     const uhidEls = document.querySelectorAll('.user-display-uhid');
-    uhidEls.forEach(el => el.innerText = user.uhid);
+    uhidEls.forEach(el => el.innerText = defaultUser.uhid);
 
     const avatarEls = document.querySelectorAll('.user-display-avatar');
     avatarEls.forEach(el => {
-      if (user.method === 'google') {
+      if (defaultUser.photoURL) {
+        el.innerHTML = `<img src="${defaultUser.photoURL}" alt="${escapeHtml(defaultUser.name)}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;">`;
+      } else if (defaultUser.method === 'google') {
         el.innerHTML = `<span style="font-size: 1.1rem;">🌐</span>`;
       } else {
-        el.innerText = user.initials || 'PT';
+        el.innerText = defaultUser.initials || 'PT';
       }
     });
 
     const badgeEls = document.querySelectorAll('.user-auth-badge');
     badgeEls.forEach(el => {
-      el.innerText = user.method === 'google' ? 'Google Verified' : (user.method === 'mobile' ? 'Mobile Verified' : 'Simulated Session');
+      el.innerText = defaultUser.method === 'google' ? 'Google Verified' : (defaultUser.method === 'mobile' ? 'Mobile Verified' : 'Simulated Session');
     });
+
+    this.autoFillPatientForms();
   }
 };
 

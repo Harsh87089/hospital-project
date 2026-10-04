@@ -858,6 +858,16 @@ const CHAT_KNOWLEDGE = [
 
 
 
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAhPgil423CqHjzc2Z8dfbelCiNTlJxZx8",
+  authDomain: "hospital-demo-project.firebaseapp.com",
+  projectId: "hospital-demo-project",
+  storageBucket: "hospital-demo-project.firebasestorage.app",
+  messagingSenderId: "524636818165",
+  appId: "1:524636818165:web:cd621089b72936da31d3bc",
+  measurementId: "G-NDPDFPHF6D"
+};
+
 export {
   DEMO_PHONE,
   DEMO_PHONE_RAW,
@@ -871,5 +881,6 @@ export {
   HEALTH_PACKAGES,
   SAMPLE_LAB_REPORTS,
   CHAT_KNOWLEDGE,
-  verifiedReportUHIDs
+  verifiedReportUHIDs,
+  FIREBASE_CONFIG
 };

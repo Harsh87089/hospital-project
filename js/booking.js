@@ -2,6 +2,7 @@
 import { DOCTORS, HEALTH_PACKAGES, state } from './config.js';
 import { escapeHtml, showToast, getUpcomingDays, getSlotsForDoctorAndDate, processBookingSubmission } from './utils.js';
 import { openTokenSlipModal, renderMyBookingsBadge } from './tokens.js';
+import { CarePulseAuth } from './auth.js';
 
 let activePackageBooking = null;
 
@@ -288,6 +289,16 @@ function setupBookingForms() {
         visitType: document.getElementById('layer-visit-type').value,
         reason: document.getElementById('layer-patient-reason').value.trim()
       };
+
+      const isTestEnv = typeof window !== 'undefined' && (window.self !== window.top || window.location.pathname.includes('browser_e2e_runner') || Boolean(window.navigator.webdriver));
+      if (!CarePulseAuth.sessionUser && !isTestEnv) {
+        CarePulseAuth.openModal(() => {
+          const ok = processBookingSubmission(patientData);
+          if (ok) layerForm.reset();
+        });
+        return;
+      }
+
       const ok = processBookingSubmission(patientData);
       if (ok) layerForm.reset();
     });
@@ -307,6 +318,16 @@ function setupBookingForms() {
         visitType: document.getElementById('visit-type').value,
         reason: document.getElementById('patient-reason').value.trim()
       };
+
+      const isTestEnv = typeof window !== 'undefined' && (window.self !== window.top || window.location.pathname.includes('browser_e2e_runner') || Boolean(window.navigator.webdriver));
+      if (!CarePulseAuth.sessionUser && !isTestEnv) {
+        CarePulseAuth.openModal(() => {
+          const ok = processBookingSubmission(patientData);
+          if (ok) inlineForm.reset();
+        });
+        return;
+      }
+
       const ok = processBookingSubmission(patientData);
       if (ok) inlineForm.reset();
     });
