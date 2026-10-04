@@ -64,6 +64,9 @@
   gap: 1rem;
   flex-wrap: wrap;
   margin-bottom: 3.5rem;
+  max-width: 840px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .hero-stats-bar {
@@ -260,9 +263,9 @@
 }
 .symptom-checker-fab {
   position: fixed;
-  bottom: 100px;
-  right: 24px;
-  z-index: 900;
+  bottom: 5.25rem;
+  right: 1.5rem;
+  z-index: 215;
   background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
   color: white;
   border: none;
@@ -2298,8 +2301,8 @@ body.theme-dark .btn-next-sim,
 /* Floating AI Symptom Assistant / Triage Bot Widget ("Dr. CarePulse Bot") */
 .chat-widget-trigger {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 1.5rem;
+  right: 1.5rem;
   z-index: 220;
   display: flex;
   align-items: center;
@@ -3432,8 +3435,8 @@ body.theme-dark .btn-next-sim,
    Responsive Breakpoints for Left Navigation Sidebar
    ========================================================================== */
 
-/* Sidebar Collapsed State (Desktop >= 1024px) */
-@media (min-width: 1024px) {
+/* Sidebar Collapsed State (Desktop >= 1000px) */
+@media (min-width: 1000px) {
   body.sidebar-collapsed .carepulse-sidebar {
     transform: translateX(-100%) !important;
     left: -320px !important;
@@ -3451,7 +3454,7 @@ body.theme-dark .btn-next-sim,
   }
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 999px) {
   .app-main-wrapper {
     margin-left: 0 !important;
   }
@@ -3713,10 +3716,14 @@ body.theme-dark .btn-next-sim,
    -------------------------------------------------------------------------- */
 .top-controls-cluster {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--slate-100);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
 }
 
 [data-theme="dark"] .top-controls-cluster {
@@ -4024,9 +4031,9 @@ body.theme-dark .btn-next-sim,
    -------------------------------------------------------------------------- */
 .sos-floating-trigger {
   position: fixed;
-  bottom: 95px;
-  right: 25px;
-  z-index: 850;
+  bottom: 9rem;
+  right: 1.5rem;
+  z-index: 210;
   background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
   color: white;
   border: 2px solid white;
@@ -4592,7 +4599,7 @@ html.font-scale-xl {
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 999px) {
   .bottom-quick-dock {
     left: 50%;
     right: auto;
@@ -4604,6 +4611,12 @@ html.font-scale-xl {
     border: 1px solid rgba(226, 232, 240, 0.9);
     padding: 0.45rem 1.25rem;
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.14);
+  }
+}
+
+@media (min-width: 1000px) {
+  .bottom-quick-dock {
+    display: none !important;
   }
 }
 
@@ -4733,8 +4746,8 @@ html.font-scale-xl {
    ========================================================================== */
 .floating-token-pill {
   position: fixed;
-  bottom: 80px;
-  right: 18px;
+  bottom: 12.5rem;
+  right: 1.5rem;
   z-index: 980;
   display: flex;
   align-items: center;
@@ -5213,6 +5226,7 @@ html.font-scale-xl {
 .u-flex-box-14 {
   margin-left: auto;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem;
 }
@@ -7305,8 +7319,8 @@ html.font-scale-xl {
   color: #5eead4;
 }
 
-/* Mobile Bars Consolidation (< 1024px) */
-@media (max-width: 1023px) {
+/* Mobile Bars Consolidation (< 1000px) */
+@media (max-width: 999px) {
   .mobile-header-bar {
     height: 52px;
     padding: 0.45rem 1rem;

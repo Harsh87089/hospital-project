@@ -32,11 +32,12 @@
 }
 
 /* --------------------------------------------------------------------------
-   2. Desktop Isolation (>= 1024px)
+   2. Desktop Isolation (>= 1000px - Laptops, Desktops, Large Tablets)
    -------------------------------------------------------------------------- */
-@media (min-width: 1024px) {
+@media (min-width: 1000px) {
   #carepulse-mobile-portal,
-  #mobile-services-sheet {
+  #mobile-services-sheet,
+  .bottom-quick-dock {
     display: none !important;
   }
 
@@ -46,9 +47,9 @@
 }
 
 /* --------------------------------------------------------------------------
-   3. Dedicated Mobile Portal (< 1024px)
+   3. Dedicated Mobile Portal (< 1000px - Mobile Phones & Small Touchscreens)
    -------------------------------------------------------------------------- */
-@media (max-width: 1023px) {
+@media (max-width: 999px) {
   /* Hide desktop clashing elements that cause sticky collisions & endless scroll */
   .carepulse-desktop-view,
   .mobile-header-bar,
@@ -1109,7 +1110,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     5. Bottom Quick Action Dock (< 1024px)
+     5. Bottom Quick Action Dock (< 1000px)
      ------------------------------------------------------------------------ */
   .bottom-quick-dock {
     display: grid !important;
@@ -1147,20 +1148,10 @@
   }
 
   /* ------------------------------------------------------------------------
-     6. Floating AI Chat Widget Fix for Mobile (< 1024px)
+     6. Floating AI Chat Widget Fix for Mobile (< 1000px)
+     Eliminated on mobile to prevent floating button collision with cards & forms
      ------------------------------------------------------------------------ */
   .chat-widget-trigger {
-    bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px)) !important;
-    right: 0.85rem !important;
-    z-index: 920 !important;
-    padding: 0 !important;
-    width: 48px !important;
-    height: 48px !important;
-    border-radius: 50% !important;
-    justify-content: center !important;
-  }
-
-  .chat-widget-trigger .btn-text-chat {
     display: none !important;
   }
 
