@@ -911,7 +911,10 @@ const CarePulseAuth = {
   showError(msg) {
     const errEl = document.getElementById('auth-error-msg');
     if (errEl) {
-      errEl.innerText = msg;
+      const cleanMsg = (typeof msg === 'string' && msg.trim() && msg.trim() !== 'undefined' && msg.trim() !== 'Google Sign-In: undefined')
+        ? msg.trim()
+        : 'Sign-in could not be completed. Please ensure Google provider is enabled in Firebase Console (Authentication > Sign-in method > Google > Save), or continue as guest.';
+      errEl.innerText = cleanMsg;
       errEl.style.display = 'block';
     }
   },

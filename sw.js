@@ -1,5 +1,5 @@
 // CarePulse Hospital - Service Worker (Offline PWA & Asset Cache Engine)
-const CACHE_NAME = 'carepulse-v2.4.0';
+const CACHE_NAME = 'carepulse-v2.5.0';
 
 const PRECACHE_ASSETS = [
   './',
@@ -79,8 +79,8 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET') return;
   if (!url.protocol.startsWith('http')) return;
 
-  // HTML navigation requests: Network-First with Cache Fallback
-  if (request.mode === 'navigate') {
+  // HTML and JS requests: Network-First with Cache Fallback so updates are immediately loaded
+  if (request.mode === 'navigate' || url.pathname.endsWith('.js')) {
     event.respondWith(
       fetch(request)
         .then(response => {
@@ -92,7 +92,7 @@ self.addEventListener('fetch', event => {
         })
         .catch(() => {
           return caches.match(request).then(cached => {
-            return cached || caches.match('./index.html');
+            return cached || (request.mode === 'navigate' ? caches.match('./index.html') : null);
           });
         })
     );
