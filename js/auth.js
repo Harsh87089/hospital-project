@@ -158,6 +158,8 @@ const CarePulseAuth = {
         this.showError('Google sign-in was closed before completing. Please try again.');
       } else if (err.code === 'auth/unauthorized-domain') {
         this.showError('Domain authorization pending: please add "hospital-project-tawny.vercel.app" in Firebase Console > Authentication > Settings > Authorized domains.');
+      } else if (err.code === 'auth/internal-error' || err.code === 'auth/operation-not-allowed') {
+        this.showError('Google provider not yet enabled: in Firebase Console > Authentication > Sign-in method > click Google, choose your support email, and click Save.');
       } else {
         this.showError(`Google Sign-In: ${err.message}`);
       }
