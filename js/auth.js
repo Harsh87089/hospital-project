@@ -30,37 +30,63 @@ const CarePulseAuth = {
     }
   },
 
+  firebaseLoadingPromise: null,
+
   ensureFirebaseLoaded() {
-    return new Promise((resolve, reject) => {
-      if (window.firebase && window.firebase.auth) {
+    if (window.firebase && window.firebase.auth) {
+      try {
         if (!firebase.apps || !firebase.apps.length) {
           firebase.initializeApp(FIREBASE_CONFIG);
         }
-        return resolve(window.firebase);
+      } catch (e) {}
+      return Promise.resolve(window.firebase);
+    }
+    if (this.firebaseLoadingPromise) {
+      return this.firebaseLoadingPromise;
+    }
+    this.firebaseLoadingPromise = new Promise((resolve) => {
+      // Check if scripts are already in the DOM
+      const existingApp = document.querySelector('script[src*="firebase-app"]');
+      const existingAuth = document.querySelector('script[src*="firebase-auth"]');
+      if (existingApp && existingAuth) {
+        let attempts = 0;
+        const interval = setInterval(() => {
+          attempts++;
+          if (window.firebase && window.firebase.auth) {
+            clearInterval(interval);
+            try {
+              if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+            } catch (e) {}
+            return resolve(window.firebase);
+          }
+          if (attempts > 60) {
+            clearInterval(interval);
+            resolve(window.firebase || null);
+          }
+        }, 100);
+        return;
       }
+
       const s1 = document.createElement('script');
       s1.src = 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js';
-      s1.crossOrigin = 'anonymous';
       s1.onload = () => {
         const s2 = document.createElement('script');
         s2.src = 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js';
-        s2.crossOrigin = 'anonymous';
         s2.onload = () => {
           try {
             if (!firebase.apps || !firebase.apps.length) {
               firebase.initializeApp(FIREBASE_CONFIG);
             }
-            resolve(window.firebase);
-          } catch (err) {
-            resolve(window.firebase);
-          }
+          } catch (e) {}
+          resolve(window.firebase || null);
         };
-        s2.onerror = reject;
+        s2.onerror = () => resolve(window.firebase || null);
         document.head.appendChild(s2);
       };
-      s1.onerror = reject;
+      s1.onerror = () => resolve(window.firebase || null);
       document.head.appendChild(s1);
     });
+    return this.firebaseLoadingPromise;
   },
 
   async initFirebase() {
@@ -68,6 +94,16 @@ const CarePulseAuth = {
       await this.ensureFirebaseLoaded();
       if (window.firebase && firebase.auth) {
         this.firebaseInitialized = true;
+        // Check for returning redirect login
+        firebase.auth().getRedirectResult().then(result => {
+          if (result && result.user) {
+            this.handleFirebaseUser(result.user);
+            showToast(`Signed in successfully as ${result.user.displayName || 'Patient'}!`, 'success');
+          }
+        }).catch(err => {
+          console.warn('Redirect sign-in check:', err);
+        });
+
         firebase.auth().onAuthStateChanged((fbUser) => {
           if (fbUser) {
             this.handleFirebaseUser(fbUser);
@@ -135,18 +171,37 @@ const CarePulseAuth = {
       }
       showToast('Opening secure Google Sign-In...', 'info');
       await this.ensureFirebaseLoaded();
+      if (!window.firebase || !firebase.auth) {
+        throw new Error('Google Sign-In service is loading. Please check your internet connection and try again.');
+      }
       const provider = new firebase.auth.GoogleAuthProvider();
       provider.addScope('profile');
       provider.addScope('email');
-      const result = await firebase.auth().signInWithPopup(provider);
-      const fbUser = result.user;
-      this.handleFirebaseUser(fbUser);
-      this.closeModal();
-      showToast(`Welcome to CarePulse Hospital, ${fbUser.displayName || 'Patient'}!`, 'success');
-      if (typeof this.postAuthCallback === 'function') {
-        const cb = this.postAuthCallback;
-        this.postAuthCallback = null;
-        try { cb(this.sessionUser); } catch (e) { console.error('Post-auth callback error:', e); }
+      provider.setCustomParameters({ prompt: 'select_account' });
+
+      let fbUser = null;
+      try {
+        const result = await firebase.auth().signInWithPopup(provider);
+        fbUser = result.user;
+      } catch (popupErr) {
+        // If popup blocked by browser, seamlessly fallback to redirect
+        if (popupErr && (popupErr.code === 'auth/popup-blocked' || popupErr.code === 'auth/cancelled-popup-request')) {
+          showToast('Popup was blocked by browser. Redirecting to Google Sign-In...', 'info');
+          await firebase.auth().signInWithRedirect(provider);
+          return;
+        }
+        throw popupErr;
+      }
+
+      if (fbUser) {
+        this.handleFirebaseUser(fbUser);
+        this.closeModal();
+        showToast(`Welcome to CarePulse Hospital, ${fbUser.displayName || 'Patient'}!`, 'success');
+        if (typeof this.postAuthCallback === 'function') {
+          const cb = this.postAuthCallback;
+          this.postAuthCallback = null;
+          try { cb(this.sessionUser); } catch (e) { console.error('Post-auth callback error:', e); }
+        }
       }
     } catch (err) {
       console.error('Google Sign-In Error:', err);
@@ -154,14 +209,22 @@ const CarePulseAuth = {
         btn.innerHTML = originalText;
         btn.disabled = false;
       }
-      if (err.code === 'auth/popup-closed-by-user') {
+      const errCode = (err && typeof err.code === 'string') ? err.code : '';
+      const errMsg = (err && typeof err.message === 'string' && err.message.trim()) ? err.message : '';
+      if (errCode === 'auth/popup-closed-by-user') {
         this.showError('Google sign-in was closed before completing. Please try again.');
-      } else if (err.code === 'auth/unauthorized-domain') {
-        this.showError('Domain authorization pending: please add "hospital-project-tawny.vercel.app" in Firebase Console > Authentication > Settings > Authorized domains.');
-      } else if (err.code === 'auth/internal-error' || err.code === 'auth/operation-not-allowed') {
-        this.showError('Google provider not yet enabled: in Firebase Console > Authentication > Sign-in method > click Google, choose your support email, and click Save.');
+      } else if (errCode === 'auth/unauthorized-domain') {
+        this.showError('Domain authorization pending: In Firebase Console > Authentication > Settings > Authorized domains, add "hospital-project-tawny.vercel.app".');
+      } else if (errCode === 'auth/internal-error' || errCode === 'auth/operation-not-allowed') {
+        this.showError('Google provider setup pending: Please ensure Google provider is enabled with a support email in Firebase Console (Authentication > Sign-in method > Google > Save).');
+      } else if (errCode === 'auth/popup-blocked') {
+        this.showError('The browser blocked the sign-in popup. Please allow popups for this site or try again.');
+      } else if (errMsg) {
+        this.showError(errMsg);
+      } else if (errCode) {
+        this.showError(`Google Sign-In error (${errCode}). Please try again or continue as guest.`);
       } else {
-        this.showError(`Google Sign-In: ${err.message}`);
+        this.showError('Google Sign-In could not connect. Please try again or continue as guest.');
       }
     }
   },
@@ -184,6 +247,9 @@ const CarePulseAuth = {
         sendBtn.disabled = true;
       }
       await this.ensureFirebaseLoaded();
+      if (!window.firebase || !firebase.auth) {
+        throw new Error('SMS service is loading. Please check your internet connection and try again.');
+      }
       if (!window.carepulseRecaptchaVerifier) {
         window.carepulseRecaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-auth-container', {
           size: 'invisible'
@@ -211,7 +277,15 @@ const CarePulseAuth = {
         sendBtn.innerHTML = originalText;
         sendBtn.disabled = false;
       }
-      this.showError(`SMS Error: ${err.message}`);
+      const errCode = (err && typeof err.code === 'string') ? err.code : '';
+      const errMsg = (err && typeof err.message === 'string' && err.message.trim()) ? err.message : '';
+      if (errCode === 'auth/quota-exceeded') {
+        this.showError('SMS quota limit reached for demo. Please continue as Guest Patient.');
+      } else if (errCode === 'auth/captcha-check-failed') {
+        this.showError('reCAPTCHA verification failed. Please try again.');
+      } else {
+        this.showError(errMsg || (errCode ? `SMS Error (${errCode})` : 'Unable to send SMS OTP. Please try again or continue as guest.'));
+      }
     }
   },
 
@@ -251,7 +325,15 @@ const CarePulseAuth = {
         confirmBtn.innerHTML = originalText;
         confirmBtn.disabled = false;
       }
-      this.showError(`Verification failed: ${err.message}`);
+      const errCode = (err && typeof err.code === 'string') ? err.code : '';
+      const errMsg = (err && typeof err.message === 'string' && err.message.trim()) ? err.message : '';
+      if (errCode === 'auth/invalid-verification-code') {
+        this.showError('Incorrect OTP code. Please check and re-enter the 6 digits.');
+      } else if (errCode === 'auth/code-expired') {
+        this.showError('OTP code has expired. Please request a new code.');
+      } else {
+        this.showError(errMsg || (errCode ? `Verification error (${errCode})` : 'Verification failed. Please try again.'));
+      }
     }
   },
 

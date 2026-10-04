@@ -1,5 +1,5 @@
 // CarePulse Hospital - Service Worker (Offline PWA & Asset Cache Engine)
-const CACHE_NAME = 'carepulse-v2.3.0';
+const CACHE_NAME = 'carepulse-v2.4.0';
 
 const PRECACHE_ASSETS = [
   './',
