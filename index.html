@@ -532,14 +532,11 @@
                 </div>
 
                 <div class="mobile-header-right">
-                    <button type="button" class="mobile-action-btn" data-action="open-spotlight-search" aria-label="Search Doctors and Services" title="Search (Ctrl+K)">
-                        <span>🔍</span>
-                    </button>
-                    <button type="button" class="mobile-action-btn" data-action="voice-ai-open" aria-label="Voice AI" title="Voice AI Assistant">
-                        <span>🎙️</span>
-                    </button>
                     <button type="button" class="mobile-action-btn" data-action="toggle-theme" aria-label="Toggle Dark/Light Mode" title="Dark Mode Toggle">
                         <span>🌙</span>
+                    </button>
+                    <button type="button" class="btn btn-outline btn-sm mobile-auth-btn-pill" id="btn-mobile-auth-action" data-action="open-auth-modal" aria-label="Sign In" style="font-size:0.75rem; padding: 4px 8px; border-radius: 8px;">
+                        <span>🔐 Sign In</span>
                     </button>
                     <button type="button" class="mobile-sos-pill-btn" data-action="trigger-emergency-sos" aria-label="Emergency SOS 108">
                         <span>🚨 108</span>
@@ -547,7 +544,7 @@
                 </div>
             </header>
 
-            <!-- 2. Clean Mobile Demo Banner -->
+            <!-- 2. Clean Mobile Demo Notice Strip -->
             <div class="mobile-demo-badge">
                 <span>🛡️ <strong>Demo Prototype:</strong> Simulated OPD Portal • Not a real hospital • In emergency dial 108</span>
             </div>
@@ -565,24 +562,38 @@
                         <option value="ludhiana">Ludhiana Satellite (OPD)</option>
                     </select>
                 </div>
-                <div class="mobile-auth-btn-wrap" style="margin-left:auto;">
-                    <button type="button" class="btn btn-outline btn-sm" id="btn-mobile-auth-action" data-action="open-auth-modal" style="font-size:0.75rem; padding: 4px 9px; border-radius: 8px;">
-                        <span>🔐 Sign In</span>
-                    </button>
-                </div>
             </div>
 
             <!-- 4. Mobile Spotlight Search Bar (Touch Trigger) -->
             <div class="mobile-search-trigger-box" data-action="open-spotlight-search" role="button" tabindex="0" aria-label="Search doctors, tests, beds, or services">
                 <span class="mobile-search-icon">🔍</span>
-                <span class="mobile-search-placeholder">Search doctors, tests, beds, or services...</span>
-                <span class="mobile-search-tag">Search</span>
+                <span class="mobile-search-placeholder">Search doctors, tests, beds, symptoms...</span>
+                <button type="button" class="mobile-mic-trigger" data-action="voice-ai-open" aria-label="Voice AI Search" title="Speak to Search" style="background:none; border:none; padding:0 4px; cursor:pointer; font-size:1.05rem;">
+                    <span>🎙️</span>
+                </button>
             </div>
 
-            <!-- 5. Mobile Quick Action Super-Grid (8 Touch Cards) -->
+            <!-- 5. Clean Mobile Hero OPD Booking Card -->
+            <section class="mobile-hero-card">
+                <div class="mobile-hero-badge">⚡ 1-Click Fast OPD Token</div>
+                <h3 class="mobile-hero-title">Book Doctor Consultation</h3>
+                <p class="mobile-hero-desc">9 clinical departments • 12 senior specialist consultants • Live queue updates</p>
+                <div class="mobile-hero-actions">
+                    <button type="button" class="btn btn-primary mobile-hero-cta" data-action="open-booking-layer">
+                        <span>📅 Book OPD Appointment</span>
+                        <span class="cta-arrow">➔</span>
+                    </button>
+                    <button type="button" class="mobile-hero-queue-btn" data-action="open-live-queue-modal">
+                        <span class="pulse-dot"></span>
+                        <span>Live Queue: <strong>14 Serving</strong> (12 min wait)</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 6. Essential Services (Clean 2x2 Grid) -->
             <section class="mobile-quick-grid-section">
                 <div class="mobile-section-header">
-                    <h3>Quick Actions</h3>
+                    <h3>Essential Services</h3>
                     <button type="button" class="mobile-view-all-link" data-action="toggle-mobile-services-sheet">All 30+ Services ➔</button>
                 </div>
                 <div class="mobile-quick-grid">
@@ -590,8 +601,8 @@
                     <button type="button" class="mobile-action-card card-primary" data-action="open-booking-layer">
                         <div class="card-icon-bubble">📅</div>
                         <div class="card-text">
-                            <strong>Book OPD Slot</strong>
-                            <span>Instant Token Time</span>
+                            <strong>Book OPD</strong>
+                            <span>Instant Token</span>
                         </div>
                         <span class="card-arrow">➔</span>
                     </button>
@@ -600,281 +611,116 @@
                     <button type="button" class="mobile-action-card card-emerald" data-action="open-live-queue-modal">
                         <div class="card-icon-bubble">⏱️</div>
                         <div class="card-text">
-                            <strong>Live OPD Queue</strong>
-                            <span>Real-time Wait Status</span>
+                            <strong>Live Queue</strong>
+                            <span>Track Wait Time</span>
                         </div>
                         <span class="card-badge">LIVE</span>
                     </button>
 
-                    <!-- 3. Doctors & OPD -->
-                    <button type="button" class="mobile-action-card" data-action="open-doctors-modal">
-                        <div class="card-icon-bubble">👨‍⚕️</div>
-                        <div class="card-text">
-                            <strong>Specialist Doctors</strong>
-                            <span>9 Clinical Depts</span>
-                        </div>
-                    </button>
-
-                    <!-- 4. Lab Reports -->
+                    <!-- 3. Lab Reports -->
                     <button type="button" class="mobile-action-card" data-action="open-lab-report-modal">
                         <div class="card-icon-bubble">📄</div>
                         <div class="card-text">
                             <strong>Lab Reports</strong>
-                            <span>View &amp; Download PDF</span>
+                            <span>Download PDF</span>
                         </div>
                     </button>
 
-                    <!-- 5. Bed & ICU Matrix -->
-                    <button type="button" class="mobile-action-card" data-action="open-beds-modal">
-                        <div class="card-icon-bubble">🛏️</div>
-                        <div class="card-text">
-                            <strong>Beds &amp; ICU</strong>
-                            <span>Live Availability</span>
-                        </div>
-                    </button>
-
-                    <!-- 6. Virtual Tele-Consult -->
-                    <button type="button" class="mobile-action-card" data-action="open-teleconsult-modal">
-                        <div class="card-icon-bubble">📹</div>
-                        <div class="card-text">
-                            <strong>Tele-Consult</strong>
-                            <span>Video OPD &amp; e-Rx</span>
-                        </div>
-                    </button>
-
-                    <!-- 7. ABHA Health Pass -->
-                    <button type="button" class="mobile-action-card" data-action="open-health-card-modal">
-                        <div class="card-icon-bubble">🪪</div>
-                        <div class="card-text">
-                            <strong>ABHA Health Pass</strong>
-                            <span>Digital QR Card</span>
-                        </div>
-                    </button>
-
-                    <!-- 8. Pharmacy -->
+                    <!-- 4. Pharmacy & Rx -->
                     <button type="button" class="mobile-action-card" data-action="open-pharmacy-modal">
                         <div class="card-icon-bubble">💊</div>
                         <div class="card-text">
-                            <strong>Pharmacy &amp; Rx</strong>
-                            <span>24/7 Home Delivery</span>
+                            <strong>Pharmacy</strong>
+                            <span>Order Medicine</span>
                         </div>
                     </button>
                 </div>
             </section>
 
-            <!-- 6. Live Token Tracking Mobile Strip -->
+            <!-- 7. Clinical Specialties (Horizontal Touch Carousel) -->
+            <section class="mobile-specialties-section">
+                <div class="mobile-section-header">
+                    <h3>Clinical Specialties</h3>
+                    <button type="button" class="mobile-view-all-link" data-action="open-doctors-modal">View 9 Doctors ➔</button>
+                </div>
+                <div class="mobile-specialties-chips">
+                    <button type="button" class="mobile-spec-chip" data-action="open-booking-layer">
+                        <span class="spec-icon">🩺</span>
+                        <span class="spec-name">General Medicine</span>
+                    </button>
+                    <button type="button" class="mobile-spec-chip" data-action="open-booking-layer">
+                        <span class="spec-icon">❤️</span>
+                        <span class="spec-name">Cardiology</span>
+                    </button>
+                    <button type="button" class="mobile-spec-chip" data-action="open-booking-layer">
+                        <span class="spec-icon">🦴</span>
+                        <span class="spec-name">Orthopedics</span>
+                    </button>
+                    <button type="button" class="mobile-spec-chip" data-action="open-booking-layer">
+                        <span class="spec-icon">👶</span>
+                        <span class="spec-name">Pediatrics</span>
+                    </button>
+                    <button type="button" class="mobile-spec-chip" data-action="open-booking-layer">
+                        <span class="spec-icon">🧴</span>
+                        <span class="spec-name">Dermatology</span>
+                    </button>
+                    <button type="button" class="mobile-spec-chip" data-action="open-booking-layer">
+                        <span class="spec-icon">👁️</span>
+                        <span class="spec-name">Ophthalmology</span>
+                    </button>
+                    <button type="button" class="mobile-spec-chip" data-action="open-booking-layer">
+                        <span class="spec-icon">👂</span>
+                        <span class="spec-name">ENT Care</span>
+                    </button>
+                    <button type="button" class="mobile-spec-chip" data-action="open-booking-layer">
+                        <span class="spec-icon">🦷</span>
+                        <span class="spec-name">Dentistry</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 8. Live Token Tracking Mobile Strip -->
             <section class="mobile-track-strip">
                 <div class="mobile-track-card">
                     <div class="mobile-track-info">
                         <span class="track-icon">🎫</span>
                         <div>
-                            <h4>Track Your Token / OPD Pass</h4>
+                            <h4>Track Your OPD Token</h4>
                             <p>Check real-time counter status &amp; queue position</p>
                         </div>
                     </div>
                     <div class="mobile-track-btn-wrap">
                         <button type="button" class="btn btn-primary btn-sm" data-action="open-track-token-modal">Track Token ➔</button>
-                        <button type="button" class="btn btn-outline btn-sm" data-action="open-my-bookings-modal">My Slips</button>
+                        <button type="button" class="btn btn-outline btn-sm mobile-track-slip-btn" data-action="open-my-bookings-modal">My Slips</button>
                     </div>
                 </div>
             </section>
 
-            <!-- 7. Segmented Category Tabs Hub (OPD, Diagnostics, Emergency, Hospital) -->
-            <section class="mobile-tabs-section">
-                <div class="mobile-section-header">
-                    <h3>Explore Hospital Services</h3>
-                    <span class="mobile-tab-hint">Tap category to switch</span>
-                </div>
-
-                <!-- Category Tabs Navigation -->
-                <div class="mobile-segmented-tabs" role="tablist" aria-label="Hospital Service Categories">
-                    <button type="button" class="mobile-segment-btn active" data-action="switch-mobile-tab" data-tab="opd" role="tab" aria-selected="true">
-                        <span>🩺</span> OPD &amp; Care
-                    </button>
-                    <button type="button" class="mobile-segment-btn" data-action="switch-mobile-tab" data-tab="diagnostics" role="tab" aria-selected="false">
-                        <span>🧪</span> Diagnostics
-                    </button>
-                    <button type="button" class="mobile-segment-btn" data-action="switch-mobile-tab" data-tab="emergency" role="tab" aria-selected="false">
-                        <span>🚨</span> Emergency
-                    </button>
-                    <button type="button" class="mobile-segment-btn" data-action="switch-mobile-tab" data-tab="hospital" role="tab" aria-selected="false">
-                        <span>🛡️</span> Services
-                    </button>
-                </div>
-
-                <!-- Tab 1: OPD & Care Content -->
-                <div class="mobile-tab-content active" id="mobile-tab-opd" role="tabpanel">
-                    <div class="mobile-service-item-card">
-                        <div class="item-card-header">
-                            <div class="item-card-icon">🩺</div>
-                            <div>
-                                <h4>OPD Consultation &amp; Booking</h4>
-                                <p>9 Specialties: Cardiology, Ortho, Peds, Derma, Medicine, Eye, ENT, Dental, Gyne</p>
-                            </div>
-                        </div>
-                        <div class="item-card-actions">
-                            <button type="button" class="btn btn-primary btn-sm" data-action="open-booking-layer">Book Doctor Slot</button>
-                            <button type="button" class="btn btn-outline btn-sm" data-action="open-doctors-modal">View 9 Doctors</button>
-                        </div>
+            <!-- 9. 24/7 Emergency Trauma & Ambulance Card -->
+            <section class="mobile-emergency-banner">
+                <div class="mobile-emergency-inner">
+                    <div class="emergency-icon-wrap">🚨</div>
+                    <div class="emergency-text-wrap">
+                        <h4>24/7 Emergency Trauma &amp; Ambulance</h4>
+                        <p>Immediate ambulance dispatch &amp; trauma response team</p>
                     </div>
-
-                    <div class="mobile-service-item-card accent-card">
-                        <div class="item-card-header">
-                            <div class="item-card-icon">🧠</div>
-                            <div>
-                                <h4>Smart Symptom Checker</h4>
-                                <p>Unsure which specialist to see? Answer 2 quick questions to find the right department.</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-primary btn-sm" data-action="open-symptom-checker" style="width:100%;">Launch Symptom Checker ➔</button>
-                    </div>
-
-                    <div class="mobile-service-item-card">
-                        <div class="item-card-header">
-                            <div class="item-card-icon">⏱️</div>
-                            <div>
-                                <h4>Live OPD Queue Status</h4>
-                                <p>Live counter updates, token call bell, estimated wait minutes by department.</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-outline btn-sm" data-action="open-live-queue-modal" style="width:100%;">Open Live Queue Board</button>
-                    </div>
-
-                    <div class="mobile-service-item-card">
-                        <div class="item-card-header">
-                            <div class="item-card-icon">⭐</div>
-                            <div>
-                                <h4>Patient Feedback &amp; Ratings</h4>
-                                <p>Share your OPD consultation experience or view certified doctor ratings.</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-outline btn-sm" data-action="open-review-modal" style="width:100%;">Rate Your Doctor</button>
+                    <div class="emergency-cta-wrap">
+                        <button type="button" class="btn btn-danger btn-sm mobile-sos-btn" data-action="trigger-emergency-sos">Emergency SOS</button>
+                        <a href="tel:108" class="btn btn-outline btn-sm mobile-call-btn">Call 108</a>
                     </div>
                 </div>
+            </section>
 
-                <!-- Tab 2: Diagnostics & Tests Content -->
-                <div class="mobile-tab-content" id="mobile-tab-diagnostics" role="tabpanel" style="display:none;">
-                    <div class="mobile-service-item-card">
-                        <div class="item-card-header">
-                            <div class="item-card-icon">🧪</div>
-                            <div>
-                                <h4>Pathology &amp; Diagnostic Tests</h4>
-                                <p>Over 40+ tests: CBC, Lipid Profile, Thyroid Panel, Blood Glucose, LFT, KFT, Urine Exam.</p>
-                            </div>
-                        </div>
-                        <div class="item-card-actions">
-                            <button type="button" class="btn btn-primary btn-sm" data-action="open-lab-report-modal">View Test Directory &amp; Pricing</button>
-                        </div>
+            <!-- 10. Complete Services Drawer Trigger -->
+            <section class="mobile-all-services-cta-section">
+                <button type="button" class="mobile-all-services-card" data-action="toggle-mobile-services-sheet">
+                    <div class="all-services-icon">🏥</div>
+                    <div class="all-services-text">
+                        <h4>All Hospital Facilities &amp; Tools</h4>
+                        <p>Tele-consult, ICU beds, ABHA pass, symptom checker &amp; rate card</p>
                     </div>
-
-                    <div class="mobile-service-item-card">
-                        <div class="item-card-header">
-                            <div class="item-card-icon">📦</div>
-                            <div>
-                                <h4>Preventive Health Packages</h4>
-                                <p>Basic, Executive, Comprehensive Heart, and Senior Citizen health checkup packages.</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-primary btn-sm" data-action="open-packages-modal" style="width:100%;">View Packages &amp; Book</button>
-                    </div>
-
-                    <div class="mobile-service-item-card accent-card">
-                        <div class="item-card-header">
-                            <div class="item-card-icon">📊</div>
-                            <div>
-                                <h4>Health Risk &amp; BMI Calculator</h4>
-                                <p>Calculate Body Mass Index (BMI), diabetes risk score, and cardiovascular vitals indicators.</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-outline btn-sm" data-action="open-health-calculator" style="width:100%;">Calculate Risk &amp; BMI ➔</button>
-                    </div>
-                </div>
-
-                <!-- Tab 3: Emergency & Critical Care Content -->
-                <div class="mobile-tab-content" id="mobile-tab-emergency" role="tabpanel" style="display:none;">
-                    <div class="mobile-service-item-card emergency-highlight-card">
-                        <div class="item-card-header">
-                            <div class="item-card-icon" style="background:#fee2e2;color:#dc2626;">🚨</div>
-                            <div>
-                                <h4 style="color:#b91c1c;">1-Click Emergency SOS Dispatch</h4>
-                                <p>Instant GPS location capture, WhatsApp dispatch simulator, direct connection to 108/112.</p>
-                            </div>
-                        </div>
-                        <div class="item-card-actions">
-                            <button type="button" class="btn btn-primary btn-sm" style="background:#dc2626;" data-action="trigger-emergency-sos">Emergency SOS 108</button>
-                            <a href="tel:108" class="btn btn-outline btn-sm" style="border-color:#dc2626;color:#dc2626;">Call 108 Directly</a>
-                        </div>
-                    </div>
-
-                    <div class="mobile-service-item-card">
-                        <div class="item-card-header">
-                            <div class="item-card-icon">🛏️</div>
-                            <div>
-                                <h4>Bed &amp; ICU Availability Matrix</h4>
-                                <p>Real-time capacity tracking for Trauma Triage, ICU, Ventilator Bays, and Oxygen Beds.</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-primary btn-sm" data-action="open-beds-modal" style="width:100%;">View Live Bed Status</button>
-                    </div>
-
-                    <div class="mobile-service-item-card">
-                        <div class="item-card-header">
-                            <div class="item-card-icon">🗺️</div>
-                            <div>
-                                <h4>Hospital GPS &amp; Indoor Wayfinder</h4>
-                                <p>Interactive department directions: OPD wing, Emergency gate, Lab counter, Pharmacy, ICU.</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-outline btn-sm" data-action="open-wayfinder-modal" style="width:100%;">Open Indoor Campus Map</button>
-                    </div>
-                </div>
-
-                <!-- Tab 4: Patient Services & Hospital Info Content -->
-                <div class="mobile-tab-content" id="mobile-tab-hospital" role="tabpanel" style="display:none;">
-                    <div class="mobile-service-item-card">
-                        <div class="item-card-header">
-                            <div class="item-card-icon">🪪</div>
-                            <div>
-                                <h4>ABHA Digital Health Pass</h4>
-                                <p>Ayushman Bharat Digital Mission (ABDM) compatible 14-digit Health ID card with vector QR.</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-primary btn-sm" data-action="open-health-card-modal" style="width:100%;">Generate ABHA Pass</button>
-                    </div>
-
-                    <div class="mobile-service-item-card">
-                        <div class="item-card-header">
-                            <div class="item-card-icon">🛡️</div>
-                            <div>
-                                <h4>Insurance &amp; Ayushman Empanelment</h4>
-                                <p>Cashless Mediclaim desk, empanelled TPAs (Star, Care, HDFC, ICICI), pre-auth requirements.</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-outline btn-sm" data-action="open-insurance-modal" style="width:100%;">View Insurance &amp; TPA Desk</button>
-                    </div>
-
-                    <div class="mobile-service-item-card">
-                        <div class="item-card-header">
-                            <div class="item-card-icon">📋</div>
-                            <div>
-                                <h4>Hospital Rate Card &amp; Charges</h4>
-                                <p>Transparent schedule of charges for consultation, investigations, diagnostics &amp; day-care.</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-outline btn-sm" data-action="open-guidelines-modal" style="width:100%;">View Official Rate Card</button>
-                    </div>
-
-                    <div class="mobile-service-item-card">
-                        <div class="item-card-header">
-                            <div class="item-card-icon">🔑</div>
-                            <div>
-                                <h4>Staff Reception Console</h4>
-                                <p>Hospital staff portal: direct token generation, queue management, walk-in patient registration.</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-outline btn-sm" data-action="open-reception-desk" style="width:100%;">Open Reception Desk (PIN: 2026)</button>
-                    </div>
-                </div>
+                    <span class="all-services-arrow">View All (30+) ➔</span>
+                </button>
             </section>
 
             <!-- 8. Mobile App Footer & Compliance -->
