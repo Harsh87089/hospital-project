@@ -215,6 +215,7 @@ const CarePulseAuth = {
       }
     };
 
+    let safetyTimer = null;
     try {
       if (btn) {
         btn.innerHTML = '<span>⏳ Connecting to Google...</span>';
@@ -223,18 +224,15 @@ const CarePulseAuth = {
       showToast('Opening secure Google Sign-In...', 'info');
 
       // Safety timeout: Reset button if sign-in takes longer than 15 seconds
-      const safetyTimer = setTimeout(() => {
+      safetyTimer = setTimeout(() => {
         resetBtn();
+        this.showError('Google Sign-In is taking longer than expected. If a popup window opened, please complete sign-in. If it was blocked, click the pop-up icon in Chrome’s address bar (top right) to allow pop-ups for this site, or click "Continue as Guest Patient" below.');
       }, 15000);
 
-      let fb = null;
-      try {
-        fb = await this.ensureFirebaseLoaded();
-      } finally {
-        clearTimeout(safetyTimer);
-      }
+      const fb = await this.ensureFirebaseLoaded();
 
       if (!fb || !window.firebase || !firebase.auth) {
+        if (safetyTimer) clearTimeout(safetyTimer);
         resetBtn();
         this.showError('Google Sign-In could not load (it may be blocked by Brave Shields, an adblocker, or strict privacy settings). Please disable adblock for this site or continue as Guest Patient.');
         return;
@@ -253,13 +251,20 @@ const CarePulseAuth = {
         // If popup blocked by browser, seamlessly fallback to redirect
         if (popupErr && (popupErr.code === 'auth/popup-blocked' || popupErr.code === 'auth/cancelled-popup-request')) {
           showToast('Popup was blocked by browser. Redirecting to Google Sign-In...', 'info');
+          setTimeout(() => {
+            resetBtn();
+            this.showError('Browser blocked the Google Sign-In pop-up. Look for the pop-up icon in Chrome’s address bar (top right) and choose "Always allow pop-ups from this site", or click "Continue as Guest Patient" below.');
+          }, 4000);
           await firebase.auth().signInWithRedirect(provider);
           return;
         }
         throw popupErr;
+      } finally {
+        if (safetyTimer) clearTimeout(safetyTimer);
       }
 
       if (fbUser) {
+        resetBtn();
         this.handleFirebaseUser(fbUser);
         this.closeModal();
         showToast(`Welcome to CarePulse Hospital, ${fbUser.displayName || 'Patient'}!`, 'success');
@@ -270,18 +275,21 @@ const CarePulseAuth = {
         }
       }
     } catch (err) {
+      if (safetyTimer) clearTimeout(safetyTimer);
       console.error('Google Sign-In Error:', err);
       resetBtn();
       const errCode = (err && typeof err.code === 'string') ? err.code : '';
       const errMsg = (err && typeof err.message === 'string' && err.message.trim()) ? err.message : '';
       if (errCode === 'auth/popup-closed-by-user') {
-        this.showError('Google sign-in was closed before completing. Please try again.');
+        this.showError('Google sign-in was closed before completing. Please try again or continue as guest.');
       } else if (errCode === 'auth/unauthorized-domain') {
-        this.showError('Domain authorization pending: In Firebase Console > Authentication > Settings > Authorized domains, add "hospital-project-tawny.vercel.app".');
+        this.showError('Domain authorization pending: In Firebase Console > Authentication > Settings > Authorized domains, add "hospital-project-tawny.vercel.app". Or continue as Guest Patient.');
+      } else if (errCode === 'auth/network-request-failed' || errMsg.toLowerCase().includes('network') || errMsg.toLowerCase().includes('internet connection')) {
+        this.showError('Google Sign-In could not connect to authentication servers. If third-party cookies are blocked or domain is pending in Firebase Authorized Domains, click "Continue as Guest Patient" below.');
       } else if (errCode === 'auth/internal-error' || errCode === 'auth/operation-not-allowed') {
-        this.showError('Google provider setup pending: Please ensure Google provider is enabled with a support email in Firebase Console (Authentication > Sign-in method > Google > Save).');
+        this.showError('Google provider setup pending: Please ensure Google provider is enabled with a support email in Firebase Console (Authentication > Sign-in method > Google > Save), or continue as Guest Patient below.');
       } else if (errCode === 'auth/popup-blocked') {
-        this.showError('The browser blocked the sign-in popup. Please allow popups for this site or try again.');
+        this.showError('The browser blocked the sign-in popup. Please allow popups for this site or continue as Guest Patient.');
       } else if (errMsg) {
         this.showError(errMsg);
       } else if (errCode) {
@@ -311,6 +319,7 @@ const CarePulseAuth = {
       }
     };
 
+    let safetyTimer = null;
     try {
       if (sendBtn) {
         sendBtn.innerHTML = '<span>⏳ Contacting SMS gateway...</span>';
@@ -318,18 +327,21 @@ const CarePulseAuth = {
       }
 
       // Safety timeout: Reset button if SMS takes longer than 15 seconds
-      const safetyTimer = setTimeout(() => {
+      safetyTimer = setTimeout(() => {
         resetBtn();
+        try {
+          if (window.carepulseRecaptchaVerifier && typeof window.carepulseRecaptchaVerifier.clear === 'function') {
+            window.carepulseRecaptchaVerifier.clear();
+          }
+        } catch (e) {}
+        window.carepulseRecaptchaVerifier = null;
+        this.showError('SMS verification request timed out. This may happen if reCAPTCHA is blocked or connection is slow. Please try again or continue as Guest Patient.');
       }, 15000);
 
-      let fb = null;
-      try {
-        fb = await this.ensureFirebaseLoaded();
-      } finally {
-        clearTimeout(safetyTimer);
-      }
+      const fb = await this.ensureFirebaseLoaded();
 
       if (!fb || !window.firebase || !firebase.auth) {
+        if (safetyTimer) clearTimeout(safetyTimer);
         resetBtn();
         this.showError('SMS verification service could not load (it may be blocked by an adblocker). Please disable adblock for this site or continue as Guest Patient.');
         return;
@@ -342,6 +354,9 @@ const CarePulseAuth = {
       }
       const formatted = '+91' + phone;
       const confirmation = await firebase.auth().signInWithPhoneNumber(formatted, window.carepulseRecaptchaVerifier);
+      if (safetyTimer) clearTimeout(safetyTimer);
+      resetBtn();
+
       window.carepulseConfirmationResult = confirmation;
       this.targetContact = formatted;
       const targetEl = document.getElementById('auth-phone-target');
@@ -357,6 +372,7 @@ const CarePulseAuth = {
         otpInput.focus();
       }
     } catch (err) {
+      if (safetyTimer) clearTimeout(safetyTimer);
       console.error('Firebase Phone Auth Error:', err);
       resetBtn();
       try {
@@ -373,7 +389,9 @@ const CarePulseAuth = {
       } else if (errCode === 'auth/quota-exceeded') {
         this.showError('SMS quota limit reached for demo. Please continue as Guest Patient.');
       } else if (errCode === 'auth/captcha-check-failed') {
-        this.showError('reCAPTCHA verification failed. Please try again.');
+        this.showError('reCAPTCHA verification failed or was blocked by browser. Please try again or continue as Guest Patient.');
+      } else if (errCode === 'auth/network-request-failed' || errMsg.toLowerCase().includes('network') || errMsg.toLowerCase().includes('internet connection')) {
+        this.showError('SMS gateway network request failed. Please check your connection or continue as Guest Patient.');
       } else {
         this.showError(errMsg || (errCode ? `SMS Error (${errCode})` : 'Unable to send SMS OTP. Please try again or continue as guest.'));
       }
@@ -519,6 +537,51 @@ const CarePulseAuth = {
     // Demo login portal is removed; visitors browse freely
   },
 
+  backToPhoneInput() {
+    const step1 = document.getElementById('auth-phone-step');
+    const step2 = document.getElementById('auth-verify-step');
+    if (step1) step1.style.display = 'block';
+    if (step2) step2.style.display = 'none';
+    const sendBtn = document.getElementById('btn-send-phone-otp');
+    if (sendBtn) {
+      sendBtn.innerHTML = '<span>📱 Send Verification OTP</span>';
+      sendBtn.disabled = false;
+    }
+    const gBtn = document.getElementById('btn-google-signin');
+    if (gBtn) {
+      gBtn.innerHTML = '<span>Continue with Google</span>';
+      gBtn.disabled = false;
+    }
+    this.clearError();
+  },
+
+  continueAsGuest() {
+    this.sessionUser = {
+      name: 'Guest Patient',
+      email: '',
+      phone: '',
+      contact: 'Guest Session',
+      photoURL: '',
+      uid: 'guest_' + Math.random().toString(36).substring(2, 9),
+      method: 'guest',
+      initials: 'GP',
+      uhid: 'CP-GUEST-' + Math.floor(1000 + Math.random() * 9000),
+      loginTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      loginDate: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    };
+    try {
+      sessionStorage.setItem('carepulse_auth_user', JSON.stringify(this.sessionUser));
+    } catch (e) { }
+    this.updateProfileUI();
+    this.closeModal();
+    showToast('Signed in as Guest Patient. You can proceed with booking!', 'info');
+    if (typeof this.postAuthCallback === 'function') {
+      const cb = this.postAuthCallback;
+      this.postAuthCallback = null;
+      try { cb(this.sessionUser); } catch (e) { console.error('Post-auth callback error:', e); }
+    }
+  },
+
   openModal(postAuthAction = null) {
     this.postAuthCallback = postAuthAction;
     this.clearError();
@@ -544,6 +607,7 @@ const CarePulseAuth = {
     document.body.classList.remove('auth-locked');
     this.postAuthCallback = null;
     this.clearError();
+    this.backToPhoneInput();
   },
 
   requireAuth(callback) {
