@@ -3,6 +3,7 @@ import { DOCTORS, HEALTH_PACKAGES, state } from './config.js';
 import { escapeHtml, showToast, getUpcomingDays, getSlotsForDoctorAndDate, processBookingSubmission } from './utils.js';
 import { openTokenSlipModal, renderMyBookingsBadge } from './tokens.js';
 import { CarePulseAuth } from './auth.js';
+import { validate } from './validate.js';
 
 let activePackageBooking = null;
 
@@ -254,7 +255,7 @@ function updateDoctorInfoBanner() {
 
   const bannerHTML = `
     <div style="display: flex; align-items: center; gap: 1rem; background: white; border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1.25rem;">
-      <img src="${doc.avatar}" style="width: 52px; height: 52px; border-radius: var(--radius-sm); object-fit: cover;" alt="${doc.name}" />
+      <img src="${doc.avatar}" width="52" height="52" loading="lazy" decoding="async" style="width: 52px; height: 52px; border-radius: var(--radius-sm); object-fit: cover;" alt="${doc.name}, ${doc.specialty} (sample profile)" />
       <div style="flex: 1;">
         <div style="font-weight: 800; font-size: 1.05rem; color: var(--dark);">${doc.name}</div>
         <div style="font-size: 0.825rem; color: var(--primary); font-weight: 600;">${doc.specialty} • ${doc.qualifications}</div>
@@ -280,6 +281,9 @@ function setupBookingForms() {
   if (layerForm) {
     layerForm.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (typeof validate === 'function' && !validate(layerForm)) {
+        return;
+      }
       const patientData = {
         name: document.getElementById('layer-patient-name').value.trim(),
         age: document.getElementById('layer-patient-age').value.trim(),
@@ -309,6 +313,9 @@ function setupBookingForms() {
   if (inlineForm) {
     inlineForm.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (typeof validate === 'function' && !validate(inlineForm)) {
+        return;
+      }
       const patientData = {
         name: document.getElementById('patient-name').value.trim(),
         age: document.getElementById('patient-age').value.trim(),

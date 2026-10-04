@@ -829,10 +829,10 @@ function processBookingSubmission(patientData) {
   clearBookingErrors();
 
   const name = (patientData.name || '').trim();
-  const nameRegex = /^[A-Za-z\s.]{2,50}$/;
-  if (!name || name.length < 2 || name.length > 50 || !nameRegex.test(name)) {
-    showBookingError('layer-patient-name', 'Please provide a valid patient name (letters and spaces only, 2-50 characters).');
-    showToast('Please enter a valid patient name (letters and spaces only, 2-50 characters).', 'warning');
+  const nameRegex = /^[A-Za-z\u0900-\u097F\u0A00-\u0A7F .'-]{2,60}$/;
+  if (!name || name.length < 2 || name.length > 60 || !nameRegex.test(name)) {
+    showBookingError('layer-patient-name', 'Please provide a valid patient name (2-60 letters).');
+    showToast('Please enter a valid patient name (2-60 letters).', 'warning');
     return false;
   }
 

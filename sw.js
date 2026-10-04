@@ -1,5 +1,5 @@
 // CarePulse Hospital - Service Worker (Offline PWA & Asset Cache Engine)
-const CACHE_NAME = 'carepulse-v2.6.0';
+const CACHE_NAME = 'carepulse-v2.6.1';
 
 const PRECACHE_ASSETS = [
   './',
@@ -38,6 +38,8 @@ const PRECACHE_ASSETS = [
   './js/wayfinder.js',
   './js/healthcard.js',
   './js/gateway.js',
+  './js/validate.js',
+  './js/a11y-modal.js',
   './app.js',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -128,4 +130,11 @@ self.addEventListener('fetch', event => {
       });
     })
   );
+});
+
+// Skip waiting message listener for instant client updates
+self.addEventListener('message', e => {
+  if (e.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });

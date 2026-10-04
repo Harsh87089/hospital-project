@@ -577,7 +577,7 @@
             <section class="mobile-hero-card">
                 <div class="mobile-hero-badge">⚡ 1-Click Fast OPD Token</div>
                 <h3 class="mobile-hero-title">Book Doctor Consultation</h3>
-                <p class="mobile-hero-desc">9 clinical departments • 12 senior specialist consultants • Live queue updates</p>
+                <p class="mobile-hero-desc"><span data-stat="depts">9</span> clinical departments • <span data-stat="doctors">18</span> senior specialist consultants • Live queue updates</p>
                 <div class="mobile-hero-actions">
                     <button type="button" class="btn btn-primary mobile-hero-cta" data-action="open-booking-layer">
                         <span>📅 Book OPD Appointment</span>
@@ -939,7 +939,7 @@
                             <span class="sheet-item-icon">🔑</span>
                             <div class="sheet-item-text">
                                 <strong>Staff Reception Console</strong>
-                                <span>Reception token generation desk (PIN: 2026)</span>
+                                <span>Reception token generation desk (demo PIN shown on console screen)</span>
                             </div>
                             <span class="sheet-item-arrow">➔</span>
                         </div>
@@ -1177,11 +1177,11 @@
                 <!-- Quick Stats Grid -->
                 <div class="hero-stats-bar">
                     <div class="hero-stat-item">
-                        <span class="stat-number" data-count="9">9</span>
+                        <span class="stat-number" data-stat="depts" data-count="9">9</span>
                         <span class="stat-label" data-i18n="hero_stat_specialties">Clinical Specialties</span>
                     </div>
                     <div class="hero-stat-item">
-                        <span class="stat-number" data-count="18">18</span>
+                        <span class="stat-number" data-stat="doctors" data-count="18">18</span>
                         <span class="stat-label" data-i18n="hero_stat_doctors">Senior Specialist Doctors</span>
                     </div>
                     <div class="hero-stat-item">
@@ -1371,7 +1371,7 @@
                         <div class="campus-pulse-item" data-action="open-doctors-modal">
                             <div class="campus-pulse-item-info">
                                 <span class="campus-pulse-label">👨‍⚕️ Specialists on Duty</span>
-                                <span class="campus-pulse-value">10 Senior Doctors</span>
+                                <span class="campus-pulse-value"><span data-stat="doctors">18</span> Senior Doctors</span>
                                 <span class="campus-pulse-sub">General, Pediatrics, Derma, Dental</span>
                             </div>
                             <span class="campus-pulse-action-btn">Doctors ➔</span>
@@ -2560,7 +2560,7 @@
                         </tr>
                         <tr>
                             <td class="label">Age / Gender / Place</td>
-                            <td class="val" id="slip-patient-meta">32 Yrs / Male • Model Town, Phagwara</td>
+                            <td class="val" id="slip-patient-meta">42 Yrs / Male • Model Town, Phagwara</td>
                         </tr>
                         <tr>
                             <td class="label">Contact Mobile</td>
@@ -3265,9 +3265,8 @@
             <div class="u-flex-box-236">
                 <span class="u-icon-decorative" aria-hidden="true">🛡️</span>
                 <div>
-                    <h3 id="pkg-modal-title"class="u-box-margin-237">CarePulse
-                        ProHealth Package</h3>
-                    <span id="pkg-modal-price"class="u-box-font-weight-238">₹1,499</span>
+                    <h3 id="pkg-modal-title"class="u-box-margin-237">Executive Full Body Check</h3>
+                    <span id="pkg-modal-price"class="u-box-font-weight-238">₹2,499</span>
                 </div>
             </div>
             <p id="pkg-modal-desc"class="u-box-font-size-239">
@@ -3351,6 +3350,7 @@
                     <div class="service-layer-title-wrap">
                         <span class="layer-badge u-badge-fef3c7-b45309">STAFF CONSOLE &bull;
                             COUNTERS 1 &amp; 2</span>
+                        <span class="simulated-data-chip" style="margin-left: 0.5rem; font-size: 0.72rem; padding: 2px 6px;">Demo gate only: not real authentication</span>
                         <h2 id="modal-title-reception">OPD Reception &amp; Token Dispatch Console</h2>
                         <p>Advance serving tokens, change doctor OPD status, and issue priority walk-in passes with
                             realtime cross-tab synchronization.</p>
@@ -3407,7 +3407,7 @@
     </div>
 
     <!-- ==========================================================================
-             DPDP Act 2023 Compliance & Patient Health Privacy Modal
+             DPDP Act 2023 Principles Alignment & Patient Health Privacy Modal
              ========================================================================== -->
     <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-privacy">
         <div class="modal-container u-modal-w-680px">
@@ -3846,7 +3846,7 @@
                 <div class="rx-patient-bar">
                     <div><strong>Patient:</strong> <span id="rx-tele-patient-name">Self (Demo Patient)</span></div>
                     <div><strong>Token:</strong> <span id="rx-token-num">#TK-TELE-01</span></div>
-                    <div><strong>Date:</strong> <span id="rx-date-stamp">20 Sep 2026</span></div>
+                    <div><strong>Date:</strong> <span id="rx-date-stamp">Today</span></div>
                     <div><strong>Type:</strong> <span class="u-box-color-285">Tele-Consultation</span></div>
                 </div>
 

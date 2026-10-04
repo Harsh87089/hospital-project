@@ -510,6 +510,10 @@ const DOCTORS = [
   }
 ];
 
+const DEPTS = [...new Set(DOCTORS.map(d => d.specialtyKey || d.specialty))];
+window.DOCTORS = DOCTORS;
+window.DEPTS = DEPTS;
+
 // Time slot catalog
 const SLOT_TEMPLATES = {
   morning: ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM'],
@@ -780,7 +784,7 @@ function renderLiveOPDBoard() {
         <!-- Card Header: Avatar, Name, Specialty, Room -->
         <div class="queue-card-header">
           <div class="queue-avatar-wrap">
-            <img src="${doc.avatar}" alt="${doc.name}" class="queue-doc-avatar" loading="lazy" />
+            <img src="${doc.avatar}" alt="${doc.name}, ${doc.specialty} (sample profile)" class="queue-doc-avatar" width="48" height="48" loading="lazy" decoding="async" />
             <span class="queue-avatar-pulse" title="Doctor is active in consultation"></span>
           </div>
           <div class="queue-header-info">
@@ -956,7 +960,7 @@ function renderDoctorCards() {
             <span class="pulse-dot ${doc.status === 'In Surgery' ? 'amber-pulse' : ''}"></span> ${doc.status || 'In OPD Today'}
           </span>
           <div class="doctor-avatar-wrapper">
-            <img src="${doc.avatar}" alt="${doc.name}" class="doctor-avatar" loading="lazy" />
+            <img src="${doc.avatar}" alt="${doc.name}, ${doc.specialty} (sample profile)" class="doctor-avatar" width="80" height="80" loading="lazy" decoding="async" />
           </div>
         </div>
 
@@ -1409,7 +1413,7 @@ function updateDoctorInfoBanner() {
 
   const bannerHTML = `
     <div style="display: flex; align-items: center; gap: 1rem; background: white; border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1.25rem;">
-      <img src="${doc.avatar}" style="width: 52px; height: 52px; border-radius: var(--radius-sm); object-fit: cover;" alt="${doc.name}" />
+      <img src="${doc.avatar}" width="52" height="52" loading="lazy" decoding="async" style="width: 52px; height: 52px; border-radius: var(--radius-sm); object-fit: cover;" alt="${doc.name}, ${doc.specialty} (sample profile)" />
       <div style="flex: 1;">
         <div style="font-weight: 800; font-size: 1.05rem; color: var(--dark);">${doc.name}</div>
         <div style="font-size: 0.825rem; color: var(--primary); font-weight: 600;">${doc.specialty} • ${doc.qualifications}</div>
@@ -2043,10 +2047,10 @@ function processBookingSubmission(patientData) {
   clearBookingErrors();
 
   const name = (patientData.name || '').trim();
-  const nameRegex = /^[A-Za-z\s.]{2,50}$/;
-  if (!name || name.length < 2 || name.length > 50 || !nameRegex.test(name)) {
-    showBookingError('layer-patient-name', 'Please provide a valid patient name (letters and spaces only, 2-50 characters).');
-    showToast('Please enter a valid patient name (letters and spaces only, 2-50 characters).', 'warning');
+  const nameRegex = /^[A-Za-z\u0900-\u097F\u0A00-\u0A7F .'-]{2,60}$/;
+  if (!name || name.length < 2 || name.length > 60 || !nameRegex.test(name)) {
+    showBookingError('layer-patient-name', 'Please provide a valid patient name (2-60 letters).');
+    showToast('Please enter a valid patient name (2-60 letters).', 'warning');
     return false;
   }
 
@@ -2171,6 +2175,9 @@ function setupBookingForms() {
   if (layerForm) {
     layerForm.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (window.CarePulseValidate && typeof window.CarePulseValidate.validate === 'function' && !window.CarePulseValidate.validate(layerForm)) {
+        return;
+      }
       const patientData = {
         name: document.getElementById('layer-patient-name').value.trim(),
         age: document.getElementById('layer-patient-age').value.trim(),
@@ -2190,6 +2197,9 @@ function setupBookingForms() {
   if (inlineForm) {
     inlineForm.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (window.CarePulseValidate && typeof window.CarePulseValidate.validate === 'function' && !window.CarePulseValidate.validate(inlineForm)) {
+        return;
+      }
       const patientData = {
         name: document.getElementById('patient-name').value.trim(),
         age: document.getElementById('patient-age').value.trim(),
@@ -3640,9 +3650,31 @@ window.closeEmergencyModal = function () {
 };
 
 // --- Close Modals on Backdrop Click or Escape Key ---
-// --- Unified Accessible Modal Engine (WCAG 2.2 AA Focus Trap, Opener Return & Scroll Lock) ---
+// --- Unified Accessible Modal Engine (WCAG 2.1 / 2.2 AA Focus Trap, Opener Return & Scroll Lock) ---
+const FOCUSABLE_MODAL_SELECTORS = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 let activeModalOpener = null;
 let currentActiveModal = null;
+
+function trapModalFocus(e) {
+  const modal = e.currentTarget;
+  if (e.key === 'Escape') {
+    e.stopPropagation();
+    window.closeModal(modal);
+    return;
+  }
+  if (e.key !== 'Tab') return;
+  const items = [...modal.querySelectorAll(FOCUSABLE_MODAL_SELECTORS)].filter(el => el.offsetParent !== null);
+  if (!items.length) return;
+  const first = items[0];
+  const last = items[items.length - 1];
+  if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault();
+    first.focus();
+  }
+}
 
 window.openModal = function (modalId, triggerElement) {
   const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
@@ -3663,15 +3695,22 @@ window.openModal = function (modalId, triggerElement) {
 
   modal.classList.add('active');
   modal.classList.remove('u-display-none');
+  modal.hidden = false;
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
   modal.setAttribute('aria-hidden', 'false');
 
   document.body.classList.add('modal-open');
   document.body.style.overflow = 'hidden';
 
+  // Attach keydown focus trap and Escape handler directly on modal
+  modal.removeEventListener('keydown', trapModalFocus);
+  modal.addEventListener('keydown', trapModalFocus);
+
   // Focus trap initiation: focus first interactive element inside modal
-  const focusable = modal.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
-  if (focusable.length > 0) {
-    focusable[0].focus();
+  const firstInteractive = modal.querySelector(FOCUSABLE_MODAL_SELECTORS);
+  if (firstInteractive && typeof firstInteractive.focus === 'function') {
+    firstInteractive.focus();
   } else {
     modal.setAttribute('tabindex', '-1');
     modal.focus();
@@ -3688,6 +3727,7 @@ window.closeModal = function (modalId) {
 
   modal.classList.remove('active');
   modal.setAttribute('aria-hidden', 'true');
+  modal.removeEventListener('keydown', trapModalFocus);
 
   const openModals = document.querySelectorAll('.modal-backdrop.active, .service-layer-modal.active, .booking-layer-modal.active, .spotlight-backdrop.active, .voice-modal-backdrop.active');
   if (openModals.length === 0) {
@@ -3699,7 +3739,11 @@ window.closeModal = function (modalId) {
   }
 
   if (activeModalOpener && typeof activeModalOpener.focus === 'function') {
-    activeModalOpener.focus();
+    try {
+      activeModalOpener.focus();
+    } catch (_) {
+      // Ignored if element detached
+    }
     activeModalOpener = null;
   }
 };
@@ -5680,6 +5724,19 @@ window.clearAllDemoData = function () {
   }
 };
 
+function syncDynamicStats() {
+  const docCount = typeof DOCTORS !== 'undefined' ? DOCTORS.length : 18;
+  const depts = typeof DEPTS !== 'undefined' ? DEPTS : [...new Set((typeof DOCTORS !== 'undefined' ? DOCTORS : []).map(d => d.specialtyKey || d.specialty))];
+  const deptCount = depts.length;
+  document.querySelectorAll('[data-stat="doctors"]').forEach(el => el.textContent = docCount);
+  document.querySelectorAll('[data-stat="depts"]').forEach(el => el.textContent = deptCount);
+  const rxDateEl = document.getElementById('rx-date-stamp');
+  if (rxDateEl && (rxDateEl.textContent === 'Today' || !rxDateEl.textContent.trim())) {
+    rxDateEl.textContent = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+}
+window.syncDynamicStats = syncDynamicStats;
+
 // --- Initial Bootstrapping ---
 function bootCarePulse() {
   if (window.__carepulse_booted) return;
@@ -5687,6 +5744,7 @@ function bootCarePulse() {
 
   // Enforce authentication gate & load session
   CarePulseAuth.init();
+  syncDynamicStats();
 
   // Load stored appointments
   const v = readJSON('carepulse_appointments', []);
@@ -6512,6 +6570,41 @@ const BedsCapacityEngine = {
     if (ivFill) ivFill.style.width = `${bay.iv}%`;
   },
 
+  drawECGStaticFrame(canvas, ctx) {
+    const w = canvas.width;
+    const h = canvas.height;
+    const baseLine = h / 2;
+    ctx.fillStyle = '#02060d';
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.beginPath();
+    ctx.strokeStyle = '#22c55e';
+    ctx.shadowColor = '#4ade80';
+    ctx.shadowBlur = 4;
+    ctx.lineWidth = 2.2;
+    ctx.lineCap = 'round';
+
+    ctx.moveTo(0, baseLine);
+    for (let x = 0; x < w; x += 2) {
+      const phase = x % 80;
+      let targetY = baseLine;
+      if (phase >= 18 && phase < 26) {
+        targetY = baseLine - 6 * Math.sin(((phase - 18) / 8) * Math.PI);
+      } else if (phase >= 32 && phase < 35) {
+        targetY = baseLine + 5;
+      } else if (phase >= 35 && phase < 40) {
+        targetY = baseLine - 36;
+      } else if (phase >= 40 && phase < 44) {
+        targetY = baseLine + 12;
+      } else if (phase >= 54 && phase < 66) {
+        targetY = baseLine - 10 * Math.sin(((phase - 54) / 12) * Math.PI);
+      }
+      ctx.lineTo(x, targetY);
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  },
+
   startECGMonitor() {
     this.stopECGMonitor();
     const canvas = document.getElementById('icu-ecg-canvas');
@@ -6523,6 +6616,12 @@ const BedsCapacityEngine = {
     canvas.height = 110;
     ctx.fillStyle = '#02060d';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const reduceMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) {
+      this.drawECGStaticFrame(canvas, ctx);
+      return;
+    }
 
     this.ecgX = 0;
     this.ecgPrevY = canvas.height / 2;
@@ -9672,7 +9771,7 @@ document.addEventListener('click', function (e) {
   }
 });
 
-// Register PWA Service Worker
+// Register PWA Service Worker with Update Detection Toast
 if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
@@ -9680,6 +9779,15 @@ if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
         if (window.location.search.includes('dev=1')) {
           console.log('[SW] ServiceWorker registered with scope:', reg.scope);
         }
+        reg.addEventListener('updatefound', () => {
+          const newSw = reg.installing;
+          if (!newSw) return;
+          newSw.addEventListener('statechange', () => {
+            if (newSw.state === 'installed' && navigator.serviceWorker.controller) {
+              showUpdateToast(newSw);
+            }
+          });
+        });
       })
       .catch(err => {
         if (window.location.search.includes('dev=1')) {
@@ -9687,6 +9795,24 @@ if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
         }
       });
   });
+
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    window.location.reload();
+  });
+}
+
+function showUpdateToast(sw) {
+  if (document.getElementById('sw-update-toast')) return;
+  const t = document.createElement('div');
+  t.id = 'sw-update-toast';
+  t.setAttribute('role', 'status');
+  t.className = 'update-toast';
+  t.innerHTML = '<span>New version ready</span> <button type="button" class="btn btn-sm btn-primary" id="sw-reload-btn">Reload</button>';
+  const btn = t.querySelector('#sw-reload-btn');
+  if (btn) {
+    btn.onclick = () => sw.postMessage({ type: 'SKIP_WAITING' });
+  }
+  document.body.append(t);
 }
 
 // Resilient Bootstrapping: Run immediately if DOM is ready, or listen to DOMContentLoaded

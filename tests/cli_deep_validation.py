@@ -128,7 +128,9 @@ class ComprehensiveValidator:
             "/js/wayfinder.js",
             "/js/healthcard.js",
             "/js/gateway.js",
-            "/js/main.js"
+            "/js/main.js",
+            "/js/validate.js",
+            "/js/a11y-modal.js"
         ]
             for ep in endpoints:
                 url = f"{BASE_URL}{ep}"

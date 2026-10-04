@@ -84,7 +84,7 @@ function renderLiveOPDBoard() {
         <!-- Card Header: Avatar, Name, Specialty, Room -->
         <div class="queue-card-header">
           <div class="queue-avatar-wrap">
-            <img src="${doc.avatar}" alt="${doc.name}" class="queue-doc-avatar" loading="lazy" />
+            <img src="${doc.avatar}" alt="${doc.name}, ${doc.specialty} (sample profile)" class="queue-doc-avatar" width="48" height="48" loading="lazy" decoding="async" />
             <span class="queue-avatar-pulse" title="Doctor is active in consultation"></span>
           </div>
           <div class="queue-header-info">
@@ -280,7 +280,7 @@ function renderDoctorCards() {
             <span class="pulse-dot ${doc.status === 'In Surgery' ? 'amber-pulse' : ''}"></span> ${doc.status || 'In OPD Today'}
           </span>
           <div class="doctor-avatar-wrapper">
-            <img src="${doc.avatar}" alt="${doc.name}" class="doctor-avatar" loading="lazy" />
+            <img src="${doc.avatar}" alt="${doc.name}, ${doc.specialty} (sample profile)" class="doctor-avatar" width="80" height="80" loading="lazy" decoding="async" />
           </div>
         </div>
 

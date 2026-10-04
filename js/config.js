@@ -868,6 +868,8 @@ const FIREBASE_CONFIG = {
   measurementId: "G-NDPDFPHF6D"
 };
 
+const DEPTS = [...new Set(DOCTORS.map(d => d.specialtyKey || d.specialty))];
+
 export {
   DEMO_PHONE,
   DEMO_PHONE_RAW,
@@ -875,6 +877,7 @@ export {
   DEMO_WHATSAPP_DISPLAY,
   DEMO_STAFF_PIN,
   DOCTORS,
+  DEPTS,
   SLOT_TEMPLATES,
   state,
   CLINIC_BRANCHES,
