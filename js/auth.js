@@ -32,60 +32,78 @@ const CarePulseAuth = {
 
   firebaseLoadingPromise: null,
 
-  ensureFirebaseLoaded() {
+  loadScript(src) {
+    return new Promise((resolve) => {
+      // Check if script already exists
+      const existing = document.querySelector(`script[src="${src}"]`);
+      if (existing) {
+        if (existing.getAttribute('data-loaded') === 'true') return resolve(true);
+        existing.addEventListener('load', () => resolve(true), { once: true });
+        existing.addEventListener('error', () => resolve(false), { once: true });
+        return;
+      }
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = () => {
+        s.setAttribute('data-loaded', 'true');
+        resolve(true);
+      };
+      s.onerror = () => resolve(false);
+      document.head.appendChild(s);
+    });
+  },
+
+  async ensureFirebaseLoaded() {
     if (window.firebase && window.firebase.auth) {
       try {
         if (!firebase.apps || !firebase.apps.length) {
           firebase.initializeApp(FIREBASE_CONFIG);
         }
       } catch (e) {}
-      return Promise.resolve(window.firebase);
+      return window.firebase;
     }
     if (this.firebaseLoadingPromise) {
       return this.firebaseLoadingPromise;
     }
-    this.firebaseLoadingPromise = new Promise((resolve) => {
-      // Check if scripts are already in the DOM
-      const existingApp = document.querySelector('script[src*="firebase-app"]');
-      const existingAuth = document.querySelector('script[src*="firebase-auth"]');
-      if (existingApp && existingAuth) {
-        let attempts = 0;
-        const interval = setInterval(() => {
-          attempts++;
-          if (window.firebase && window.firebase.auth) {
-            clearInterval(interval);
-            try {
-              if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
-            } catch (e) {}
-            return resolve(window.firebase);
-          }
-          if (attempts > 60) {
-            clearInterval(interval);
-            resolve(window.firebase || null);
-          }
-        }, 100);
-        return;
+    this.firebaseLoadingPromise = (async () => {
+      // 1. Check if HTML scripts already loaded or are about to finish
+      for (let i = 0; i < 15; i++) {
+        if (window.firebase && window.firebase.auth) {
+          try {
+            if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+          } catch (e) {}
+          return window.firebase;
+        }
+        await new Promise((r) => setTimeout(r, 100));
       }
 
-      const s1 = document.createElement('script');
-      s1.src = 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js';
-      s1.onload = () => {
-        const s2 = document.createElement('script');
-        s2.src = 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js';
-        s2.onload = () => {
+      // 2. Secondary CDN: jsDelivr (often unblocked by adblockers and privacy shields)
+      try {
+        await this.loadScript('https://cdn.jsdelivr.net/npm/firebase@10.8.0/firebase-app-compat.js');
+        await this.loadScript('https://cdn.jsdelivr.net/npm/firebase@10.8.0/firebase-auth-compat.js');
+        if (window.firebase && window.firebase.auth) {
           try {
-            if (!firebase.apps || !firebase.apps.length) {
-              firebase.initializeApp(FIREBASE_CONFIG);
-            }
+            if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
           } catch (e) {}
-          resolve(window.firebase || null);
-        };
-        s2.onerror = () => resolve(window.firebase || null);
-        document.head.appendChild(s2);
-      };
-      s1.onerror = () => resolve(window.firebase || null);
-      document.head.appendChild(s1);
-    });
+          return window.firebase;
+        }
+      } catch (e) {}
+
+      // 3. Last fallback: dynamic gstatic injection
+      try {
+        await this.loadScript('https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js');
+        await this.loadScript('https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js');
+        if (window.firebase && window.firebase.auth) {
+          try {
+            if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+          } catch (e) {}
+          return window.firebase;
+        }
+      } catch (e) {}
+
+      return null;
+    })();
+
     return this.firebaseLoadingPromise;
   },
 
@@ -170,9 +188,9 @@ const CarePulseAuth = {
         btn.disabled = true;
       }
       showToast('Opening secure Google Sign-In...', 'info');
-      await this.ensureFirebaseLoaded();
-      if (!window.firebase || !firebase.auth) {
-        throw new Error('Google Sign-In service is loading. Please check your internet connection and try again.');
+      const fb = await this.ensureFirebaseLoaded();
+      if (!fb || !window.firebase || !firebase.auth) {
+        throw new Error('Google Sign-In could not load (it may be blocked by an adblocker like Brave Shields, uBlock Origin, or AdGuard). Please disable adblock for this site or continue as Guest Patient.');
       }
       const provider = new firebase.auth.GoogleAuthProvider();
       provider.addScope('profile');
@@ -246,9 +264,9 @@ const CarePulseAuth = {
         sendBtn.innerHTML = '<span>⏳ Contacting SMS gateway...</span>';
         sendBtn.disabled = true;
       }
-      await this.ensureFirebaseLoaded();
-      if (!window.firebase || !firebase.auth) {
-        throw new Error('SMS service is loading. Please check your internet connection and try again.');
+      const fb = await this.ensureFirebaseLoaded();
+      if (!fb || !window.firebase || !firebase.auth) {
+        throw new Error('SMS verification service could not load (it may be blocked by an adblocker). Please disable adblock for this site or continue as Guest Patient.');
       }
       if (!window.carepulseRecaptchaVerifier) {
         window.carepulseRecaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-auth-container', {
