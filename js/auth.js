@@ -32,23 +32,43 @@ const CarePulseAuth = {
 
   firebaseLoadingPromise: null,
 
-  loadScript(src) {
+  loadScript(src, timeoutMs = 2500) {
     return new Promise((resolve) => {
-      // Check if script already exists
-      const existing = document.querySelector(`script[src="${src}"]`);
-      if (existing) {
-        if (existing.getAttribute('data-loaded') === 'true') return resolve(true);
-        existing.addEventListener('load', () => resolve(true), { once: true });
-        existing.addEventListener('error', () => resolve(false), { once: true });
-        return;
+      let done = false;
+      const timer = setTimeout(() => {
+        if (!done) {
+          done = true;
+          resolve(false);
+        }
+      }, timeoutMs);
+
+      // Check if already on window
+      if (src.includes('firebase-app') && window.firebase) {
+        clearTimeout(timer);
+        return resolve(true);
       }
+      if (src.includes('firebase-auth') && window.firebase && window.firebase.auth) {
+        clearTimeout(timer);
+        return resolve(true);
+      }
+
       const s = document.createElement('script');
       s.src = src;
+      s.async = true;
       s.onload = () => {
-        s.setAttribute('data-loaded', 'true');
-        resolve(true);
+        if (!done) {
+          done = true;
+          clearTimeout(timer);
+          resolve(true);
+        }
       };
-      s.onerror = () => resolve(false);
+      s.onerror = () => {
+        if (!done) {
+          done = true;
+          clearTimeout(timer);
+          resolve(false);
+        }
+      };
       document.head.appendChild(s);
     });
   },
@@ -62,12 +82,14 @@ const CarePulseAuth = {
       } catch (e) {}
       return window.firebase;
     }
+
     if (this.firebaseLoadingPromise) {
       return this.firebaseLoadingPromise;
     }
+
     this.firebaseLoadingPromise = (async () => {
-      // 1. Check if HTML scripts already loaded or are about to finish
-      for (let i = 0; i < 15; i++) {
+      // 1. Check if HTML scripts already loaded or are about to finish (up to 1.2s)
+      for (let i = 0; i < 12; i++) {
         if (window.firebase && window.firebase.auth) {
           try {
             if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
@@ -79,8 +101,8 @@ const CarePulseAuth = {
 
       // 2. Secondary CDN: jsDelivr (often unblocked by adblockers and privacy shields)
       try {
-        await this.loadScript('https://cdn.jsdelivr.net/npm/firebase@10.8.0/firebase-app-compat.js');
-        await this.loadScript('https://cdn.jsdelivr.net/npm/firebase@10.8.0/firebase-auth-compat.js');
+        await this.loadScript('https://cdn.jsdelivr.net/npm/firebase@10.8.0/firebase-app-compat.js', 2500);
+        await this.loadScript('https://cdn.jsdelivr.net/npm/firebase@10.8.0/firebase-auth-compat.js', 2500);
         if (window.firebase && window.firebase.auth) {
           try {
             if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
@@ -89,10 +111,10 @@ const CarePulseAuth = {
         }
       } catch (e) {}
 
-      // 3. Last fallback: dynamic gstatic injection
+      // 3. Last fallback: dynamic gstatic injection with timeout
       try {
-        await this.loadScript('https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js');
-        await this.loadScript('https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js');
+        await this.loadScript('https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js', 2500);
+        await this.loadScript('https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js', 2500);
         if (window.firebase && window.firebase.auth) {
           try {
             if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
@@ -104,7 +126,11 @@ const CarePulseAuth = {
       return null;
     })();
 
-    return this.firebaseLoadingPromise;
+    const result = await this.firebaseLoadingPromise;
+    if (!result) {
+      this.firebaseLoadingPromise = null; // Allow retry on subsequent user actions
+    }
+    return result;
   },
 
   async initFirebase() {
@@ -181,17 +207,39 @@ const CarePulseAuth = {
   async signInWithGoogle() {
     this.clearError();
     const btn = document.getElementById('btn-google-signin');
-    const originalText = btn ? btn.innerHTML : '';
+    const originalText = btn ? btn.innerHTML : '<span>Continue with Google</span>';
+    const resetBtn = () => {
+      if (btn) {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    };
+
     try {
       if (btn) {
         btn.innerHTML = '<span>⏳ Connecting to Google...</span>';
         btn.disabled = true;
       }
       showToast('Opening secure Google Sign-In...', 'info');
-      const fb = await this.ensureFirebaseLoaded();
-      if (!fb || !window.firebase || !firebase.auth) {
-        throw new Error('Google Sign-In could not load (it may be blocked by an adblocker like Brave Shields, uBlock Origin, or AdGuard). Please disable adblock for this site or continue as Guest Patient.');
+
+      // Safety timeout: Reset button if sign-in takes longer than 15 seconds
+      const safetyTimer = setTimeout(() => {
+        resetBtn();
+      }, 15000);
+
+      let fb = null;
+      try {
+        fb = await this.ensureFirebaseLoaded();
+      } finally {
+        clearTimeout(safetyTimer);
       }
+
+      if (!fb || !window.firebase || !firebase.auth) {
+        resetBtn();
+        this.showError('Google Sign-In could not load (it may be blocked by Brave Shields, an adblocker, or strict privacy settings). Please disable adblock for this site or continue as Guest Patient.');
+        return;
+      }
+
       const provider = new firebase.auth.GoogleAuthProvider();
       provider.addScope('profile');
       provider.addScope('email');
@@ -223,10 +271,7 @@ const CarePulseAuth = {
       }
     } catch (err) {
       console.error('Google Sign-In Error:', err);
-      if (btn) {
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-      }
+      resetBtn();
       const errCode = (err && typeof err.code === 'string') ? err.code : '';
       const errMsg = (err && typeof err.message === 'string' && err.message.trim()) ? err.message : '';
       if (errCode === 'auth/popup-closed-by-user') {
@@ -258,16 +303,38 @@ const CarePulseAuth = {
       return;
     }
     const sendBtn = document.getElementById('btn-send-phone-otp');
-    const originalText = sendBtn ? sendBtn.innerHTML : '';
+    const originalText = sendBtn ? sendBtn.innerHTML : '<span>📱 Send Verification OTP</span>';
+    const resetBtn = () => {
+      if (sendBtn) {
+        sendBtn.innerHTML = originalText;
+        sendBtn.disabled = false;
+      }
+    };
+
     try {
       if (sendBtn) {
         sendBtn.innerHTML = '<span>⏳ Contacting SMS gateway...</span>';
         sendBtn.disabled = true;
       }
-      const fb = await this.ensureFirebaseLoaded();
-      if (!fb || !window.firebase || !firebase.auth) {
-        throw new Error('SMS verification service could not load (it may be blocked by an adblocker). Please disable adblock for this site or continue as Guest Patient.');
+
+      // Safety timeout: Reset button if SMS takes longer than 15 seconds
+      const safetyTimer = setTimeout(() => {
+        resetBtn();
+      }, 15000);
+
+      let fb = null;
+      try {
+        fb = await this.ensureFirebaseLoaded();
+      } finally {
+        clearTimeout(safetyTimer);
       }
+
+      if (!fb || !window.firebase || !firebase.auth) {
+        resetBtn();
+        this.showError('SMS verification service could not load (it may be blocked by an adblocker). Please disable adblock for this site or continue as Guest Patient.');
+        return;
+      }
+
       if (!window.carepulseRecaptchaVerifier) {
         window.carepulseRecaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-auth-container', {
           size: 'invisible'
@@ -291,13 +358,19 @@ const CarePulseAuth = {
       }
     } catch (err) {
       console.error('Firebase Phone Auth Error:', err);
-      if (sendBtn) {
-        sendBtn.innerHTML = originalText;
-        sendBtn.disabled = false;
-      }
+      resetBtn();
+      try {
+        if (window.carepulseRecaptchaVerifier && typeof window.carepulseRecaptchaVerifier.clear === 'function') {
+          window.carepulseRecaptchaVerifier.clear();
+        }
+      } catch (e) {}
+      window.carepulseRecaptchaVerifier = null;
+
       const errCode = (err && typeof err.code === 'string') ? err.code : '';
       const errMsg = (err && typeof err.message === 'string' && err.message.trim()) ? err.message : '';
-      if (errCode === 'auth/quota-exceeded') {
+      if (errCode === 'auth/operation-not-allowed') {
+        this.showError('Phone Authentication is not enabled in Firebase Console (Authentication > Sign-in method > Phone > Enable). Or you can continue as Guest Patient.');
+      } else if (errCode === 'auth/quota-exceeded') {
         this.showError('SMS quota limit reached for demo. Please continue as Guest Patient.');
       } else if (errCode === 'auth/captcha-check-failed') {
         this.showError('reCAPTCHA verification failed. Please try again.');
@@ -317,7 +390,13 @@ const CarePulseAuth = {
       return;
     }
     const confirmBtn = document.getElementById('btn-confirm-phone-otp');
-    const originalText = confirmBtn ? confirmBtn.innerHTML : '';
+    const originalText = confirmBtn ? confirmBtn.innerHTML : '<span>Verify &amp; Continue</span>';
+    const resetBtn = () => {
+      if (confirmBtn) {
+        confirmBtn.innerHTML = originalText;
+        confirmBtn.disabled = false;
+      }
+    };
     try {
       if (confirmBtn) {
         confirmBtn.innerHTML = '<span>⏳ Verifying OTP...</span>';
@@ -339,10 +418,7 @@ const CarePulseAuth = {
       }
     } catch (err) {
       console.error('OTP confirmation error:', err);
-      if (confirmBtn) {
-        confirmBtn.innerHTML = originalText;
-        confirmBtn.disabled = false;
-      }
+      resetBtn();
       const errCode = (err && typeof err.code === 'string') ? err.code : '';
       const errMsg = (err && typeof err.message === 'string' && err.message.trim()) ? err.message : '';
       if (errCode === 'auth/invalid-verification-code') {
