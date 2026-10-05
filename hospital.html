@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://images.unsplash.com https://lh3.googleusercontent.com; media-src 'self' blob: data:; frame-src 'self' https://www.google.com https://maps.google.com https://www.recaptcha.net https://hospital-demo-project.firebaseapp.com https://*.firebaseapp.com https://accounts.google.com; connect-src 'self' https://api.emailjs.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://*.firebaseio.com https://*.googleapis.com https://apis.google.com https://accounts.google.com https://www.google.com https://www.recaptcha.net https://hospital-demo-project.firebaseapp.com https://*.firebaseapp.com https://gstatic.com https://www.gstatic.com; base-uri 'self'; form-action 'self' https://accounts.google.com https://hospital-demo-project.firebaseapp.com https://*.firebaseapp.com; object-src 'none';" />
     <title>CarePulse | Hospital Portal Demo - OPD Booking &amp; Live Token Queue (UX Prototype)</title>
     <meta name="description" content="CarePulse is a fictional hospital portal built as a portfolio UX prototype: OPD appointment booking, live token queue and e-pass generation. Not a real hospital - no real bookings, care or ambulance dispatch." />
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
@@ -585,7 +586,7 @@
                     </button>
                     <button type="button" class="mobile-hero-queue-btn" data-action="open-live-queue-modal">
                         <span class="pulse-dot"></span>
-                        <span>Live Queue: <strong>14 Serving</strong> (12 min wait)</span>
+                        <span id="hero-live-queue-text">Live Queue: <strong>TK-14 Serving</strong> (12 min wait)</span>
                     </button>
                 </div>
             </section>
@@ -1363,8 +1364,8 @@
                         <div class="campus-pulse-item" data-action="open-live-queue-modal">
                             <div class="campus-pulse-item-info">
                                 <span class="campus-pulse-label">⏱️ Live OPD Queue</span>
-                                <span class="campus-pulse-value">Token #TK-108 Active</span>
-                                <span class="campus-pulse-sub">Avg Wait: ~12 mins &bull; 4 Chambers</span>
+                                <span class="campus-pulse-value" id="pulse-queue-status">Token #TK-14 Active</span>
+                                <span class="campus-pulse-sub" id="pulse-queue-sub">Avg Wait: ~12 mins &bull; 18 Chambers</span>
                             </div>
                             <span class="campus-pulse-action-btn">Open Board ➔</span>
                         </div>
@@ -1404,12 +1405,12 @@
         <section class="section rate-card-section u-box-padding-34" id="rate-card-section">
             <div class="container">
                 <div class="section-header text-center u-modal-w-760px">
-                    <span class="badge badge-primary">CENTRAL TARIFF TRANSPARENCY</span>
+                    <span class="badge badge-primary">SAMPLE TARIFF SCHEDULE</span>
                     <h2 class="u-box-font-size-36">Standard OPD &amp; Diagnostic
                         Tariff Schedule</h2>
                     <p class="u-box-color-37">
-                        CarePulse demonstrates 100% upfront pricing transparency in this prototype. No unexpected admission
-                        charges, hidden file opening fees, or diagnostic surcharges.
+                        CarePulse demonstrates a sample tariff schedule in this prototype. Simulated fee schedule for consultation
+                        and diagnostic packages (demonstration purposes only).
                     </p>
                 </div>
 
@@ -1748,7 +1749,7 @@
                 <div class="section-header text-center u-modal-w-760px" style="text-align:center;">
                     <span class="badge badge-primary">PATIENT REVIEWS</span>
                     <h2 class="u-box-font-size-36" style="margin-top:0.5rem;">What Our Patients Say</h2>
-                    <p class="u-box-color-37">Verified demo reviews from simulated patients across all specialties. (Demo Prototype)</p>
+                    <p class="u-box-color-37">Sample reviews from simulated patients across all specialties. (Demo Prototype)</p>
                 </div>
                 <div class="testimonials-grid" id="testimonials-grid">
                     <!-- Testimonials injected by JS -->
@@ -1796,7 +1797,7 @@
                     <div class="queue-metric-card">
                         <div class="queue-metric-icon u-badge-ecfdf5-059669">👨‍⚕️</div>
                         <div class="queue-metric-info">
-                            <span class="queue-metric-val" id="queue-stat-chambers">10 Chambers</span>
+                            <span class="queue-metric-val" id="queue-stat-chambers">18 Chambers</span>
                             <span class="queue-metric-lbl">Active Specialists</span>
                         </div>
                     </div>
@@ -3684,8 +3685,8 @@
     <div id="pa-announcement-banner" class="pa-announcement-banner" role="status" aria-live="polite">
         <span class="u-icon-decorative" aria-hidden="true">📢</span>
         <div>
-            <div id="pa-announcement-text" class="pa-announcement-text"><span class="simulated-data-chip" style="font-size:0.65rem; padding: 2px 6px; margin-right:6px;">SIMULATED</span> Now Serving Token TK-15 &bull; Room 101</div>
-            <div id="pa-announcement-sub" class="pa-announcement-sub">CarePulse Public Address (Demo Simulation) &bull; Dr. Rajesh Sharma</div>
+            <div id="pa-announcement-text" class="pa-announcement-text"><span class="simulated-data-chip" style="font-size:0.65rem; padding: 2px 6px; margin-right:6px;">SIMULATED</span> Now Serving Token TK-14 &bull; Room 101</div>
+            <div id="pa-announcement-sub" class="pa-announcement-sub">CarePulse Public Address (Demo Simulation) &bull; Dr. Rajesh Sharma (Room 101)</div>
         </div>
     </div>
 
@@ -4160,25 +4161,6 @@
 
     <!-- Main JavaScript Logic (ES Modules with Legacy Fallback Bundle) -->
     <script type="module" src="js/main.js"></script>
-    <script>
-      // Protocol fallback: When opened directly via local file:// protocol where modules are blocked by browser CORS, load app.js
-      if (window.location.protocol === 'file:') {
-        function checkAndLoadFallback() {
-          if (!window.CarePulseAuth && !document.querySelector('script[data-fallback="app-js"]')) {
-            var s = document.createElement('script');
-            s.src = 'app.js?v=2.2';
-            s.setAttribute('data-fallback', 'app-js');
-            document.body.appendChild(s);
-          }
-        }
-        if (document.readyState === 'loading') {
-          window.addEventListener('DOMContentLoaded', checkAndLoadFallback);
-        } else {
-          checkAndLoadFallback();
-        }
-        setTimeout(checkAndLoadFallback, 150);
-      }
-    </script>
     <script nomodule src="app.js?v=2.2"></script>
 
 

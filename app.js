@@ -11,14 +11,18 @@ const DEMO_WHATSAPP = '910000000000';
 const DEMO_WHATSAPP_DISPLAY = '+91 00000 00000';
 const DEMO_STAFF_PIN = '2026';
 
-// Dynamically synchronize canonical link and og:url with whatever live domain is hosting the app (e.g. Vercel)
-(function syncSEOWithCurrentHost() {
-  if (typeof window !== 'undefined' && window.location && window.location.protocol && window.location.protocol.startsWith('http')) {
-    const liveCanonical = window.location.origin + window.location.pathname;
-    const canonEl = document.querySelector('link[rel="canonical"]');
-    if (canonEl) canonEl.setAttribute('href', liveCanonical);
-    const ogUrlEl = document.querySelector('meta[property="og:url"]');
-    if (ogUrlEl) ogUrlEl.setAttribute('content', liveCanonical);
+// Guard: Ensure GitHub Pages mirror is not indexed to avoid duplicate canonical indexing with primary Vercel host
+(function guardPagesIndexing() {
+  if (typeof window !== 'undefined' && window.location && window.location.hostname && window.location.hostname.includes('github.io')) {
+    const existingRobots = document.querySelector('meta[name="robots"]');
+    if (existingRobots) {
+      existingRobots.setAttribute('content', 'noindex, nofollow');
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'robots';
+      meta.content = 'noindex, nofollow';
+      document.head.appendChild(meta);
+    }
   }
 })();
 
@@ -540,7 +544,14 @@ const state = {
   lastCreatedToken: null,
   queueSpecialty: 'all',
   queueSearch: '',
-  queueAutoSimInterval: null
+  queueAutoSimInterval: null,
+  liveQueue: {
+    activeToken: 'TK-14',
+    activeRoom: 'Room 101',
+    activeDoctor: DOCTORS[0].name,
+    avgWaitMins: 12,
+    totalChambers: DOCTORS.length
+  }
 };
 
 // --- Web Audio Chime Generator (Realistic Clinic Bell) ---
@@ -722,6 +733,54 @@ function getSlotsForDoctorAndDate(doctorId, isoDate) {
 }
 
 // --- Render Live OPD Queue Board ---
+function syncQueueStateAndUI(activeDoc, tokenNum) {
+  if (!state.liveQueue) {
+    state.liveQueue = {
+      activeToken: 'TK-14',
+      activeRoom: 'Room 101',
+      activeDoctor: DOCTORS[0]?.name || 'Dr. Rajesh Sharma',
+      avgWaitMins: 12,
+      totalChambers: DOCTORS.length
+    };
+  }
+  if (activeDoc && tokenNum) {
+    state.liveQueue.activeToken = `TK-${String(tokenNum).padStart(2, '0')}`;
+    state.liveQueue.activeRoom = (activeDoc.room || 'Room 101').split(',')[0].trim();
+    state.liveQueue.activeDoctor = activeDoc.name;
+  }
+
+  // 1. Hero queue button
+  const heroQueueText = document.getElementById('hero-live-queue-text');
+  if (heroQueueText) {
+    heroQueueText.innerHTML = `Live Queue: <strong>${state.liveQueue.activeToken} Serving</strong> (${state.liveQueue.avgWaitMins} min wait)`;
+  }
+
+  // 2. Campus pulse active token
+  const pulseQueueStatus = document.getElementById('pulse-queue-status');
+  if (pulseQueueStatus) {
+    pulseQueueStatus.innerText = `Token #${state.liveQueue.activeToken} Active`;
+  }
+
+  // 3. Campus pulse chambers and wait
+  const pulseQueueSub = document.getElementById('pulse-queue-sub');
+  if (pulseQueueSub) {
+    pulseQueueSub.innerHTML = `Avg Wait: ~${state.liveQueue.avgWaitMins} mins &bull; ${state.liveQueue.totalChambers} Chambers`;
+  }
+
+  // 4. Queue metric chamber count
+  const statChambers = document.getElementById('queue-stat-chambers');
+  if (statChambers) {
+    statChambers.innerText = `${state.liveQueue.totalChambers} Chambers`;
+  }
+
+  // 5. PA bar announcement
+  const paText = document.getElementById('pa-announcement-text');
+  if (paText) {
+    paText.innerHTML = `<span class="simulated-data-chip" style="font-size:0.65rem; padding: 2px 6px; margin-right:6px;">SIMULATED</span> Now Serving Token ${state.liveQueue.activeToken} &bull; ${state.liveQueue.activeRoom}`;
+  }
+}
+window.syncQueueStateAndUI = syncQueueStateAndUI;
+
 function renderLiveOPDBoard() {
   const container = document.getElementById('live-queue-cards');
   if (!container) return;
@@ -732,9 +791,12 @@ function renderLiveOPDBoard() {
   const totalIssuedToday = DOCTORS.reduce((sum, d) => sum + (d.totalTodayTokens || 0), 0);
   const avgWait = Math.round(DOCTORS.reduce((sum, d) => sum + (d.avgWaitPerPatient || 12), 0) / (DOCTORS.length || 1));
 
-  // Update summary badges if present
-  const statChambers = document.getElementById('queue-stat-chambers');
-  if (statChambers) statChambers.innerText = `${totalChambers} Chambers`;
+  // Sync state.liveQueue metrics
+  if (state.liveQueue) {
+    state.liveQueue.avgWaitMins = avgWait;
+    state.liveQueue.totalChambers = totalChambers;
+  }
+  syncQueueStateAndUI();
 
   const statTokens = document.getElementById('queue-stat-tokens');
   if (statTokens) statTokens.innerText = `${totalServingNow} / ${totalIssuedToday}`;
@@ -915,6 +977,7 @@ window.simulateNextToken = function (docId) {
   } else {
     playClinicChime();
   }
+  syncQueueStateAndUI(doc, doc.currentServingToken);
   showToast(`Ding! ${doc.name} (${doc.room.split(',')[0]}) is now calling Token #TK-${String(doc.currentServingToken).padStart(2, '0')}`, 'success');
   renderLiveOPDBoard();
 
@@ -1986,7 +2049,9 @@ function generateUniqueTicketDetails(doc, patientData, targetDateIso) {
   });
 
   // 10. Dynamic Verification URL & Payload for QR (No PII in query params)
-  const qrPayload = `https://hospital-project-tawny.vercel.app/?track=${tokenId}&ref=${ticketRef}`;
+  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
+  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
+  const qrPayload = `${qrOrigin}${qrPath}?track=${encodeURIComponent(tokenId)}&ref=${encodeURIComponent(ticketRef)}`;
 
   return {
     tokenNumber,
@@ -2255,7 +2320,9 @@ function openTokenSlipModal(app) {
   // Dynamic QR Code
   const qrContainer = document.getElementById('slip-qr-container');
   if (qrContainer) {
-    const qrPayload = app.qrPayload || `https://carepulse.hospital/checkin?t=${app.tokenId}&ref=${app.ticketRef || '0'}&sec=${app.securityCode || '0'}`;
+    const origin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
+    const pathname = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
+    const qrPayload = app.qrPayload || `${origin}${pathname}?track=${encodeURIComponent(app.tokenId || '')}&ref=${encodeURIComponent(app.ticketRef || '0')}`;
     qrContainer.innerHTML = CarePulseQR.renderToSvg(qrPayload, 72);
   }
 
@@ -2467,7 +2534,9 @@ function downloadTicket(app, format = 'png') {
   ctx.stroke();
 
   // Draw dynamic QR Code on canvas
-  const qrPayload = app.qrPayload || `https://hospital-project-tawny.vercel.app/?track=${app.tokenId}&ref=${app.ticketRef}`;
+  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
+  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
+  const qrPayload = app.qrPayload || `${qrOrigin}${qrPath}?track=${encodeURIComponent(app.tokenId || '')}&ref=${encodeURIComponent(app.ticketRef || '0')}`;
   CarePulseQR.drawToCanvas(ctx, qrPayload, 56, 642, 110);
 
   ctx.fillStyle = '#0f172a';
@@ -2584,7 +2653,9 @@ function downloadTicketPDF(app) {
   }
 
   const barcodeSvg = CarePulseBarcode.renderSvg(app.barcodeNum || `CP-${app.tokenId}`);
-  const qrSvg = CarePulseQR.renderToSvg(app.qrPayload || `https://hospital-project-tawny.vercel.app/?track=${app.tokenId}&ref=${app.ticketRef || '0'}`, 90);
+  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
+  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
+  const qrSvg = CarePulseQR.renderToSvg(app.qrPayload || `${qrOrigin}${qrPath}?track=${encodeURIComponent(app.tokenId || '')}&ref=${encodeURIComponent(app.ticketRef || '0')}`, 90);
 
   printWindow.document.write(`
     <!DOCTYPE html>
@@ -3209,6 +3280,7 @@ window.callNextPatientToken = function (doctorId) {
     try { playClinicChime(); } catch (e) { }
   }
 
+  syncQueueStateAndUI(doc, doc.currentServingToken);
   showToast(`🔔 Counter Called: Token #TK-${String(doc.currentServingToken).padStart(2, '0')} for ${doc.name} (${doc.room.split(',')[0]})`, 'success');
   broadcastQueueUpdate('CALL_NEXT', { doctorId, servingToken: doc.currentServingToken });
 };
@@ -4054,7 +4126,9 @@ window.submitPackageBookingForm = function (e) {
   const genSecPart = () => Array.from({ length: 4 }, () => hexChars.charAt(Math.floor(Math.random() * hexChars.length))).join('');
   const securityCode = `SEC-${genSecPart()}-${genSecPart()}`;
   const barcodeNum = `CP-PKG-${pkgTokenNum}-${Math.floor(1000 + Math.random() * 9000)}`;
-  const qrPayload = `https://carepulse.hospital/checkin?t=${tokenString}&ref=${ticketRef}&sec=${securityCode}&p=${encodeURIComponent(name)}`;
+  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
+  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
+  const qrPayload = `${qrOrigin}${qrPath}?track=${encodeURIComponent(tokenString)}&ref=${encodeURIComponent(ticketRef)}`;
 
   const pkgAppointment = {
     tokenId: tokenString,
@@ -4121,7 +4195,7 @@ function submitDirectPackageBooking(pkg) {
     queuePosition: 1,
     estWaitMins: 5,
     issueTimestamp: now.toLocaleDateString('en-IN') + ', ' + now.toLocaleTimeString('en-IN'),
-    qrPayload: `https://carepulse.hospital/checkin?t=${tokenString}&ref=${ticketRef}`,
+    qrPayload: `${(typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app'}${(typeof location !== 'undefined' && location.pathname) ? location.pathname : '/'}?track=${encodeURIComponent(tokenString)}&ref=${encodeURIComponent(ticketRef)}`,
     doctorId: 'lab-pkg',
     doctorName: 'CarePulse Diagnostics Lab Desk',
     doctorSpecialty: 'CarePulse ProHealth Package',

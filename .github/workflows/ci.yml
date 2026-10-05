@@ -20,11 +20,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Run Unit Test Suite (36 Tests)
+      - name: Run Unit Test Suite (38 Tests)
         run: python -m unittest discover -s tests -v
 
       - name: Run Overclaims & Honest Demo Guard
         run: python -m unittest tests/test_no_overclaims.py -v
 
-      - name: Run Deep CLI Verification Suite (104 Checks)
+      - name: Run Deep CLI Verification Suite (109 Checks)
         run: python tests/cli_deep_validation.py

@@ -20,7 +20,7 @@ import hashlib
 import urllib.request
 from html.parser import HTMLParser
 
-BASE_URL = "http://localhost:3000"
+BASE_URL = "http://127.0.0.1:3000"
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class ComprehensiveValidator:

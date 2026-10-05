@@ -65,7 +65,9 @@ function openTokenSlipModal(app) {
   // Dynamic QR Code
   const qrContainer = document.getElementById('slip-qr-container');
   if (qrContainer) {
-    const qrPayload = app.qrPayload || `https://carepulse.hospital/checkin?t=${app.tokenId}&ref=${app.ticketRef || '0'}&sec=${app.securityCode || '0'}`;
+    const origin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
+    const pathname = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
+    const qrPayload = app.qrPayload || `${origin}${pathname}?track=${encodeURIComponent(app.tokenId || '')}&ref=${encodeURIComponent(app.ticketRef || '0')}`;
     qrContainer.innerHTML = CarePulseQR.renderToSvg(qrPayload, 72);
   }
 
@@ -279,7 +281,9 @@ function downloadTicket(app, format = 'png') {
   ctx.stroke();
 
   // Draw dynamic QR Code on canvas
-  const qrPayload = app.qrPayload || `https://hospital-project-tawny.vercel.app/?track=${app.tokenId}&ref=${app.ticketRef}`;
+  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
+  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
+  const qrPayload = app.qrPayload || `${qrOrigin}${qrPath}?track=${encodeURIComponent(app.tokenId || '')}&ref=${encodeURIComponent(app.ticketRef || '0')}`;
   CarePulseQR.drawToCanvas(ctx, qrPayload, 56, 642, 110);
 
   ctx.fillStyle = '#0f172a';
@@ -396,7 +400,9 @@ function downloadTicketPDF(app) {
   }
 
   const barcodeSvg = CarePulseBarcode.renderSvg(app.barcodeNum || `CP-${app.tokenId}`);
-  const qrSvg = CarePulseQR.renderToSvg(app.qrPayload || `https://hospital-project-tawny.vercel.app/?track=${app.tokenId}&ref=${app.ticketRef || '0'}`, 90);
+  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
+  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
+  const qrSvg = CarePulseQR.renderToSvg(app.qrPayload || `${qrOrigin}${qrPath}?track=${encodeURIComponent(app.tokenId || '')}&ref=${encodeURIComponent(app.ticketRef || '0')}`, 90);
 
   printWindow.document.write(`
     <!DOCTYPE html>

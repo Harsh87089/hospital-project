@@ -768,7 +768,9 @@ function generateUniqueTicketDetails(doc, patientData, targetDateIso) {
   });
 
   // 10. Dynamic Verification URL & Payload for QR (No PII in query params)
-  const qrPayload = `https://hospital-project-tawny.vercel.app/?track=${tokenId}&ref=${ticketRef}`;
+  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
+  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
+  const qrPayload = `${qrOrigin}${qrPath}?track=${encodeURIComponent(tokenId)}&ref=${encodeURIComponent(ticketRef)}`;
 
   return {
     tokenNumber,

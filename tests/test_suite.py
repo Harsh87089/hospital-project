@@ -252,7 +252,7 @@ class TestCarePulsePlatform(unittest.TestCase):
             with open(harness_path, 'w', encoding='utf-8') as f:
                 f.write(harness_html)
 
-            port = 8080
+            port = None
             import urllib.request
             for p in [8080, 3000]:
                 try:
@@ -262,20 +262,41 @@ class TestCarePulsePlatform(unittest.TestCase):
                 except Exception:
                     pass
 
+            server_spawned = None
+            if not port:
+                try:
+                    import functools, threading
+                    from http.server import HTTPServer, SimpleHTTPRequestHandler
+                    class QuietHandler(SimpleHTTPRequestHandler):
+                        def log_message(self, *args): pass
+                    handler = functools.partial(QuietHandler, directory=os.getcwd())
+                    server_spawned = HTTPServer(('127.0.0.1', 0), handler)
+                    port = server_spawned.server_address[1]
+                    t = threading.Thread(target=server_spawned.serve_forever, daemon=True)
+                    t.start()
+                except Exception:
+                    port = 3000
+
             try:
                 cmd = [
                     chrome,
                     '--headless=new',
                     '--disable-gpu',
-                    '--virtual-time-budget=3000',
+                    '--virtual-time-budget=5000',
                     '--dump-dom',
-                    f'http://localhost:{port}/tests/temp_v8_test.html'
+                    f'http://127.0.0.1:{port}/tests/temp_v8_test.html'
                 ]
                 res = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8', errors='replace')
                 m_v8 = re.search(r'id="v8-status"[^>]*>([^<]+)<', res.stdout)
                 v8_status = m_v8.group(1).strip() if m_v8 else None
                 self.assertEqual(v8_status, 'V8_ALL_OK', f"V8 JavaScript parsing error encountered: {res.stdout}")
             finally:
+                if server_spawned:
+                    try:
+                        server_spawned.shutdown()
+                        server_spawned.server_close()
+                    except Exception:
+                        pass
                 if os.path.exists(harness_path):
                     os.remove(harness_path)
 
@@ -331,5 +352,50 @@ class TestCarePulsePlatform(unittest.TestCase):
         self.assertIn('Camera (Virtual Tele-Consultation Preview - Camera Only, No Microphone Required)', self.html)
         self.assertNotIn('Camera and Microphone (Virtual Tele-Consultation Preview)', self.html)
 
+    # -------------------------------------------------------------
+    # 9. Reviewer Pass 2 Fixes (QR Privacy, SEO Mirror, Numbers, Wording)
+    # -------------------------------------------------------------
+    def test_22_reviewer_pass2_fixes(self):
+        """Pass 2 criteria: no patient name in QR, dynamic origin, no syncSEOWithCurrentHost, meta CSP, consistent numbers."""
+        with open('js/booking.js', 'r', encoding='utf-8') as f:
+            booking_js = f.read()
+        with open('js/tokens.js', 'r', encoding='utf-8') as f:
+            tokens_js = f.read()
+        with open('js/config.js', 'r', encoding='utf-8') as f:
+            config_js = f.read()
+        with open('app.js', 'r', encoding='utf-8') as f:
+            app_js = f.read()
+
+        # 1. QR Payload privacy & origin
+        self.assertNotIn('carepulse.hospital/checkin', booking_js, "Found unowned carepulse.hospital domain in booking.js")
+        self.assertNotIn('carepulse.hospital/checkin', tokens_js, "Found unowned carepulse.hospital domain in tokens.js")
+        self.assertNotIn('carepulse.hospital/checkin', app_js, "Found unowned carepulse.hospital domain in app.js")
+        self.assertNotIn('&p=', booking_js, "Found patient name parameter in QR payload in booking.js")
+        self.assertNotIn('&p=', app_js, "Found patient name parameter in QR payload in app.js")
+
+        # 2. SEO Canonical & Pages guard
+        self.assertNotIn('syncSEOWithCurrentHost', config_js, "syncSEOWithCurrentHost must be deleted from config.js")
+        self.assertNotIn('syncSEOWithCurrentHost', app_js, "syncSEOWithCurrentHost must be deleted from app.js")
+        self.assertIn('guardPagesIndexing', config_js, "guardPagesIndexing missing in config.js")
+        self.assertIn('guardPagesIndexing', app_js, "guardPagesIndexing missing in app.js")
+
+        # 3. Meta CSP in HTML
+        self.assertIn('<meta http-equiv="Content-Security-Policy"', self.html, "Meta Content-Security-Policy tag missing in HTML")
+
+        # 4. Consistent numbers across hero, pulse, and PA announcement
+        self.assertIn('id="hero-live-queue-text">Live Queue: <strong>TK-14 Serving</strong>', self.html)
+        self.assertIn('id="pulse-queue-status">Token #TK-14 Active<', self.html)
+        self.assertIn('id="pulse-queue-sub">Avg Wait: ~12 mins &bull; 18 Chambers<', self.html)
+        self.assertIn('id="queue-stat-chambers">18 Chambers<', self.html)
+        self.assertIn('Now Serving Token TK-14 &bull; Room 101', self.html)
+
+        # 5. Absence of confusing/overclaiming wording
+        self.assertNotIn('Verified demo reviews', self.html)
+        self.assertIn('Sample reviews from simulated patients', self.html)
+        self.assertNotIn('100% upfront pricing transparency', self.html)
+        self.assertIn('SAMPLE TARIFF SCHEDULE', self.html)
+        self.assertIn('CarePulse demonstrates a sample tariff schedule', self.html)
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
+

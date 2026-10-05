@@ -23,6 +23,11 @@ import * as A11yModal from './a11y-modal.js';
 // Bind all module exports to window for global interoperability
 Object.assign(window, Config, Utils, Auth, Booking, Queue, Tokens, Pharmacy, Lab, SOS, Calculators, Theme, I18n, Search, Voice, Tele, Wayfinder, HealthCard, Gateway, Validate, A11yModal);
 
+// Initialize unified live queue state and indicators across hero, campus pulse, and PA announcement
+if (typeof Queue.syncQueueStateAndUI === 'function') {
+  Queue.syncQueueStateAndUI();
+}
+
 // Skeleton loader for Beds & ICU Capacity
 function renderBedSkeletons(count = 4) {
   const container = document.getElementById('beds-capacity-grid');

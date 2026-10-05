@@ -5,14 +5,18 @@ const DEMO_WHATSAPP = '910000000000';
 const DEMO_WHATSAPP_DISPLAY = '+91 00000 00000';
 const DEMO_STAFF_PIN = '2026';
 
-// Dynamically synchronize canonical link and og:url with whatever live domain is hosting the app (e.g. Vercel)
-(function syncSEOWithCurrentHost() {
-  if (typeof window !== 'undefined' && window.location && window.location.protocol && window.location.protocol.startsWith('http')) {
-    const liveCanonical = window.location.origin + window.location.pathname;
-    const canonEl = document.querySelector('link[rel="canonical"]');
-    if (canonEl) canonEl.setAttribute('href', liveCanonical);
-    const ogUrlEl = document.querySelector('meta[property="og:url"]');
-    if (ogUrlEl) ogUrlEl.setAttribute('content', liveCanonical);
+// Guard: Ensure GitHub Pages mirror is not indexed to avoid duplicate canonical indexing with primary Vercel host
+(function guardPagesIndexing() {
+  if (typeof window !== 'undefined' && window.location && window.location.hostname && window.location.hostname.includes('github.io')) {
+    const existingRobots = document.querySelector('meta[name="robots"]');
+    if (existingRobots) {
+      existingRobots.setAttribute('content', 'noindex, nofollow');
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'robots';
+      meta.content = 'noindex, nofollow';
+      document.head.appendChild(meta);
+    }
   }
 })();
 
@@ -496,7 +500,14 @@ const state = {
   lastCreatedToken: null,
   queueSpecialty: 'all',
   queueSearch: '',
-  queueAutoSimInterval: null
+  queueAutoSimInterval: null,
+  liveQueue: {
+    activeToken: 'TK-14',
+    activeRoom: 'Room 101',
+    activeDoctor: DOCTORS[0].name,
+    avgWaitMins: 12,
+    totalChambers: DOCTORS.length
+  }
 };
 
 // --- Web Audio Chime Generator (Realistic Clinic Bell) ---

@@ -21,6 +21,53 @@ function renderQueueSkeletons(count = 4) {
   `).join('');
 }
 
+function syncQueueStateAndUI(activeDoc, tokenNum) {
+  if (!state.liveQueue) {
+    state.liveQueue = {
+      activeToken: 'TK-14',
+      activeRoom: 'Room 101',
+      activeDoctor: DOCTORS[0]?.name || 'Dr. Rajesh Sharma',
+      avgWaitMins: 12,
+      totalChambers: DOCTORS.length
+    };
+  }
+  if (activeDoc && tokenNum) {
+    state.liveQueue.activeToken = `TK-${String(tokenNum).padStart(2, '0')}`;
+    state.liveQueue.activeRoom = (activeDoc.room || 'Room 101').split(',')[0].trim();
+    state.liveQueue.activeDoctor = activeDoc.name;
+  }
+
+  // 1. Hero queue button
+  const heroQueueText = document.getElementById('hero-live-queue-text');
+  if (heroQueueText) {
+    heroQueueText.innerHTML = `Live Queue: <strong>${state.liveQueue.activeToken} Serving</strong> (${state.liveQueue.avgWaitMins} min wait)`;
+  }
+
+  // 2. Campus pulse active token
+  const pulseQueueStatus = document.getElementById('pulse-queue-status');
+  if (pulseQueueStatus) {
+    pulseQueueStatus.innerText = `Token #${state.liveQueue.activeToken} Active`;
+  }
+
+  // 3. Campus pulse chambers and wait
+  const pulseQueueSub = document.getElementById('pulse-queue-sub');
+  if (pulseQueueSub) {
+    pulseQueueSub.innerHTML = `Avg Wait: ~${state.liveQueue.avgWaitMins} mins &bull; ${state.liveQueue.totalChambers} Chambers`;
+  }
+
+  // 4. Queue metric chamber count
+  const statChambers = document.getElementById('queue-stat-chambers');
+  if (statChambers) {
+    statChambers.innerText = `${state.liveQueue.totalChambers} Chambers`;
+  }
+
+  // 5. PA bar announcement
+  const paText = document.getElementById('pa-announcement-text');
+  if (paText) {
+    paText.innerHTML = `<span class="simulated-data-chip" style="font-size:0.65rem; padding: 2px 6px; margin-right:6px;">SIMULATED</span> Now Serving Token ${state.liveQueue.activeToken} &bull; ${state.liveQueue.activeRoom}`;
+  }
+}
+
 function renderLiveOPDBoard() {
   const container = document.getElementById('live-queue-cards');
   if (!container) return;
@@ -31,9 +78,12 @@ function renderLiveOPDBoard() {
   const totalIssuedToday = DOCTORS.reduce((sum, d) => sum + (d.totalTodayTokens || 0), 0);
   const avgWait = Math.round(DOCTORS.reduce((sum, d) => sum + (d.avgWaitPerPatient || 12), 0) / (DOCTORS.length || 1));
 
-  // Update summary badges if present
-  const statChambers = document.getElementById('queue-stat-chambers');
-  if (statChambers) statChambers.innerText = `${totalChambers} Chambers`;
+  // Sync state.liveQueue metrics
+  if (state.liveQueue) {
+    state.liveQueue.avgWaitMins = avgWait;
+    state.liveQueue.totalChambers = totalChambers;
+  }
+  syncQueueStateAndUI();
 
   const statTokens = document.getElementById('queue-stat-tokens');
   if (statTokens) statTokens.innerText = `${totalServingNow} / ${totalIssuedToday}`;
@@ -215,6 +265,7 @@ const simulateNextToken = window.simulateNextToken = function (docId) {
   } else {
     playClinicChime();
   }
+  syncQueueStateAndUI(doc, doc.currentServingToken);
   showToast(`Ding! ${doc.name} (${doc.room.split(',')[0]}) is now calling Token #TK-${String(doc.currentServingToken).padStart(2, '0')}`, 'success');
   renderLiveOPDBoard();
 
@@ -520,6 +571,7 @@ const callNextPatientToken = window.callNextPatientToken = function (doctorId) {
     try { playClinicChime(); } catch (e) { }
   }
 
+  syncQueueStateAndUI(doc, doc.currentServingToken);
   showToast(`🔔 Counter Called: Token #TK-${String(doc.currentServingToken).padStart(2, '0')} for ${doc.name} (${doc.room.split(',')[0]})`, 'success');
   broadcastQueueUpdate('CALL_NEXT', { doctorId, servingToken: doc.currentServingToken });
 };
@@ -736,5 +788,6 @@ export {
   markTokenNoShow,
   issueWalkinToken,
   setDoctorStatus,
-  renderReceptionDashboard
+  renderReceptionDashboard,
+  syncQueueStateAndUI
 };

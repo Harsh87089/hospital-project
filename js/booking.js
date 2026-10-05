@@ -443,7 +443,9 @@ const submitPackageBookingForm = window.submitPackageBookingForm = function (e) 
   const genSecPart = () => Array.from({ length: 4 }, () => hexChars.charAt(Math.floor(Math.random() * hexChars.length))).join('');
   const securityCode = `SEC-${genSecPart()}-${genSecPart()}`;
   const barcodeNum = `CP-PKG-${pkgTokenNum}-${Math.floor(1000 + Math.random() * 9000)}`;
-  const qrPayload = `https://carepulse.hospital/checkin?t=${tokenString}&ref=${ticketRef}&sec=${securityCode}&p=${encodeURIComponent(name)}`;
+  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
+  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
+  const qrPayload = `${qrOrigin}${qrPath}?track=${encodeURIComponent(tokenString)}&ref=${encodeURIComponent(ticketRef)}`;
 
   const pkgAppointment = {
     tokenId: tokenString,
@@ -510,7 +512,7 @@ function submitDirectPackageBooking(pkg) {
     queuePosition: 1,
     estWaitMins: 5,
     issueTimestamp: now.toLocaleDateString('en-IN') + ', ' + now.toLocaleTimeString('en-IN'),
-    qrPayload: `https://carepulse.hospital/checkin?t=${tokenString}&ref=${ticketRef}`,
+    qrPayload: `${(typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app'}${(typeof location !== 'undefined' && location.pathname) ? location.pathname : '/'}?track=${encodeURIComponent(tokenString)}&ref=${encodeURIComponent(ticketRef)}`,
     doctorId: 'lab-pkg',
     doctorName: 'CarePulse Diagnostics Lab Desk',
     doctorSpecialty: 'CarePulse ProHealth Package',
