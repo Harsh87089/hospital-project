@@ -298,8 +298,19 @@ function setupModalDismissals() {
   window.handleHashRouting = function () {
     const hash = (window.location.hash || '').toLowerCase();
     const searchParams = new URLSearchParams(window.location.search);
+    const trackParam = searchParams.get('track');
     const docParam = searchParams.get('doctor') || (hash.includes('doctor=') ? hash.split('doctor=')[1].split('&')[0] : null);
     const specParam = searchParams.get('specialty') || searchParams.get('dept') || (hash.includes('specialty=') ? hash.split('specialty=')[1].split('&')[0] : null);
+
+    if (trackParam) {
+      const cleanTrack = trackParam.trim().toUpperCase();
+      if (/^TK-\d+$/i.test(cleanTrack)) {
+        setTimeout(() => {
+          if (typeof openTrackTokenModal === 'function') openTrackTokenModal(cleanTrack);
+        }, 350);
+        return;
+      }
+    }
 
     if (docParam) {
       setTimeout(() => openBookingLayer(docParam), 400);

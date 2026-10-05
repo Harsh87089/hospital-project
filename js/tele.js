@@ -1,5 +1,5 @@
 // CarePulse Tele-Consultation & Virtual Prescription Engine
-import { DEMO_PHONE, DEMO_WHATSAPP, DOCTORS } from './config.js';
+import { DEMO_PHONE, DOCTORS } from './config.js';
 import { showToast, escapeHtml } from './utils.js';
 
 const TeleConsultEngine = {
@@ -31,6 +31,11 @@ const TeleConsultEngine = {
     const modal = document.getElementById('tele-consult-modal');
     if (!modal) return;
 
+    // Reset session tokenRef freshly for every consult session
+    this.tokenRef = `#TK-TELE-${Math.floor(1000 + Math.random() * 9000)}`;
+    const rxTokenEl = document.getElementById('rx-token-num');
+    if (rxTokenEl) rxTokenEl.innerText = this.tokenRef;
+
     // Populate Doctor Data
     const badgeName = document.getElementById('tele-doc-badge-name');
     const badgeSpec = document.getElementById('tele-doc-badge-spec');
@@ -41,14 +46,14 @@ const TeleConsultEngine = {
     const rxDocReg = document.getElementById('rx-header-doc-reg');
     const rxSigName = document.getElementById('rx-sig-name');
 
-    if (badgeName) badgeName.innerText = doc.name;
-    if (badgeSpec) badgeSpec.innerText = `${doc.specialty} • ${doc.regNo || 'Demo Faculty'}`;
-    if (screenName) screenName.innerText = doc.name;
-    if (screenDesc) screenDesc.innerText = `${doc.qualifications} • Live Tele-Consultation`;
-    if (docAvatar && doc.avatar) docAvatar.src = doc.avatar;
-    if (rxDocName) rxDocName.innerText = doc.name;
-    if (rxDocReg) rxDocReg.innerText = `${doc.qualifications} • ${doc.regNo || 'Faculty ID: CP-MED-101'}`;
-    if (rxSigName) rxSigName.innerText = doc.name;
+    if (badgeName) badgeName.innerText = doc ? doc.name : 'Consultant Doctor';
+    if (badgeSpec) badgeSpec.innerText = `${doc ? doc.specialty : 'General OPD'} • ${doc?.regNo || 'Demo ID: CP-MED-101 (Sample Profile)'}`;
+    if (screenName) screenName.innerText = doc ? doc.name : 'Consultant Doctor';
+    if (screenDesc) screenDesc.innerText = `${doc ? doc.qualifications : 'MBBS'} • Demo Consultation (Simulated)`;
+    if (docAvatar && doc?.avatar) docAvatar.src = doc.avatar;
+    if (rxDocName) rxDocName.innerText = doc ? doc.name : 'Consultant Doctor';
+    if (rxDocReg) rxDocReg.innerText = `${doc ? doc.qualifications : 'MBBS'} • ${doc?.regNo || 'Demo ID: CP-MED-101 (Sample Profile)'}`;
+    if (rxSigName) rxSigName.innerText = doc ? doc.name : 'Consultant Doctor';
 
     // Patient info
     const user = window.CarePulseAuth ? CarePulseAuth.sessionUser : null;
@@ -75,7 +80,7 @@ const TeleConsultEngine = {
     this.resetControls();
     this.initCameraStream();
 
-    showToast(`📹 Connected to Dr. ${doc.name.split(' ').pop()}'s Virtual Consultation Room`, 'success');
+    showToast(`📹 Connected to Dr. ${doc ? doc.name.split(' ').pop() : 'Consultant'}'s Demo Consultation Room`, 'success');
   },
 
   resetControls() {
@@ -86,7 +91,7 @@ const TeleConsultEngine = {
     if (mic) {
       mic.innerHTML = '🎙️';
       mic.classList.remove('off');
-      mic.title = 'Mute Microphone';
+      mic.title = 'Audio simulated in demo (mic not captured)';
     }
     if (cam) {
       cam.innerHTML = '📹';
@@ -99,6 +104,7 @@ const TeleConsultEngine = {
     this.sessionId++;
     this.stopCameraStream();
     this.stopCallTimer();
+    this.stopVitals();
     const modal = document.getElementById('tele-consult-modal');
     if (modal) {
       modal.classList.remove('active');
@@ -122,20 +128,29 @@ const TeleConsultEngine = {
 
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
-        if (sid !== this.sessionId) {
+        if (sid !== this.sessionId || document.hidden) {
           stream.getTracks().forEach(t => t.stop());
           return;
         }
         this.mediaStream = stream;
+        this.isCamOff = false;
         if (videoEl) {
           videoEl.srcObject = stream;
           videoEl.style.display = 'block';
         }
         if (fallbackEl) fallbackEl.style.display = 'none';
+        const btn = document.getElementById('btn-tele-cam');
+        if (btn) {
+          btn.innerHTML = '📹';
+          btn.classList.remove('off');
+          btn.title = 'Turn Camera Off';
+        }
       })
       .catch(err => {
+        if (sid !== this.sessionId) return;
         console.warn('Webcam unavailable, using simulation:', err);
         showFallback();
+        showToast(err?.name === 'NotAllowedError' ? 'Camera permission denied. Showing simulated view.' : 'No camera available. Showing simulated view.', 'info');
       });
   },
 
@@ -148,44 +163,34 @@ const TeleConsultEngine = {
     if (videoEl) videoEl.srcObject = null;
   },
 
-  toggleMic() {
-    this.isMicMuted = !this.isMicMuted;
-    if (this.mediaStream) {
-      this.mediaStream.getAudioTracks().forEach(t => t.enabled = !this.isMicMuted);
-    }
-    const btn = document.getElementById('btn-tele-mic');
+  setCamera(on) {
+    this.isCamOff = !on;
+    const btn = document.getElementById('btn-tele-cam');
     if (btn) {
-      btn.innerHTML = this.isMicMuted ? '🔇' : '🎙️';
-      btn.classList.toggle('off', this.isMicMuted);
-      btn.title = this.isMicMuted ? 'Unmute Microphone' : 'Mute Microphone';
+      btn.innerHTML = on ? '📹' : '🚫';
+      btn.classList.toggle('off', !on);
+      btn.title = on ? 'Turn Camera Off' : 'Turn Camera On';
     }
-    showToast(this.isMicMuted ? 'Microphone muted' : 'Microphone unmuted', 'info');
+    if (on) {
+      this.initCameraStream();
+    } else {
+      this.stopCameraStream();
+      const v = document.getElementById('patient-webcam-video');
+      const f = document.getElementById('patient-webcam-fallback');
+      if (v) v.style.display = 'none';
+      if (f) f.style.display = 'flex';
+    }
   },
 
   toggleCamera() {
-    this.isCamOff = !this.isCamOff;
-    if (this.mediaStream) {
-      this.mediaStream.getVideoTracks().forEach(t => t.enabled = !this.isCamOff);
-    }
-    const btn = document.getElementById('btn-tele-cam');
-    const videoEl = document.getElementById('patient-webcam-video');
-    const fallbackEl = document.getElementById('patient-webcam-fallback');
+    this.setCamera(this.isCamOff);
+  },
 
+  toggleMic() {
+    showToast('Audio is simulated in this demo — microphone is not captured or transmitted.', 'info');
+    const btn = document.getElementById('btn-tele-mic');
     if (btn) {
-      btn.innerHTML = this.isCamOff ? '🚫' : '📹';
-      btn.classList.toggle('off', this.isCamOff);
-      btn.title = this.isCamOff ? 'Turn Camera On' : 'Turn Camera Off';
-    }
-    if (this.isCamOff) {
-      if (videoEl) videoEl.style.display = 'none';
-      if (fallbackEl) fallbackEl.style.display = 'flex';
-      showToast('Camera stream disabled', 'info');
-    } else {
-      if (this.mediaStream && videoEl) {
-        videoEl.style.display = 'block';
-        if (fallbackEl) fallbackEl.style.display = 'none';
-      }
-      showToast('Camera stream enabled', 'info');
+      btn.title = 'Audio simulated in demo (mic not captured)';
     }
   },
 
@@ -204,11 +209,10 @@ const TeleConsultEngine = {
   stopCallTimer() {
     if (this.timerInterval) clearInterval(this.timerInterval);
     this.timerInterval = null;
-    if (this.vitalsInterval) clearInterval(this.vitalsInterval);
-    this.vitalsInterval = null;
   },
 
   startVitalsSimulation() {
+    this.stopVitals();
     const hrEl = document.getElementById('tele-vital-hr');
     const spo2El = document.getElementById('tele-vital-spo2');
     const bpEl = document.getElementById('tele-vital-bp');
@@ -222,6 +226,11 @@ const TeleConsultEngine = {
     }, 4000);
   },
 
+  stopVitals() {
+    if (this.vitalsInterval) clearInterval(this.vitalsInterval);
+    this.vitalsInterval = null;
+  },
+
   simulateVitalsSpike() {
     const hrEl = document.getElementById('tele-vital-hr');
     const spo2El = document.getElementById('tele-vital-spo2');
@@ -229,7 +238,7 @@ const TeleConsultEngine = {
     this.currentVitals.spo2 = 99;
     if (hrEl) hrEl.innerText = `88 BPM (Pulsing)`;
     if (spo2El) spo2El.innerText = `SpO2 99%`;
-    showToast('🩺 Live clinical vitals checked: Heart Rate 88 BPM, SpO2 99%, Normal Sinus Rhythm', 'success');
+    showToast('🩺 Simulated vitals updated: Heart Rate 88 BPM, SpO2 99% (Demo telemetry)', 'info');
   },
 
   renderPrescriptions() {
@@ -274,15 +283,22 @@ const TeleConsultEngine = {
   downloadPrescriptionPDF() {
     const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
     const user = window.CarePulseAuth ? CarePulseAuth.sessionUser : null;
-    const patientName = (user && user.name) ? user.name : 'Self (Demo Patient)';
+    const rawPatientName = (user && user.name) ? user.name : 'Self (Demo Patient)';
+    const patientName = rawPatientName.endsWith('(Demo)') ? rawPatientName : `${rawPatientName} (Demo)`;
     const safeName = escapeHtml(patientName);
     this.tokenRef ??= `#TK-TELE-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const printWin = window.open('', '_blank', 'width=800,height=900');
     if (!printWin) {
-      alert('Please allow popups to download/print the demo prescription.');
+      showToast('Please allow popups to download/print the demo prescription.', 'warning');
       return;
     }
+
+    const safeDocName = escapeHtml(doc ? doc.name : 'Consultant Doctor');
+    const safeDocSpec = escapeHtml(doc ? doc.specialty : 'General OPD');
+    const safeDocReg = escapeHtml(doc?.regNo || 'Demo ID: CP-MED-101 (Sample Profile)');
+    const safePhone = escapeHtml(DEMO_PHONE);
+    const safeTokenRef = escapeHtml(this.tokenRef);
 
     const itemsHtml = this.prescriptions.map((m, i) => `
       <tr style="border-bottom: 1px solid #e2e8f0;">
@@ -328,28 +344,28 @@ const TeleConsultEngine = {
         <div class="header">
           <div class="brand">
             <h1>🏥 CarePulse Multi-Specialty Hospital</h1>
-            <p>GT Road, Near Sugar Mill Crossing, Phagwara, Punjab 144401</p>
-            <p>Emergency & Trauma: 108 / 112 &bull; Demo Helpline: ${DEMO_PHONE} &bull; Telehealth Prototype</p>
+            <p>Simulated CarePulse Campus, Sector 9 (Demo Facility), Phagwara, Punjab 144401</p>
+            <p>Emergency & Trauma: 108 / 112 &bull; Demo Helpline: ${safePhone} &bull; Telehealth Prototype</p>
           </div>
           <div class="doc-info">
-            <h3>${escapeHtml(doc.name)}</h3>
-            <p style="margin: 2px 0; font-size: 13px; font-weight: 600;">${escapeHtml(doc.specialty)}</p>
-            <p style="margin: 0; font-size: 12px; color: #64748b;">${escapeHtml(doc.regNo || 'Faculty ID: CP-MED-101')}</p>
+            <h3>${safeDocName}</h3>
+            <p style="margin: 2px 0; font-size: 13px; font-weight: 600;">${safeDocSpec}</p>
+            <p style="margin: 0; font-size: 12px; color: #64748b;">${safeDocReg}</p>
           </div>
         </div>
 
         <div class="patient-box">
           <div><strong>Patient Name:</strong> ${safeName}</div>
           <div><strong>Date:</strong> ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
-          <div><strong>Consultation:</strong> Virtual Video Tele-Consult</div>
-          <div><strong>Token Ref:</strong> ${this.tokenRef}</div>
+          <div><strong>Consultation:</strong> Virtual Video Tele-Consult (Demo)</div>
+          <div><strong>Token Ref:</strong> ${safeTokenRef}</div>
         </div>
 
         <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 6px; padding: 10px 14px; margin-bottom: 20px; font-size: 13px;">
-          <strong>Clinical Diagnosis:</strong> Acute Upper Respiratory Tract Infection (URTI) with mild pyrexia. Advised oral hydration and rest.
+          <strong>Sample Diagnosis:</strong> Acute Upper Respiratory Tract Infection (URTI) with mild pyrexia (Sample diagnosis only). Advised oral hydration and rest.
         </div>
 
-        <h3 style="font-family: Georgia, serif; color: #0d9488; font-size: 20px; margin: 0 0 10px;">℞ Prescribed Medications</h3>
+        <h3 style="font-family: Georgia, serif; color: #0d9488; font-size: 20px; margin: 0 0 10px;">℞ Prescribed Medications (Sample)</h3>
         <table class="rx-table">
           <thead>
             <tr>
@@ -369,9 +385,9 @@ const TeleConsultEngine = {
             <p style="margin: 2px 0 0;">Not a real medical prescription or valid for dispensing.</p>
           </div>
           <div class="signature">
-            <div class="sig-line">${escapeHtml(doc.name)}</div>
-            <div style="font-size: 12px; font-weight: 700; color: #0f172a;">${escapeHtml(doc.name)}</div>
-            <div style="font-size: 11px; color: #64748b;">Faculty ID: ${escapeHtml(doc.regNo || 'CP-MED-101')}</div>
+            <div class="sig-line">${safeDocName}</div>
+            <div style="font-size: 12px; font-weight: 700; color: #0f172a;">${safeDocSpec}</div>
+            <div style="font-size: 11px; color: #64748b;">${safeDocReg}</div>
           </div>
         </div>
 
@@ -400,25 +416,30 @@ const TeleConsultEngine = {
     const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
     const lines = [
       '*CarePulse Hospital Tele-Consultation Prescription (Demo)*',
-      `*Doctor:* ${doc.name} (${doc.specialty})`,
-      `*Faculty ID:* ${doc.regNo || 'CP-MED-101'}`,
+      '⚠️ Sample prescription for demonstration only — not a valid medical prescription.',
+      `*Doctor:* ${doc ? doc.name : 'Consultant'} (${doc ? doc.specialty : 'General OPD'})`,
+      `*Demo ID:* ${doc?.regNo || 'CP-MED-101'}`,
       `*Date:* ${new Date().toLocaleDateString('en-GB')}`,
       '',
-      '*Rx Medicines:*',
+      '*Rx Medicines (Sample):*',
       ...this.prescriptions.map((m, i) => `${i + 1}. ${m.name} (${m.dosage} x ${m.duration})`),
       '',
       `*Demo Helpline:* ${DEMO_PHONE}`,
-      '*Address:* GT Road, Phagwara, Punjab'
+      '*Facility:* Simulated CarePulse Campus (Demo Facility), Phagwara'
     ];
     window.open(`https://wa.me/?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener');
   },
 
   endConsultation() {
     this.sessionId++;
-    const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
     this.stopCameraStream();
     this.stopCallTimer();
-    showToast(`✅ Video consultation with ${doc.name} completed successfully. Please review or download your prescription.`, 'success');
+    this.stopVitals();
+    const v = document.getElementById('patient-webcam-video');
+    const f = document.getElementById('patient-webcam-fallback');
+    if (v) v.style.display = 'none';
+    if (f) f.style.display = 'flex';
+    showToast('✅ Demo consultation concluded. Sample prescription generated for preview.', 'success');
   }
 };
 
@@ -427,11 +448,6 @@ const openTeleConsultModal = window.openTeleConsultModal = function (docId) { Te
 const closeTeleConsultModal = window.closeTeleConsultModal = function () { TeleConsultEngine.close(); };
 
 // Ensure media tracks are terminated on page unload or visibility change
-window.addEventListener('beforeunload', () => {
-  if (TeleConsultEngine.mediaStream) {
-    TeleConsultEngine.stopCameraStream();
-  }
-});
 window.addEventListener('pagehide', () => {
   if (TeleConsultEngine.mediaStream) {
     TeleConsultEngine.stopCameraStream();
@@ -439,18 +455,10 @@ window.addEventListener('pagehide', () => {
 });
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && TeleConsultEngine.mediaStream) {
-    TeleConsultEngine.stopCameraStream();
-    const v = document.getElementById('patient-webcam-video');
-    const f = document.getElementById('patient-webcam-fallback');
-    if (v) v.style.display = 'none';
-    if (f) f.style.display = 'flex';
+    TeleConsultEngine.setCamera(false);
+    showToast('Camera paused while tab was hidden. Tap 📹 to resume.', 'info');
   }
 });
-
-// ==========================================================================
-// 21. CampusWayfinderEngine (Indoor GPS & Multi-Floor Navigation)
-// ==========================================================================
-
 
 export {
   TeleConsultEngine,

@@ -1,6 +1,6 @@
 // CarePulse Token Slip, PDF E-Pass & Reschedule/Cancel Engine
 import { DEMO_WHATSAPP, DOCTORS, state } from './config.js';
-import { escapeHtml, showToast, getSlotsForDoctorAndDate, CarePulseQR, CarePulseBarcode } from './utils.js';
+import { escapeHtml, showToast, getSlotsForDoctorAndDate, CarePulseQR, CarePulseBarcode, getCanonicalQrPayload, getISTIsoDate } from './utils.js';
 
 let activeTrackerToken = null;
 
@@ -10,10 +10,13 @@ const openTrackTokenModal = window.openTrackTokenModal = function (presetTokenId
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
   if (presetTokenId) {
-    const input = document.getElementById('tracker-input');
-    if (input) {
-      input.value = presetTokenId;
-      checkTokenLiveStatus(presetTokenId);
+    const cleanId = String(presetTokenId).trim().toUpperCase();
+    if (/^#?TK-\d+$/i.test(cleanId)) {
+      const input = document.getElementById('tracker-input');
+      if (input) {
+        input.value = cleanId.replace('#', '');
+      }
+      checkTokenLiveStatus(cleanId);
     }
   }
 };
@@ -65,9 +68,7 @@ function openTokenSlipModal(app) {
   // Dynamic QR Code
   const qrContainer = document.getElementById('slip-qr-container');
   if (qrContainer) {
-    const origin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
-    const pathname = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
-    const qrPayload = app.qrPayload || `${origin}${pathname}?track=${encodeURIComponent(app.tokenId || '')}&ref=${encodeURIComponent(app.ticketRef || '0')}`;
+    const qrPayload = app.qrPayload || getCanonicalQrPayload(app.tokenId, app.ticketRef);
     qrContainer.innerHTML = CarePulseQR.renderToSvg(qrPayload, 72);
   }
 
@@ -280,10 +281,8 @@ function downloadTicket(app, format = 'png') {
   ctx.lineWidth = 1;
   ctx.stroke();
 
-  // Draw dynamic QR Code on canvas
-  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
-  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
-  const qrPayload = app.qrPayload || `${qrOrigin}${qrPath}?track=${encodeURIComponent(app.tokenId || '')}&ref=${encodeURIComponent(app.ticketRef || '0')}`;
+  // Draw canonical QR Code on canvas
+  const qrPayload = app.qrPayload || getCanonicalQrPayload(app.tokenId, app.ticketRef);
   CarePulseQR.drawToCanvas(ctx, qrPayload, 56, 642, 110);
 
   ctx.fillStyle = '#0f172a';
@@ -399,10 +398,8 @@ function downloadTicketPDF(app) {
     return;
   }
 
-  const barcodeSvg = CarePulseBarcode.renderSvg(app.barcodeNum || `CP-${app.tokenId}`);
-  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
-  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
-  const qrSvg = CarePulseQR.renderToSvg(app.qrPayload || `${qrOrigin}${qrPath}?track=${encodeURIComponent(app.tokenId || '')}&ref=${encodeURIComponent(app.ticketRef || '0')}`, 90);
+  const qrPayload = app.qrPayload || getCanonicalQrPayload(app.tokenId, app.ticketRef);
+  const qrSvg = CarePulseQR.renderToSvg(qrPayload, 90);
 
   printWindow.document.write(`
     <!DOCTYPE html>
@@ -922,14 +919,41 @@ function checkTokenLiveStatus(searchVal) {
   const cleanPhone = searchVal.replace(/[^0-9]/g, '');
 
   // Find strictly in user appointments
-  const found = state.userAppointments.find(a =>
+  let found = state.userAppointments.find(a =>
     a.tokenId.toUpperCase() === cleanVal ||
     (cleanPhone.length === 10 && (a.patientPhone || '').replace(/[^0-9]/g, '') === cleanPhone)
   );
 
+  // If not found in localStorage and matches strict pattern ^TK-\d+$, construct simulated live token record
+  if (!found && /^TK-\d+$/i.test(cleanVal)) {
+    const tokenDigits = parseInt(cleanVal.replace(/\D/g, ''), 10) || 14;
+    const doc = DOCTORS[0];
+    const currentlyServing = 14;
+    const urlRef = (typeof URLSearchParams !== 'undefined' && typeof window !== 'undefined')
+      ? new URLSearchParams(window.location.search).get('ref')
+      : null;
+    found = {
+      tokenId: cleanVal,
+      tokenNumber: tokenDigits,
+      patientName: 'Registered Patient (Demo)',
+      patientPhone: '9876543210',
+      doctorId: doc.id,
+      doctorName: doc.name,
+      doctorSpecialty: doc.specialty,
+      room: doc.room || 'Room 101, Ground Floor',
+      date: 'Today (Live OPD)',
+      isoDate: getISTIsoDate(),
+      timeSlot: 'Morning OPD Session',
+      status: tokenDigits < currentlyServing ? 'Completed' : (tokenDigits === currentlyServing ? 'In Consultation' : 'Confirmed'),
+      ticketRef: urlRef || 'CP-2026-LIVE',
+      assignedDesk: 'Counter 1 • Desk A'
+    };
+  }
+
   if (!found) {
-    showToast(`No appointment record found for "${escapeHtml(searchVal)}". Please verify your token number or book a new appointment.`, 'warning');
+    showToast(`No appointment record found for "${cleanVal}". Please verify your token number or book a new appointment.`, 'warning');
     resultBox.classList.remove('active');
+    resultBox.textContent = '';
     activeTrackerToken = null;
     return;
   }
@@ -942,11 +966,10 @@ function checkTokenLiveStatus(searchVal) {
   const todayIST = getISTIsoDate();
   const isToday = (found.isoDate === todayIST || found.date?.includes('Today'));
 
-  const currentlyServing = doc.currentServingToken || 0;
+  const currentlyServing = doc.currentServingToken || 14;
   const ahead = Math.max(0, tokenNum - currentlyServing);
   const estWait = ahead * (doc.avgWaitPerPatient || 12);
 
-  // Determine queue stage based on whether consultation is today or a future date
   let stageText = '';
   let waitDisplay = '';
   let step1Class = 'completed';
@@ -955,7 +978,7 @@ function checkTokenLiveStatus(searchVal) {
   let progressWidth = '50%';
 
   if (!isToday) {
-    stageText = `📅 Scheduled for ${escapeHtml(found.date)} (${escapeHtml(found.timeSlot)}). Live counter activates on appointment day.`;
+    stageText = `📅 Scheduled for ${found.date} (${found.timeSlot}). Live counter activates on appointment day.`;
     waitDisplay = 'Upcoming';
     step1Class = 'completed';
     step2Class = '';
@@ -991,53 +1014,121 @@ function checkTokenLiveStatus(searchVal) {
     progressWidth = '40%';
   }
 
-  resultBox.innerHTML = `
-    <div class="tracker-top-info">
-      <div>
-        <span style="font-size: 0.78rem; color: #a7f3d0; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Verified Token Status</span>
-        <div class="tracker-token-badge" id="tracker-token-num">#${escapeHtml(found.tokenId)}</div>
-        <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 0.2rem;">Patient: <strong>${escapeHtml(patientName)}</strong> • ${escapeHtml(doc.name)} (${escapeHtml(doc.specialty)})</div>
-      </div>
+  // Safe DOM construction: Zero innerHTML - all dynamic properties set with textContent
+  resultBox.textContent = '';
 
-      <div style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: var(--radius-md); padding: 0.75rem 1.25rem; text-align: right;">
-        <div style="font-size: 0.75rem; color: #94a3b8;">${isToday ? 'Current OPD Status' : 'Scheduled Date'}</div>
-        <div style="font-size: 1.25rem; font-weight: 800; color: #34d399;">${isToday ? `Now Serving: #TK-${String(currentlyServing).padStart(2, '0')}` : escapeHtml(found.date)}</div>
-        <div style="font-size: 0.75rem; color: #cbd5e1;">Room: ${escapeHtml((doc.room || '').split(',')[0])}</div>
-      </div>
-    </div>
+  const topInfo = document.createElement('div');
+  topInfo.className = 'tracker-top-info';
 
-    <!-- Live Queue Timeline -->
-    <div class="queue-progress-track">
-      <div class="progress-line-bg"></div>
-      <div class="progress-line-active" style="width: ${progressWidth};"></div>
-      
-      <div class="progress-steps">
-        <div class="step-item ${step1Class}">
-          <div class="step-circle">1</div>
-          <span class="step-label">Token Confirmed</span>
-        </div>
-        <div class="step-item ${step2Class}">
-          <div class="step-circle">2</div>
-          <span class="step-label">Waiting Lobby</span>
-        </div>
-        <div class="step-item ${step3Class}">
-          <div class="step-circle">3</div>
-          <span class="step-label">In Consultation</span>
-        </div>
-      </div>
-    </div>
+  const leftCol = document.createElement('div');
+  const badgeLabel = document.createElement('span');
+  badgeLabel.style.cssText = 'font-size: 0.78rem; color: #a7f3d0; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;';
+  badgeLabel.textContent = 'Verified Token Status';
 
-    <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(13, 148, 136, 0.2); border: 1px solid rgba(20, 184, 166, 0.4); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-top: 1rem; flex-wrap: wrap; gap: 0.75rem;">
-      <div>
-        <div style="font-size: 0.8rem; color: #5eead4; font-weight: 700; text-transform: uppercase;">Live Status</div>
-        <div style="font-size: 1rem; font-weight: 700; color: white;">${stageText}</div>
-      </div>
-      <div style="text-align: right;">
-        <div style="font-size: 0.75rem; color: #cbd5e1;">Estimated Wait Time</div>
-        <div style="font-size: 1.4rem; font-weight: 800; color: #fde047;">${waitDisplay}</div>
-      </div>
-    </div>
-  `;
+  const tokenBadge = document.createElement('div');
+  tokenBadge.className = 'tracker-token-badge';
+  tokenBadge.id = 'tracker-token-num';
+  tokenBadge.textContent = `#${found.tokenId}`;
+
+  const patientDesc = document.createElement('div');
+  patientDesc.style.cssText = 'font-size: 0.9rem; color: #cbd5e1; margin-top: 0.2rem;';
+  patientDesc.textContent = `Patient: ${patientName} • ${doc.name} (${doc.specialty})`;
+
+  leftCol.appendChild(badgeLabel);
+  leftCol.appendChild(tokenBadge);
+  leftCol.appendChild(patientDesc);
+
+  const rightCol = document.createElement('div');
+  rightCol.style.cssText = 'background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: var(--radius-md); padding: 0.75rem 1.25rem; text-align: right;';
+
+  const statusSub = document.createElement('div');
+  statusSub.style.cssText = 'font-size: 0.75rem; color: #94a3b8;';
+  statusSub.textContent = isToday ? 'Current OPD Status' : 'Scheduled Date';
+
+  const servingLabel = document.createElement('div');
+  servingLabel.style.cssText = 'font-size: 1.25rem; font-weight: 800; color: #34d399;';
+  servingLabel.textContent = isToday ? `Now Serving: #TK-${String(currentlyServing).padStart(2, '0')}` : found.date;
+
+  const roomLabel = document.createElement('div');
+  roomLabel.style.cssText = 'font-size: 0.75rem; color: #cbd5e1;';
+  roomLabel.textContent = `Room: ${(doc.room || '').split(',')[0]}`;
+
+  rightCol.appendChild(statusSub);
+  rightCol.appendChild(servingLabel);
+  rightCol.appendChild(roomLabel);
+
+  topInfo.appendChild(leftCol);
+  topInfo.appendChild(rightCol);
+  resultBox.appendChild(topInfo);
+
+  // Live Queue Timeline
+  const progressTrack = document.createElement('div');
+  progressTrack.className = 'queue-progress-track';
+
+  const bgLine = document.createElement('div');
+  bgLine.className = 'progress-line-bg';
+  const activeLine = document.createElement('div');
+  activeLine.className = 'progress-line-active';
+  activeLine.style.width = progressWidth;
+
+  const stepsWrap = document.createElement('div');
+  stepsWrap.className = 'progress-steps';
+
+  const stepsData = [
+    { num: '1', label: 'Token Confirmed', cls: step1Class },
+    { num: '2', label: 'Waiting Lobby', cls: step2Class },
+    { num: '3', label: 'In Consultation', cls: step3Class }
+  ];
+
+  stepsData.forEach(s => {
+    const item = document.createElement('div');
+    item.className = `step-item ${s.cls}`.trim();
+    const circle = document.createElement('div');
+    circle.className = 'step-circle';
+    circle.textContent = s.num;
+    const lbl = document.createElement('span');
+    lbl.className = 'step-label';
+    lbl.textContent = s.label;
+    item.appendChild(circle);
+    item.appendChild(lbl);
+    stepsWrap.appendChild(item);
+  });
+
+  progressTrack.appendChild(bgLine);
+  progressTrack.appendChild(activeLine);
+  progressTrack.appendChild(stepsWrap);
+  resultBox.appendChild(progressTrack);
+
+  // Summary Banner
+  const summaryBanner = document.createElement('div');
+  summaryBanner.style.cssText = 'display: flex; align-items: center; justify-content: space-between; background: rgba(13, 148, 136, 0.2); border: 1px solid rgba(20, 184, 166, 0.4); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-top: 1rem; flex-wrap: wrap; gap: 0.75rem;';
+
+  const statusWrap = document.createElement('div');
+  const liveStatusLbl = document.createElement('div');
+  liveStatusLbl.style.cssText = 'font-size: 0.8rem; color: #5eead4; font-weight: 700; text-transform: uppercase;';
+  liveStatusLbl.textContent = 'Live Status';
+  const stageHeader = document.createElement('div');
+  stageHeader.style.cssText = 'font-size: 1rem; font-weight: 700; color: white;';
+  stageHeader.textContent = stageText;
+
+  statusWrap.appendChild(liveStatusLbl);
+  statusWrap.appendChild(stageHeader);
+
+  const waitWrap = document.createElement('div');
+  waitWrap.style.cssText = 'text-align: right;';
+  const waitLbl = document.createElement('div');
+  waitLbl.style.cssText = 'font-size: 0.75rem; color: #cbd5e1;';
+  waitLbl.textContent = 'Estimated Wait Time';
+  const waitVal = document.createElement('div');
+  waitVal.style.cssText = 'font-size: 1.4rem; font-weight: 800; color: #fde047;';
+  waitVal.textContent = waitDisplay;
+
+  waitWrap.appendChild(waitLbl);
+  waitWrap.appendChild(waitVal);
+
+  summaryBanner.appendChild(statusWrap);
+  summaryBanner.appendChild(waitWrap);
+  resultBox.appendChild(summaryBanner);
 
   resultBox.classList.add('active');
   if (isToday) {

@@ -11,17 +11,15 @@ const DEMO_WHATSAPP = '910000000000';
 const DEMO_WHATSAPP_DISPLAY = '+91 00000 00000';
 const DEMO_STAFF_PIN = '2026';
 
-// Guard: Ensure GitHub Pages mirror is not indexed to avoid duplicate canonical indexing with primary Vercel host
+// Guard: Ensure GitHub Pages duplicate mirror uses clean Canonical pointing to primary Vercel host without conflicting noindex
 (function guardPagesIndexing() {
   if (typeof window !== 'undefined' && window.location && window.location.hostname && window.location.hostname.includes('github.io')) {
-    const existingRobots = document.querySelector('meta[name="robots"]');
-    if (existingRobots) {
-      existingRobots.setAttribute('content', 'noindex, nofollow');
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'robots';
-      meta.content = 'noindex, nofollow';
-      document.head.appendChild(meta);
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.rel = 'canonical';
+      canonical.href = 'https://hospital-project-tawny.vercel.app/';
+      document.head.appendChild(canonical);
     }
   }
 })();
@@ -1221,10 +1219,13 @@ window.openTrackTokenModal = function (presetTokenId = null) {
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
   if (presetTokenId) {
-    const input = document.getElementById('tracker-input');
-    if (input) {
-      input.value = presetTokenId;
-      checkTokenLiveStatus(presetTokenId);
+    const cleanId = String(presetTokenId).trim().toUpperCase();
+    if (/^#?TK-\d+$/i.test(cleanId)) {
+      const input = document.getElementById('tracker-input');
+      if (input) {
+        input.value = cleanId.replace('#', '');
+      }
+      checkTokenLiveStatus(cleanId);
     }
   }
 };
@@ -1980,7 +1981,14 @@ const CarePulseBarcode = {
   }
 };
 
-// --- Unique Ticket Attributes & State Generator ---
+const CANONICAL_BASE_URL = 'https://hospital-project-tawny.vercel.app';
+
+function getCanonicalQrPayload(tokenId, ticketRef = '') {
+  const safeToken = String(tokenId || '').trim();
+  const safeRef = String(ticketRef || '').trim();
+  return `${CANONICAL_BASE_URL}/?track=${encodeURIComponent(safeToken)}${safeRef ? `&ref=${encodeURIComponent(safeRef)}` : ''}`;
+}
+
 // --- Unique Ticket Attributes & State Generator ---
 function generateUniqueTicketDetails(doc, patientData, targetDateIso) {
   const appDateIso = targetDateIso || state.selectedDate || getISTIsoDate();
@@ -2048,10 +2056,8 @@ function generateUniqueTicketDetails(doc, patientData, targetDateIso) {
     hour12: true
   });
 
-  // 10. Dynamic Verification URL & Payload for QR (No PII in query params)
-  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
-  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
-  const qrPayload = `${qrOrigin}${qrPath}?track=${encodeURIComponent(tokenId)}&ref=${encodeURIComponent(ticketRef)}`;
+  // 10. Canonical Verification URL & Payload for QR (No PII in query params)
+  const qrPayload = getCanonicalQrPayload(tokenId, ticketRef);
 
   return {
     tokenNumber,
@@ -2320,9 +2326,7 @@ function openTokenSlipModal(app) {
   // Dynamic QR Code
   const qrContainer = document.getElementById('slip-qr-container');
   if (qrContainer) {
-    const origin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
-    const pathname = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
-    const qrPayload = app.qrPayload || `${origin}${pathname}?track=${encodeURIComponent(app.tokenId || '')}&ref=${encodeURIComponent(app.ticketRef || '0')}`;
+    const qrPayload = app.qrPayload || getCanonicalQrPayload(app.tokenId, app.ticketRef);
     qrContainer.innerHTML = CarePulseQR.renderToSvg(qrPayload, 72);
   }
 
@@ -2533,10 +2537,8 @@ function downloadTicket(app, format = 'png') {
   ctx.lineWidth = 1;
   ctx.stroke();
 
-  // Draw dynamic QR Code on canvas
-  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
-  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
-  const qrPayload = app.qrPayload || `${qrOrigin}${qrPath}?track=${encodeURIComponent(app.tokenId || '')}&ref=${encodeURIComponent(app.ticketRef || '0')}`;
+  // Draw canonical QR Code on canvas
+  const qrPayload = app.qrPayload || getCanonicalQrPayload(app.tokenId, app.ticketRef);
   CarePulseQR.drawToCanvas(ctx, qrPayload, 56, 642, 110);
 
   ctx.fillStyle = '#0f172a';
@@ -2653,9 +2655,8 @@ function downloadTicketPDF(app) {
   }
 
   const barcodeSvg = CarePulseBarcode.renderSvg(app.barcodeNum || `CP-${app.tokenId}`);
-  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
-  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
-  const qrSvg = CarePulseQR.renderToSvg(app.qrPayload || `${qrOrigin}${qrPath}?track=${encodeURIComponent(app.tokenId || '')}&ref=${encodeURIComponent(app.ticketRef || '0')}`, 90);
+  const qrPayload = app.qrPayload || getCanonicalQrPayload(app.tokenId, app.ticketRef);
+  const qrSvg = CarePulseQR.renderToSvg(qrPayload, 90);
 
   printWindow.document.write(`
     <!DOCTYPE html>
@@ -3476,14 +3477,41 @@ function checkTokenLiveStatus(searchVal) {
   const cleanPhone = searchVal.replace(/[^0-9]/g, '');
 
   // Find strictly in user appointments
-  const found = state.userAppointments.find(a =>
+  let found = state.userAppointments.find(a =>
     a.tokenId.toUpperCase() === cleanVal ||
     (cleanPhone.length === 10 && (a.patientPhone || '').replace(/[^0-9]/g, '') === cleanPhone)
   );
 
+  // If not found in localStorage and matches strict pattern ^TK-\d+$, construct simulated live token record
+  if (!found && /^TK-\d+$/i.test(cleanVal)) {
+    const tokenDigits = parseInt(cleanVal.replace(/\D/g, ''), 10) || 14;
+    const doc = DOCTORS[0];
+    const currentlyServing = 14;
+    const urlRef = (typeof URLSearchParams !== 'undefined' && typeof window !== 'undefined')
+      ? new URLSearchParams(window.location.search).get('ref')
+      : null;
+    found = {
+      tokenId: cleanVal,
+      tokenNumber: tokenDigits,
+      patientName: 'Registered Patient (Demo)',
+      patientPhone: '9876543210',
+      doctorId: doc.id,
+      doctorName: doc.name,
+      doctorSpecialty: doc.specialty,
+      room: doc.room || 'Room 101, Ground Floor',
+      date: 'Today (Live OPD)',
+      isoDate: getISTIsoDate(),
+      timeSlot: 'Morning OPD Session',
+      status: tokenDigits < currentlyServing ? 'Completed' : (tokenDigits === currentlyServing ? 'In Consultation' : 'Confirmed'),
+      ticketRef: urlRef || 'CP-2026-LIVE',
+      assignedDesk: 'Counter 1 • Desk A'
+    };
+  }
+
   if (!found) {
-    showToast(`No appointment record found for "${escapeHtml(searchVal)}". Please verify your token number or book a new appointment.`, 'warning');
+    showToast(`No appointment record found for "${cleanVal}". Please verify your token number or book a new appointment.`, 'warning');
     resultBox.classList.remove('active');
+    resultBox.textContent = '';
     activeTrackerToken = null;
     return;
   }
@@ -3496,11 +3524,10 @@ function checkTokenLiveStatus(searchVal) {
   const todayIST = getISTIsoDate();
   const isToday = (found.isoDate === todayIST || found.date?.includes('Today'));
 
-  const currentlyServing = doc.currentServingToken || 0;
+  const currentlyServing = doc.currentServingToken || 14;
   const ahead = Math.max(0, tokenNum - currentlyServing);
   const estWait = ahead * (doc.avgWaitPerPatient || 12);
 
-  // Determine queue stage based on whether consultation is today or a future date
   let stageText = '';
   let waitDisplay = '';
   let step1Class = 'completed';
@@ -3509,7 +3536,7 @@ function checkTokenLiveStatus(searchVal) {
   let progressWidth = '50%';
 
   if (!isToday) {
-    stageText = `📅 Scheduled for ${escapeHtml(found.date)} (${escapeHtml(found.timeSlot)}). Live counter activates on appointment day.`;
+    stageText = `📅 Scheduled for ${found.date} (${found.timeSlot}). Live counter activates on appointment day.`;
     waitDisplay = 'Upcoming';
     step1Class = 'completed';
     step2Class = '';
@@ -3545,53 +3572,121 @@ function checkTokenLiveStatus(searchVal) {
     progressWidth = '40%';
   }
 
-  resultBox.innerHTML = `
-    <div class="tracker-top-info">
-      <div>
-        <span style="font-size: 0.78rem; color: #a7f3d0; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Verified Token Status</span>
-        <div class="tracker-token-badge" id="tracker-token-num">#${escapeHtml(found.tokenId)}</div>
-        <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 0.2rem;">Patient: <strong>${escapeHtml(patientName)}</strong> • ${escapeHtml(doc.name)} (${escapeHtml(doc.specialty)})</div>
-      </div>
+  // Safe DOM construction: Zero innerHTML - all dynamic properties set with textContent
+  resultBox.textContent = '';
 
-      <div style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: var(--radius-md); padding: 0.75rem 1.25rem; text-align: right;">
-        <div style="font-size: 0.75rem; color: #94a3b8;">${isToday ? 'Current OPD Status' : 'Scheduled Date'}</div>
-        <div style="font-size: 1.25rem; font-weight: 800; color: #34d399;">${isToday ? `Now Serving: #TK-${String(currentlyServing).padStart(2, '0')}` : escapeHtml(found.date)}</div>
-        <div style="font-size: 0.75rem; color: #cbd5e1;">Room: ${escapeHtml((doc.room || '').split(',')[0])}</div>
-      </div>
-    </div>
+  const topInfo = document.createElement('div');
+  topInfo.className = 'tracker-top-info';
 
-    <!-- Live Queue Timeline -->
-    <div class="queue-progress-track">
-      <div class="progress-line-bg"></div>
-      <div class="progress-line-active" style="width: ${progressWidth};"></div>
-      
-      <div class="progress-steps">
-        <div class="step-item ${step1Class}">
-          <div class="step-circle">1</div>
-          <span class="step-label">Token Confirmed</span>
-        </div>
-        <div class="step-item ${step2Class}">
-          <div class="step-circle">2</div>
-          <span class="step-label">Waiting Lobby</span>
-        </div>
-        <div class="step-item ${step3Class}">
-          <div class="step-circle">3</div>
-          <span class="step-label">In Consultation</span>
-        </div>
-      </div>
-    </div>
+  const leftCol = document.createElement('div');
+  const badgeLabel = document.createElement('span');
+  badgeLabel.style.cssText = 'font-size: 0.78rem; color: #a7f3d0; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;';
+  badgeLabel.textContent = 'Verified Token Status';
 
-    <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(13, 148, 136, 0.2); border: 1px solid rgba(20, 184, 166, 0.4); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-top: 1rem; flex-wrap: wrap; gap: 0.75rem;">
-      <div>
-        <div style="font-size: 0.8rem; color: #5eead4; font-weight: 700; text-transform: uppercase;">Live Status</div>
-        <div style="font-size: 1rem; font-weight: 700; color: white;">${stageText}</div>
-      </div>
-      <div style="text-align: right;">
-        <div style="font-size: 0.75rem; color: #cbd5e1;">Estimated Wait Time</div>
-        <div style="font-size: 1.4rem; font-weight: 800; color: #fde047;">${waitDisplay}</div>
-      </div>
-    </div>
-  `;
+  const tokenBadge = document.createElement('div');
+  tokenBadge.className = 'tracker-token-badge';
+  tokenBadge.id = 'tracker-token-num';
+  tokenBadge.textContent = `#${found.tokenId}`;
+
+  const patientDesc = document.createElement('div');
+  patientDesc.style.cssText = 'font-size: 0.9rem; color: #cbd5e1; margin-top: 0.2rem;';
+  patientDesc.textContent = `Patient: ${patientName} • ${doc.name} (${doc.specialty})`;
+
+  leftCol.appendChild(badgeLabel);
+  leftCol.appendChild(tokenBadge);
+  leftCol.appendChild(patientDesc);
+
+  const rightCol = document.createElement('div');
+  rightCol.style.cssText = 'background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: var(--radius-md); padding: 0.75rem 1.25rem; text-align: right;';
+
+  const statusSub = document.createElement('div');
+  statusSub.style.cssText = 'font-size: 0.75rem; color: #94a3b8;';
+  statusSub.textContent = isToday ? 'Current OPD Status' : 'Scheduled Date';
+
+  const servingLabel = document.createElement('div');
+  servingLabel.style.cssText = 'font-size: 1.25rem; font-weight: 800; color: #34d399;';
+  servingLabel.textContent = isToday ? `Now Serving: #TK-${String(currentlyServing).padStart(2, '0')}` : found.date;
+
+  const roomLabel = document.createElement('div');
+  roomLabel.style.cssText = 'font-size: 0.75rem; color: #cbd5e1;';
+  roomLabel.textContent = `Room: ${(doc.room || '').split(',')[0]}`;
+
+  rightCol.appendChild(statusSub);
+  rightCol.appendChild(servingLabel);
+  rightCol.appendChild(roomLabel);
+
+  topInfo.appendChild(leftCol);
+  topInfo.appendChild(rightCol);
+  resultBox.appendChild(topInfo);
+
+  // Live Queue Timeline
+  const progressTrack = document.createElement('div');
+  progressTrack.className = 'queue-progress-track';
+
+  const bgLine = document.createElement('div');
+  bgLine.className = 'progress-line-bg';
+  const activeLine = document.createElement('div');
+  activeLine.className = 'progress-line-active';
+  activeLine.style.width = progressWidth;
+
+  const stepsWrap = document.createElement('div');
+  stepsWrap.className = 'progress-steps';
+
+  const stepsData = [
+    { num: '1', label: 'Token Confirmed', cls: step1Class },
+    { num: '2', label: 'Waiting Lobby', cls: step2Class },
+    { num: '3', label: 'In Consultation', cls: step3Class }
+  ];
+
+  stepsData.forEach(s => {
+    const item = document.createElement('div');
+    item.className = `step-item ${s.cls}`.trim();
+    const circle = document.createElement('div');
+    circle.className = 'step-circle';
+    circle.textContent = s.num;
+    const lbl = document.createElement('span');
+    lbl.className = 'step-label';
+    lbl.textContent = s.label;
+    item.appendChild(circle);
+    item.appendChild(lbl);
+    stepsWrap.appendChild(item);
+  });
+
+  progressTrack.appendChild(bgLine);
+  progressTrack.appendChild(activeLine);
+  progressTrack.appendChild(stepsWrap);
+  resultBox.appendChild(progressTrack);
+
+  // Summary Banner
+  const summaryBanner = document.createElement('div');
+  summaryBanner.style.cssText = 'display: flex; align-items: center; justify-content: space-between; background: rgba(13, 148, 136, 0.2); border: 1px solid rgba(20, 184, 166, 0.4); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-top: 1rem; flex-wrap: wrap; gap: 0.75rem;';
+
+  const statusWrap = document.createElement('div');
+  const liveStatusLbl = document.createElement('div');
+  liveStatusLbl.style.cssText = 'font-size: 0.8rem; color: #5eead4; font-weight: 700; text-transform: uppercase;';
+  liveStatusLbl.textContent = 'Live Status';
+  const stageHeader = document.createElement('div');
+  stageHeader.style.cssText = 'font-size: 1rem; font-weight: 700; color: white;';
+  stageHeader.textContent = stageText;
+
+  statusWrap.appendChild(liveStatusLbl);
+  statusWrap.appendChild(stageHeader);
+
+  const waitWrap = document.createElement('div');
+  waitWrap.style.cssText = 'text-align: right;';
+  const waitLbl = document.createElement('div');
+  waitLbl.style.cssText = 'font-size: 0.75rem; color: #cbd5e1;';
+  waitLbl.textContent = 'Estimated Wait Time';
+  const waitVal = document.createElement('div');
+  waitVal.style.cssText = 'font-size: 1.4rem; font-weight: 800; color: #fde047;';
+  waitVal.textContent = waitDisplay;
+
+  waitWrap.appendChild(waitLbl);
+  waitWrap.appendChild(waitVal);
+
+  summaryBanner.appendChild(statusWrap);
+  summaryBanner.appendChild(waitWrap);
+  resultBox.appendChild(summaryBanner);
 
   resultBox.classList.add('active');
   if (isToday) {
@@ -3876,8 +3971,19 @@ function setupModalDismissals() {
   window.handleHashRouting = function () {
     const hash = (window.location.hash || '').toLowerCase();
     const searchParams = new URLSearchParams(window.location.search);
+    const trackParam = searchParams.get('track');
     const docParam = searchParams.get('doctor') || (hash.includes('doctor=') ? hash.split('doctor=')[1].split('&')[0] : null);
     const specParam = searchParams.get('specialty') || searchParams.get('dept') || (hash.includes('specialty=') ? hash.split('specialty=')[1].split('&')[0] : null);
+
+    if (trackParam) {
+      const cleanTrack = trackParam.trim().toUpperCase();
+      if (/^TK-\d+$/i.test(cleanTrack)) {
+        setTimeout(() => {
+          if (typeof openTrackTokenModal === 'function') openTrackTokenModal(cleanTrack);
+        }, 350);
+        return;
+      }
+    }
 
     if (docParam) {
       setTimeout(() => openBookingLayer(docParam), 400);
@@ -4126,9 +4232,7 @@ window.submitPackageBookingForm = function (e) {
   const genSecPart = () => Array.from({ length: 4 }, () => hexChars.charAt(Math.floor(Math.random() * hexChars.length))).join('');
   const securityCode = `SEC-${genSecPart()}-${genSecPart()}`;
   const barcodeNum = `CP-PKG-${pkgTokenNum}-${Math.floor(1000 + Math.random() * 9000)}`;
-  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
-  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
-  const qrPayload = `${qrOrigin}${qrPath}?track=${encodeURIComponent(tokenString)}&ref=${encodeURIComponent(ticketRef)}`;
+  const qrPayload = getCanonicalQrPayload(tokenString, ticketRef);
 
   const pkgAppointment = {
     tokenId: tokenString,
@@ -4195,7 +4299,7 @@ function submitDirectPackageBooking(pkg) {
     queuePosition: 1,
     estWaitMins: 5,
     issueTimestamp: now.toLocaleDateString('en-IN') + ', ' + now.toLocaleTimeString('en-IN'),
-    qrPayload: `${(typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app'}${(typeof location !== 'undefined' && location.pathname) ? location.pathname : '/'}?track=${encodeURIComponent(tokenString)}&ref=${encodeURIComponent(ticketRef)}`,
+    qrPayload: getCanonicalQrPayload(tokenString, ticketRef),
     doctorId: 'lab-pkg',
     doctorName: 'CarePulse Diagnostics Lab Desk',
     doctorSpecialty: 'CarePulse ProHealth Package',
@@ -8337,6 +8441,11 @@ const TeleConsultEngine = {
     const modal = document.getElementById('tele-consult-modal');
     if (!modal) return;
 
+    // Reset session tokenRef freshly for every consult session
+    this.tokenRef = `#TK-TELE-${Math.floor(1000 + Math.random() * 9000)}`;
+    const rxTokenEl = document.getElementById('rx-token-num');
+    if (rxTokenEl) rxTokenEl.innerText = this.tokenRef;
+
     // Populate Doctor Data
     const badgeName = document.getElementById('tele-doc-badge-name');
     const badgeSpec = document.getElementById('tele-doc-badge-spec');
@@ -8347,14 +8456,14 @@ const TeleConsultEngine = {
     const rxDocReg = document.getElementById('rx-header-doc-reg');
     const rxSigName = document.getElementById('rx-sig-name');
 
-    if (badgeName) badgeName.innerText = doc.name;
-    if (badgeSpec) badgeSpec.innerText = `${doc.specialty} • ${doc.regNo || 'Demo Faculty'}`;
-    if (screenName) screenName.innerText = doc.name;
-    if (screenDesc) screenDesc.innerText = `${doc.qualifications} • Live Tele-Consultation`;
-    if (docAvatar && doc.avatar) docAvatar.src = doc.avatar;
-    if (rxDocName) rxDocName.innerText = doc.name;
-    if (rxDocReg) rxDocReg.innerText = `${doc.qualifications} • ${doc.regNo || 'Faculty ID: CP-MED-101'}`;
-    if (rxSigName) rxSigName.innerText = doc.name;
+    if (badgeName) badgeName.innerText = doc ? doc.name : 'Consultant Doctor';
+    if (badgeSpec) badgeSpec.innerText = `${doc ? doc.specialty : 'General OPD'} • ${doc?.regNo || 'Demo ID: CP-MED-101 (Sample Profile)'}`;
+    if (screenName) screenName.innerText = doc ? doc.name : 'Consultant Doctor';
+    if (screenDesc) screenDesc.innerText = `${doc ? doc.qualifications : 'MBBS'} • Demo Consultation (Simulated)`;
+    if (docAvatar && doc?.avatar) docAvatar.src = doc.avatar;
+    if (rxDocName) rxDocName.innerText = doc ? doc.name : 'Consultant Doctor';
+    if (rxDocReg) rxDocReg.innerText = `${doc ? doc.qualifications : 'MBBS'} • ${doc?.regNo || 'Demo ID: CP-MED-101 (Sample Profile)'}`;
+    if (rxSigName) rxSigName.innerText = doc ? doc.name : 'Consultant Doctor';
 
     // Patient info
     const user = window.CarePulseAuth ? CarePulseAuth.sessionUser : null;
@@ -8381,7 +8490,7 @@ const TeleConsultEngine = {
     this.resetControls();
     this.initCameraStream();
 
-    showToast(`📹 Connected to Dr. ${doc.name.split(' ').pop()}'s Virtual Consultation Room`, 'success');
+    showToast(`📹 Connected to Dr. ${doc ? doc.name.split(' ').pop() : 'Consultant'}'s Demo Consultation Room`, 'success');
   },
 
   resetControls() {
@@ -8392,7 +8501,7 @@ const TeleConsultEngine = {
     if (mic) {
       mic.innerHTML = '🎙️';
       mic.classList.remove('off');
-      mic.title = 'Mute Microphone';
+      mic.title = 'Audio simulated in demo (mic not captured)';
     }
     if (cam) {
       cam.innerHTML = '📹';
@@ -8405,6 +8514,7 @@ const TeleConsultEngine = {
     this.sessionId++;
     this.stopCameraStream();
     this.stopCallTimer();
+    this.stopVitals();
     const modal = document.getElementById('tele-consult-modal');
     if (modal) {
       modal.classList.remove('active');
@@ -8428,20 +8538,29 @@ const TeleConsultEngine = {
 
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
-        if (sid !== this.sessionId) {
+        if (sid !== this.sessionId || document.hidden) {
           stream.getTracks().forEach(t => t.stop());
           return;
         }
         this.mediaStream = stream;
+        this.isCamOff = false;
         if (videoEl) {
           videoEl.srcObject = stream;
           videoEl.style.display = 'block';
         }
         if (fallbackEl) fallbackEl.style.display = 'none';
+        const btn = document.getElementById('btn-tele-cam');
+        if (btn) {
+          btn.innerHTML = '📹';
+          btn.classList.remove('off');
+          btn.title = 'Turn Camera Off';
+        }
       })
       .catch(err => {
+        if (sid !== this.sessionId) return;
         console.warn('Webcam unavailable, using simulation:', err);
         showFallback();
+        showToast(err?.name === 'NotAllowedError' ? 'Camera permission denied. Showing simulated view.' : 'No camera available. Showing simulated view.', 'info');
       });
   },
 
@@ -8454,44 +8573,34 @@ const TeleConsultEngine = {
     if (videoEl) videoEl.srcObject = null;
   },
 
-  toggleMic() {
-    this.isMicMuted = !this.isMicMuted;
-    if (this.mediaStream) {
-      this.mediaStream.getAudioTracks().forEach(t => t.enabled = !this.isMicMuted);
-    }
-    const btn = document.getElementById('btn-tele-mic');
+  setCamera(on) {
+    this.isCamOff = !on;
+    const btn = document.getElementById('btn-tele-cam');
     if (btn) {
-      btn.innerHTML = this.isMicMuted ? '🔇' : '🎙️';
-      btn.classList.toggle('off', this.isMicMuted);
-      btn.title = this.isMicMuted ? 'Unmute Microphone' : 'Mute Microphone';
+      btn.innerHTML = on ? '📹' : '🚫';
+      btn.classList.toggle('off', !on);
+      btn.title = on ? 'Turn Camera Off' : 'Turn Camera On';
     }
-    showToast(this.isMicMuted ? 'Microphone muted' : 'Microphone unmuted', 'info');
+    if (on) {
+      this.initCameraStream();
+    } else {
+      this.stopCameraStream();
+      const v = document.getElementById('patient-webcam-video');
+      const f = document.getElementById('patient-webcam-fallback');
+      if (v) v.style.display = 'none';
+      if (f) f.style.display = 'flex';
+    }
   },
 
   toggleCamera() {
-    this.isCamOff = !this.isCamOff;
-    if (this.mediaStream) {
-      this.mediaStream.getVideoTracks().forEach(t => t.enabled = !this.isCamOff);
-    }
-    const btn = document.getElementById('btn-tele-cam');
-    const videoEl = document.getElementById('patient-webcam-video');
-    const fallbackEl = document.getElementById('patient-webcam-fallback');
+    this.setCamera(this.isCamOff);
+  },
 
+  toggleMic() {
+    showToast('Audio is simulated in this demo — microphone is not captured or transmitted.', 'info');
+    const btn = document.getElementById('btn-tele-mic');
     if (btn) {
-      btn.innerHTML = this.isCamOff ? '🚫' : '📹';
-      btn.classList.toggle('off', this.isCamOff);
-      btn.title = this.isCamOff ? 'Turn Camera On' : 'Turn Camera Off';
-    }
-    if (this.isCamOff) {
-      if (videoEl) videoEl.style.display = 'none';
-      if (fallbackEl) fallbackEl.style.display = 'flex';
-      showToast('Camera stream disabled', 'info');
-    } else {
-      if (this.mediaStream && videoEl) {
-        videoEl.style.display = 'block';
-        if (fallbackEl) fallbackEl.style.display = 'none';
-      }
-      showToast('Camera stream enabled', 'info');
+      btn.title = 'Audio simulated in demo (mic not captured)';
     }
   },
 
@@ -8510,11 +8619,10 @@ const TeleConsultEngine = {
   stopCallTimer() {
     if (this.timerInterval) clearInterval(this.timerInterval);
     this.timerInterval = null;
-    if (this.vitalsInterval) clearInterval(this.vitalsInterval);
-    this.vitalsInterval = null;
   },
 
   startVitalsSimulation() {
+    this.stopVitals();
     const hrEl = document.getElementById('tele-vital-hr');
     const spo2El = document.getElementById('tele-vital-spo2');
     const bpEl = document.getElementById('tele-vital-bp');
@@ -8528,6 +8636,11 @@ const TeleConsultEngine = {
     }, 4000);
   },
 
+  stopVitals() {
+    if (this.vitalsInterval) clearInterval(this.vitalsInterval);
+    this.vitalsInterval = null;
+  },
+
   simulateVitalsSpike() {
     const hrEl = document.getElementById('tele-vital-hr');
     const spo2El = document.getElementById('tele-vital-spo2');
@@ -8535,7 +8648,7 @@ const TeleConsultEngine = {
     this.currentVitals.spo2 = 99;
     if (hrEl) hrEl.innerText = `88 BPM (Pulsing)`;
     if (spo2El) spo2El.innerText = `SpO2 99%`;
-    showToast('🩺 Live clinical vitals checked: Heart Rate 88 BPM, SpO2 99%, Normal Sinus Rhythm', 'success');
+    showToast('🩺 Simulated vitals updated: Heart Rate 88 BPM, SpO2 99% (Demo telemetry)', 'info');
   },
 
   renderPrescriptions() {
@@ -8580,15 +8693,22 @@ const TeleConsultEngine = {
   downloadPrescriptionPDF() {
     const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
     const user = window.CarePulseAuth ? CarePulseAuth.sessionUser : null;
-    const patientName = (user && user.name) ? user.name : 'Self (Demo Patient)';
+    const rawPatientName = (user && user.name) ? user.name : 'Self (Demo Patient)';
+    const patientName = rawPatientName.endsWith('(Demo)') ? rawPatientName : `${rawPatientName} (Demo)`;
     const safeName = escapeHtml(patientName);
     this.tokenRef ??= `#TK-TELE-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const printWin = window.open('', '_blank', 'width=800,height=900');
     if (!printWin) {
-      alert('Please allow popups to download/print the demo prescription.');
+      showToast('Please allow popups to download/print the demo prescription.', 'warning');
       return;
     }
+
+    const safeDocName = escapeHtml(doc ? doc.name : 'Consultant Doctor');
+    const safeDocSpec = escapeHtml(doc ? doc.specialty : 'General OPD');
+    const safeDocReg = escapeHtml(doc?.regNo || 'Demo ID: CP-MED-101 (Sample Profile)');
+    const safePhone = escapeHtml(DEMO_PHONE);
+    const safeTokenRef = escapeHtml(this.tokenRef);
 
     const itemsHtml = this.prescriptions.map((m, i) => `
       <tr style="border-bottom: 1px solid #e2e8f0;">
@@ -8634,28 +8754,28 @@ const TeleConsultEngine = {
         <div class="header">
           <div class="brand">
             <h1>🏥 CarePulse Multi-Specialty Hospital</h1>
-            <p>GT Road, Near Sugar Mill Crossing, Phagwara, Punjab 144401</p>
-            <p>Emergency & Trauma: 108 / 112 &bull; Demo Helpline: ${DEMO_PHONE} &bull; Telehealth Prototype</p>
+            <p>Simulated CarePulse Campus, Sector 9 (Demo Facility), Phagwara, Punjab 144401</p>
+            <p>Emergency & Trauma: 108 / 112 &bull; Demo Helpline: ${safePhone} &bull; Telehealth Prototype</p>
           </div>
           <div class="doc-info">
-            <h3>${escapeHtml(doc.name)}</h3>
-            <p style="margin: 2px 0; font-size: 13px; font-weight: 600;">${escapeHtml(doc.specialty)}</p>
-            <p style="margin: 0; font-size: 12px; color: #64748b;">${escapeHtml(doc.regNo || 'Faculty ID: CP-MED-101')}</p>
+            <h3>${safeDocName}</h3>
+            <p style="margin: 2px 0; font-size: 13px; font-weight: 600;">${safeDocSpec}</p>
+            <p style="margin: 0; font-size: 12px; color: #64748b;">${safeDocReg}</p>
           </div>
         </div>
 
         <div class="patient-box">
           <div><strong>Patient Name:</strong> ${safeName}</div>
           <div><strong>Date:</strong> ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
-          <div><strong>Consultation:</strong> Virtual Video Tele-Consult</div>
-          <div><strong>Token Ref:</strong> ${this.tokenRef}</div>
+          <div><strong>Consultation:</strong> Virtual Video Tele-Consult (Demo)</div>
+          <div><strong>Token Ref:</strong> ${safeTokenRef}</div>
         </div>
 
         <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 6px; padding: 10px 14px; margin-bottom: 20px; font-size: 13px;">
-          <strong>Clinical Diagnosis:</strong> Acute Upper Respiratory Tract Infection (URTI) with mild pyrexia. Advised oral hydration and rest.
+          <strong>Sample Diagnosis:</strong> Acute Upper Respiratory Tract Infection (URTI) with mild pyrexia (Sample diagnosis only). Advised oral hydration and rest.
         </div>
 
-        <h3 style="font-family: Georgia, serif; color: #0d9488; font-size: 20px; margin: 0 0 10px;">℞ Prescribed Medications</h3>
+        <h3 style="font-family: Georgia, serif; color: #0d9488; font-size: 20px; margin: 0 0 10px;">℞ Prescribed Medications (Sample)</h3>
         <table class="rx-table">
           <thead>
             <tr>
@@ -8675,9 +8795,9 @@ const TeleConsultEngine = {
             <p style="margin: 2px 0 0;">Not a real medical prescription or valid for dispensing.</p>
           </div>
           <div class="signature">
-            <div class="sig-line">${escapeHtml(doc.name)}</div>
-            <div style="font-size: 12px; font-weight: 700; color: #0f172a;">${escapeHtml(doc.name)}</div>
-            <div style="font-size: 11px; color: #64748b;">Faculty ID: ${escapeHtml(doc.regNo || 'CP-MED-101')}</div>
+            <div class="sig-line">${safeDocName}</div>
+            <div style="font-size: 12px; font-weight: 700; color: #0f172a;">${safeDocSpec}</div>
+            <div style="font-size: 11px; color: #64748b;">${safeDocReg}</div>
           </div>
         </div>
 
@@ -8706,25 +8826,30 @@ const TeleConsultEngine = {
     const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
     const lines = [
       '*CarePulse Hospital Tele-Consultation Prescription (Demo)*',
-      `*Doctor:* ${doc.name} (${doc.specialty})`,
-      `*Faculty ID:* ${doc.regNo || 'CP-MED-101'}`,
+      '⚠️ Sample prescription for demonstration only — not a valid medical prescription.',
+      `*Doctor:* ${doc ? doc.name : 'Consultant'} (${doc ? doc.specialty : 'General OPD'})`,
+      `*Demo ID:* ${doc?.regNo || 'CP-MED-101'}`,
       `*Date:* ${new Date().toLocaleDateString('en-GB')}`,
       '',
-      '*Rx Medicines:*',
+      '*Rx Medicines (Sample):*',
       ...this.prescriptions.map((m, i) => `${i + 1}. ${m.name} (${m.dosage} x ${m.duration})`),
       '',
       `*Demo Helpline:* ${DEMO_PHONE}`,
-      '*Address:* GT Road, Phagwara, Punjab'
+      '*Facility:* Simulated CarePulse Campus (Demo Facility), Phagwara'
     ];
     window.open(`https://wa.me/?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener');
   },
 
   endConsultation() {
     this.sessionId++;
-    const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
     this.stopCameraStream();
     this.stopCallTimer();
-    showToast(`✅ Video consultation with ${doc.name} completed successfully. Please review or download your prescription.`, 'success');
+    this.stopVitals();
+    const v = document.getElementById('patient-webcam-video');
+    const f = document.getElementById('patient-webcam-fallback');
+    if (v) v.style.display = 'none';
+    if (f) f.style.display = 'flex';
+    showToast('✅ Demo consultation concluded. Sample prescription generated for preview.', 'success');
   }
 };
 
@@ -8733,11 +8858,6 @@ window.openTeleConsultModal = function (docId) { TeleConsultEngine.open(docId); 
 window.closeTeleConsultModal = function () { TeleConsultEngine.close(); };
 
 // Ensure media tracks are terminated on page unload or visibility change
-window.addEventListener('beforeunload', () => {
-  if (TeleConsultEngine.mediaStream) {
-    TeleConsultEngine.stopCameraStream();
-  }
-});
 window.addEventListener('pagehide', () => {
   if (TeleConsultEngine.mediaStream) {
     TeleConsultEngine.stopCameraStream();
@@ -8745,11 +8865,8 @@ window.addEventListener('pagehide', () => {
 });
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && TeleConsultEngine.mediaStream) {
-    TeleConsultEngine.stopCameraStream();
-    const v = document.getElementById('patient-webcam-video');
-    const f = document.getElementById('patient-webcam-fallback');
-    if (v) v.style.display = 'none';
-    if (f) f.style.display = 'flex';
+    TeleConsultEngine.setCamera(false);
+    showToast('Camera paused while tab was hidden. Tap 📹 to resume.', 'info');
   }
 });
 

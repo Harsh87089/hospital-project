@@ -1,6 +1,6 @@
 // CarePulse Appointment Booking & Scheduling Engine
 import { DOCTORS, HEALTH_PACKAGES, state } from './config.js';
-import { escapeHtml, showToast, getUpcomingDays, getSlotsForDoctorAndDate, processBookingSubmission } from './utils.js';
+import { escapeHtml, showToast, getUpcomingDays, getSlotsForDoctorAndDate, processBookingSubmission, getCanonicalQrPayload } from './utils.js';
 import { openTokenSlipModal, renderMyBookingsBadge } from './tokens.js';
 import { CarePulseAuth } from './auth.js';
 import { validate } from './validate.js';
@@ -443,9 +443,7 @@ const submitPackageBookingForm = window.submitPackageBookingForm = function (e) 
   const genSecPart = () => Array.from({ length: 4 }, () => hexChars.charAt(Math.floor(Math.random() * hexChars.length))).join('');
   const securityCode = `SEC-${genSecPart()}-${genSecPart()}`;
   const barcodeNum = `CP-PKG-${pkgTokenNum}-${Math.floor(1000 + Math.random() * 9000)}`;
-  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
-  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
-  const qrPayload = `${qrOrigin}${qrPath}?track=${encodeURIComponent(tokenString)}&ref=${encodeURIComponent(ticketRef)}`;
+  const qrPayload = getCanonicalQrPayload(tokenString, ticketRef);
 
   const pkgAppointment = {
     tokenId: tokenString,
@@ -512,7 +510,7 @@ function submitDirectPackageBooking(pkg) {
     queuePosition: 1,
     estWaitMins: 5,
     issueTimestamp: now.toLocaleDateString('en-IN') + ', ' + now.toLocaleTimeString('en-IN'),
-    qrPayload: `${(typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app'}${(typeof location !== 'undefined' && location.pathname) ? location.pathname : '/'}?track=${encodeURIComponent(tokenString)}&ref=${encodeURIComponent(ticketRef)}`,
+    qrPayload: getCanonicalQrPayload(tokenString, ticketRef),
     doctorId: 'lab-pkg',
     doctorName: 'CarePulse Diagnostics Lab Desk',
     doctorSpecialty: 'CarePulse ProHealth Package',

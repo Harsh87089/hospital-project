@@ -3448,9 +3448,10 @@
                     <li><strong>Google Maps Embed (<code>maps.google.com / google.com</code>)</strong>: The campus map iframe loads on-demand only after you explicitly click "Load Interactive Map". Zero network requests are made to Google Maps during initial page load.</li>
                     <li><strong>In-Memory Client-Side QR Engine</strong>: Digital OPD tokens and health passes generate vector SVG QR codes directly in browser memory without any external network fallback service. Zero patient names, phone numbers, or token details are transmitted over the network.</li>
                     <li><strong>EmailJS &amp; Firebase Compat (Developer Mode Only)</strong>: Optional cloud notification and authentication scripts are strictly gated and load dynamically only when testing in developer preview mode with <code>?dev=1</code> in the URL. For standard visitors, neither script is loaded or executed.</li>
-                    <li><strong>Camera (Virtual Tele-Consultation Preview - Camera Only, No Microphone Required)</strong>: When you launch the virtual tele-consultation module, the page requests camera-only access (<code>{ video: true }</code>) via <code>navigator.mediaDevices.getUserMedia</code> to render an in-browser local video preview. No microphone permission is requested. The video stream is processed entirely in browser memory on your device and is never recorded, transmitted, or uploaded to any server. All camera media tracks are immediately stopped when the consultation session is closed, dismissed, tab is hidden, or when navigating away.</li>
-                    <li><strong>Microphone and speech recognition (Voice AI)</strong>: Voice commands use your browser's built-in Web Speech API and start only after you tap the microphone and grant permission. In browsers where recognition is performed by cloud services (such as Google Chrome), audio is processed according to the browser vendor's privacy policy. CarePulse itself does not record, intercept, or store audio. You can also use typed search without granting microphone permission.</li>
+                    <li><strong>Camera (Virtual Tele-Consultation Preview - Camera Only, No Microphone Required)</strong>: When you launch the virtual tele-consultation module, the portal requests camera-only access (<code>{ video: true }</code>) strictly to render a local Picture-in-Picture patient preview. Microphone permission is NEVER requested or used by the tele-consultation room; audio in the consultation demo is entirely simulated. The video stream is processed purely in client-side memory on your device, never recorded, and never transmitted over any network. All camera hardware tracks are actively stopped and released when the consultation is ended, paused, dismissed, when the tab is hidden, or when navigating away.</li>
+                    <li><strong>Microphone (Voice AI Assistant Only - Distinct Feature)</strong>: Voice commands in the Voice AI search feature use your browser's built-in Web Speech API and activate only after you explicitly tap the voice assistant microphone and grant browser permission. This is entirely separate from the tele-consultation room. In browsers where speech recognition is processed via cloud speech engines (such as Google Chrome), speech audio is handled according to your browser vendor's privacy policy. CarePulse itself never records or stores your speech audio, and all search functions can be used via standard keyboard typing without granting microphone access.</li>
                     <li><strong>Location (Emergency &amp; Ambulance Hub)</strong>: When you open the Emergency Hub, the page asks your browser for your geolocation to display coordinates you can copy or share. Coordinates are held in browser memory only and never stored or uploaded. If you tap "Share Location on WhatsApp", the coordinates are sent to WhatsApp at your explicit request.</li>
+                    <li><strong>WhatsApp Sharing (User-Initiated Share Actions)</strong>: If you choose to tap "Share Prescription on WhatsApp" or "Share Location on WhatsApp", the formatted sample text is transferred to WhatsApp (a third-party service owned by Meta) via a standard web link strictly at your explicit initiation and subject to WhatsApp's Terms of Service and Privacy Policy. CarePulse does not transmit this data automatically.</li>
                 </ul>
 
                 <h4 class="u-box-color-256">4. Zero Third-Party Monetization or Data Brokering</h4>
@@ -3765,7 +3766,7 @@
                     <span class="pulse-dot"></span>
                     <div>
                         <strong id="tele-doc-badge-name">Dr. Rajesh Sharma</strong>
-                        <span id="tele-doc-badge-spec"class="u-box-display-279">General Medicine &bull; Faculty ID: CP-MED-101 (Sample Profile)</span>
+                        <span id="tele-doc-badge-spec"class="u-box-display-279">General Medicine &bull; Demo ID: CP-MED-101 (Sample Profile)</span>
                     </div>
                 </div>
 
@@ -3779,6 +3780,7 @@
 
                 <!-- Live Patient Telemetry HUD -->
                 <div class="tele-vitals-hud">
+                    <span class="vitals-pill" style="background: rgba(245, 158, 11, 0.25); border: 1px solid rgba(245, 158, 11, 0.5); color: #fde68a; font-weight: 700; font-size: 0.68rem; letter-spacing: 0.04em;">SIMULATED DATA</span>
                     <div class="vitals-pill">
                         <span class="u-icon-decorative" aria-hidden="true">❤️</span> <span id="tele-vital-hr">74 BPM</span>
                     </div>
@@ -3801,7 +3803,7 @@
                     </div>
                     <div class="u-box-text-align-281">
                         <h4 id="tele-doc-screen-name"class="u-box-margin-282">Dr. Rajesh Sharma</h4>
-                        <p id="tele-doc-screen-desc"class="u-box-margin-283">Live Consultation Active &bull; Simulated Media Session</p>
+                        <p id="tele-doc-screen-desc"class="u-box-margin-283">Demo Consultation Session &bull; Simulated Media</p>
                     </div>
                 </div>
 
@@ -3814,10 +3816,10 @@
 
                 <!-- Call Controls Toolbar -->
                 <div class="tele-call-controls">
-                    <button type="button" class="tele-ctrl-btn" id="btn-tele-mic" data-action="tele-mic" title="Mute/Unmute Microphone">
+                    <button type="button" class="tele-ctrl-btn" id="btn-tele-mic" data-action="tele-mic" title="Audio simulated in demo (mic not captured)" aria-label="Microphone (Audio simulated in demo)">
                         🎙️
                     </button>
-                    <button type="button" class="tele-ctrl-btn" id="btn-tele-cam" data-action="tele-cam" title="Camera On/Off">
+                    <button type="button" class="tele-ctrl-btn" id="btn-tele-cam" data-action="tele-cam" title="Turn Camera Off" aria-label="Toggle Camera Preview">
                         📹
                     </button>
                     <button type="button" class="tele-ctrl-btn" data-action="tele-vitals" title="Simulate Vitals Check">
@@ -3839,7 +3841,7 @@
                     </div>
                     <div class="rx-doc-meta">
                         <div class="rx-doc-name" id="rx-header-doc-name">Dr. Rajesh Sharma</div>
-                        <div class="rx-doc-reg" id="rx-header-doc-reg">MBBS, MD &bull; Faculty ID: CP-MED-101 (Sample Profile)</div>
+                        <div class="rx-doc-reg" id="rx-header-doc-reg">MBBS, MD &bull; Demo ID: CP-MED-101 (Sample Profile)</div>
                     </div>
                 </div>
 
@@ -3853,7 +3855,7 @@
 
                 <!-- Clinical Diagnosis Notes -->
                 <div class="rx-clinical-notes">
-                    <strong>Clinical Diagnosis:</strong> <span id="rx-diagnosis-text">Acute Upper Respiratory Tract Infection (URTI) with mild pyrexia. Advised symptomatic relief and oral hydration.</span>
+                    <strong>Sample Diagnosis:</strong> <span id="rx-diagnosis-text">Acute Upper Respiratory Tract Infection (URTI) with mild pyrexia (Demo note). Advised symptomatic relief and oral hydration.</span>
                 </div>
 
                 <!-- Prescription Items List (Rx) -->
@@ -3903,7 +3905,7 @@
                     <button type="button" class="btn-rx-action pharmacy" data-action="tele-order-pharmacy">
                         <span>🛒</span> <span>Send to Pharmacy</span>
                     </button>
-                    <button type="button" class="btn-rx-action whatsapp" data-action="tele-share-wa">
+                    <button type="button" class="btn-rx-action whatsapp" data-action="tele-share-wa" title="Transfers sample prescription text to WhatsApp (third-party service)">
                         <span>💬</span> <span>Share Prescription on WhatsApp</span>
                     </button>
                 </div>

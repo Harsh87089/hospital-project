@@ -699,7 +699,14 @@ const CarePulseBarcode = {
   }
 };
 
-// --- Unique Ticket Attributes & State Generator ---
+const CANONICAL_BASE_URL = 'https://hospital-project-tawny.vercel.app';
+
+function getCanonicalQrPayload(tokenId, ticketRef = '') {
+  const safeToken = String(tokenId || '').trim();
+  const safeRef = String(ticketRef || '').trim();
+  return `${CANONICAL_BASE_URL}/?track=${encodeURIComponent(safeToken)}${safeRef ? `&ref=${encodeURIComponent(safeRef)}` : ''}`;
+}
+
 // --- Unique Ticket Attributes & State Generator ---
 function generateUniqueTicketDetails(doc, patientData, targetDateIso) {
   const appDateIso = targetDateIso || state.selectedDate || getISTIsoDate();
@@ -767,10 +774,8 @@ function generateUniqueTicketDetails(doc, patientData, targetDateIso) {
     hour12: true
   });
 
-  // 10. Dynamic Verification URL & Payload for QR (No PII in query params)
-  const qrOrigin = (typeof location !== 'undefined' && location.origin) ? location.origin : 'https://hospital-project-tawny.vercel.app';
-  const qrPath = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
-  const qrPayload = `${qrOrigin}${qrPath}?track=${encodeURIComponent(tokenId)}&ref=${encodeURIComponent(ticketRef)}`;
+  // 10. Canonical Verification URL & Payload for QR (No PII in query params)
+  const qrPayload = getCanonicalQrPayload(tokenId, ticketRef);
 
   return {
     tokenNumber,
@@ -956,6 +961,8 @@ function processBookingSubmission(patientData) {
 
 
 export {
+  CANONICAL_BASE_URL,
+  getCanonicalQrPayload,
   escapeHtml,
   getISTDate,
   getISTIsoDate,

@@ -98,6 +98,8 @@ python -m http.server 3000
 # → open http://localhost:3000
 ```
 
+> **Note on Local Serving:** Do not open `index.html` by double-clicking it directly via `file://`. Modern web browsers enforce security and CORS restrictions that block JavaScript ES module imports (`<script type="module">`) over the `file://` protocol. Always serve the project through a local HTTP server such as `python -m http.server 3000` or any standard static file server.
+
 ### Running the Test Suites
 
 ```bash

@@ -5,17 +5,15 @@ const DEMO_WHATSAPP = '910000000000';
 const DEMO_WHATSAPP_DISPLAY = '+91 00000 00000';
 const DEMO_STAFF_PIN = '2026';
 
-// Guard: Ensure GitHub Pages mirror is not indexed to avoid duplicate canonical indexing with primary Vercel host
+// Guard: Ensure GitHub Pages duplicate mirror uses clean Canonical pointing to primary Vercel host without conflicting noindex
 (function guardPagesIndexing() {
   if (typeof window !== 'undefined' && window.location && window.location.hostname && window.location.hostname.includes('github.io')) {
-    const existingRobots = document.querySelector('meta[name="robots"]');
-    if (existingRobots) {
-      existingRobots.setAttribute('content', 'noindex, nofollow');
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'robots';
-      meta.content = 'noindex, nofollow';
-      document.head.appendChild(meta);
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.rel = 'canonical';
+      canonical.href = 'https://hospital-project-tawny.vercel.app/';
+      document.head.appendChild(canonical);
     }
   }
 })();
