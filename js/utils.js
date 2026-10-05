@@ -704,7 +704,15 @@ const CANONICAL_BASE_URL = 'https://hospital-project-tawny.vercel.app';
 function getCanonicalQrPayload(tokenId, ticketRef = '') {
   const safeToken = String(tokenId || '').trim();
   const safeRef = String(ticketRef || '').trim();
-  return `${CANONICAL_BASE_URL}/?track=${encodeURIComponent(safeToken)}${safeRef ? `&ref=${encodeURIComponent(safeRef)}` : ''}`;
+  let base = CANONICAL_BASE_URL;
+  if (typeof window !== 'undefined' && window.location) {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1' || host.endsWith('.localhost')) {
+      base = window.location.origin;
+    }
+  }
+  const cleanBase = base.replace(/\/+$/, '');
+  return `${cleanBase}/?track=${encodeURIComponent(safeToken)}${safeRef ? `&ref=${encodeURIComponent(safeRef)}` : ''}`;
 }
 
 // --- Unique Ticket Attributes & State Generator ---

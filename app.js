@@ -1220,7 +1220,7 @@ window.openTrackTokenModal = function (presetTokenId = null) {
   document.body.style.overflow = 'hidden';
   if (presetTokenId) {
     const cleanId = String(presetTokenId).trim().toUpperCase();
-    if (/^#?TK-\d+$/i.test(cleanId)) {
+    if (/^#?TK-\d{1,6}$/i.test(cleanId)) {
       const input = document.getElementById('tracker-input');
       if (input) {
         input.value = cleanId.replace('#', '');
@@ -1986,7 +1986,15 @@ const CANONICAL_BASE_URL = 'https://hospital-project-tawny.vercel.app';
 function getCanonicalQrPayload(tokenId, ticketRef = '') {
   const safeToken = String(tokenId || '').trim();
   const safeRef = String(ticketRef || '').trim();
-  return `${CANONICAL_BASE_URL}/?track=${encodeURIComponent(safeToken)}${safeRef ? `&ref=${encodeURIComponent(safeRef)}` : ''}`;
+  let base = CANONICAL_BASE_URL;
+  if (typeof window !== 'undefined' && window.location) {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1' || host.endsWith('.localhost')) {
+      base = window.location.origin;
+    }
+  }
+  const cleanBase = base.replace(/\/+$/, '');
+  return `${cleanBase}/?track=${encodeURIComponent(safeToken)}${safeRef ? `&ref=${encodeURIComponent(safeRef)}` : ''}`;
 }
 
 // --- Unique Ticket Attributes & State Generator ---
@@ -3482,10 +3490,10 @@ function checkTokenLiveStatus(searchVal) {
     (cleanPhone.length === 10 && (a.patientPhone || '').replace(/[^0-9]/g, '') === cleanPhone)
   );
 
-  // If not found in localStorage and matches strict pattern ^TK-\d+$, construct simulated live token record
-  if (!found && /^TK-\d+$/i.test(cleanVal)) {
+  // If not found in localStorage and matches strict pattern ^TK-\d{1,6}$, construct simulated live token record
+  if (!found && /^TK-\d{1,6}$/i.test(cleanVal)) {
     const tokenDigits = parseInt(cleanVal.replace(/\D/g, ''), 10) || 14;
-    const doc = DOCTORS[0];
+    const doc = (DOCTORS && DOCTORS[0]) || { id: 'doc-gp-1', name: 'Dr. Rajesh Sharma', specialty: 'General Medicine', room: 'Room 101, Ground Floor' };
     const currentlyServing = 14;
     const urlRef = (typeof URLSearchParams !== 'undefined' && typeof window !== 'undefined')
       ? new URLSearchParams(window.location.search).get('ref')
@@ -3509,7 +3517,7 @@ function checkTokenLiveStatus(searchVal) {
   }
 
   if (!found) {
-    showToast(`No appointment record found for "${cleanVal}". Please verify your token number or book a new appointment.`, 'warning');
+    showToast('No appointment record found. Please verify your token number or book a new appointment.', 'warning');
     resultBox.classList.remove('active');
     resultBox.textContent = '';
     activeTrackerToken = null;
@@ -3517,7 +3525,7 @@ function checkTokenLiveStatus(searchVal) {
   }
 
   activeTrackerToken = found.tokenId;
-  const doc = DOCTORS.find(d => d.id === found.doctorId) || DOCTORS[0];
+  const doc = (DOCTORS && DOCTORS.find(d => d.id === found.doctorId)) || (DOCTORS && DOCTORS[0]) || { name: 'Dr. Rajesh Sharma', specialty: 'General Medicine', avgWaitPerPatient: 12, currentServingToken: 14 };
   const tokenNum = found.tokenNumber;
   const patientName = found.patientName || 'Registered Patient';
 
@@ -3572,7 +3580,7 @@ function checkTokenLiveStatus(searchVal) {
     progressWidth = '40%';
   }
 
-  // Safe DOM construction: Zero innerHTML - all dynamic properties set with textContent
+  // Safe DOM construction: pure DOM element creation - all dynamic properties set with textContent
   resultBox.textContent = '';
 
   const topInfo = document.createElement('div');
@@ -3977,7 +3985,7 @@ function setupModalDismissals() {
 
     if (trackParam) {
       const cleanTrack = trackParam.trim().toUpperCase();
-      if (/^TK-\d+$/i.test(cleanTrack)) {
+      if (/^TK-\d{1,6}$/i.test(cleanTrack)) {
         setTimeout(() => {
           if (typeof openTrackTokenModal === 'function') openTrackTokenModal(cleanTrack);
         }, 350);
@@ -8420,7 +8428,7 @@ const TeleConsultEngine = {
   timerInterval: null,
   elapsedSeconds: 0,
   vitalsInterval: null,
-  currentVitals: { hr: 74, spo2: 98, bp: '120/80' },
+  currentVitals: { hr: 74, spo2: 98 },
 
   prescriptions: [
     { name: 'Tab. Paracetamol 650 mg', dosage: '1-0-1 (After Food)', duration: '3 Days' },
@@ -8437,7 +8445,7 @@ const TeleConsultEngine = {
       this.activeDoctorId = (DOCTORS[0] && DOCTORS[0].id) || 'doc-gp-1';
     }
 
-    const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
+    const doc = (DOCTORS && DOCTORS.find(d => d.id === this.activeDoctorId)) || (DOCTORS && DOCTORS[0]) || { name: 'Dr. Rajesh Sharma', specialty: 'General Medicine', qualifications: 'MBBS, MD', regNo: 'Demo ID: CP-MED-101 (Sample Profile)' };
     const modal = document.getElementById('tele-consult-modal');
     if (!modal) return;
 
@@ -8540,6 +8548,16 @@ const TeleConsultEngine = {
       .then(stream => {
         if (sid !== this.sessionId || document.hidden) {
           stream.getTracks().forEach(t => t.stop());
+          if (document.hidden && sid === this.sessionId) {
+            this.isCamOff = true;
+            showFallback();
+            const btn = document.getElementById('btn-tele-cam');
+            if (btn) {
+              btn.innerHTML = '🚫';
+              btn.classList.add('off');
+              btn.title = 'Camera paused while tab was hidden (Tap 📹 to resume)';
+            }
+          }
           return;
         }
         this.mediaStream = stream;
@@ -8691,11 +8709,12 @@ const TeleConsultEngine = {
   },
 
   downloadPrescriptionPDF() {
-    const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
+    const doc = (DOCTORS && DOCTORS.find(d => d.id === this.activeDoctorId)) || (DOCTORS && DOCTORS[0]) || { name: 'Dr. Rajesh Sharma', specialty: 'General Medicine', qualifications: 'MBBS, MD', regNo: 'Demo ID: CP-MED-101 (Sample Profile)' };
     const user = window.CarePulseAuth ? CarePulseAuth.sessionUser : null;
-    const rawPatientName = (user && user.name) ? user.name : 'Self (Demo Patient)';
-    const patientName = rawPatientName.endsWith('(Demo)') ? rawPatientName : `${rawPatientName} (Demo)`;
-    const safeName = escapeHtml(patientName);
+    const rawPatientName = (user && user.name)
+      ? (user.name.includes('(Demo)') ? user.name : `${user.name} (Demo)`)
+      : 'Self (Demo Patient)';
+    const safeName = escapeHtml(rawPatientName);
     this.tokenRef ??= `#TK-TELE-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const printWin = window.open('', '_blank', 'width=800,height=900');
@@ -8722,6 +8741,8 @@ const TeleConsultEngine = {
       <!DOCTYPE html>
       <html>
       <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; font-src 'self' data:;">
         <title>Prescription - CarePulse Hospital - ${safeName}</title>
         <style>
           body { font-family: system-ui, -apple-system, sans-serif; padding: 30px; color: #0f172a; line-height: 1.5; position: relative; }
@@ -8823,7 +8844,7 @@ const TeleConsultEngine = {
   },
 
   sharePrescriptionWhatsApp() {
-    const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
+    const doc = (DOCTORS && DOCTORS.find(d => d.id === this.activeDoctorId)) || (DOCTORS && DOCTORS[0]) || { name: 'Dr. Rajesh Sharma', specialty: 'General Medicine', qualifications: 'MBBS, MD', regNo: 'Demo ID: CP-MED-101 (Sample Profile)' };
     const lines = [
       '*CarePulse Hospital Tele-Consultation Prescription (Demo)*',
       '⚠️ Sample prescription for demonstration only — not a valid medical prescription.',

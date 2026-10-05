@@ -10,7 +10,7 @@ const TeleConsultEngine = {
   timerInterval: null,
   elapsedSeconds: 0,
   vitalsInterval: null,
-  currentVitals: { hr: 74, spo2: 98, bp: '120/80' },
+  currentVitals: { hr: 74, spo2: 98 },
 
   prescriptions: [
     { name: 'Tab. Paracetamol 650 mg', dosage: '1-0-1 (After Food)', duration: '3 Days' },
@@ -27,7 +27,7 @@ const TeleConsultEngine = {
       this.activeDoctorId = (DOCTORS[0] && DOCTORS[0].id) || 'doc-gp-1';
     }
 
-    const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
+    const doc = (DOCTORS && DOCTORS.find(d => d.id === this.activeDoctorId)) || (DOCTORS && DOCTORS[0]) || { name: 'Dr. Rajesh Sharma', specialty: 'General Medicine', qualifications: 'MBBS, MD', regNo: 'Demo ID: CP-MED-101 (Sample Profile)' };
     const modal = document.getElementById('tele-consult-modal');
     if (!modal) return;
 
@@ -130,6 +130,16 @@ const TeleConsultEngine = {
       .then(stream => {
         if (sid !== this.sessionId || document.hidden) {
           stream.getTracks().forEach(t => t.stop());
+          if (document.hidden && sid === this.sessionId) {
+            this.isCamOff = true;
+            showFallback();
+            const btn = document.getElementById('btn-tele-cam');
+            if (btn) {
+              btn.innerHTML = '🚫';
+              btn.classList.add('off');
+              btn.title = 'Camera paused while tab was hidden (Tap 📹 to resume)';
+            }
+          }
           return;
         }
         this.mediaStream = stream;
@@ -281,11 +291,12 @@ const TeleConsultEngine = {
   },
 
   downloadPrescriptionPDF() {
-    const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
+    const doc = (DOCTORS && DOCTORS.find(d => d.id === this.activeDoctorId)) || (DOCTORS && DOCTORS[0]) || { name: 'Dr. Rajesh Sharma', specialty: 'General Medicine', qualifications: 'MBBS, MD', regNo: 'Demo ID: CP-MED-101 (Sample Profile)' };
     const user = window.CarePulseAuth ? CarePulseAuth.sessionUser : null;
-    const rawPatientName = (user && user.name) ? user.name : 'Self (Demo Patient)';
-    const patientName = rawPatientName.endsWith('(Demo)') ? rawPatientName : `${rawPatientName} (Demo)`;
-    const safeName = escapeHtml(patientName);
+    const rawPatientName = (user && user.name)
+      ? (user.name.includes('(Demo)') ? user.name : `${user.name} (Demo)`)
+      : 'Self (Demo Patient)';
+    const safeName = escapeHtml(rawPatientName);
     this.tokenRef ??= `#TK-TELE-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const printWin = window.open('', '_blank', 'width=800,height=900');
@@ -312,6 +323,8 @@ const TeleConsultEngine = {
       <!DOCTYPE html>
       <html>
       <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; font-src 'self' data:;">
         <title>Prescription - CarePulse Hospital - ${safeName}</title>
         <style>
           body { font-family: system-ui, -apple-system, sans-serif; padding: 30px; color: #0f172a; line-height: 1.5; position: relative; }
@@ -413,7 +426,7 @@ const TeleConsultEngine = {
   },
 
   sharePrescriptionWhatsApp() {
-    const doc = DOCTORS.find(d => d.id === this.activeDoctorId) || DOCTORS[0];
+    const doc = (DOCTORS && DOCTORS.find(d => d.id === this.activeDoctorId)) || (DOCTORS && DOCTORS[0]) || { name: 'Dr. Rajesh Sharma', specialty: 'General Medicine', qualifications: 'MBBS, MD', regNo: 'Demo ID: CP-MED-101 (Sample Profile)' };
     const lines = [
       '*CarePulse Hospital Tele-Consultation Prescription (Demo)*',
       '⚠️ Sample prescription for demonstration only — not a valid medical prescription.',

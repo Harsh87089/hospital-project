@@ -304,7 +304,7 @@ function setupModalDismissals() {
 
     if (trackParam) {
       const cleanTrack = trackParam.trim().toUpperCase();
-      if (/^TK-\d+$/i.test(cleanTrack)) {
+      if (/^TK-\d{1,6}$/i.test(cleanTrack)) {
         setTimeout(() => {
           if (typeof openTrackTokenModal === 'function') openTrackTokenModal(cleanTrack);
         }, 350);

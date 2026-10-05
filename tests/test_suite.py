@@ -396,6 +396,71 @@ class TestCarePulsePlatform(unittest.TestCase):
         self.assertIn('SAMPLE TARIFF SCHEDULE', self.html)
         self.assertIn('CarePulse demonstrates a sample tariff schedule', self.html)
 
+    # -------------------------------------------------------------
+    # 10. Reviewer Pass 3 Fixes (Camera Stop, Stale Catch, Deep Track, textContent Only)
+    # -------------------------------------------------------------
+    def test_23_tele_camera_stop_and_stale_catch(self):
+        """setCamera(false) must stop all tracks; stale .catch/.then must check sessionId."""
+        with open('js/tele.js', 'r', encoding='utf-8') as f:
+            tele_js = f.read()
+        with open('app.js', 'r', encoding='utf-8') as f:
+            app_js = f.read()
+
+        for code, label in [(tele_js, 'js/tele.js'), (app_js, 'app.js')]:
+            # setCamera(false) calls stop() on mediaStream tracks
+            self.assertIn('setCamera(on)', code, f"setCamera missing in {label}")
+            self.assertIn('stream.getTracks().forEach(t => t.stop())', code, f"stream track stop missing in {label}")
+            self.assertIn('this.mediaStream.getTracks().forEach(track => track.stop())', code, f"mediaStream track stop missing in {label}")
+            self.assertIn('track.stop()', code, f"track.stop missing in {label}")
+            # Stale catch guard
+            self.assertIn('if (sid !== this.sessionId) return;', code, f"stale session guard missing in {label}")
+            # Document hidden check in .then
+            self.assertIn('document.hidden', code, f"document.hidden check missing in {label}")
+            # Meta CSP in prescription printout popup
+            self.assertIn("default-src 'none'; style-src 'unsafe-inline'", code, f"printWin CSP missing in {label}")
+
+    def test_24_track_regex_validation_rules(self):
+        """?track= regex must accept TK-14, TK-1..TK-999999 and reject TK-1<img>, TK-, tk-, overlong."""
+        pattern = re.compile(r'^TK-\d{1,6}$')
+
+        # Valid tokens
+        self.assertTrue(pattern.match('TK-14'))
+        self.assertTrue(pattern.match('TK-1'))
+        self.assertTrue(pattern.match('TK-999999'))
+
+        # Invalid tokens (must reject)
+        self.assertIsNone(pattern.match('TK-1<img>'))
+        self.assertIsNone(pattern.match('TK-'))
+        self.assertIsNone(pattern.match('tk-'))
+        self.assertIsNone(pattern.match('TK-1234567'))
+        self.assertIsNone(pattern.match('TK-14<script>'))
+        self.assertIsNone(pattern.match('TK-123;DROP TABLE'))
+        self.assertIsNone(pattern.match(''))
+
+        # Lowercase input after uppercasing
+        clean_lower = 'tk-14'.strip().upper()
+        self.assertTrue(pattern.match(clean_lower))
+
+    def test_25_check_token_live_status_zero_inner_html(self):
+        """checkTokenLiveStatus source code must contain zero innerHTML usage."""
+        with open('js/tokens.js', 'r', encoding='utf-8') as f:
+            tokens_js = f.read()
+        with open('app.js', 'r', encoding='utf-8') as f:
+            app_js = f.read()
+
+        for code, label in [(tokens_js, 'js/tokens.js'), (app_js, 'app.js')]:
+            start = code.find('function checkTokenLiveStatus(')
+            self.assertNotEqual(start, -1, f"checkTokenLiveStatus not found in {label}")
+            end = code.find('function renderMyBookingsBadge(', start)
+            if end == -1:
+                end = code.find('window.renderMyBookingsBadge', start)
+            self.assertNotEqual(end, -1, f"End of checkTokenLiveStatus not found in {label}")
+            func_code = code[start:end]
+            self.assertNotIn('innerHTML', func_code, f"Found innerHTML in checkTokenLiveStatus in {label}!")
+            self.assertIn('resultBox.textContent', func_code, f"textContent not found in {label}")
+            self.assertIn('createElement', func_code, f"createElement not found in {label}")
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
+
 

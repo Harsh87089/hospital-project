@@ -1,5 +1,5 @@
 // CarePulse Token Slip, PDF E-Pass & Reschedule/Cancel Engine
-import { DEMO_WHATSAPP, DOCTORS, state } from './config.js';
+import { DOCTORS, state } from './config.js';
 import { escapeHtml, showToast, getSlotsForDoctorAndDate, CarePulseQR, CarePulseBarcode, getCanonicalQrPayload, getISTIsoDate } from './utils.js';
 
 let activeTrackerToken = null;
@@ -11,7 +11,7 @@ const openTrackTokenModal = window.openTrackTokenModal = function (presetTokenId
   document.body.style.overflow = 'hidden';
   if (presetTokenId) {
     const cleanId = String(presetTokenId).trim().toUpperCase();
-    if (/^#?TK-\d+$/i.test(cleanId)) {
+    if (/^#?TK-\d{1,6}$/i.test(cleanId)) {
       const input = document.getElementById('tracker-input');
       if (input) {
         input.value = cleanId.replace('#', '');
@@ -924,10 +924,10 @@ function checkTokenLiveStatus(searchVal) {
     (cleanPhone.length === 10 && (a.patientPhone || '').replace(/[^0-9]/g, '') === cleanPhone)
   );
 
-  // If not found in localStorage and matches strict pattern ^TK-\d+$, construct simulated live token record
-  if (!found && /^TK-\d+$/i.test(cleanVal)) {
+  // If not found in localStorage and matches strict pattern ^TK-\d{1,6}$, construct simulated live token record
+  if (!found && /^TK-\d{1,6}$/i.test(cleanVal)) {
     const tokenDigits = parseInt(cleanVal.replace(/\D/g, ''), 10) || 14;
-    const doc = DOCTORS[0];
+    const doc = (DOCTORS && DOCTORS[0]) || { id: 'doc-gp-1', name: 'Dr. Rajesh Sharma', specialty: 'General Medicine', room: 'Room 101, Ground Floor' };
     const currentlyServing = 14;
     const urlRef = (typeof URLSearchParams !== 'undefined' && typeof window !== 'undefined')
       ? new URLSearchParams(window.location.search).get('ref')
@@ -951,7 +951,7 @@ function checkTokenLiveStatus(searchVal) {
   }
 
   if (!found) {
-    showToast(`No appointment record found for "${cleanVal}". Please verify your token number or book a new appointment.`, 'warning');
+    showToast('No appointment record found. Please verify your token number or book a new appointment.', 'warning');
     resultBox.classList.remove('active');
     resultBox.textContent = '';
     activeTrackerToken = null;
@@ -959,7 +959,7 @@ function checkTokenLiveStatus(searchVal) {
   }
 
   activeTrackerToken = found.tokenId;
-  const doc = DOCTORS.find(d => d.id === found.doctorId) || DOCTORS[0];
+  const doc = (DOCTORS && DOCTORS.find(d => d.id === found.doctorId)) || (DOCTORS && DOCTORS[0]) || { name: 'Dr. Rajesh Sharma', specialty: 'General Medicine', avgWaitPerPatient: 12, currentServingToken: 14 };
   const tokenNum = found.tokenNumber;
   const patientName = found.patientName || 'Registered Patient';
 
@@ -1014,7 +1014,7 @@ function checkTokenLiveStatus(searchVal) {
     progressWidth = '40%';
   }
 
-  // Safe DOM construction: Zero innerHTML - all dynamic properties set with textContent
+  // Safe DOM construction: pure DOM element creation - all dynamic properties set with textContent
   resultBox.textContent = '';
 
   const topInfo = document.createElement('div');
