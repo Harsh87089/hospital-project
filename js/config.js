@@ -4,6 +4,7 @@ const DEMO_PHONE_RAW = '18000000000';
 const DEMO_WHATSAPP = '910000000000';
 const DEMO_WHATSAPP_DISPLAY = '+91 00000 00000';
 const DEMO_STAFF_PIN = '2026';
+const APP_VERSION = 'carepulse-v2.7.0';
 
 // Guard: Ensure GitHub Pages duplicate mirror uses clean Canonical pointing to primary Vercel host without conflicting noindex
 (function guardPagesIndexing() {
@@ -885,6 +886,7 @@ export {
   DEMO_WHATSAPP,
   DEMO_WHATSAPP_DISPLAY,
   DEMO_STAFF_PIN,
+  APP_VERSION,
   DOCTORS,
   DEPTS,
   SLOT_TEMPLATES,

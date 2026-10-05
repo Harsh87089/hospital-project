@@ -460,6 +460,35 @@ class TestCarePulsePlatform(unittest.TestCase):
             self.assertIn('resultBox.textContent', func_code, f"textContent not found in {label}")
             self.assertIn('createElement', func_code, f"createElement not found in {label}")
 
+    def test_26_canary_parity_between_modules_and_app_js(self):
+        """Canary strings must be present in both js/* modules and app.js."""
+        with open('app.js', 'r', encoding='utf-8') as f:
+            app_js = f.read()
+
+        js_modules = []
+        js_dir = 'js'
+        for fname in os.listdir(js_dir):
+            if fname.endswith('.js'):
+                with open(os.path.join(js_dir, fname), 'r', encoding='utf-8') as f:
+                    js_modules.append(f.read())
+        all_modules = '\n'.join(js_modules)
+
+        canaries = [
+            'TOKEN_ID_RE',
+            'CANONICAL_BASE_URL',
+            'track.stop()',
+            'carepulse-v2.7.0'
+        ]
+
+        for canary in canaries:
+            in_modules = canary in all_modules
+            in_app = canary in app_js
+            self.assertEqual(
+                in_modules, in_app,
+                f"Canary string '{canary}' parity mismatch: in js/*: {in_modules}, in app.js: {in_app}"
+            )
+            self.assertTrue(in_app, f"Canary string '{canary}' must be present in app.js")
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
 

@@ -1,6 +1,6 @@
 // CarePulse Token Slip, PDF E-Pass & Reschedule/Cancel Engine
 import { DOCTORS, state } from './config.js';
-import { escapeHtml, showToast, getSlotsForDoctorAndDate, CarePulseQR, CarePulseBarcode, getCanonicalQrPayload, getISTIsoDate } from './utils.js';
+import { escapeHtml, showToast, getSlotsForDoctorAndDate, CarePulseQR, CarePulseBarcode, getCanonicalQrPayload, getISTIsoDate, TOKEN_ID_RE, normalizeTokenId, isValidTokenId, formatToken } from './utils.js';
 
 let activeTrackerToken = null;
 
@@ -10,11 +10,11 @@ const openTrackTokenModal = window.openTrackTokenModal = function (presetTokenId
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
   if (presetTokenId) {
-    const cleanId = String(presetTokenId).trim().toUpperCase();
-    if (/^#?TK-\d{1,6}$/i.test(cleanId)) {
+    const cleanId = normalizeTokenId(presetTokenId);
+    if (isValidTokenId(cleanId)) {
       const input = document.getElementById('tracker-input');
       if (input) {
-        input.value = cleanId.replace('#', '');
+        input.value = cleanId;
       }
       checkTokenLiveStatus(cleanId);
     }
@@ -407,6 +407,7 @@ function downloadTicketPDF(app) {
     <head>
       <title>CarePulse_Ticket_${escapeHtml(app.tokenId)}_${escapeHtml(app.patientName)}</title>
       <meta charset="utf-8" />
+      <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data: blob:;">
       <style>
         @page { size: auto; margin: 15mm; }
         body {
@@ -915,38 +916,41 @@ function checkTokenLiveStatus(searchVal) {
     return;
   }
 
-  const cleanVal = searchVal.replace('#', '').trim().toUpperCase();
-  const cleanPhone = searchVal.replace(/[^0-9]/g, '');
+  const cleanVal = normalizeTokenId(searchVal);
+  const isPhoneSearch = /^[\d\s+()-]+$/.test(searchVal.trim());
+  const cleanPhone = isPhoneSearch ? searchVal.replace(/[^0-9]/g, '') : '';
 
-  // Find strictly in user appointments
+  // Find strictly in user appointments (safe navigation on tokenId)
   let found = state.userAppointments.find(a =>
-    a.tokenId.toUpperCase() === cleanVal ||
-    (cleanPhone.length === 10 && (a.patientPhone || '').replace(/[^0-9]/g, '') === cleanPhone)
+    (a.tokenId && a.tokenId.toUpperCase() === cleanVal) ||
+    (isPhoneSearch && cleanPhone.length === 10 && (a.patientPhone || '').replace(/[^0-9]/g, '') === cleanPhone)
   );
 
+  const currentlyServing = parseInt(String(state?.liveQueue?.activeToken || '14').replace(/\D/g, ''), 10) || 14;
+
   // If not found in localStorage and matches strict pattern ^TK-\d{1,6}$, construct simulated live token record
-  if (!found && /^TK-\d{1,6}$/i.test(cleanVal)) {
-    const tokenDigits = parseInt(cleanVal.replace(/\D/g, ''), 10) || 14;
-    const doc = (DOCTORS && DOCTORS[0]) || { id: 'doc-gp-1', name: 'Dr. Rajesh Sharma', specialty: 'General Medicine', room: 'Room 101, Ground Floor' };
-    const currentlyServing = 14;
-    const urlRef = (typeof URLSearchParams !== 'undefined' && typeof window !== 'undefined')
+  if (!found && isValidTokenId(cleanVal)) {
+    const tokenDigits = parseInt(cleanVal.replace(/\D/g, ''), 10) || currentlyServing;
+    const defaultDoc = (DOCTORS && DOCTORS[0]) || { id: 'doc-gp-1', name: 'Dr. Rajesh Sharma', specialty: 'General Medicine', room: 'Room 101, Ground Floor' };
+    const rawRef = (typeof URLSearchParams !== 'undefined' && typeof window !== 'undefined')
       ? new URLSearchParams(window.location.search).get('ref')
       : null;
+    const safeRef = (rawRef && /^[A-Za-z0-9-]{1,24}$/.test(rawRef)) ? rawRef : 'CP-2026-LIVE';
     found = {
       tokenId: cleanVal,
       tokenNumber: tokenDigits,
       patientName: 'Registered Patient (Demo)',
-      patientPhone: '9876543210',
-      doctorId: doc.id,
-      doctorName: doc.name,
-      doctorSpecialty: doc.specialty,
-      room: doc.room || 'Room 101, Ground Floor',
+      doctorId: defaultDoc.id,
+      doctorName: defaultDoc.name,
+      doctorSpecialty: defaultDoc.specialty,
+      room: defaultDoc.room || 'Room 101, Ground Floor',
       date: 'Today (Live OPD)',
       isoDate: getISTIsoDate(),
       timeSlot: 'Morning OPD Session',
       status: tokenDigits < currentlyServing ? 'Completed' : (tokenDigits === currentlyServing ? 'In Consultation' : 'Confirmed'),
-      ticketRef: urlRef || 'CP-2026-LIVE',
-      assignedDesk: 'Counter 1 • Desk A'
+      ticketRef: safeRef,
+      assignedDesk: 'Counter 1 • Desk A',
+      simulated: true
     };
   }
 
@@ -959,16 +963,16 @@ function checkTokenLiveStatus(searchVal) {
   }
 
   activeTrackerToken = found.tokenId;
-  const doc = (DOCTORS && DOCTORS.find(d => d.id === found.doctorId)) || (DOCTORS && DOCTORS[0]) || { name: 'Dr. Rajesh Sharma', specialty: 'General Medicine', avgWaitPerPatient: 12, currentServingToken: 14 };
+  const doc = (DOCTORS && DOCTORS.find(d => d.id === found.doctorId)) || (DOCTORS && DOCTORS[0]) || { name: 'Dr. Rajesh Sharma', specialty: 'General Medicine', avgWaitPerPatient: 12, currentServingToken: currentlyServing };
   const tokenNum = found.tokenNumber;
   const patientName = found.patientName || 'Registered Patient';
 
   const todayIST = getISTIsoDate();
   const isToday = (found.isoDate === todayIST || found.date?.includes('Today'));
 
-  const currentlyServing = doc.currentServingToken || 14;
+  const avgWaitPerPatient = doc.avgWaitPerPatient || state?.liveQueue?.avgWaitMins || 12;
   const ahead = Math.max(0, tokenNum - currentlyServing);
-  const estWait = ahead * (doc.avgWaitPerPatient || 12);
+  const estWait = ahead * avgWaitPerPatient;
 
   let stageText = '';
   let waitDisplay = '';
@@ -977,7 +981,15 @@ function checkTokenLiveStatus(searchVal) {
   let step3Class = '';
   let progressWidth = '50%';
 
-  if (!isToday) {
+  // 1. Cancelled branch MUST come first
+  if (found.status === 'Cancelled') {
+    stageText = 'Appointment Cancelled';
+    waitDisplay = 'Cancelled';
+    step1Class = 'completed';
+    step2Class = '';
+    step3Class = '';
+    progressWidth = '0%';
+  } else if (!isToday) {
     stageText = `📅 Scheduled for ${found.date} (${found.timeSlot}). Live counter activates on appointment day.`;
     waitDisplay = 'Upcoming';
     step1Class = 'completed';
@@ -990,12 +1002,6 @@ function checkTokenLiveStatus(searchVal) {
     step2Class = 'completed';
     step3Class = 'completed';
     progressWidth = '100%';
-  } else if (found.status === 'Cancelled') {
-    stageText = 'Appointment Cancelled';
-    waitDisplay = 'Cancelled';
-    step2Class = '';
-    step3Class = '';
-    progressWidth = '0%';
   } else if (tokenNum === currentlyServing) {
     stageText = 'Now Serving - Please Enter Doctor Consultation Room';
     waitDisplay = 'Now Serving';
@@ -1004,7 +1010,7 @@ function checkTokenLiveStatus(searchVal) {
     progressWidth = '75%';
   } else if (ahead === 1) {
     stageText = 'You are NEXT in line! Please wait directly outside the chamber door.';
-    waitDisplay = `~${doc.avgWaitPerPatient || 12} mins`;
+    waitDisplay = `~${avgWaitPerPatient} mins`;
     step2Class = 'current';
     progressWidth = '50%';
   } else {
@@ -1023,7 +1029,7 @@ function checkTokenLiveStatus(searchVal) {
   const leftCol = document.createElement('div');
   const badgeLabel = document.createElement('span');
   badgeLabel.style.cssText = 'font-size: 0.78rem; color: #a7f3d0; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;';
-  badgeLabel.textContent = 'Verified Token Status';
+  badgeLabel.textContent = found.simulated ? 'Demo Token Status (simulated)' : 'Token Status';
 
   const tokenBadge = document.createElement('div');
   tokenBadge.className = 'tracker-token-badge';
@@ -1047,7 +1053,7 @@ function checkTokenLiveStatus(searchVal) {
 
   const servingLabel = document.createElement('div');
   servingLabel.style.cssText = 'font-size: 1.25rem; font-weight: 800; color: #34d399;';
-  servingLabel.textContent = isToday ? `Now Serving: #TK-${String(currentlyServing).padStart(2, '0')}` : found.date;
+  servingLabel.textContent = isToday ? `Now Serving: #${formatToken(currentlyServing)}` : found.date;
 
   const roomLabel = document.createElement('div');
   roomLabel.style.cssText = 'font-size: 0.75rem; color: #cbd5e1;';
@@ -1132,9 +1138,9 @@ function checkTokenLiveStatus(searchVal) {
 
   resultBox.classList.add('active');
   if (isToday) {
-    showToast(`Queue verified: ${ahead} patients ahead of you.`, 'info');
+    showToast(`Queue estimate (demo): ${ahead} patients ahead of you.`, 'info');
   } else {
-    showToast(`Appointment confirmed for ${found.date}!`, 'info');
+    showToast(`Appointment confirmed for ${found.date} (demo)!`, 'info');
   }
 }
 

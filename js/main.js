@@ -303,8 +303,14 @@ function setupModalDismissals() {
     const specParam = searchParams.get('specialty') || searchParams.get('dept') || (hash.includes('specialty=') ? hash.split('specialty=')[1].split('&')[0] : null);
 
     if (trackParam) {
-      const cleanTrack = trackParam.trim().toUpperCase();
-      if (/^TK-\d{1,6}$/i.test(cleanTrack)) {
+      const cleanTrack = Utils.normalizeTokenId(trackParam);
+      if (Utils.isValidTokenId(cleanTrack)) {
+        // Clean URL parameter to prevent re-triggering on future hash changes
+        if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
+          const url = new URL(window.location.href);
+          url.searchParams.delete('track');
+          window.history.replaceState(null, '', url.pathname + (url.search ? url.search : '') + url.hash);
+        }
         setTimeout(() => {
           if (typeof openTrackTokenModal === 'function') openTrackTokenModal(cleanTrack);
         }, 350);
@@ -313,12 +319,23 @@ function setupModalDismissals() {
     }
 
     if (docParam) {
-      setTimeout(() => openBookingLayer(docParam), 400);
-      return;
+      const cleanDoc = String(docParam).trim().toLowerCase();
+      const validDoc = (Config.DOCTORS || []).find(d => d.id.toLowerCase() === cleanDoc);
+      if (validDoc) {
+        setTimeout(() => openBookingLayer(validDoc.id), 400);
+        return;
+      }
     }
     if (specParam) {
-      setTimeout(() => openDoctorsModal(specParam), 400);
-      return;
+      const cleanSpec = String(specParam).trim().toLowerCase();
+      const matchDoc = (Config.DOCTORS || []).find(d =>
+        (d.specialty && d.specialty.toLowerCase() === cleanSpec) ||
+        (d.id && d.id.toLowerCase() === cleanSpec)
+      );
+      if (matchDoc || ['cardiology', 'general', 'orthopedics', 'pediatrics', 'neurology', 'dermatology', 'gynecology', 'ent', 'ophthalmology', 'all'].includes(cleanSpec)) {
+        setTimeout(() => openDoctorsModal(cleanSpec), 400);
+        return;
+      }
     }
 
     if (!hash) return;

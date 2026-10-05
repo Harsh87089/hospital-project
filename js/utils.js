@@ -699,6 +699,19 @@ const CarePulseBarcode = {
   }
 };
 
+// Centralized Token Validation & Formatting
+const TOKEN_ID_RE = /^TK-\d{1,6}$/;
+const normalizeTokenId = v => String(v ?? '').replace('#', '').trim().toUpperCase();
+const isValidTokenId = v => TOKEN_ID_RE.test(normalizeTokenId(v));
+const formatToken = n => `TK-${String(n).padStart(2, '0')}`;
+
+if (typeof window !== 'undefined') {
+  window.TOKEN_ID_RE = TOKEN_ID_RE;
+  window.normalizeTokenId = normalizeTokenId;
+  window.isValidTokenId = isValidTokenId;
+  window.formatToken = formatToken;
+}
+
 const CANONICAL_BASE_URL = 'https://hospital-project-tawny.vercel.app';
 
 function getCanonicalQrPayload(tokenId, ticketRef = '') {
@@ -969,6 +982,10 @@ function processBookingSubmission(patientData) {
 
 
 export {
+  TOKEN_ID_RE,
+  normalizeTokenId,
+  isValidTokenId,
+  formatToken,
   CANONICAL_BASE_URL,
   getCanonicalQrPayload,
   escapeHtml,

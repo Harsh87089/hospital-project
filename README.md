@@ -4,7 +4,7 @@
 > **No real patient data is collected. All records, tokens, and documents are simulated.**
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-blue?logo=vercel)](https://hospital-project-tawny.vercel.app/)
-[![Tests](https://img.shields.io/badge/Tests-38%20passed-brightgreen)](#6-local-setup--testing-guide)
+[![Tests](https://img.shields.io/badge/Tests-42%20passed-brightgreen)](#6-local-setup--testing-guide)
 [![CI](https://github.com/Harsh87089/hospital-project/actions/workflows/ci.yml/badge.svg)](https://github.com/Harsh87089/hospital-project/actions)
 
 ![CarePulse demo portal — OPD booking, queue tracker, and smart health pass with DEMO watermarks](icons/readme-hero.jpg)
@@ -103,7 +103,7 @@ python -m http.server 3000
 ### Running the Test Suites
 
 ```bash
-# 1. Full unit + functional + V8 syntax suite (38 tests)
+# 1. Full unit + functional + V8 syntax suite (42 tests)
 python -m unittest discover -s tests
 
 # 2. No-overclaims regression guard (10 tests — banned phrases, noindex, data-demo markers)
@@ -119,7 +119,7 @@ python tests/test_browser_e2e.py
 npx playwright test
 ```
 
-**All 38 unit tests and 109 CLI checks pass with 0 failures.**
+**All 42 unit tests and 109 CLI checks pass with 0 failures.**
 
 ---
 

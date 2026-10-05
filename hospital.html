@@ -45,88 +45,22 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
-    <!-- Schema.org JSON-LD Structured Data for Google Search Rich Results -->
+    <!-- Schema.org JSON-LD Structured Data for Google Search -->
     <script type="application/ld+json">
-    [
-      {
-        "@context": "https://schema.org",
-        "@type": "Hospital",
-        "name": "CarePulse Multi-Specialty Hospital (Demo)",
-        "url": "https://hospital-project-tawny.vercel.app/",
-        "description": "Demonstration hospital web portal prototype offering simulated OPD token booking, interactive queue tracking, diagnostics, 9 clinical specialties, and healthcare UI design concepts on GT Road, Phagwara.",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "GT Road, Near Sugar Mill Crossing, Model Town",
-          "addressLocality": "Phagwara",
-          "addressRegion": "Punjab",
-          "postalCode": "144401",
-          "addressCountry": "IN"
-        },
-        "openingHoursSpecification": [
-          {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-            "opens": "08:30",
-            "closes": "20:30"
-          },
-          {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": "Sunday",
-            "opens": "09:00",
-            "closes": "14:00"
-          }
-        ],
-        "medicalSpecialty": [
-          "GeneralPractice",
-          "Cardiovascular",
-          "Orthopedics",
-          "Pediatrics",
-          "Dermatology",
-          "Gynecologic",
-          "Otolaryngologic",
-          "Ophthalmic",
-          "Dentistry"
-        ]
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "Physician",
-        "name": "Dr. Rajesh Sharma (Demo Profile)",
-        "medicalSpecialty": "GeneralPractice",
-        "jobTitle": "Senior Consultant Physician & Diabetologist",
-        "worksFor": {
-          "@type": "Hospital",
-          "name": "CarePulse Multi-Specialty Hospital (Demo)"
-        },
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "GT Road, Model Town",
-          "addressLocality": "Phagwara",
-          "addressRegion": "Punjab",
-          "postalCode": "144401",
-          "addressCountry": "IN"
-        }
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "Physician",
-        "name": "Dr. Manpreet Singh (Demo Profile)",
-        "medicalSpecialty": "Cardiovascular",
-        "jobTitle": "Chief Interventional Cardiologist",
-        "worksFor": {
-          "@type": "Hospital",
-          "name": "CarePulse Multi-Specialty Hospital (Demo)"
-        },
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "GT Road, Model Town",
-          "addressLocality": "Phagwara",
-          "addressRegion": "Punjab",
-          "postalCode": "144401",
-          "addressCountry": "IN"
-        }
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "CarePulse Hospital Portal (Demo Prototype)",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "All",
+      "url": "https://hospital-project-tawny.vercel.app/",
+      "description": "Interactive demonstration and portfolio prototype of an enterprise healthcare portal featuring simulated OPD token booking, live queue estimation, and digital e-pass management.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
       }
-    ]
+    }
     </script>
 
     <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
@@ -2227,7 +2161,7 @@
                 </div>
 
                 <!-- Tracker Result Box -->
-                <div class="tracker-result-box" id="tracker-result-box">
+                <div class="tracker-result-box" id="tracker-result-box" aria-live="polite">
                     <!-- Dynamically populated by app.js -->
                 </div>
             </div>

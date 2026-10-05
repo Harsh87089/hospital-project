@@ -324,7 +324,7 @@ const TeleConsultEngine = {
       <html>
       <head>
         <meta charset="UTF-8">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; font-src 'self' data:;">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline';">
         <title>Prescription - CarePulse Hospital - ${safeName}</title>
         <style>
           body { font-family: system-ui, -apple-system, sans-serif; padding: 30px; color: #0f172a; line-height: 1.5; position: relative; }
